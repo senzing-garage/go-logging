@@ -9,7 +9,6 @@ import (
 	"sort"
 	"strings"
 
-	"github.com/senzing/go-logging/logger"
 	"github.com/senzing/go-logging/messageformat"
 )
 
