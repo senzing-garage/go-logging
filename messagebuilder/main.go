@@ -7,55 +7,16 @@
 package messagebuilder
 
 // ----------------------------------------------------------------------------
-// Constants
-// ----------------------------------------------------------------------------
-
-const noFormat = ""
-
-// Order is important for the LevelXxxx variables
-
-const (
-	LevelTrace Level = iota
-	LevelDebug
-	LevelInfo
-	LevelWarn
-	LevelError
-	LevelFatal
-	LevelPanic
-)
-
-const (
-	LevelDebugName  = "DEBUG"
-	LevelErrorName  = "ERROR"
-	LevelFatalName  = "FATAL"
-	LevelInfoName   = "INFO"
-	LevelPanicName  = "PANIC"
-	LevelTraceName  = "TRACE"
-	LevelWarnName   = "WARN"
-	MessageIdFormat = "senzing-6511%04d"
-)
-
-// ----------------------------------------------------------------------------
 // Types
 // ----------------------------------------------------------------------------
 
-type Level int
-
-type Logger struct {
-	isDebug bool
-	isError bool
-	isFatal bool
-	isInfo  bool
-	isPanic bool
-	isTrace bool
-	isWarn  bool
-}
+type MessageBuilder struct{}
 
 // ----------------------------------------------------------------------------
 // Constants
 // ----------------------------------------------------------------------------
 
-var logger *Logger
+var messagebuilder *MessageBuilder
 
 var MessageLevelMap = map[int]string{
 	1000:  "info",

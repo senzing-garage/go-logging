@@ -10,10 +10,16 @@ type Detail struct {
 	Value string `json:"value"`
 }
 
-type Message struct {
+type MessageFormat struct {
 	Id      string      `json:"id,omitempty"`
 	Level   string      `json:"level,omitempty"`
 	Text    interface{} `json:"text,omitempty"`
 	Details interface{} `json:"details,omitempty"`
 	Error   interface{} `json:"error,omitempty"`
 }
+
+// ----------------------------------------------------------------------------
+// Constants
+// ----------------------------------------------------------------------------
+
+var messageformat *MessageFormat

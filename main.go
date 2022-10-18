@@ -6,6 +6,7 @@ import (
 	"time"
 
 	"github.com/senzing/go-logging/logger"
+	"github.com/senzing/go-logging/messagelogger"
 )
 
 // Values updated via "go install -ldflags" parameters.
@@ -45,7 +46,7 @@ func main() {
 
 	// Log a message.
 
-	logger.LogMessage(MessageIdFormat, 2000, "Test message 1", "Variable1", "Variable2")
+	messagelogger.LogMessage(MessageIdFormat, 2000, "Test message 1", "Variable1", "Variable2")
 
 	// Log a message using a map.
 
@@ -53,12 +54,12 @@ func main() {
 		"FirstVariable":  "First value",
 		"SecondVariable": "Second value",
 	}
-	logger.LogMessageUsingMap(MessageIdFormat, 2001, "Test message 2", detailsMap)
+	messagelogger.LogMessageUsingMap(MessageIdFormat, 2001, "Test message 2", detailsMap)
 
 	// Log an error based on a prior error.
 
 	anError := errors.New("this is a new error")
-	logger.LogMessageFromError(MessageIdFormat, 2002, "Test message 3", anError, "Variable1", "Variable2")
+	messagelogger.LogMessageFromError(MessageIdFormat, 2002, "Test message 3", anError, "Variable1", "Variable2")
 
 	// The following demonstrates the low-level calls for
 	// Trace, Debug, Info, Warn, and Error.
