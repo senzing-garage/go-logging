@@ -54,7 +54,7 @@ func stringify(unknown interface{}) string {
 // Build a message given details as strings.
 func BuildMessage(id string, level string, text string, details ...interface{}) string {
 
-	resultStruct := Message{}
+	resultStruct := MessageFormat{}
 
 	if len(id) > 0 {
 		resultStruct.Id = id
@@ -94,7 +94,7 @@ func BuildMessage(id string, level string, text string, details ...interface{}) 
 // Build a message from an error
 func BuildMessageFromError(id string, level string, text string, err error, details ...interface{}) string {
 
-	resultStruct := Message{}
+	resultStruct := MessageFormat{}
 
 	if len(id) > 0 {
 		resultStruct.Id = id
@@ -134,7 +134,7 @@ func BuildMessageFromError(id string, level string, text string, err error, deta
 		if isJson(errorMessage) {
 			priorError = jsonAsInterface(errorMessage)
 		} else {
-			priorError = Message{
+			priorError = MessageFormat{
 				Text: errorMessage,
 			}
 		}
@@ -150,7 +150,7 @@ func BuildMessageFromError(id string, level string, text string, err error, deta
 // Build a message given details as a map of strings.
 func BuildMessageFromErrorUsingMap(id string, level string, text string, err error, details map[string]interface{}) string {
 
-	resultStruct := Message{}
+	resultStruct := MessageFormat{}
 
 	// Fill optional fields.
 
@@ -191,7 +191,7 @@ func BuildMessageFromErrorUsingMap(id string, level string, text string, err err
 		if isJson(errorMessage) {
 			priorError = jsonAsInterface(errorMessage)
 		} else {
-			priorError = Message{
+			priorError = MessageFormat{
 				Text: errorMessage,
 			}
 		}
@@ -207,7 +207,7 @@ func BuildMessageFromErrorUsingMap(id string, level string, text string, err err
 // Build a message given details as a map of strings.
 func BuildMessageUsingMap(id string, level string, text string, details map[string]interface{}) string {
 
-	resultStruct := Message{}
+	resultStruct := MessageFormat{}
 
 	// Fill optional fields.
 
@@ -247,8 +247,8 @@ func BuildMessageUsingMap(id string, level string, text string, details map[stri
 }
 
 // Parse JSON message.
-func ParseMessage(jsonString string) Message {
-	var message Message
+func ParseMessage(jsonString string) MessageFormat {
+	var message MessageFormat
 	json.Unmarshal([]byte(jsonString), &message)
 	return message
 }

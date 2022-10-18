@@ -17,9 +17,3 @@ type MessageFormat struct {
 	Details interface{} `json:"details,omitempty"`
 	Error   interface{} `json:"error,omitempty"`
 }
-
-// ----------------------------------------------------------------------------
-// Constants
-// ----------------------------------------------------------------------------
-
-var messageformat *MessageFormat

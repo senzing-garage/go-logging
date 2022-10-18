@@ -4,7 +4,8 @@ Package helper ...
 package messagelogger
 
 import (
-	"github.com/docktermj/go-xyzzy-helpers/logger"
+	"github.com/senzing/go-logging/logger"
+	"github.com/senzing/go-logging/messagebuilder"
 )
 
 // ----------------------------------------------------------------------------
@@ -29,7 +30,7 @@ func New() *MessageLogger {
 
 // Write log record based on message level function.
 func LogBasedOnLevel(messageLevel string, messageJson string) {
-	logger.LogBasedOnLevel(messageLevel, messageJson)
+	messagelogger.LogBasedOnLevel(messageLevel, messageJson)
 }
 
 // Write log record based on message level method.
@@ -70,9 +71,9 @@ func LogMessage(idTemplate string, errorNumber int, message string, details ...i
 // Inspect the error to see what the level is and log based on the level method.
 func (messagelogger *MessageLogger) LogMessage(idTemplate string, errorNumber int, message string, details ...interface{}) error {
 	var err error = nil
-	messageLevel := messagelogger.BuildMessageLevel(errorNumber, message)
-	messageJson := messagelogger.BuildMessage(idTemplate, errorNumber, message, details...)
-	logger.LogBasedOnLevel(messageLevel, messageJson)
+	messageLevel := messagebuilder.BuildMessageLevel(errorNumber, message)
+	messageJson := messagebuilder.BuildMessage(idTemplate, errorNumber, message, details...)
+	messagelogger.LogBasedOnLevel(messageLevel, messageJson)
 	return err
 }
 
@@ -85,9 +86,9 @@ func LogMessageFromError(idTemplate string, errorNumber int, message string, err
 func (messagelogger *MessageLogger) LogMessageFromError(idTemplate string, errorNumber int, message string, anError error, details ...interface{}) error {
 	var err error = nil
 
-	messageLevel := messagelogger.BuildMessageLevel(errorNumber, message)
-	messageJson := messagelogger.BuildMessageFromError(idTemplate, errorNumber, message, anError, details...)
-	logger.LogBasedOnLevel(messageLevel, messageJson)
+	messageLevel := messagebuilder.BuildMessageLevel(errorNumber, message)
+	messageJson := messagebuilder.BuildMessageFromError(idTemplate, errorNumber, message, anError, details...)
+	messagelogger.LogBasedOnLevel(messageLevel, messageJson)
 	return err
 }
 
@@ -100,9 +101,9 @@ func LogMessageFromErrorUsingMap(idTemplate string, errorNumber int, message str
 func (messagelogger *MessageLogger) LogMessageFromErrorUsingMap(idTemplate string, errorNumber int, message string, anError error, details map[string]interface{}) error {
 	var err error = nil
 
-	messageLevel := messagelogger.BuildMessageLevel(errorNumber, message)
-	messageJson := messagelogger.BuildMessageFromErrorUsingMap(idTemplate, errorNumber, message, anError, details)
-	logger.LogBasedOnLevel(messageLevel, messageJson)
+	messageLevel := messagebuilder.BuildMessageLevel(errorNumber, message)
+	messageJson := messagebuilder.BuildMessageFromErrorUsingMap(idTemplate, errorNumber, message, anError, details)
+	messagelogger.LogBasedOnLevel(messageLevel, messageJson)
 	return err
 }
 
@@ -114,8 +115,8 @@ func LogMessageUsingMap(idTemplate string, errorNumber int, message string, deta
 // Inspect the error to see what the level is and log based on the level method.
 func (messagelogger *MessageLogger) LogMessageUsingMap(idTemplate string, errorNumber int, message string, details map[string]interface{}) error {
 	var err error = nil
-	messageLevel := messagelogger.BuildMessageLevel(errorNumber, message)
-	messageJson := messagelogger.BuildMessageUsingMap(idTemplate, errorNumber, message, details)
-	logger.LogBasedOnLevel(messageLevel, messageJson)
+	messageLevel := messagebuilder.BuildMessageLevel(errorNumber, message)
+	messageJson := messagebuilder.BuildMessageUsingMap(idTemplate, errorNumber, message, details)
+	messagelogger.LogBasedOnLevel(messageLevel, messageJson)
 	return err
 }
