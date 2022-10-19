@@ -13,7 +13,7 @@ package messagebuilder
 type MessageBuilder struct{}
 
 // ----------------------------------------------------------------------------
-// Constants
+// Variables
 // ----------------------------------------------------------------------------
 
 var messagebuilder *MessageBuilder

@@ -62,8 +62,9 @@ build: dependencies \
 
 .PHONY: test
 test:
-#	@go test -v $(GO_PACKAGE_NAME)/...
-	@go test -v ./...
+#	@go test -v ./...
+#	@go test -v ./logger
+	@go test -v ./messageformat
 
 # -----------------------------------------------------------------------------
 # Run

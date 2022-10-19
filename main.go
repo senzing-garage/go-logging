@@ -38,11 +38,16 @@ func main() {
 
 	// Configure the logger. If not configured, no functions will print.
 
-	logger.SetLevel(logger.LevelInfo)
+	messagelogger.SetLevel(messagelogger.LevelInfo)
+
+	// ------------------------------------------------------------------------
+	// The following demonstrates the high-level messagelogger calls for
+	// LogMessage, LogMessageUsingMap, and LogMessageFromError.
+	// ------------------------------------------------------------------------
 
 	// Log a message.
 
-	messagelogger.LogMessage(MessageIdFormat, 2000, "Test message 1", "Variable1", "Variable2")
+	messagelogger.LogMessage(MessageIdFormat, 2000, "Test message 1", programName, buildVersion, buildIteration)
 
 	// Log a message using a map.
 
@@ -57,8 +62,10 @@ func main() {
 	anError := errors.New("this is a new error")
 	messagelogger.LogMessageFromError(MessageIdFormat, 2002, "Test message 3", anError, "Variable1", "Variable2")
 
-	// The following demonstrates the low-level calls for
+	// ------------------------------------------------------------------------
+	// The following demonstrates the low-level logger calls for
 	// Trace, Debug, Info, Warn, and Error.
+	// ------------------------------------------------------------------------
 
 	log.Println("Test Trace")
 	logger.Trace("trace prints")

@@ -20,6 +20,16 @@ func init() {
 // Public Setters
 // ----------------------------------------------------------------------------
 
+// ----------------------------------------------------------------------------
+// Public Setters
+// ----------------------------------------------------------------------------
+
+func SetLevel(level Level) *MessageLogger { return messagelogger.SetLevel(level) }
+func (messagelogger *MessageLogger) SetLevel(level Level) *MessageLogger {
+	logger.SetLevel(logger.Level(level))
+	return messagelogger
+}
+
 func New() *MessageLogger {
 	return new(MessageLogger)
 }
