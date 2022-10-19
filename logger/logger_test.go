@@ -214,10 +214,10 @@ func TestTrace(test *testing.T) {
 
 // -- Miscellaneous -----------------------------------------------------------
 
-func TestFluentInterface(test *testing.T) {
-	SetLevel(LevelTrace)
-	Trace("trace").Debug("debug").Info("info").Warn("warn").Error("error")
-}
+// func TestFluentInterface(test *testing.T) {
+// 	SetLevel(LevelTrace)
+// 	Trace("trace").Debug("debug").Info("info").Warn("warn").Error("error")
+// }
 
 func TestVaradic(test *testing.T) {
 	SetLevel(LevelDebug)

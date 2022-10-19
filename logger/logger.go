@@ -20,7 +20,7 @@ func init() {
 // Internal methods
 // ----------------------------------------------------------------------------
 
-func (logger *Logger) printf(debugLevelName string, format string, v ...interface{}) *Logger {
+func (logger *LoggerImpl) printf(debugLevelName string, format string, v ...interface{}) LoggerInterface {
 	var message string
 	calldepth := 3
 	if format == noFormat {
@@ -32,15 +32,15 @@ func (logger *Logger) printf(debugLevelName string, format string, v ...interfac
 		message = fmt.Sprintf(debugLevelName+" "+format, v...)
 	}
 	log.Output(calldepth, message)
-	return logger
+	return loggerInstance
 }
 
 // ----------------------------------------------------------------------------
 // Public Setters and Getters
 // ----------------------------------------------------------------------------
 
-func SetLevel(level Level) *Logger { return loggerInstance.SetLevel(level) }
-func (logger *Logger) SetLevel(level Level) *Logger {
+func SetLevel(level Level) LoggerInterface { return loggerInstance.SetLevel(level) }
+func (logger *LoggerImpl) SetLevel(level Level) LoggerInterface {
 	logger.level = level
 	logger.isPanic = level <= LevelPanic
 	logger.isFatal = level <= LevelFatal
@@ -53,12 +53,12 @@ func (logger *Logger) SetLevel(level Level) *Logger {
 }
 
 func GetLevel() Level { return loggerInstance.GetLevel() }
-func (logger *Logger) GetLevel() Level {
+func (logger *LoggerImpl) GetLevel() Level {
 	return logger.level
 }
 
-func New() *Logger {
-	return new(Logger)
+func New() *LoggerImpl {
+	return new(LoggerImpl)
 }
 
 // ----------------------------------------------------------------------------
@@ -66,37 +66,37 @@ func New() *Logger {
 // ----------------------------------------------------------------------------
 
 func IsPanic() bool { return loggerInstance.IsPanic() }
-func (logger *Logger) IsPanic() bool {
+func (logger *LoggerImpl) IsPanic() bool {
 	return logger.isPanic
 }
 
 func IsFatal() bool { return loggerInstance.IsFatal() }
-func (logger *Logger) IsFatal() bool {
+func (logger *LoggerImpl) IsFatal() bool {
 	return logger.isFatal
 }
 
 func IsError() bool { return loggerInstance.IsError() }
-func (logger *Logger) IsError() bool {
+func (logger *LoggerImpl) IsError() bool {
 	return logger.isError
 }
 
 func IsWarn() bool { return loggerInstance.IsWarn() }
-func (logger *Logger) IsWarn() bool {
+func (logger *LoggerImpl) IsWarn() bool {
 	return logger.isWarn
 }
 
 func IsInfo() bool { return loggerInstance.IsInfo() }
-func (logger *Logger) IsInfo() bool {
+func (logger *LoggerImpl) IsInfo() bool {
 	return logger.isInfo
 }
 
 func IsDebug() bool { return loggerInstance.IsDebug() }
-func (logger *Logger) IsDebug() bool {
+func (logger *LoggerImpl) IsDebug() bool {
 	return logger.isDebug
 }
 
 func IsTrace() bool { return loggerInstance.IsTrace() }
-func (logger *Logger) IsTrace() bool {
+func (logger *LoggerImpl) IsTrace() bool {
 	return logger.isTrace
 }
 
@@ -106,28 +106,28 @@ func (logger *Logger) IsTrace() bool {
 
 // --- Trace ------------------------------------------------------------------
 
-func Trace(v ...interface{}) *Logger {
+func Trace(v ...interface{}) LoggerInterface {
 	if loggerInstance.IsTrace() {
 		loggerInstance.printf(LevelTraceName, noFormat, v...)
 	}
 	return loggerInstance
 }
 
-func (logger *Logger) Trace(v ...interface{}) *Logger {
+func (logger *LoggerImpl) Trace(v ...interface{}) LoggerInterface {
 	if loggerInstance.isTrace {
 		loggerInstance.printf(LevelTraceName, noFormat, v...)
 	}
 	return loggerInstance
 }
 
-func Tracef(format string, v ...interface{}) *Logger {
+func Tracef(format string, v ...interface{}) LoggerInterface {
 	if loggerInstance.IsTrace() {
 		loggerInstance.printf(LevelTraceName, format, v...)
 	}
 	return loggerInstance
 }
 
-func (logger *Logger) Tracef(format string, v ...interface{}) *Logger {
+func (logger *LoggerImpl) Tracef(format string, v ...interface{}) LoggerInterface {
 	if loggerInstance.isTrace {
 		loggerInstance.printf(LevelTraceName, format, v...)
 	}
@@ -136,28 +136,28 @@ func (logger *Logger) Tracef(format string, v ...interface{}) *Logger {
 
 // --- Debug ------------------------------------------------------------------
 
-func Debug(v ...interface{}) *Logger {
+func Debug(v ...interface{}) LoggerInterface {
 	if loggerInstance.IsDebug() {
 		loggerInstance.printf(LevelDebugName, noFormat, v...)
 	}
 	return loggerInstance
 }
 
-func (logger *Logger) Debug(v ...interface{}) *Logger {
+func (logger *LoggerImpl) Debug(v ...interface{}) LoggerInterface {
 	if loggerInstance.isDebug {
 		loggerInstance.printf(LevelDebugName, noFormat, v...)
 	}
 	return loggerInstance
 }
 
-func Debugf(format string, v ...interface{}) *Logger {
+func Debugf(format string, v ...interface{}) LoggerInterface {
 	if loggerInstance.IsDebug() {
 		loggerInstance.printf(LevelDebugName, format, v...)
 	}
 	return loggerInstance
 }
 
-func (logger *Logger) Debugf(format string, v ...interface{}) *Logger {
+func (logger *LoggerImpl) Debugf(format string, v ...interface{}) LoggerInterface {
 	if loggerInstance.isDebug {
 		loggerInstance.printf(LevelDebugName, format, v...)
 	}
@@ -166,28 +166,28 @@ func (logger *Logger) Debugf(format string, v ...interface{}) *Logger {
 
 // --- Info -------------------------------------------------------------------
 
-func Info(v ...interface{}) *Logger {
+func Info(v ...interface{}) LoggerInterface {
 	if loggerInstance.IsInfo() {
 		loggerInstance.printf(LevelInfoName, noFormat, v...)
 	}
 	return loggerInstance
 }
 
-func (logger *Logger) Info(v ...interface{}) *Logger {
+func (logger *LoggerImpl) Info(v ...interface{}) LoggerInterface {
 	if loggerInstance.isInfo {
 		loggerInstance.printf(LevelInfoName, noFormat, v...)
 	}
 	return loggerInstance
 }
 
-func Infof(format string, v ...interface{}) *Logger {
+func Infof(format string, v ...interface{}) LoggerInterface {
 	if loggerInstance.IsInfo() {
 		loggerInstance.printf(LevelInfoName, format, v...)
 	}
 	return loggerInstance
 }
 
-func (logger *Logger) Infof(format string, v ...interface{}) *Logger {
+func (logger *LoggerImpl) Infof(format string, v ...interface{}) LoggerInterface {
 	if loggerInstance.isInfo {
 		loggerInstance.printf(LevelInfoName, format, v...)
 	}
@@ -196,28 +196,28 @@ func (logger *Logger) Infof(format string, v ...interface{}) *Logger {
 
 // --- Warn -------------------------------------------------------------------
 
-func Warn(v ...interface{}) *Logger {
+func Warn(v ...interface{}) LoggerInterface {
 	if loggerInstance.IsWarn() {
 		loggerInstance.printf(LevelWarnName, noFormat, v...)
 	}
 	return loggerInstance
 }
 
-func (logger *Logger) Warn(v ...interface{}) *Logger {
+func (logger *LoggerImpl) Warn(v ...interface{}) LoggerInterface {
 	if loggerInstance.isWarn {
 		loggerInstance.printf(LevelWarnName, noFormat, v...)
 	}
 	return loggerInstance
 }
 
-func Warnf(format string, v ...interface{}) *Logger {
+func Warnf(format string, v ...interface{}) LoggerInterface {
 	if loggerInstance.IsWarn() {
 		loggerInstance.printf(LevelWarnName, format, v...)
 	}
 	return loggerInstance
 }
 
-func (logger *Logger) Warnf(format string, v ...interface{}) *Logger {
+func (logger *LoggerImpl) Warnf(format string, v ...interface{}) LoggerInterface {
 	if loggerInstance.isWarn {
 		loggerInstance.printf(LevelWarnName, format, v...)
 	}
@@ -226,28 +226,28 @@ func (logger *Logger) Warnf(format string, v ...interface{}) *Logger {
 
 // --- Error ------------------------------------------------------------------
 
-func Error(v ...interface{}) *Logger {
+func Error(v ...interface{}) LoggerInterface {
 	if loggerInstance.IsError() {
 		loggerInstance.printf(LevelErrorName, noFormat, v...)
 	}
 	return loggerInstance
 }
 
-func (logger *Logger) Error(v ...interface{}) *Logger {
+func (logger *LoggerImpl) Error(v ...interface{}) LoggerInterface {
 	if loggerInstance.isError {
 		loggerInstance.printf(LevelErrorName, noFormat, v...)
 	}
 	return loggerInstance
 }
 
-func Errorf(format string, v ...interface{}) *Logger {
+func Errorf(format string, v ...interface{}) LoggerInterface {
 	if loggerInstance.IsError() {
 		loggerInstance.printf(LevelErrorName, format, v...)
 	}
 	return loggerInstance
 }
 
-func (logger *Logger) Errorf(format string, v ...interface{}) *Logger {
+func (logger *LoggerImpl) Errorf(format string, v ...interface{}) LoggerInterface {
 	if loggerInstance.isError {
 		loggerInstance.printf(LevelErrorName, format, v...)
 	}
@@ -256,7 +256,7 @@ func (logger *Logger) Errorf(format string, v ...interface{}) *Logger {
 
 // --- Fatal ------------------------------------------------------------------
 
-func Fatal(v ...interface{}) *Logger {
+func Fatal(v ...interface{}) LoggerInterface {
 	if loggerInstance.IsFatal() {
 		loggerInstance.printf(LevelFatalName, noFormat, v...)
 		log.Fatal("")
@@ -264,7 +264,7 @@ func Fatal(v ...interface{}) *Logger {
 	return loggerInstance
 }
 
-func (logger *Logger) Fatal(v ...interface{}) *Logger {
+func (logger *LoggerImpl) Fatal(v ...interface{}) LoggerInterface {
 	if loggerInstance.isFatal {
 		loggerInstance.printf(LevelFatalName, noFormat, v...)
 		log.Fatal("")
@@ -272,7 +272,7 @@ func (logger *Logger) Fatal(v ...interface{}) *Logger {
 	return loggerInstance
 }
 
-func Fatalf(format string, v ...interface{}) *Logger {
+func Fatalf(format string, v ...interface{}) LoggerInterface {
 	if loggerInstance.IsFatal() {
 		loggerInstance.printf(LevelFatalName, format, v...)
 		log.Fatal("")
@@ -280,7 +280,7 @@ func Fatalf(format string, v ...interface{}) *Logger {
 	return loggerInstance
 }
 
-func (logger *Logger) Fatalf(format string, v ...interface{}) *Logger {
+func (logger *LoggerImpl) Fatalf(format string, v ...interface{}) LoggerInterface {
 	if loggerInstance.isFatal {
 		loggerInstance.printf(LevelFatalName, format, v...)
 		log.Fatal("")
@@ -290,7 +290,7 @@ func (logger *Logger) Fatalf(format string, v ...interface{}) *Logger {
 
 // --- Panic ------------------------------------------------------------------
 
-func Panic(v ...interface{}) *Logger {
+func Panic(v ...interface{}) LoggerInterface {
 	if loggerInstance.IsPanic() {
 		loggerInstance.printf(LevelPanicName, noFormat, v...)
 		log.Panic("")
@@ -298,7 +298,7 @@ func Panic(v ...interface{}) *Logger {
 	return loggerInstance
 }
 
-func (logger *Logger) Panic(v ...interface{}) *Logger {
+func (logger *LoggerImpl) Panic(v ...interface{}) LoggerInterface {
 	if loggerInstance.isPanic {
 		loggerInstance.printf(LevelPanicName, noFormat, v...)
 		log.Panic("")
@@ -306,7 +306,7 @@ func (logger *Logger) Panic(v ...interface{}) *Logger {
 	return loggerInstance
 }
 
-func Panicf(format string, v ...interface{}) *Logger {
+func Panicf(format string, v ...interface{}) LoggerInterface {
 	if loggerInstance.IsPanic() {
 		loggerInstance.printf(LevelPanicName, format, v...)
 		log.Panic("")
@@ -314,7 +314,7 @@ func Panicf(format string, v ...interface{}) *Logger {
 	return loggerInstance
 }
 
-func (logger *Logger) Panicf(format string, v ...interface{}) *Logger {
+func (logger *LoggerImpl) Panicf(format string, v ...interface{}) LoggerInterface {
 	if loggerInstance.isPanic {
 		loggerInstance.printf(LevelPanicName, format, v...)
 		log.Panic("")
