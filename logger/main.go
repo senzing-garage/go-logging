@@ -53,7 +53,37 @@ const (
 )
 
 // ----------------------------------------------------------------------------
+// Interfaces
+// ----------------------------------------------------------------------------
+
+type LoggerInterface interface {
+	Debug(v ...interface{}) LoggerInterface
+	Debugf(format string, v ...interface{}) LoggerInterface
+	Error(v ...interface{}) LoggerInterface
+	Errorf(format string, v ...interface{}) LoggerInterface
+	Fatal(v ...interface{}) LoggerInterface
+	Fatalf(format string, v ...interface{}) LoggerInterface
+	GetLevel() Level
+	Info(v ...interface{}) LoggerInterface
+	Infof(format string, v ...interface{}) LoggerInterface
+	IsDebug() bool
+	IsError() bool
+	IsFatal() bool
+	IsInfo() bool
+	IsPanic() bool
+	IsTrace() bool
+	IsWarn() bool
+	Panic(v ...interface{}) LoggerInterface
+	Panicf(format string, v ...interface{}) LoggerInterface
+	SetLevel(level Level) LoggerInterface
+	Trace(v ...interface{}) LoggerInterface
+	Tracef(format string, v ...interface{}) LoggerInterface
+	Warn(v ...interface{}) LoggerInterface
+	Warnf(format string, v ...interface{}) LoggerInterface
+}
+
+// ----------------------------------------------------------------------------
 // Variables
 // ----------------------------------------------------------------------------
 
-var logger *Logger
+var loggerInstance *Logger
