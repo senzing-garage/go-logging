@@ -48,7 +48,7 @@ func stringify(unknown interface{}) string {
 }
 
 // ----------------------------------------------------------------------------
-// Interface methods
+// Functions
 // ----------------------------------------------------------------------------
 
 // Build a message given details as strings.

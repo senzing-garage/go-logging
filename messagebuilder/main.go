@@ -10,16 +10,40 @@ package messagebuilder
 // Types
 // ----------------------------------------------------------------------------
 
-type MessageBuilder struct{}
+type MessageBuilderImpl struct{}
+
+// ----------------------------------------------------------------------------
+// Interfaces
+// ----------------------------------------------------------------------------
+
+type MessageBuilderInterface interface {
+	BuildError(idTemplate string, errorNumber int, message string, details ...interface{}) error
+	BuildMessage(idTemplate string, errorNumber int, message string, details ...interface{}) string
+	BuildMessageFromError(idTemplate string, errorNumber int, message string, anError error, details ...interface{}) string
+	BuildMessageFromErrorUsingMap(idTemplate string, errorNumber int, message string, anError error, details map[string]interface{}) string
+	BuildMessageUsingMap(idTemplate string, errorNumber int, message string, details map[string]interface{}) string
+	BuildMessageId(idTemplate string, errorNumber int) string
+	BuildMessageLevel(errorNumber int, message string) string
+}
 
 // ----------------------------------------------------------------------------
 // Variables
 // ----------------------------------------------------------------------------
 
-var messagebuilder *MessageBuilder
+var messageBuilderInstance *MessageBuilderImpl
 
 // Important:  The number listed is one more than the highest number for the MessageLevel.
-// For instance:  0-999 is info;  1000-1999 is warning; 2000-2999 is error.
+// Message ranges:
+// 0000-0999 info
+// 1000-1999 warning
+// 2000-2999 error
+// 3000-3999 debug
+// 4000-4999 trace
+// 5000-5999 reserved-
+// 6000-6999 retryable
+// 7000-7999 reserved-2
+// 8000-8999 fatal
+// 9000-9999 panic
 var MessageLevelMap = map[int]string{
 	1000:  "info",
 	2000:  "warning",

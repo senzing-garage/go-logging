@@ -17,28 +17,62 @@ import (
 // ----------------------------------------------------------------------------
 
 func init() {
-	messagebuilder = New()
+	messageBuilderInstance = New()
 }
 
 // ----------------------------------------------------------------------------
-// Public Setters
+// Constructors
 // ----------------------------------------------------------------------------
 
-func New() *MessageBuilder {
-	return new(MessageBuilder)
+func New() *MessageBuilderImpl {
+	return new(MessageBuilderImpl)
+}
+
+// ----------------------------------------------------------------------------
+// Instance functions
+// ----------------------------------------------------------------------------
+
+// Build an error function.
+func BuildError(idTemplate string, errorNumber int, message string, details ...interface{}) error {
+	return messageBuilderInstance.BuildError(idTemplate, errorNumber, message, details...)
+}
+
+// Build log message function.
+func BuildMessage(idTemplate string, errorNumber int, message string, details ...interface{}) string {
+	return messageBuilderInstance.BuildMessage(idTemplate, errorNumber, message, details...)
+}
+
+// Build log message function.
+func BuildMessageFromError(idTemplate string, errorNumber int, message string, err error, details ...interface{}) string {
+	return messageBuilderInstance.BuildMessageFromError(idTemplate, errorNumber, message, err, details...)
+}
+
+// Build log message function.
+func BuildMessageFromErrorUsingMap(idTemplate string, errorNumber int, message string, err error, details map[string]interface{}) string {
+	return messageBuilderInstance.BuildMessageFromErrorUsingMap(idTemplate, errorNumber, message, err, details)
+}
+
+// Build log message function.
+func BuildMessageUsingMap(idTemplate string, errorNumber int, message string, details map[string]interface{}) string {
+	return messageBuilderInstance.BuildMessageUsingMap(idTemplate, errorNumber, message, details)
+}
+
+// Construct a unique message id function.
+func BuildMessageId(idTemplate string, errorNumber int) string {
+	return messageBuilderInstance.BuildMessageId(idTemplate, errorNumber)
+}
+
+// Based on the errorNumber and Senzing error code, get the message level function.
+func BuildMessageLevel(errorNumber int, message string) string {
+	return messageBuilderInstance.BuildMessageLevel(errorNumber, message)
 }
 
 // ----------------------------------------------------------------------------
 // Interface methods
 // ----------------------------------------------------------------------------
 
-// Build an error function.
-func BuildError(idTemplate string, errorNumber int, message string, details ...interface{}) error {
-	return messagebuilder.BuildError(idTemplate, errorNumber, message, details...)
-}
-
 // Build an error method.
-func (messagebuilder *MessageBuilder) BuildError(idTemplate string, errorNumber int, message string, details ...interface{}) error {
+func (messagebuilder *MessageBuilderImpl) BuildError(idTemplate string, errorNumber int, message string, details ...interface{}) error {
 	errorMessage := messageformat.BuildMessage(
 		messagebuilder.BuildMessageId(idTemplate, errorNumber),
 		messagebuilder.BuildMessageLevel(errorNumber, message),
@@ -48,13 +82,8 @@ func (messagebuilder *MessageBuilder) BuildError(idTemplate string, errorNumber 
 	return errors.New(errorMessage)
 }
 
-// Build log message function.
-func BuildMessage(idTemplate string, errorNumber int, message string, details ...interface{}) string {
-	return messagebuilder.BuildMessage(idTemplate, errorNumber, message, details...)
-}
-
 // Build log message method.
-func (messagebuilder *MessageBuilder) BuildMessage(idTemplate string, errorNumber int, message string, details ...interface{}) string {
+func (messagebuilder *MessageBuilderImpl) BuildMessage(idTemplate string, errorNumber int, message string, details ...interface{}) string {
 	return messageformat.BuildMessage(
 		messagebuilder.BuildMessageId(idTemplate, errorNumber),
 		messagebuilder.BuildMessageLevel(errorNumber, message),
@@ -63,13 +92,8 @@ func (messagebuilder *MessageBuilder) BuildMessage(idTemplate string, errorNumbe
 	)
 }
 
-// Build log message function.
-func BuildMessageFromError(idTemplate string, errorNumber int, message string, err error, details ...interface{}) string {
-	return messagebuilder.BuildMessageFromError(idTemplate, errorNumber, message, err, details...)
-}
-
 // Build log message method.
-func (messagebuilder *MessageBuilder) BuildMessageFromError(idTemplate string, errorNumber int, message string, anError error, details ...interface{}) string {
+func (messagebuilder *MessageBuilderImpl) BuildMessageFromError(idTemplate string, errorNumber int, message string, anError error, details ...interface{}) string {
 	return messageformat.BuildMessageFromError(
 		messagebuilder.BuildMessageId(idTemplate, errorNumber),
 		messagebuilder.BuildMessageLevel(errorNumber, message),
@@ -79,13 +103,8 @@ func (messagebuilder *MessageBuilder) BuildMessageFromError(idTemplate string, e
 	)
 }
 
-// Build log message function.
-func BuildMessageFromErrorUsingMap(idTemplate string, errorNumber int, message string, err error, details map[string]interface{}) string {
-	return messagebuilder.BuildMessageFromErrorUsingMap(idTemplate, errorNumber, message, err, details)
-}
-
 // Build log message method.
-func (messagebuilder *MessageBuilder) BuildMessageFromErrorUsingMap(idTemplate string, errorNumber int, message string, anError error, details map[string]interface{}) string {
+func (messagebuilder *MessageBuilderImpl) BuildMessageFromErrorUsingMap(idTemplate string, errorNumber int, message string, anError error, details map[string]interface{}) string {
 	return messageformat.BuildMessageFromErrorUsingMap(
 		messagebuilder.BuildMessageId(idTemplate, errorNumber),
 		messagebuilder.BuildMessageLevel(errorNumber, message),
@@ -95,13 +114,8 @@ func (messagebuilder *MessageBuilder) BuildMessageFromErrorUsingMap(idTemplate s
 	)
 }
 
-// Build log message function.
-func BuildMessageUsingMap(idTemplate string, errorNumber int, message string, details map[string]interface{}) string {
-	return messagebuilder.BuildMessageUsingMap(idTemplate, errorNumber, message, details)
-}
-
 // Build log message method.
-func (messagebuilder *MessageBuilder) BuildMessageUsingMap(idTemplate string, errorNumber int, message string, details map[string]interface{}) string {
+func (messagebuilder *MessageBuilderImpl) BuildMessageUsingMap(idTemplate string, errorNumber int, message string, details map[string]interface{}) string {
 	return messageformat.BuildMessageUsingMap(
 		messagebuilder.BuildMessageId(idTemplate, errorNumber),
 		messagebuilder.BuildMessageLevel(errorNumber, message),
@@ -110,23 +124,13 @@ func (messagebuilder *MessageBuilder) BuildMessageUsingMap(idTemplate string, er
 	)
 }
 
-// Construct a unique message id function.
-func BuildMessageId(idTemplate string, errorNumber int) string {
-	return messagebuilder.BuildMessageId(idTemplate, errorNumber)
-}
-
 // Construct a unique message id method.
-func (messagebuilder *MessageBuilder) BuildMessageId(idTemplate string, errorNumber int) string {
+func (messagebuilder *MessageBuilderImpl) BuildMessageId(idTemplate string, errorNumber int) string {
 	return fmt.Sprintf(idTemplate, errorNumber)
 }
 
-// Based on the errorNumber and Senzing error code, get the message level function.
-func BuildMessageLevel(errorNumber int, message string) string {
-	return messagebuilder.BuildMessageLevel(errorNumber, message)
-}
-
 // Based on the errorNumber and Senzing error code, get the message level method.
-func (messagebuilder *MessageBuilder) BuildMessageLevel(errorNumber int, message string) string {
+func (messagebuilder *MessageBuilderImpl) BuildMessageLevel(errorNumber int, message string) string {
 
 	var result = "unknown"
 
