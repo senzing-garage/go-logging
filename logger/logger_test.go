@@ -20,71 +20,7 @@ func TestLevels(test *testing.T) {
 	assert.True(test, LevelFatal < LevelPanic, "Fatal")
 }
 
-func TestIsTrace(test *testing.T) {
-	SetLevel(LevelTrace)
-	assert.True(test, IsTrace(), "Trace")
-	assert.True(test, IsDebug(), "Debug")
-	assert.True(test, IsInfo(), "Info")
-	assert.True(test, IsWarn(), "Warn")
-	assert.True(test, IsError(), "Error")
-	assert.True(test, IsFatal(), "Fatal")
-	assert.True(test, IsPanic(), "Panic")
-}
-
-func TestIsDebug(test *testing.T) {
-	SetLevel(LevelDebug)
-	assert.False(test, IsTrace(), "Trace")
-	assert.True(test, IsDebug(), "Debug")
-	assert.True(test, IsInfo(), "Info")
-	assert.True(test, IsWarn(), "Warn")
-	assert.True(test, IsError(), "Error")
-	assert.True(test, IsFatal(), "Fatal")
-	assert.True(test, IsPanic(), "Panic")
-}
-
-func TestIsInfo(test *testing.T) {
-	SetLevel(LevelInfo)
-	assert.False(test, IsTrace(), "Trace")
-	assert.False(test, IsDebug(), "Debug")
-	assert.True(test, IsInfo(), "Info")
-	assert.True(test, IsWarn(), "Warn")
-	assert.True(test, IsError(), "Error")
-	assert.True(test, IsFatal(), "Fatal")
-	assert.True(test, IsPanic(), "Panic")
-}
-
-func TestIsWarn(test *testing.T) {
-	SetLevel(LevelWarn)
-	assert.False(test, IsTrace(), "Trace")
-	assert.False(test, IsDebug(), "Debug")
-	assert.False(test, IsInfo(), "Info")
-	assert.True(test, IsWarn(), "Warn")
-	assert.True(test, IsError(), "Error")
-	assert.True(test, IsFatal(), "Fatal")
-	assert.True(test, IsPanic(), "Panic")
-}
-
-func TestIsError(test *testing.T) {
-	SetLevel(LevelError)
-	assert.False(test, IsTrace(), "Trace")
-	assert.False(test, IsDebug(), "Debug")
-	assert.False(test, IsInfo(), "Info")
-	assert.False(test, IsWarn(), "Warn")
-	assert.True(test, IsError(), "Error")
-	assert.True(test, IsFatal(), "Fatal")
-	assert.True(test, IsPanic(), "Panic")
-}
-
-func TestIsFatal(test *testing.T) {
-	SetLevel(LevelFatal)
-	assert.False(test, IsTrace(), "Trace")
-	assert.False(test, IsDebug(), "Debug")
-	assert.False(test, IsInfo(), "Info")
-	assert.False(test, IsWarn(), "Warn")
-	assert.False(test, IsError(), "Error")
-	assert.True(test, IsFatal(), "Fatal")
-	assert.True(test, IsPanic(), "Panic")
-}
+// -- IsPanic -----------------------------------------------------------------
 
 func TestIsPanic(test *testing.T) {
 	SetLevel(LevelPanic)
@@ -97,23 +33,101 @@ func TestIsPanic(test *testing.T) {
 	assert.True(test, IsPanic(), "Panic")
 }
 
-func TestTrace(test *testing.T) {
-	SetLevel(LevelTrace)
-	assert.NotZero(test, Trace("test"), "string")
-	assert.NotZero(test, Tracef("test %s", "something"), "format")
+// -- IsFatal -----------------------------------------------------------------
+
+func TestIsFatal(test *testing.T) {
+	SetLevel(LevelFatal)
+	assert.False(test, IsTrace(), "Trace")
+	assert.False(test, IsDebug(), "Debug")
+	assert.False(test, IsInfo(), "Info")
+	assert.False(test, IsWarn(), "Warn")
+	assert.False(test, IsError(), "Error")
+	assert.True(test, IsFatal(), "Fatal")
+	assert.True(test, IsPanic(), "Panic")
 }
 
-func TestDebug(test *testing.T) {
-	SetLevel(LevelDebug)
-	assert.NotZero(test, Debug("test"), "string")
-	assert.NotZero(test, Debugf("test %s", "something"), "format")
+// -- IsError -----------------------------------------------------------------
+
+func TestIsError(test *testing.T) {
+	SetLevel(LevelError)
+	assert.False(test, IsTrace(), "Trace")
+	assert.False(test, IsDebug(), "Debug")
+	assert.False(test, IsInfo(), "Info")
+	assert.False(test, IsWarn(), "Warn")
+	assert.True(test, IsError(), "Error")
+	assert.True(test, IsFatal(), "Fatal")
+	assert.True(test, IsPanic(), "Panic")
 }
 
-func TestInfo(test *testing.T) {
+// -- IsWarn ------------------------------------------------------------------
+
+func TestIsWarn(test *testing.T) {
+	SetLevel(LevelWarn)
+	assert.False(test, IsTrace(), "Trace")
+	assert.False(test, IsDebug(), "Debug")
+	assert.False(test, IsInfo(), "Info")
+	assert.True(test, IsWarn(), "Warn")
+	assert.True(test, IsError(), "Error")
+	assert.True(test, IsFatal(), "Fatal")
+	assert.True(test, IsPanic(), "Panic")
+}
+
+// -- IsInfo ------------------------------------------------------------------
+
+func TestIsInfo(test *testing.T) {
 	SetLevel(LevelInfo)
-	assert.NotZero(test, Info("test"), "string")
-	assert.NotZero(test, Infof("test %s", "something"), "format")
+	assert.False(test, IsTrace(), "Trace")
+	assert.False(test, IsDebug(), "Debug")
+	assert.True(test, IsInfo(), "Info")
+	assert.True(test, IsWarn(), "Warn")
+	assert.True(test, IsError(), "Error")
+	assert.True(test, IsFatal(), "Fatal")
+	assert.True(test, IsPanic(), "Panic")
 }
+
+// -- IsDebug -----------------------------------------------------------------
+
+func TestIsDebug(test *testing.T) {
+	SetLevel(LevelDebug)
+	assert.False(test, IsTrace(), "Trace")
+	assert.True(test, IsDebug(), "Debug")
+	assert.True(test, IsInfo(), "Info")
+	assert.True(test, IsWarn(), "Warn")
+	assert.True(test, IsError(), "Error")
+	assert.True(test, IsFatal(), "Fatal")
+	assert.True(test, IsPanic(), "Panic")
+}
+
+// -- IsTrace -----------------------------------------------------------------
+
+func TestIsTrace(test *testing.T) {
+	SetLevel(LevelTrace)
+	assert.True(test, IsTrace(), "Trace")
+	assert.True(test, IsDebug(), "Debug")
+	assert.True(test, IsInfo(), "Info")
+	assert.True(test, IsWarn(), "Warn")
+	assert.True(test, IsError(), "Error")
+	assert.True(test, IsFatal(), "Fatal")
+	assert.True(test, IsPanic(), "Panic")
+}
+
+// -- Panic -------------------------------------------------------------------
+
+// No tests.
+
+// -- Fatal -------------------------------------------------------------------
+
+// No tests.
+
+// -- Error -------------------------------------------------------------------
+
+func TestError(test *testing.T) {
+	SetLevel(LevelError)
+	assert.NotZero(test, Error("test"), "string")
+	assert.NotZero(test, Errorf("test %s", "something"), "format")
+}
+
+// -- Warn --------------------------------------------------------------------
 
 func TestWarn(test *testing.T) {
 	SetLevel(LevelWarn)
@@ -121,11 +135,31 @@ func TestWarn(test *testing.T) {
 	assert.NotZero(test, Warnf("test %s", "something"), "format")
 }
 
-func TestError(test *testing.T) {
-	SetLevel(LevelError)
-	assert.NotZero(test, Error("test"), "string")
-	assert.NotZero(test, Errorf("test %s", "something"), "format")
+// -- Info --------------------------------------------------------------------
+
+func TestInfo(test *testing.T) {
+	SetLevel(LevelInfo)
+	assert.NotZero(test, Info("test"), "string")
+	assert.NotZero(test, Infof("test %s", "something"), "format")
 }
+
+// -- Debug -------------------------------------------------------------------
+
+func TestDebug(test *testing.T) {
+	SetLevel(LevelDebug)
+	assert.NotZero(test, Debug("test"), "string")
+	assert.NotZero(test, Debugf("test %s", "something"), "format")
+}
+
+// -- Trace -------------------------------------------------------------------
+
+func TestTrace(test *testing.T) {
+	SetLevel(LevelTrace)
+	assert.NotZero(test, Trace("test"), "string")
+	assert.NotZero(test, Tracef("test %s", "something"), "format")
+}
+
+// -- Miscellaneous -----------------------------------------------------------
 
 func TestFluentInterface(test *testing.T) {
 	SetLevel(LevelTrace)
