@@ -7,6 +7,11 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
+const (
+	EnablePrinting = 1
+	TruncateLength = 300
+)
+
 // ----------------------------------------------------------------------------
 // Test interface functions - names begin with "Test"
 // ----------------------------------------------------------------------------
@@ -18,6 +23,54 @@ func TestLevels(test *testing.T) {
 	assert.True(test, LevelWarn < LevelError, "Warn")
 	assert.True(test, LevelError < LevelFatal, "Error")
 	assert.True(test, LevelFatal < LevelPanic, "Fatal")
+}
+
+// -- SetLevel ----------------------------------------------------------------
+
+func TestSetLevel(test *testing.T) {
+	SetLevel(LevelPanic)
+	SetLevel(LevelFatal)
+	SetLevel(LevelError)
+	SetLevel(LevelWarn)
+	SetLevel(LevelInfo)
+	SetLevel(LevelDebug)
+	SetLevel(LevelTrace)
+}
+
+// -- GetLevel ----------------------------------------------------------------
+
+func TestGetLevel(test *testing.T) {
+
+	var level Level
+
+	level = LevelPanic
+	SetLevel(level)
+	assert.True(test, level == GetLevel(), "Panic")
+
+	level = LevelFatal
+	SetLevel(level)
+	assert.True(test, level == GetLevel(), "Fatal")
+
+	level = LevelError
+	SetLevel(level)
+	assert.True(test, level == GetLevel(), "Error")
+
+	level = LevelWarn
+	SetLevel(level)
+	assert.True(test, level == GetLevel(), "Warn")
+
+	level = LevelInfo
+	SetLevel(level)
+	assert.True(test, level == GetLevel(), "Info")
+
+	level = LevelDebug
+	SetLevel(level)
+	assert.True(test, level == GetLevel(), "Debug")
+
+	level = LevelTrace
+	SetLevel(level)
+	assert.True(test, level == GetLevel(), "Trace")
+
 }
 
 // -- IsPanic -----------------------------------------------------------------

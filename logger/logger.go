@@ -36,11 +36,12 @@ func (logger *Logger) printf(debugLevelName string, format string, v ...interfac
 }
 
 // ----------------------------------------------------------------------------
-// Public Setters
+// Public Setters and Getters
 // ----------------------------------------------------------------------------
 
 func SetLevel(level Level) *Logger { return logger.SetLevel(level) }
 func (logger *Logger) SetLevel(level Level) *Logger {
+	logger.level = level
 	logger.isPanic = level <= LevelPanic
 	logger.isFatal = level <= LevelFatal
 	logger.isError = level <= LevelError
@@ -49,6 +50,11 @@ func (logger *Logger) SetLevel(level Level) *Logger {
 	logger.isDebug = level <= LevelDebug
 	logger.isTrace = level <= LevelTrace
 	return logger
+}
+
+func GetLevel() Level { return logger.GetLevel() }
+func (logger *Logger) GetLevel() Level {
+	return logger.level
 }
 
 func New() *Logger {

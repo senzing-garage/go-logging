@@ -13,6 +13,7 @@ package logger
 type Level int
 
 type Logger struct {
+	level   Level
 	isDebug bool
 	isError bool
 	isFatal bool

@@ -18,6 +18,8 @@ type MessageBuilder struct{}
 
 var messagebuilder *MessageBuilder
 
+// Important:  The number listed is one more than the highest number for the MessageLevel.
+// For instance:  0-999 is info;  1000-1999 is warning; 2000-2999 is error.
 var MessageLevelMap = map[int]string{
 	1000:  "info",
 	2000:  "warning",

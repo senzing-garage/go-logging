@@ -21,7 +21,7 @@ func TestLogMessage(test *testing.T) {
 
 func TestLogMessageFromError(test *testing.T) {
 	anError := errors.New("This is a new error")
-	LogMessageFromError(MessageIdFormat, 2002, "Test message", anError, "Variable1", "Variable2")
+	LogMessageFromError(MessageIdFormat, 2001, "Test message", anError, "Variable1", "Variable2")
 }
 
 // -- LogMessageFromErrorUsingMap ---------------------------------------------
@@ -50,5 +50,5 @@ func TestLogMessageUsingMap(test *testing.T) {
 		"JSON":           jsonData,
 	}
 
-	LogMessageUsingMap(MessageIdFormat, 2000, "Test message", detailsMap)
+	LogMessageUsingMap(MessageIdFormat, 2003, "Test message", detailsMap)
 }

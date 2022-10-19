@@ -47,7 +47,7 @@ func main() {
 
 	// Log a message.
 
-	messagelogger.LogMessage(MessageIdFormat, 2000, "Test message 1", programName, buildVersion, buildIteration)
+	messagelogger.LogMessage(MessageIdFormat, 999, "Test INFO message 1", programName, buildVersion, buildIteration)
 
 	// Log a message using a map.
 
@@ -55,12 +55,22 @@ func main() {
 		"FirstVariable":  "First value",
 		"SecondVariable": "Second value",
 	}
-	messagelogger.LogMessageUsingMap(MessageIdFormat, 2001, "Test message 2", detailsMap)
+	messagelogger.LogMessageUsingMap(MessageIdFormat, 1000, "Test WARN message 2", detailsMap)
 
 	// Log an error based on a prior error.
 
 	anError := errors.New("this is a new error")
-	messagelogger.LogMessageFromError(MessageIdFormat, 2002, "Test message 3", anError, "Variable1", "Variable2")
+	messagelogger.LogMessageFromError(MessageIdFormat, 2000, "Test ERROR message 3", anError, "Variable1", "Variable2")
+
+	// Won't print because of logging level.
+
+	messagelogger.LogMessageFromErrorUsingMap(MessageIdFormat, 3000, "Test DEBUG message 4", anError, detailsMap)
+
+	// Change logging level and try again. Then restore logging level
+
+	messagelogger.SetLevel(messagelogger.LevelDebug)
+	messagelogger.LogMessageFromErrorUsingMap(MessageIdFormat, 3000, "Test DEBUG message 5", anError, detailsMap)
+	messagelogger.SetLevel(messagelogger.LevelInfo)
 
 	// ------------------------------------------------------------------------
 	// The following demonstrates the low-level logger calls for

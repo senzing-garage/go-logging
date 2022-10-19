@@ -5,8 +5,32 @@ import (
 	"fmt"
 	"testing"
 
+	truncator "github.com/aquilax/truncate"
 	"github.com/stretchr/testify/assert"
 )
+
+const (
+	EnablePrinting = 1
+	TruncateLength = 300
+)
+
+// ----------------------------------------------------------------------------
+// Internal functions - names begin with lowercase letter
+// ----------------------------------------------------------------------------
+
+func truncate(aString string) string {
+	return truncator.Truncate(aString, TruncateLength, "...", truncator.PositionEnd)
+}
+
+func printResult(test *testing.T, title string, result interface{}) {
+	if EnablePrinting == 1 {
+		test.Logf("%s: %v", title, truncate(fmt.Sprintf("%v", result)))
+	}
+}
+
+func printActual(test *testing.T, actual interface{}) {
+	printResult(test, "Actual", actual)
+}
 
 // ----------------------------------------------------------------------------
 // Test interface functions - names begin with "Test"
@@ -16,46 +40,46 @@ import (
 
 func TestBuildMessage(test *testing.T) {
 	actual := BuildMessage("A", "B", "C", "D")
-	fmt.Println(actual)
+	printActual(test, actual)
 	assert.NotEmpty(test, actual)
 }
 
 func TestBuildMessageNoId(test *testing.T) {
 	actual := BuildMessage("", "B", "C", "D")
-	fmt.Println(actual)
+	printActual(test, actual)
 	assert.NotEmpty(test, actual)
 }
 
 func TestBuildMessageNoDetails(test *testing.T) {
 	actual := BuildMessage("A", "B", "C")
-	fmt.Println(actual)
+	printActual(test, actual)
 }
 
 func TestBuildMessageNoMessage(test *testing.T) {
 	actual := BuildMessage("A", "B", "")
-	fmt.Println(actual)
+	printActual(test, actual)
 }
 
 func TestBuildMessageNoLevel(test *testing.T) {
 	actual := BuildMessage("A", "", "")
-	fmt.Println(actual)
+	printActual(test, actual)
 }
 
 func TestBuildMessageWithNonStrings(test *testing.T) {
 	myError := errors.New("Bob's error")
 	actual := BuildMessage("A", "myLevel", "myText", "aString", 1, 2.3, myError)
-	fmt.Println(actual)
+	printActual(test, actual)
 }
 
 func TestBuildMessageWithTest(test *testing.T) {
 	actual := BuildMessage("A", "myLevel", "myText", test)
-	fmt.Println(actual)
+	printActual(test, actual)
 }
 
 func TestBuildMessageWithJsonText(test *testing.T) {
 	jsonText := `{"SOCIAL_HANDLE": "flavorh", "DATE_OF_BIRTH": "4/8/1983", "ADDR_STATE": "LA"}`
 	actual := BuildMessage("A", "myLevel", jsonText, test)
-	fmt.Println(actual)
+	printActual(test, actual)
 }
 
 // -- BuildMessageFromError ---------------------------------------------------
@@ -71,7 +95,7 @@ func TestBuildMessageFromError(test *testing.T) {
 	errorMessage3 := BuildMessageFromError("I", "J", "K", error2, "L")
 	actual := errors.New(errorMessage3)
 
-	fmt.Println(actual)
+	printActual(test, actual)
 	assert.NotEmpty(test, actual)
 }
 
@@ -80,7 +104,7 @@ func TestBuildMessageFromErrorWithSimpleMessage(test *testing.T) {
 	error1 := errors.New("Simple error")
 
 	actual := BuildMessageFromError("A", "B", "C", error1, "D")
-	fmt.Println(actual)
+	printActual(test, actual)
 	assert.NotEmpty(test, actual)
 }
 
@@ -97,7 +121,7 @@ func TestBuildMessageFromErrorUsingMap(test *testing.T) {
 		"TestClass":      test,
 	}
 	actual := BuildMessageFromErrorUsingMap("A", "B", "C", err, detailsMap)
-	fmt.Println(actual)
+	printActual(test, actual)
 }
 
 // -- BuildMessageUsingMap ----------------------------------------------------
@@ -109,7 +133,7 @@ func TestBuildMessageUsingMap(test *testing.T) {
 		"TestClass":      test,
 	}
 	actual := BuildMessageUsingMap("A", "B", "C", detailsMap)
-	fmt.Println(actual)
+	printActual(test, actual)
 }
 
 func TestBuildMessageUsingMapWithJson(test *testing.T) {
@@ -121,7 +145,7 @@ func TestBuildMessageUsingMapWithJson(test *testing.T) {
 		"JSON":           jsonData,
 	}
 	actual := BuildMessageUsingMap("A", "B", "C", detailsMap)
-	fmt.Println(actual)
+	printActual(test, actual)
 }
 
 // -- ParseMessage ------------------------------------------------------------
@@ -130,7 +154,7 @@ func TestParseMessage(test *testing.T) {
 	message := BuildMessage("A", "B", "C", "D")
 	parsedMessage := ParseMessage(message)
 
-	fmt.Println(parsedMessage.Level)
+	printResult(test, "Level", parsedMessage.Level)
 }
 
 func TestParseMessageUsingMap(test *testing.T) {
@@ -145,5 +169,5 @@ func TestParseMessageUsingMap(test *testing.T) {
 		fmt.Printf("Error: %t", ok)
 	}
 
-	fmt.Println(details["FirstVariable"])
+	printResult(test, "First Variable", details["FirstVariable"])
 }

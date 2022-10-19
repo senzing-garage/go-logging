@@ -142,6 +142,7 @@ func (messagebuilder *MessageBuilder) BuildMessageLevel(errorNumber int, message
 
 	for _, messageLevelKey := range messageLevelKeys {
 		if errorNumber < messageLevelKey {
+
 			result = MessageLevelMap[messageLevelKey]
 			break
 		}
