@@ -12,32 +12,10 @@ import (
 // Test interface functions - names begin with "Test"
 // ----------------------------------------------------------------------------
 
+// -- BuildMessage ------------------------------------------------------------
+
 func TestBuildMessage(test *testing.T) {
 	actual := BuildMessage("A", "B", "C", "D")
-	fmt.Println(actual)
-	assert.NotEmpty(test, actual)
-}
-
-func TestBuildMessageFromError(test *testing.T) {
-
-	errorMessage1 := BuildMessage("A", "B", "C", "D")
-	error1 := errors.New(errorMessage1)
-
-	errorMessage2 := BuildMessageFromError("E", "F", "G", error1, "H")
-	error2 := errors.New(errorMessage2)
-
-	errorMessage3 := BuildMessageFromError("I", "J", "K", error2, "L")
-	actual := errors.New(errorMessage3)
-
-	fmt.Println(actual)
-	assert.NotEmpty(test, actual)
-}
-
-func TestBuildMessageFromErrorWithSimpleMessage(test *testing.T) {
-
-	error1 := errors.New("Simple error")
-
-	actual := BuildMessageFromError("A", "B", "C", error1, "D")
 	fmt.Println(actual)
 	assert.NotEmpty(test, actual)
 }
@@ -80,6 +58,50 @@ func TestBuildMessageWithJsonText(test *testing.T) {
 	fmt.Println(actual)
 }
 
+// -- BuildMessageFromError ---------------------------------------------------
+
+func TestBuildMessageFromError(test *testing.T) {
+
+	errorMessage1 := BuildMessage("A", "B", "C", "D")
+	error1 := errors.New(errorMessage1)
+
+	errorMessage2 := BuildMessageFromError("E", "F", "G", error1, "H")
+	error2 := errors.New(errorMessage2)
+
+	errorMessage3 := BuildMessageFromError("I", "J", "K", error2, "L")
+	actual := errors.New(errorMessage3)
+
+	fmt.Println(actual)
+	assert.NotEmpty(test, actual)
+}
+
+func TestBuildMessageFromErrorWithSimpleMessage(test *testing.T) {
+
+	error1 := errors.New("Simple error")
+
+	actual := BuildMessageFromError("A", "B", "C", error1, "D")
+	fmt.Println(actual)
+	assert.NotEmpty(test, actual)
+}
+
+// -- BuildMessageFromErrorUsingMap -------------------------------------------
+
+func TestBuildMessageFromErrorUsingMap(test *testing.T) {
+
+	errorMessage := BuildMessage("A", "B", "C", "D")
+	err := errors.New(errorMessage)
+
+	detailsMap := map[string]interface{}{
+		"FirstVariable":  "First value",
+		"SecondVariable": "Second value",
+		"TestClass":      test,
+	}
+	actual := BuildMessageFromErrorUsingMap("A", "B", "C", err, detailsMap)
+	fmt.Println(actual)
+}
+
+// -- BuildMessageUsingMap ----------------------------------------------------
+
 func TestBuildMessageUsingMap(test *testing.T) {
 	detailsMap := map[string]interface{}{
 		"FirstVariable":  "First value",
@@ -101,6 +123,8 @@ func TestBuildMessageUsingMapWithJson(test *testing.T) {
 	actual := BuildMessageUsingMap("A", "B", "C", detailsMap)
 	fmt.Println(actual)
 }
+
+// -- ParseMessage ------------------------------------------------------------
 
 func TestParseMessage(test *testing.T) {
 	message := BuildMessage("A", "B", "C", "D")
