@@ -53,6 +53,7 @@ type LoggerInterface interface {
 	Fatal(v ...interface{}) LoggerInterface
 	Fatalf(format string, v ...interface{}) LoggerInterface
 	GetLevel() Level
+	GetLevelAsString() string
 	Info(v ...interface{}) LoggerInterface
 	Infof(format string, v ...interface{}) LoggerInterface
 	IsDebug() bool
@@ -65,8 +66,33 @@ type LoggerInterface interface {
 	Panic(v ...interface{}) LoggerInterface
 	Panicf(format string, v ...interface{}) LoggerInterface
 	SetLevel(level Level) LoggerInterface
+	SetLevelFromString(levelString string) LoggerInterface
 	Trace(v ...interface{}) LoggerInterface
 	Tracef(format string, v ...interface{}) LoggerInterface
 	Warn(v ...interface{}) LoggerInterface
 	Warnf(format string, v ...interface{}) LoggerInterface
+}
+
+// ----------------------------------------------------------------------------
+// Variables
+// ----------------------------------------------------------------------------
+
+var levelToTextMap = map[Level]string{
+	LevelTrace: LevelTraceName,
+	LevelDebug: LevelDebugName,
+	LevelInfo:  LevelInfoName,
+	LevelWarn:  LevelWarnName,
+	LevelError: LevelErrorName,
+	LevelFatal: LevelFatalName,
+	LevelPanic: LevelPanicName,
+}
+
+var textToLevelMap = map[string]Level{
+	LevelTraceName: LevelTrace,
+	LevelDebugName: LevelDebug,
+	LevelInfoName:  LevelInfo,
+	LevelWarnName:  LevelWarn,
+	LevelErrorName: LevelError,
+	LevelFatalName: LevelFatal,
+	LevelPanicName: LevelPanic,
 }

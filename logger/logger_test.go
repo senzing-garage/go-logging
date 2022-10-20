@@ -7,11 +7,6 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-const (
-	EnablePrinting = 1
-	TruncateLength = 300
-)
-
 // ----------------------------------------------------------------------------
 // Test interface functions - names begin with "Test"
 // ----------------------------------------------------------------------------
@@ -35,6 +30,46 @@ func TestSetLevel(test *testing.T) {
 	SetLevel(LevelInfo)
 	SetLevel(LevelDebug)
 	SetLevel(LevelTrace)
+}
+
+// -- SetLevelFromString ------------------------------------------------------
+
+func TestSetLevelFromString(test *testing.T) {
+
+	var levelString string
+
+	levelString = "PANIC"
+	SetLevelFromString(levelString)
+	assert.True(test, LevelPanic == GetLevel(), "Panic")
+
+	levelString = "fatal"
+	SetLevelFromString(levelString)
+	assert.True(test, LevelFatal == GetLevel(), "Fatal")
+
+	levelString = "ErRoR"
+	SetLevelFromString(levelString)
+	assert.True(test, LevelError == GetLevel(), "Error")
+
+	levelString = "waRN"
+	SetLevelFromString(levelString)
+	assert.True(test, LevelWarn == GetLevel(), "Warn")
+
+	levelString = "INFO"
+	SetLevelFromString(levelString)
+	assert.True(test, LevelInfo == GetLevel(), "Info")
+
+	levelString = "DEBUG"
+	SetLevelFromString(levelString)
+	assert.True(test, LevelDebug == GetLevel(), "Debug")
+
+	levelString = "TRACE"
+	SetLevelFromString(levelString)
+	assert.True(test, LevelTrace == GetLevel(), "Trace")
+
+	levelString = "Bad-Level-String"
+	SetLevelFromString(levelString)
+	assert.True(test, LevelPanic == GetLevel(), "Unknown string returns Panic")
+
 }
 
 // -- GetLevel ----------------------------------------------------------------
@@ -70,6 +105,42 @@ func TestGetLevel(test *testing.T) {
 	level = LevelTrace
 	SetLevel(level)
 	assert.True(test, level == GetLevel(), "Trace")
+
+}
+
+// -- GetLevelAsString --------------------------------------------------------
+
+func TestGetLevelAsString(test *testing.T) {
+
+	var level Level
+
+	level = LevelPanic
+	SetLevel(level)
+	assert.True(test, GetLevelAsString() == "PANIC", "Panic")
+
+	level = LevelFatal
+	SetLevel(level)
+	assert.True(test, GetLevelAsString() == "FATAL", "Fatal")
+
+	level = LevelError
+	SetLevel(level)
+	assert.True(test, GetLevelAsString() == "ERROR", "Error")
+
+	level = LevelWarn
+	SetLevel(level)
+	assert.True(test, GetLevelAsString() == "WARN", "Warn")
+
+	level = LevelInfo
+	SetLevel(level)
+	assert.True(test, GetLevelAsString() == "INFO", "Info")
+
+	level = LevelDebug
+	SetLevel(level)
+	assert.True(test, GetLevelAsString() == "DEBUG", "Debug")
+
+	level = LevelTrace
+	SetLevel(level)
+	assert.True(test, GetLevelAsString() == "TRACE", "Trace")
 
 }
 

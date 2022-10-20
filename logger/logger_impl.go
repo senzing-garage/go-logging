@@ -6,6 +6,7 @@ package logger
 import (
 	"fmt"
 	"log"
+	"strings"
 )
 
 // ----------------------------------------------------------------------------
@@ -68,6 +69,8 @@ func (logger *LoggerImpl) printf(debugLevelName string, format string, v ...inte
 // Public Setters and Getters
 // ----------------------------------------------------------------------------
 
+// --- Level ------------------------------------------------------------------
+
 func SetLevel(level Level) LoggerInterface { return loggerInstance.SetLevel(level) }
 func (logger *LoggerImpl) SetLevel(level Level) LoggerInterface {
 	logger.level = level
@@ -81,9 +84,27 @@ func (logger *LoggerImpl) SetLevel(level Level) LoggerInterface {
 	return logger
 }
 
+func SetLevelFromString(levelString string) LoggerInterface {
+	return loggerInstance.SetLevelFromString(levelString)
+}
+func (logger *LoggerImpl) SetLevelFromString(levelString string) LoggerInterface {
+	upperLevelString := strings.ToUpper(levelString)
+	level, ok := textToLevelMap[upperLevelString]
+	if !ok {
+		level = LevelPanic
+	}
+	logger.SetLevel(level)
+	return logger
+}
+
 func GetLevel() Level { return loggerInstance.GetLevel() }
 func (logger *LoggerImpl) GetLevel() Level {
 	return logger.level
+}
+
+func GetLevelAsString() string { return loggerInstance.GetLevelAsString() }
+func (logger *LoggerImpl) GetLevelAsString() string {
+	return levelToTextMap[logger.level]
 }
 
 // ----------------------------------------------------------------------------

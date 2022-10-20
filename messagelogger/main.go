@@ -12,10 +12,6 @@ package messagelogger
 
 type Level int
 
-type MessageLoggerImpl struct {
-	level Level
-}
-
 // ----------------------------------------------------------------------------
 // Constants
 // ----------------------------------------------------------------------------
@@ -38,16 +34,6 @@ const (
 
 type MessageLoggerInterface interface {
 	GetLevel() Level
-	LogBasedOnLevel(messageLevel string, messageJson string)
-	LogMessage(idTemplate string, errorNumber int, message string, details ...interface{}) error
-	LogMessageFromError(idTemplate string, errorNumber int, message string, anError error, details ...interface{}) error
-	LogMessageFromErrorUsingMap(idTemplate string, errorNumber int, message string, anError error, details map[string]interface{}) error
-	LogMessageUsingMap(idTemplate string, errorNumber int, message string, details map[string]interface{}) error
+	Log(errorNumber int, details ...interface{}) error
 	SetLevel(level Level) MessageLoggerInterface
 }
-
-// ----------------------------------------------------------------------------
-// Variables
-// ----------------------------------------------------------------------------
-
-var messageLoggerInstance *MessageLoggerImpl

@@ -9,12 +9,20 @@ import (
 )
 
 // ----------------------------------------------------------------------------
-// Internal functions
+// Types
 // ----------------------------------------------------------------------------
 
-func init() {
-	messageLoggerInstance = New()
+type MessageLoggerImpl struct {
+	idTemplate string
+	level      Level
+	messages   map[int]string
 }
+
+// ----------------------------------------------------------------------------
+// Variables
+// ----------------------------------------------------------------------------
+
+var messageLoggerInstance *MessageLoggerImpl
 
 // ----------------------------------------------------------------------------
 // Constructors
@@ -25,8 +33,33 @@ func New() *MessageLoggerImpl {
 }
 
 // ----------------------------------------------------------------------------
+// Internal functions
+// ----------------------------------------------------------------------------
+
+func init() {
+	messageLoggerInstance = New()
+}
+
+// ----------------------------------------------------------------------------
 // Public Setters and Getters
 // ----------------------------------------------------------------------------
+
+// --- IdTemplate -------------------------------------------------------------
+
+func SetIdTemplate(idTemplate string) MessageLoggerInterface {
+	return messageLoggerInstance.SetIdTemplate(idTemplate)
+}
+func (messagelogger *MessageLoggerImpl) SetIdTemplate(idTemplate string) MessageLoggerInterface {
+	messagelogger.idTemplate = idTemplate
+	return messagelogger
+}
+
+func GetIdTemplate() string { return messageLoggerInstance.GetIdTemplate() }
+func (messagelogger *MessageLoggerImpl) GetIdTemplate() string {
+	return messagelogger.idTemplate
+}
+
+// --- Level ------------------------------------------------------------------
 
 func SetLevel(level Level) MessageLoggerInterface { return messageLoggerInstance.SetLevel(level) }
 func (messagelogger *MessageLoggerImpl) SetLevel(level Level) MessageLoggerInterface {
@@ -37,6 +70,21 @@ func (messagelogger *MessageLoggerImpl) SetLevel(level Level) MessageLoggerInter
 func GetLevel() Level { return messageLoggerInstance.GetLevel() }
 func (messagelogger *MessageLoggerImpl) GetLevel() Level {
 	return messagelogger.level
+}
+
+// --- Messages ---------------------------------------------------------------
+
+func SetMessages(messages map[int]string) MessageLoggerInterface {
+	return messageLoggerInstance.SetMessages(messages)
+}
+func (messagelogger *MessageLoggerImpl) SetMessages(messages map[int]string) {
+	messagelogger.messages = messages
+	return messagelogger
+}
+
+func GetMessages() map[int]string { return messageLoggerInstance.GetMessages() }
+func (messagelogger *MessageLoggerImpl) GetMessages() map[int]string {
+	return messagelogger.messages
 }
 
 // ----------------------------------------------------------------------------
