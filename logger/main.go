@@ -12,17 +12,6 @@ package logger
 
 type Level int
 
-type LoggerImpl struct {
-	level   Level
-	isDebug bool
-	isError bool
-	isFatal bool
-	isInfo  bool
-	isPanic bool
-	isTrace bool
-	isWarn  bool
-}
-
 // ----------------------------------------------------------------------------
 // Constants
 // ----------------------------------------------------------------------------
@@ -81,9 +70,3 @@ type LoggerInterface interface {
 	Warn(v ...interface{}) LoggerInterface
 	Warnf(format string, v ...interface{}) LoggerInterface
 }
-
-// ----------------------------------------------------------------------------
-// Variables
-// ----------------------------------------------------------------------------
-
-var loggerInstance *LoggerImpl

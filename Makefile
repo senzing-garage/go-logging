@@ -62,9 +62,9 @@ build: dependencies \
 
 .PHONY: test
 test:
-	@go test -v ./...
+#	@go test -v ./...
 #	@go test -v ./.
-#	@go test -v ./logger
+	@go test -v ./logger
 #	@go test -v ./messaeformat
 #	@go test -v ./messagebuilder
 #	@go test -v ./messagelogger

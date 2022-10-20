@@ -9,12 +9,25 @@ import (
 )
 
 // ----------------------------------------------------------------------------
-// Internal functions
+// Types
 // ----------------------------------------------------------------------------
 
-func init() {
-	loggerInstance = New()
+type LoggerImpl struct {
+	level   Level
+	isDebug bool
+	isError bool
+	isFatal bool
+	isInfo  bool
+	isPanic bool
+	isTrace bool
+	isWarn  bool
 }
+
+// ----------------------------------------------------------------------------
+// Variables
+// ----------------------------------------------------------------------------
+
+var loggerInstance *LoggerImpl
 
 // ----------------------------------------------------------------------------
 // Constructors
@@ -22,6 +35,14 @@ func init() {
 
 func New() *LoggerImpl {
 	return new(LoggerImpl)
+}
+
+// ----------------------------------------------------------------------------
+// Internal functions
+// ----------------------------------------------------------------------------
+
+func init() {
+	loggerInstance = New()
 }
 
 // ----------------------------------------------------------------------------
@@ -68,6 +89,8 @@ func (logger *LoggerImpl) GetLevel() Level {
 // ----------------------------------------------------------------------------
 // Instance functions
 // ----------------------------------------------------------------------------
+
+// --- IsXxxxx ----------------------------------------------------------------
 
 func IsDebug() bool { return loggerInstance.IsDebug() }
 func IsError() bool { return loggerInstance.IsError() }
