@@ -52,8 +52,8 @@ type LoggerInterface interface {
 	Errorf(format string, v ...interface{}) LoggerInterface
 	Fatal(v ...interface{}) LoggerInterface
 	Fatalf(format string, v ...interface{}) LoggerInterface
-	GetLevel() Level
-	GetLevelAsString() string
+	GetLogLevel() Level
+	GetLogLevelAsString() string
 	Info(v ...interface{}) LoggerInterface
 	Infof(format string, v ...interface{}) LoggerInterface
 	IsDebug() bool
@@ -65,8 +65,8 @@ type LoggerInterface interface {
 	IsWarn() bool
 	Panic(v ...interface{}) LoggerInterface
 	Panicf(format string, v ...interface{}) LoggerInterface
-	SetLevel(level Level) LoggerInterface
-	SetLevelFromString(levelString string) LoggerInterface
+	SetLogLevel(level Level) LoggerInterface
+	SetLogLevelFromString(levelString string) LoggerInterface
 	Trace(v ...interface{}) LoggerInterface
 	Tracef(format string, v ...interface{}) LoggerInterface
 	Warn(v ...interface{}) LoggerInterface

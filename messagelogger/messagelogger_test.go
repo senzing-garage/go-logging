@@ -1,5 +1,7 @@
 package messagelogger
 
+import "testing"
+
 // const MessageIdFormat = "senzing-9999%04d"
 
 // ----------------------------------------------------------------------------
@@ -8,9 +10,9 @@ package messagelogger
 
 // -- LogMessage --------------------------------------------------------------
 
-// func TestLogMessage(test *testing.T) {
-// 	LogMessage(MessageIdFormat, 2000, "Test message", "Variable1", "Variable2")
-// }
+func TestLogMessage(test *testing.T) {
+	Log(2000, "Test message", "Variable1", "Variable2")
+}
 
 // -- LogMessageFromError -----------------------------------------------------
 

@@ -5,14 +5,16 @@ import (
 	"time"
 
 	"github.com/senzing/go-logging/logger"
+	"github.com/senzing/go-logging/messageformat"
+	"github.com/senzing/go-logging/messagelevel"
 	"github.com/senzing/go-logging/messagelogger"
 )
 
 // Values updated via "go install -ldflags" parameters.
 
-// var programName string = "unknown"
-// var buildVersion string = "0.0.0"
-// var buildIteration string = "0"
+var programName string = "unknown"
+var buildVersion string = "0.0.0"
+var buildIteration string = "0"
 
 const MessageIdFormat = "senzing-9999%04d"
 
@@ -37,12 +39,43 @@ func main() {
 
 	// Configure the logger. If not configured, no functions will print.
 
-	messagelogger.SetLevel(messagelogger.LevelInfo)
+	// messagelogger.SetLevel(messagelogger.LevelInfo)
 
 	// ------------------------------------------------------------------------
 	// The following demonstrates the high-level messagelogger calls for
 	// LogMessage, LogMessageUsingMap, and LogMessageFromError.
 	// ------------------------------------------------------------------------
+
+	// --- Simple case with default MessageFormat, no Messages, no MessageLevel
+
+	messagelogger.Log(1, "Default: Test INFO message 1", programName, buildVersion, buildIteration)
+
+	// --- Simple case with
+
+	var messages_2 = map[int]string{
+		1: "message-1",
+		2: "Program name: %s; Build version %s; Build iterations %s;",
+		3: "message-3",
+	}
+	messagelogger.SetMessages(messages_2)
+
+	messagelogger.Log(2, programName, buildVersion, buildIteration)
+
+	// ------------------------------------------------------------------------
+	// Test a constructed logger.
+	// ------------------------------------------------------------------------
+
+	terseMessageLogger := &messagelogger.MessageLoggerImpl{
+		IdTemplate:    "test-%d",
+		Messages:      messages_2,
+		MessageFormat: &messageformat.MessageFormatTerse{},
+		MessageLevel:  &messagelevel.MessageLevelSenzingApi{},
+	}
+
+	terseMessageLogger.SetLogger(&logger.LoggerImpl{})
+	terseMessageLogger.SetLogLevel(messagelogger.LevelDebug)
+
+	terseMessageLogger.Log(3, "Terse: Test INFO message 1", programName, buildVersion, buildIteration)
 
 	// Log a message.
 

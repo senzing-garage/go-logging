@@ -69,10 +69,10 @@ func (logger *LoggerImpl) printf(debugLevelName string, format string, v ...inte
 // Public Setters and Getters
 // ----------------------------------------------------------------------------
 
-// --- Level ------------------------------------------------------------------
+// --- LogLevel ---------------------------------------------------------------
 
-func SetLevel(level Level) LoggerInterface { return loggerInstance.SetLevel(level) }
-func (logger *LoggerImpl) SetLevel(level Level) LoggerInterface {
+func SetLogLevel(level Level) LoggerInterface { return loggerInstance.SetLogLevel(level) }
+func (logger *LoggerImpl) SetLogLevel(level Level) LoggerInterface {
 	logger.level = level
 	logger.isPanic = level <= LevelPanic
 	logger.isFatal = level <= LevelFatal
@@ -84,26 +84,26 @@ func (logger *LoggerImpl) SetLevel(level Level) LoggerInterface {
 	return logger
 }
 
-func SetLevelFromString(levelString string) LoggerInterface {
-	return loggerInstance.SetLevelFromString(levelString)
+func SetLogLevelFromString(levelString string) LoggerInterface {
+	return loggerInstance.SetLogLevelFromString(levelString)
 }
-func (logger *LoggerImpl) SetLevelFromString(levelString string) LoggerInterface {
+func (logger *LoggerImpl) SetLogLevelFromString(levelString string) LoggerInterface {
 	upperLevelString := strings.ToUpper(levelString)
 	level, ok := textToLevelMap[upperLevelString]
 	if !ok {
 		level = LevelPanic
 	}
-	logger.SetLevel(level)
+	logger.SetLogLevel(level)
 	return logger
 }
 
-func GetLevel() Level { return loggerInstance.GetLevel() }
-func (logger *LoggerImpl) GetLevel() Level {
+func GetLogLevel() Level { return loggerInstance.GetLogLevel() }
+func (logger *LoggerImpl) GetLogLevel() Level {
 	return logger.level
 }
 
-func GetLevelAsString() string { return loggerInstance.GetLevelAsString() }
-func (logger *LoggerImpl) GetLevelAsString() string {
+func GetLogLevelAsString() string { return loggerInstance.GetLogLevelAsString() }
+func (logger *LoggerImpl) GetLogLevelAsString() string {
 	return levelToTextMap[logger.level]
 }
 
