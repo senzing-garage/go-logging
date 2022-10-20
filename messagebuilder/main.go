@@ -13,8 +13,6 @@ package messagebuilder
 type MessageBuilderInterface interface {
 	BuildError(idTemplate string, errorNumber int, message string, details ...interface{}) error
 	BuildMessage(idTemplate string, errorNumber int, message string, details ...interface{}) string
-	BuildMessageFromError(idTemplate string, errorNumber int, message string, anError error, details ...interface{}) string
-	BuildMessageFromErrorUsingMap(idTemplate string, errorNumber int, message string, anError error, details map[string]interface{}) string
 	BuildMessageUsingMap(idTemplate string, errorNumber int, message string, details map[string]interface{}) string
 	BuildMessageId(idTemplate string, errorNumber int) string
 	BuildMessageLevel(errorNumber int, message string) string

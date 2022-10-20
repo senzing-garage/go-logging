@@ -2,18 +2,10 @@
 package messageformat
 
 // ----------------------------------------------------------------------------
-// Types
+// Interfaces
 // ----------------------------------------------------------------------------
 
-type Detail struct {
-	Key   string `json:"key"`
-	Value string `json:"value"`
-}
-
-type MessageFormat struct {
-	Id      string      `json:"id,omitempty"`
-	Level   string      `json:"level,omitempty"`
-	Text    interface{} `json:"text,omitempty"`
-	Details interface{} `json:"details,omitempty"`
-	Error   interface{} `json:"error,omitempty"`
+type MessageFormatInterface interface {
+	BuildError(id string, status string, text string, details ...interface{}) error
+	BuildMessage(id string, status string, text string, details ...interface{}) string
 }

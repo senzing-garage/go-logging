@@ -4,8 +4,11 @@ Package helper ...
 package messagelogger
 
 import (
+	"fmt"
+
 	"github.com/senzing/go-logging/logger"
-	"github.com/senzing/go-logging/messagebuilder"
+	"github.com/senzing/go-logging/messageformat"
+	"github.com/senzing/go-logging/messagelevel"
 )
 
 // ----------------------------------------------------------------------------
@@ -13,9 +16,11 @@ import (
 // ----------------------------------------------------------------------------
 
 type MessageLoggerImpl struct {
-	idTemplate string
-	level      Level
-	messages   map[int]string
+	idTemplate    string
+	messages      map[int]string
+	messageformat messageformat.MessageFormatInterface
+	messagelevel  messagelevel.MessageLevelInterface
+	logger        logger.LoggerInterface
 }
 
 // ----------------------------------------------------------------------------
@@ -29,7 +34,11 @@ var messageLoggerInstance *MessageLoggerImpl
 // ----------------------------------------------------------------------------
 
 func New() *MessageLoggerImpl {
-	return new(MessageLoggerImpl)
+	result := new(MessageLoggerImpl)
+	result.SetLevel(LevelWarn)
+	result.SetMessageFormat(&messageformat.MessageFormatJson{})
+	result.SetMessageLevel(&messagelevel.MessageLevelSenzingApi{})
+	return result
 }
 
 // ----------------------------------------------------------------------------
@@ -63,13 +72,28 @@ func (messagelogger *MessageLoggerImpl) GetIdTemplate() string {
 
 func SetLevel(level Level) MessageLoggerInterface { return messageLoggerInstance.SetLevel(level) }
 func (messagelogger *MessageLoggerImpl) SetLevel(level Level) MessageLoggerInterface {
-	logger.SetLevel(logger.Level(level))
+	messagelogger.logger.SetLevel(logger.Level(level))
 	return messagelogger
 }
 
 func GetLevel() Level { return messageLoggerInstance.GetLevel() }
 func (messagelogger *MessageLoggerImpl) GetLevel() Level {
-	return messagelogger.level
+	return Level(messagelogger.logger.GetLevel())
+}
+
+// --- LevelFromString --------------------------------------------------------
+
+func SetLevelFromString(levelString string) MessageLoggerInterface {
+	return messageLoggerInstance.SetLevelFromString(levelString)
+}
+func (messagelogger *MessageLoggerImpl) SetLevelFromString(levelString string) MessageLoggerInterface {
+	logger.SetLevelFromString(levelString)
+	return messagelogger
+}
+
+func GetLevelAsString() string { return messageLoggerInstance.GetLevelAsString() }
+func (messagelogger *MessageLoggerImpl) GetLevelAsString() string {
+	return (messagelogger.logger.GetLevelAsString())
 }
 
 // --- Messages ---------------------------------------------------------------
@@ -77,7 +101,7 @@ func (messagelogger *MessageLoggerImpl) GetLevel() Level {
 func SetMessages(messages map[int]string) MessageLoggerInterface {
 	return messageLoggerInstance.SetMessages(messages)
 }
-func (messagelogger *MessageLoggerImpl) SetMessages(messages map[int]string) {
+func (messagelogger *MessageLoggerImpl) SetMessages(messages map[int]string) MessageLoggerInterface {
 	messagelogger.messages = messages
 	return messagelogger
 }
@@ -87,98 +111,137 @@ func (messagelogger *MessageLoggerImpl) GetMessages() map[int]string {
 	return messagelogger.messages
 }
 
+// --- MessageFormat ----------------------------------------------------------
+
+func SetMessageLevel(messageLevel messagelevel.MessageLevelInterface) MessageLoggerInterface {
+	return messageLoggerInstance.SetMessageLevel(messageLevel)
+}
+func (messagelogger *MessageLoggerImpl) SetMessageLevel(messageLevel messagelevel.MessageLevelInterface) MessageLoggerInterface {
+	messagelogger.messagelevel = messageLevel
+	return messagelogger
+}
+
+// --- MessageFormat ----------------------------------------------------------
+
+func SetMessageFormat(messageFormat messageformat.MessageFormatInterface) MessageLoggerInterface {
+	return messageLoggerInstance.SetMessageFormat(messageFormat)
+}
+func (messagelogger *MessageLoggerImpl) SetMessageFormat(messageFormat messageformat.MessageFormatInterface) MessageLoggerInterface {
+	messagelogger.messageformat = messageFormat
+	return messagelogger
+}
+
 // ----------------------------------------------------------------------------
 // Instance functions
 // ----------------------------------------------------------------------------
 
+// TODO:
+func Log(errorNumber int, details ...interface{}) error {
+	return messageLoggerInstance.Log(errorNumber, details...)
+}
+
 // Write log record based on message level function.
-func LogBasedOnLevel(messageLevel string, messageJson string) {
-	messageLoggerInstance.LogBasedOnLevel(messageLevel, messageJson)
+func LogBasedOnLevel(level Level, messageBody string) {
+	messageLoggerInstance.LogBasedOnLevel(level, messageBody)
 }
 
 // Inspect the error to see what the level is and log based on the level function.
-func LogMessage(idTemplate string, errorNumber int, message string, details ...interface{}) error {
-	return messageLoggerInstance.LogMessage(idTemplate, errorNumber, message, details...)
-}
+// func LogMessage(idTemplate string, errorNumber int, message string, details ...interface{}) error {
+// 	return messageLoggerInstance.LogMessage(idTemplate, errorNumber, message, details...)
+// }
 
 // Inspect the error to see what the level is and log based on the level function.
-func LogMessageFromError(idTemplate string, errorNumber int, message string, err error, details ...interface{}) error {
-	return messageLoggerInstance.LogMessageFromError(idTemplate, errorNumber, message, err, details...)
-}
+// func LogMessageFromError(idTemplate string, errorNumber int, message string, err error, details ...interface{}) error {
+// 	return messageLoggerInstance.LogMessageFromError(idTemplate, errorNumber, message, err, details...)
+// }
 
 // Inspect the error to see what the level is and log based on the level function.
-func LogMessageFromErrorUsingMap(idTemplate string, errorNumber int, message string, err error, details map[string]interface{}) error {
-	return messageLoggerInstance.LogMessageFromErrorUsingMap(idTemplate, errorNumber, message, err, details)
-}
+// func LogMessageFromErrorUsingMap(idTemplate string, errorNumber int, message string, err error, details map[string]interface{}) error {
+// 	return messageLoggerInstance.LogMessageFromErrorUsingMap(idTemplate, errorNumber, message, err, details)
+// }
 
 // Inspect the error to see what the level is and log based on the level function.
-func LogMessageUsingMap(idTemplate string, errorNumber int, message string, details map[string]interface{}) error {
-	return messageLoggerInstance.LogMessageUsingMap(idTemplate, errorNumber, message, details)
-}
+// func LogMessageUsingMap(idTemplate string, errorNumber int, message string, details map[string]interface{}) error {
+// 	return messageLoggerInstance.LogMessageUsingMap(idTemplate, errorNumber, message, details)
+// }
 
 // ----------------------------------------------------------------------------
 // Interface methods
 // ----------------------------------------------------------------------------
 
 // Write log record based on message level method.
-func (messagelogger *MessageLoggerImpl) LogBasedOnLevel(messageLevel string, messageJson string) {
-	switch messageLevel {
-	case "info":
-		logger.Info(messageJson)
-	case "warning":
-		logger.Warn(messageJson)
-	case "error":
-		logger.Error(messageJson)
-	case "debug":
-		logger.Debug(messageJson)
-	case "trace":
-		logger.Trace(messageJson)
-	case "retryable":
-		logger.Info(messageJson)
-	case "reserved":
-		logger.Info(messageJson)
-	case "fatal":
-		logger.Fatal(messageJson)
-	case "panic":
-		logger.Panic(messageJson)
+func (messagelogger *MessageLoggerImpl) LogBasedOnLevel(level Level, messageBody string) {
+	switch level {
+	case Level(logger.LevelInfo):
+		logger.Info(messageBody)
+	case Level(logger.LevelWarn):
+		logger.Warn(messageBody)
+	case Level(logger.LevelError):
+		logger.Error(messageBody)
+	case Level(logger.LevelDebug):
+		logger.Debug(messageBody)
+	case Level(logger.LevelTrace):
+		logger.Trace(messageBody)
+	case Level(logger.LevelFatal):
+		logger.Fatal(messageBody)
+	case Level(logger.LevelPanic):
+		logger.Panic(messageBody)
 	default:
-		logger.Info(messageJson)
+		logger.Info(messageBody)
 	}
 }
 
 // Inspect the error to see what the level is and log based on the level method.
-func (messagelogger *MessageLoggerImpl) LogMessage(idTemplate string, errorNumber int, message string, details ...interface{}) error {
+func (messagelogger *MessageLoggerImpl) Log(errorNumber int, details ...interface{}) error {
 	var err error = nil
-	messageLevel := messagebuilder.BuildMessageLevel(errorNumber, message)
-	messageJson := messagebuilder.BuildMessage(idTemplate, errorNumber, message, details...)
-	messagelogger.LogBasedOnLevel(messageLevel, messageJson)
+
+	status := ""
+
+	text := ""
+	textTemplate, ok := messagelogger.messages[errorNumber]
+	if ok {
+		text = fmt.Sprintf(textTemplate, details...)
+	}
+
+	messageLevel, err := messagelogger.messagelevel.CalculateMessageLevel(errorNumber, text)
+	messageBody := messagelogger.messageformat.BuildMessage(messagelogger.idTemplate, status, text, details...)
+	messagelogger.LogBasedOnLevel(Level(messageLevel), messageBody)
 	return err
 }
 
 // Inspect the error to see what the level is and log based on the level method.
-func (messagelogger *MessageLoggerImpl) LogMessageFromError(idTemplate string, errorNumber int, message string, anError error, details ...interface{}) error {
-	var err error = nil
-	messageLevel := messagebuilder.BuildMessageLevel(errorNumber, message)
-	messageJson := messagebuilder.BuildMessageFromError(idTemplate, errorNumber, message, anError, details...)
-	messagelogger.LogBasedOnLevel(messageLevel, messageJson)
-	return err
-}
+// func (messagelogger *MessageLoggerImpl) LogMessage(idTemplate string, errorNumber int, message string, details ...interface{}) error {
+// 	var err error = nil
+// 	messageLevel := messagebuilder.BuildMessageLevel(errorNumber, message)
+// 	messageJson := messagebuilder.BuildMessage(idTemplate, errorNumber, message, details...)
+// 	messagelogger.LogBasedOnLevel(messageLevel, messageJson)
+// 	return err
+// }
 
 // Inspect the error to see what the level is and log based on the level method.
-func (messagelogger *MessageLoggerImpl) LogMessageFromErrorUsingMap(idTemplate string, errorNumber int, message string, anError error, details map[string]interface{}) error {
-	var err error = nil
-
-	messageLevel := messagebuilder.BuildMessageLevel(errorNumber, message)
-	messageJson := messagebuilder.BuildMessageFromErrorUsingMap(idTemplate, errorNumber, message, anError, details)
-	messagelogger.LogBasedOnLevel(messageLevel, messageJson)
-	return err
-}
+// func (messagelogger *MessageLoggerImpl) LogMessageFromError(idTemplate string, errorNumber int, message string, anError error, details ...interface{}) error {
+// 	var err error = nil
+// 	messageLevel := messagebuilder.BuildMessageLevel(errorNumber, message)
+// 	messageJson := messagebuilder.BuildMessageFromError(idTemplate, errorNumber, message, anError, details...)
+// 	messagelogger.LogBasedOnLevel(messageLevel, messageJson)
+// 	return err
+// }
 
 // Inspect the error to see what the level is and log based on the level method.
-func (messagelogger *MessageLoggerImpl) LogMessageUsingMap(idTemplate string, errorNumber int, message string, details map[string]interface{}) error {
-	var err error = nil
-	messageLevel := messagebuilder.BuildMessageLevel(errorNumber, message)
-	messageJson := messagebuilder.BuildMessageUsingMap(idTemplate, errorNumber, message, details)
-	messagelogger.LogBasedOnLevel(messageLevel, messageJson)
-	return err
-}
+// func (messagelogger *MessageLoggerImpl) LogMessageFromErrorUsingMap(idTemplate string, errorNumber int, message string, anError error, details map[string]interface{}) error {
+// 	var err error = nil
+
+// 	messageLevel := messagebuilder.BuildMessageLevel(errorNumber, message)
+// 	messageJson := messagebuilder.BuildMessageFromErrorUsingMap(idTemplate, errorNumber, message, anError, details)
+// 	messagelogger.LogBasedOnLevel(messageLevel, messageJson)
+// 	return err
+// }
+
+// Inspect the error to see what the level is and log based on the level method.
+// func (messagelogger *MessageLoggerImpl) LogMessageUsingMap(idTemplate string, errorNumber int, message string, details map[string]interface{}) error {
+// 	var err error = nil
+// 	messageLevel := messagebuilder.BuildMessageLevel(errorNumber, message)
+// 	messageJson := messagebuilder.BuildMessageUsingMap(idTemplate, errorNumber, message, details)
+// 	messagelogger.LogBasedOnLevel(messageLevel, messageJson)
+// 	return err
+// }

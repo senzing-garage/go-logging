@@ -31,14 +31,14 @@ const (
 )
 
 const (
-	LevelDebugName  = "DEBUG"
-	LevelErrorName  = "ERROR"
-	LevelFatalName  = "FATAL"
-	LevelInfoName   = "INFO"
-	LevelPanicName  = "PANIC"
-	LevelTraceName  = "TRACE"
-	LevelWarnName   = "WARN"
-	MessageIdFormat = "senzing-6511%04d"
+	LevelDebugName = "DEBUG"
+	LevelErrorName = "ERROR"
+	LevelFatalName = "FATAL"
+	LevelInfoName  = "INFO"
+	LevelPanicName = "PANIC"
+	LevelTraceName = "TRACE"
+	LevelWarnName  = "WARN"
+	// MessageIdFormat = "senzing-6511%04d"
 )
 
 // ----------------------------------------------------------------------------
