@@ -11,14 +11,14 @@ import (
 // Types
 // ----------------------------------------------------------------------------
 
-type MessageLevelSenzingApi struct{}
+type MessageLevelInfo struct{}
 
 // ----------------------------------------------------------------------------
 // Interface methods
 // ----------------------------------------------------------------------------
 
 // TODO:
-func (messagelevel *MessageLevelSenzingApi) CalculateMessageLevel(errorNumber int, message string) (logger.Level, error) {
+func (messagelevel *MessageLevelInfo) CalculateMessageLevel(errorNumber int, message string) (logger.Level, error) {
 	var err error = nil
-	return logger.LevelError, err
+	return logger.LevelInfo, err
 }

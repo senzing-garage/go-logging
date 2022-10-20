@@ -65,8 +65,8 @@ test:
 #	@go test -v ./...
 #	@go test -v ./.
 #	@go test -v ./logger
-	@go test -v ./messageformat
-#	@go test -v ./messagelevel
+#	@go test -v ./messageformat
+	@go test -v ./messagelevel
 #	@go test -v ./messagelogger
 
 
