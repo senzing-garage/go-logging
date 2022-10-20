@@ -9,7 +9,7 @@ package messagelogger
 import (
 	"github.com/senzing/go-logging/logger"
 	"github.com/senzing/go-logging/messageformat"
-	"github.com/senzing/go-logging/messagelevel"
+	"github.com/senzing/go-logging/messageloglevel"
 )
 
 // ----------------------------------------------------------------------------
@@ -50,6 +50,6 @@ type MessageLoggerInterface interface {
 	SetLogLevel(level Level) MessageLoggerInterface
 	SetLogLevelFromString(levelString string) MessageLoggerInterface
 	SetMessageFormat(messageFormat messageformat.MessageFormatInterface) MessageLoggerInterface
-	SetMessageLevel(messageLevel messagelevel.MessageLevelInterface) MessageLoggerInterface
+	SetMessageLogLevel(messageLogLevel messageloglevel.MessageLogLevelInterface) MessageLoggerInterface
 	SetMessages(messages map[int]string) MessageLoggerInterface
 }

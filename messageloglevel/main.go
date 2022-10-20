@@ -4,7 +4,7 @@
 //   - ...
 //   - ...
 //   - ...
-package messagelevel
+package messageloglevel
 
 import "github.com/senzing/go-logging/logger"
 
@@ -12,6 +12,6 @@ import "github.com/senzing/go-logging/logger"
 // Interfaces
 // ----------------------------------------------------------------------------
 
-type MessageLevelInterface interface {
-	CalculateMessageLevel(errorNumber int, message string) (logger.Level, error)
+type MessageLogLevelInterface interface {
+	CalculateMessageLogLevel(errorNumber int, message string) (logger.Level, error)
 }

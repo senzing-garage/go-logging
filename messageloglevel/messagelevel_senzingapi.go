@@ -1,7 +1,7 @@
 /*
 Package helper ...
 */
-package messagelevel
+package messageloglevel
 
 import (
 	"github.com/senzing/go-logging/logger"
@@ -11,14 +11,14 @@ import (
 // Types
 // ----------------------------------------------------------------------------
 
-type MessageLevelInfo struct{}
+type MessageLogLevelSenzingApi struct{}
 
 // ----------------------------------------------------------------------------
 // Interface methods
 // ----------------------------------------------------------------------------
 
 // TODO:
-func (messagelevel *MessageLevelInfo) CalculateMessageLevel(errorNumber int, message string) (logger.Level, error) {
+func (messagelevel *MessageLogLevelSenzingApi) CalculateMessageLogLevel(errorNumber int, message string) (logger.Level, error) {
 	var err error = nil
-	return logger.LevelInfo, err
+	return logger.LevelError, err
 }

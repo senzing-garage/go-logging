@@ -8,7 +8,7 @@ import (
 
 	"github.com/senzing/go-logging/logger"
 	"github.com/senzing/go-logging/messageformat"
-	"github.com/senzing/go-logging/messagelevel"
+	"github.com/senzing/go-logging/messageloglevel"
 )
 
 // ----------------------------------------------------------------------------
@@ -16,11 +16,11 @@ import (
 // ----------------------------------------------------------------------------
 
 type MessageLoggerImpl struct {
-	IdTemplate    string
-	Messages      map[int]string
-	MessageFormat messageformat.MessageFormatInterface
-	MessageLevel  messagelevel.MessageLevelInterface
-	logger        logger.LoggerInterface
+	IdTemplate      string
+	Messages        map[int]string
+	MessageFormat   messageformat.MessageFormatInterface
+	MessageLogLevel messageloglevel.MessageLogLevelInterface
+	logger          logger.LoggerInterface
 }
 
 // ----------------------------------------------------------------------------
@@ -49,7 +49,7 @@ func New() *MessageLoggerImpl {
 	result.SetLogLevel(LevelError)
 	result.SetIdTemplate(DefaultIdTemplate)
 	result.SetMessageFormat(&messageformat.MessageFormatJson{})
-	result.SetMessageLevel(&messagelevel.MessageLevelSenzingApi{})
+	result.SetMessageLogLevel(&messageloglevel.MessageLogLevelSenzingApi{})
 	return result
 }
 
@@ -135,11 +135,11 @@ func (messagelogger *MessageLoggerImpl) GetMessages() map[int]string {
 
 // --- MessageLevel -----------------------------------------------------------
 
-func SetMessageLevel(messageLevel messagelevel.MessageLevelInterface) MessageLoggerInterface {
-	return messageLoggerInstance.SetMessageLevel(messageLevel)
+func SetMessageLogLevel(messageLogLevel messageloglevel.MessageLogLevelInterface) MessageLoggerInterface {
+	return messageLoggerInstance.SetMessageLogLevel(messageLogLevel)
 }
-func (messagelogger *MessageLoggerImpl) SetMessageLevel(messageLevel messagelevel.MessageLevelInterface) MessageLoggerInterface {
-	messagelogger.MessageLevel = messageLevel
+func (messagelogger *MessageLoggerImpl) SetMessageLogLevel(messageLevel messageloglevel.MessageLogLevelInterface) MessageLoggerInterface {
+	messagelogger.MessageLogLevel = messageLevel
 	return messagelogger
 }
 
@@ -232,7 +232,7 @@ func (messagelogger *MessageLoggerImpl) Log(errorNumber int, details ...interfac
 		text = fmt.Sprintf(textTemplate, details...)
 	}
 
-	messageLevel, err := messagelogger.MessageLevel.CalculateMessageLevel(errorNumber, text)
+	messageLevel, err := messagelogger.MessageLogLevel.CalculateMessageLogLevel(errorNumber, text)
 	messageBody := messagelogger.MessageFormat.BuildMessage(id, status, text, details...)
 	messagelogger.LogBasedOnLevel(Level(messageLevel), messageBody)
 	return err

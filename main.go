@@ -6,8 +6,8 @@ import (
 
 	"github.com/senzing/go-logging/logger"
 	"github.com/senzing/go-logging/messageformat"
-	"github.com/senzing/go-logging/messagelevel"
 	"github.com/senzing/go-logging/messagelogger"
+	"github.com/senzing/go-logging/messageloglevel"
 )
 
 // Values updated via "go install -ldflags" parameters.
@@ -66,10 +66,10 @@ func main() {
 	// ------------------------------------------------------------------------
 
 	terseMessageLogger := &messagelogger.MessageLoggerImpl{
-		IdTemplate:    "test-%d",
-		Messages:      messages_2,
-		MessageFormat: &messageformat.MessageFormatTerse{},
-		MessageLevel:  &messagelevel.MessageLevelSenzingApi{},
+		IdTemplate:      "test-%d",
+		Messages:        messages_2,
+		MessageFormat:   &messageformat.MessageFormatTerse{},
+		MessageLogLevel: &messageloglevel.MessageLogLevelSenzingApi{},
 	}
 
 	terseMessageLogger.SetLogger(&logger.LoggerImpl{})
