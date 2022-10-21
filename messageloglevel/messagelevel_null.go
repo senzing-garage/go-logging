@@ -20,5 +20,5 @@ type MessageLogLevelNull struct{}
 // TODO:
 func (messagelevel *MessageLogLevelNull) CalculateMessageLogLevel(errorNumber int, message string) (logger.Level, error) {
 	var err error = nil
-	return logger.LevelWarn, err
+	return logger.LevelInfo, err
 }

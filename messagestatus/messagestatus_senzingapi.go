@@ -9,7 +9,16 @@ package messagestatus
 
 type MessageStatusSenzingApi struct{}
 
-var SenzingApiErrorsMap = map[string]string{
+// ----------------------------------------------------------------------------
+// Variables
+// ----------------------------------------------------------------------------
+
+var senzingApiStatusMap = map[int]string{
+	1000: "user-input-error",
+	2000: "retryable",
+}
+
+var senzingApiErrorsMap = map[string]string{
 	"0002E":  "info",
 	"0007E":  "error",
 	"0023E":  "error",
@@ -48,6 +57,12 @@ var SenzingApiErrorsMap = map[string]string{
 // TODO:
 func (messagelevel *MessageStatusSenzingApi) CalculateMessageStatus(errorNumber int, text string) (string, error) {
 	var err error = nil
-	var result = "retryable"
+	var result = ""
+
+	result, ok := senzingApiStatusMap[errorNumber]
+	if ok {
+		return result, err
+	}
+
 	return result, err
 }

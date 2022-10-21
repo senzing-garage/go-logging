@@ -25,7 +25,7 @@ type MessageFormatJson struct {
 	Status  string        `json:"status,omitempty"`
 	Text    interface{}   `json:"text,omitempty"`
 	Details interface{}   `json:"details,omitempty"`
-	Error   []interface{} `json:"error,omitempty"`
+	Errors  []interface{} `json:"errors,omitempty"`
 }
 
 // ----------------------------------------------------------------------------
@@ -93,6 +93,7 @@ func (messageFormat *MessageFormatJson) BuildMessage(id string, status string, t
 	}
 
 	if len(details) > 0 {
+		var errorsList []interface{}
 		detailMap := make(map[string]interface{})
 		for index, value := range details {
 			switch typedValue := value.(type) {
@@ -106,7 +107,7 @@ func (messageFormat *MessageFormatJson) BuildMessage(id string, status string, t
 						Text: errorMessage,
 					}
 				}
-				messageFormat.Error = append(messageFormat.Error, priorError)
+				errorsList = append(errorsList, priorError)
 
 			case map[string]string:
 				for mapIndex, mapValue := range typedValue {
@@ -127,6 +128,7 @@ func (messageFormat *MessageFormatJson) BuildMessage(id string, status string, t
 				}
 			}
 		}
+		messageFormat.Errors = errorsList
 		messageFormat.Details = detailMap
 	}
 
@@ -135,173 +137,6 @@ func (messageFormat *MessageFormatJson) BuildMessage(id string, status string, t
 	result, _ := json.Marshal(messageFormat)
 	return string(result)
 }
-
-// Build a message from an error
-// func BuildMessageFromErrorXX(id string, level string, text string, err error, details ...interface{}) string {
-
-// 	messageFormat := MessageFormatJson{}
-
-// 	if len(id) > 0 {
-// 		messageFormat.Id = id
-// 	}
-
-// 	if len(level) > 0 {
-// 		messageFormat.Status = level
-// 	}
-
-// 	if len(text) > 0 {
-// 		if isJson(text) {
-// 			messageFormat.Text = jsonAsInterface(text)
-// 		} else {
-// 			messageFormat.Text = text
-// 		}
-// 	}
-
-// 	if len(details) > 0 {
-// 		detailMap := make(map[string]interface{})
-// 		for index, value := range details {
-// 			valueAsString := stringify(value)
-// 			if isJson(valueAsString) {
-// 				detailMap[strconv.Itoa(index+1)] = jsonAsInterface(valueAsString)
-// 			} else {
-// 				detailMap[strconv.Itoa(index+1)] = valueAsString
-// 			}
-// 		}
-// 		messageFormat.Details = detailMap
-// 	}
-
-// 	// Nest prior Error message.
-
-// 	if err != nil {
-// 		errorMessage := err.Error()
-
-// 		var priorError interface{}
-// 		if isJson(errorMessage) {
-// 			priorError = jsonAsInterface(errorMessage)
-// 		} else {
-// 			priorError = MessageFormatJson{
-// 				Text: errorMessage,
-// 			}
-// 		}
-// 		messageFormat.Error = priorError
-// 	}
-
-// 	// Convert to JSON.
-
-// 	result, _ := json.Marshal(messageFormat)
-// 	return string(result)
-// }
-
-// Build a message given details as a map of strings.
-// func BuildMessageFromErrorUsingMapXX(id string, level string, text string, err error, details map[string]interface{}) string {
-
-// 	messageFormat := MessageFormatJson{}
-
-// 	// Fill optional fields.
-
-// 	if len(id) > 0 {
-// 		messageFormat.Id = id
-// 	}
-
-// 	if len(level) > 0 {
-// 		messageFormat.Status = level
-// 	}
-
-// 	if len(text) > 0 {
-// 		if isJson(text) {
-// 			messageFormat.Text = jsonAsInterface(text)
-// 		} else {
-// 			messageFormat.Text = text
-// 		}
-// 	}
-
-// 	if len(details) > 0 {
-// 		detailMap := make(map[string]interface{})
-// 		for index, value := range details {
-// 			valueAsString := stringify(value)
-// 			if isJson(valueAsString) {
-// 				detailMap[index] = jsonAsInterface(valueAsString)
-// 			} else {
-// 				detailMap[index] = valueAsString
-// 			}
-// 		}
-// 		messageFormat.Details = detailMap
-// 	}
-
-// 	// Nest prior Error message.
-
-// 	if err != nil {
-// 		errorMessage := err.Error()
-// 		var priorError interface{}
-// 		if isJson(errorMessage) {
-// 			priorError = jsonAsInterface(errorMessage)
-// 		} else {
-// 			priorError = MessageFormatJson{
-// 				Text: errorMessage,
-// 			}
-// 		}
-// 		messageFormat.Error = priorError
-// 	}
-
-// 	// Convert to JSON.
-
-// 	result, _ := json.Marshal(messageFormat)
-// 	return string(result)
-// }
-
-// Build a message given details as a map of strings.
-// func (messageFormat *MessageFormatJson) BuildMessageUsingMap(id string, level string, text string, details map[string]interface{}) string {
-
-// 	// Fill optional fields.
-
-// 	if len(id) > 0 {
-// 		messageFormat.Id = id
-// 	}
-
-// 	if len(level) > 0 {
-// 		messageFormat.Status = level
-// 	}
-
-// 	if len(text) > 0 {
-// 		if isJson(text) {
-// 			messageFormat.Text = jsonAsInterface(text)
-// 		} else {
-// 			messageFormat.Text = text
-// 		}
-// 	}
-
-// 	if len(details) > 0 {
-// 		detailMap := make(map[string]interface{})
-// 		for index, value := range details {
-// 			switch typedValue := value.(type) {
-// 			case error:
-// 				errorMessage := typedValue.Error()
-// 				var priorError interface{}
-// 				if isJson(errorMessage) {
-// 					priorError = jsonAsInterface(errorMessage)
-// 				} else {
-// 					priorError = MessageFormatJson{
-// 						Text: errorMessage,
-// 					}
-// 				}
-// 				messageFormat.Error = append(messageFormat.Error, priorError)
-// 			default:
-// 				valueAsString := stringify(typedValue)
-// 				if isJson(valueAsString) {
-// 					detailMap[index] = jsonAsInterface(valueAsString)
-// 				} else {
-// 					detailMap[index] = valueAsString
-// 				}
-// 			}
-// 		}
-// 		messageFormat.Details = detailMap
-// 	}
-
-// 	// Convert to JSON.
-
-// 	result, _ := json.Marshal(messageFormat)
-// 	return string(result)
-// }
 
 // Parse JSON message.
 // func ParseMessage(jsonString string) MessageFormatJson {

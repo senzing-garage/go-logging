@@ -1,6 +1,7 @@
 package main
 
 import (
+	"errors"
 	"fmt"
 	"log"
 	"time"
@@ -9,6 +10,7 @@ import (
 	"github.com/senzing/go-logging/messageformat"
 	"github.com/senzing/go-logging/messagelogger"
 	"github.com/senzing/go-logging/messageloglevel"
+	"github.com/senzing/go-logging/messagestatus"
 )
 
 // Values updated via "go install -ldflags" parameters.
@@ -38,10 +40,6 @@ func main() {
 
 	log.SetFlags(log.Llongfile | log.Ldate | log.Lmicroseconds | log.LUTC)
 
-	// Configure the logger. If not configured, no functions will print.
-
-	// messagelogger.SetLevel(messagelogger.LevelInfo)
-
 	// ------------------------------------------------------------------------
 	// The following demonstrates the high-level messagelogger calls for
 	// LogMessage, LogMessageUsingMap, and LogMessageFromError.
@@ -49,87 +47,113 @@ func main() {
 
 	// --- Simple case with default MessageFormat, no Messages, no MessageLevel
 
-	messagelogger.SetLogLevel(messagelogger.LevelTrace)
+	fmt.Printf("\n\n--- Test 1: No customization ---------------------------------------------------\n\n")
 
-	messagelogger.Log(1, "Default: Test INFO message 1", programName, buildVersion, buildIteration)
+	messagelogger.Log(0, "Custom message")
+	messagelogger.Log(1000, programName, buildVersion, buildIteration)
+	messagelogger.Log(2000, programName, buildVersion, buildIteration)
+	messagelogger.Log(3000, programName, buildVersion, buildIteration)
+	messagelogger.Log(4000, programName, buildVersion, buildIteration)
 
-	// --- Simple case with
+	fmt.Printf("\n\n--- Test 2: Add message templates ----------------------------------------------\n\n")
 
-	var messages_2 = map[int]string{
-		1:    "message-1",
-		2002: "Program name: %s; Build version %s; Build iterations %s;",
-		3003: "Dog name: %s",
+	var messageTemplates = map[int]string{
+		0:    "No variable substitution",
+		1000: "Program name: %s;",
+		2000: "Program name: %s; Build version %s;",
+		3000: "Program name: %s; Build version %s; Build iterations %s;",
+		4000: "Program name: %s; Build version %s; Build iterations %s; Unknown: %s",
 	}
+	messagelogger.GetMessageLogger().Messages = messageTemplates
 
-	aMessage, _ := messagelogger.Message(1, "Default: Test INFO message 1", programName, buildVersion, buildIteration)
-	fmt.Printf("%s\n", aMessage)
+	messagelogger.Log(0, "Custom message")
+	messagelogger.Log(1000, programName, buildVersion, buildIteration)
+	messagelogger.Log(2000, programName, buildVersion, buildIteration)
+	messagelogger.Log(3000, programName, buildVersion, buildIteration)
+	messagelogger.Log(4000, programName, buildVersion, buildIteration)
 
-	xLogger := messagelogger.GetMessageLogger()
-	xLogger.Messages = messages_2
+	fmt.Printf("\n\n--- Test 3: Add message levels -------------------------------------------------\n\n")
 
-	messagelogger.Log(2002, programName, buildVersion, buildIteration)
+	messagelogger.GetMessageLogger().MessageLogLevel = &messageloglevel.MessageLogLevelSenzingApi{}
+
+	messagelogger.Log(0, "Custom message")
+	messagelogger.Log(1000, programName, buildVersion, buildIteration)
+	messagelogger.Log(2000, programName, buildVersion, buildIteration)
+	messagelogger.Log(3000, programName, buildVersion, buildIteration)
+	messagelogger.Log(4000, programName, buildVersion, buildIteration)
+
+	fmt.Printf("\n\n--- Test 4: Add status ---------------------------------------------------------\n\n")
+
+	messagelogger.GetMessageLogger().MessageStatus = &messagestatus.MessageStatusSenzingApi{}
+
+	messagelogger.Log(0, "Custom message")
+	messagelogger.Log(1000, programName, buildVersion, buildIteration)
+	messagelogger.Log(2000, programName, buildVersion, buildIteration)
+	messagelogger.Log(3000, programName, buildVersion, buildIteration)
+	messagelogger.Log(4000, programName, buildVersion, buildIteration)
+
+	fmt.Printf("\n\n--- Test 5: Add logging golang errors ------------------------------------------\n\n")
+
+	error_1 := errors.New("first error")
+	error_2 := errors.New("second error")
+
+	messagelogger.Log(0, "Custom message", error_1)
+	messagelogger.Log(1000, programName, buildVersion, buildIteration, error_1)
+	messagelogger.Log(2000, programName, buildVersion, buildIteration, error_1, "Just some text", error_2)
+
+	fmt.Printf("\n\n--- Test 6: Using Maps ---------------------------------------------------------\n\n")
+
+	messageTemplates[1001] = "Using maps"
 
 	var detailsMap = map[string]string{
-		"Guy": "Bob",
-		"Gal": "Mary",
+		"Husband": "Bob",
+		"Wife":    "Mary",
 	}
 
 	var detailsMap2 = map[string]string{
-		"Boy":  "Bobbie",
-		"Girl": "Jane",
+		"Son":      "Bobbie",
+		"Daughter": "Jane",
 	}
 
-	messagelogger.Log(3003, "Rover", detailsMap, detailsMap2)
-	aMessage, _ = messagelogger.Message(3003, "Rover", detailsMap, detailsMap2)
-	fmt.Printf("%s\n", aMessage)
+	messagelogger.Log(1000, detailsMap, detailsMap2)
+	messagelogger.Log(1001, detailsMap, detailsMap2)
 
 	// ------------------------------------------------------------------------
-	// Test a constructed logger.
+	// Test a custom logger
 	// ------------------------------------------------------------------------
+
+	fmt.Printf("\n\n--------------------------------------------------------------------------------")
+	fmt.Printf("\n--- Custom logger --------------------------------------------------------------")
+	fmt.Printf("\n--------------------------------------------------------------------------------")
+
+	log.SetFlags(0)
 
 	terseMessageLogger := &messagelogger.MessageLoggerImpl{
-		IdTemplate:      "test-%d",
-		Messages:        messages_2,
+		IdTemplate:      "test-%04d",
+		Messages:        messageTemplates,
 		MessageFormat:   &messageformat.MessageFormatTerse{},
-		MessageLogLevel: &messageloglevel.MessageLogLevelSenzingApi{},
+		MessageLogLevel: &messageloglevel.MessageLogLevelNull{},
 		Logger:          &logger.LoggerImpl{},
 	}
 
 	terseMessageLogger.SetLogLevel(messagelogger.LevelDebug)
 
-	terseMessageLogger.Log(4004, "Terse: Test INFO message 1", programName, buildVersion, buildIteration)
+	fmt.Printf("\n\n--- Test 11: -------------------------------------------------------------------\n\n")
 
-	// Log a message.
-
-	// messagelogger.LogMessage(MessageIdFormat, 999, "Test INFO message 1", programName, buildVersion, buildIteration)
-
-	// Log a message using a map.
-
-	// detailsMap := map[string]interface{}{
-	// 	"FirstVariable":  "First value",
-	// 	"SecondVariable": "Second value",
-	// }
-	// messagelogger.LogMessageUsingMap(MessageIdFormat, 1000, "Test WARN message 2", detailsMap)
-
-	// Log an error based on a prior error.
-
-	// anError := errors.New("this is a new error")
-	// messagelogger.LogMessageFromError(MessageIdFormat, 2000, "Test ERROR message 3", anError, "Variable1", "Variable2")
-
-	// Won't print because of logging level.
-
-	// messagelogger.LogMessageFromErrorUsingMap(MessageIdFormat, 3000, "Test DEBUG message 4", anError, detailsMap)
-
-	// Change logging level and try again. Then restore logging level
-
-	// messagelogger.SetLevel(messagelogger.LevelDebug)
-	// messagelogger.LogMessageFromErrorUsingMap(MessageIdFormat, 3000, "Test DEBUG message 5", anError, detailsMap)
-	// messagelogger.SetLevel(messagelogger.LevelInfo)
+	terseMessageLogger.Log(0, "Custom message")
+	terseMessageLogger.Log(1000, programName, buildVersion, buildIteration)
+	terseMessageLogger.Log(2000, programName, buildVersion, buildIteration)
+	terseMessageLogger.Log(3000, programName, buildVersion, buildIteration)
+	terseMessageLogger.Log(4000, programName, buildVersion, buildIteration)
 
 	// ------------------------------------------------------------------------
 	// The following demonstrates the low-level logger calls for
 	// Trace, Debug, Info, Warn, and Error.
 	// ------------------------------------------------------------------------
+
+	fmt.Printf("\n\n--------------------------------------------------------------------------------")
+	fmt.Printf("\n--- Low-level logger tests -----------------------------------------------------")
+	fmt.Printf("\n--------------------------------------------------------------------------------\n\n")
 
 	log.Println("Test Trace")
 	logger.Trace("trace prints")

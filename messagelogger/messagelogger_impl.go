@@ -55,7 +55,7 @@ func New() *MessageLoggerImpl {
 		MessageLogLevel: &messageloglevel.MessageLogLevelNull{},
 		MessageStatus:   &messagestatus.MessageStatusNull{},
 	}
-	result.SetLogLevel(LevelError)
+	result.SetLogLevel(LevelInfo)
 	return result
 }
 

@@ -35,7 +35,9 @@ var loggerInstance *LoggerImpl
 // ----------------------------------------------------------------------------
 
 func New() *LoggerImpl {
-	return new(LoggerImpl)
+	result := &LoggerImpl{}
+	result.SetLogLevel(LevelInfo)
+	return result
 }
 
 // ----------------------------------------------------------------------------
