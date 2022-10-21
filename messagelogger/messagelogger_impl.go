@@ -5,6 +5,7 @@ package messagelogger
 
 import (
 	"fmt"
+	"strings"
 
 	"github.com/senzing/go-logging/logger"
 	"github.com/senzing/go-logging/messageformat"
@@ -229,7 +230,9 @@ func (messagelogger *MessageLoggerImpl) Log(errorNumber int, details ...interfac
 	textTemplate, ok := messagelogger.Messages[errorNumber]
 
 	if ok {
-		text = fmt.Sprintf(textTemplate, details...)
+		textRaw := fmt.Sprintf(textTemplate, details...)
+		text = strings.Split(textRaw, "%!(")[0]
+
 	}
 
 	messageLevel, err := messagelogger.MessageLogLevel.CalculateMessageLogLevel(errorNumber, text)

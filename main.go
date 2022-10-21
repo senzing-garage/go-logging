@@ -55,11 +55,23 @@ func main() {
 	var messages_2 = map[int]string{
 		1: "message-1",
 		2: "Program name: %s; Build version %s; Build iterations %s;",
-		3: "message-3",
+		3: "Dog name: %s",
 	}
 	messagelogger.SetMessages(messages_2)
 
 	messagelogger.Log(2, programName, buildVersion, buildIteration)
+
+	var detailsMap = map[string]string{
+		"Guy": "Bob",
+		"Gal": "Mary",
+	}
+
+	var detailsMap2 = map[string]string{
+		"Boy":  "Bobbie",
+		"Girl": "Jane",
+	}
+
+	messagelogger.Log(3, "Rover", detailsMap, detailsMap2)
 
 	// ------------------------------------------------------------------------
 	// Test a constructed logger.
@@ -75,7 +87,7 @@ func main() {
 	terseMessageLogger.SetLogger(&logger.LoggerImpl{})
 	terseMessageLogger.SetLogLevel(messagelogger.LevelDebug)
 
-	terseMessageLogger.Log(3, "Terse: Test INFO message 1", programName, buildVersion, buildIteration)
+	terseMessageLogger.Log(103, "Terse: Test INFO message 1", programName, buildVersion, buildIteration)
 
 	// Log a message.
 

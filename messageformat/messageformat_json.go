@@ -107,6 +107,17 @@ func (messageFormat *MessageFormatJson) BuildMessage(id string, status string, t
 					}
 				}
 				messageFormat.Error = append(messageFormat.Error, priorError)
+
+			case map[string]string:
+				for mapIndex, mapValue := range typedValue {
+					mapValueAsString := stringify(mapValue)
+					if isJson(mapValueAsString) {
+						detailMap[mapIndex] = jsonAsInterface(mapValueAsString)
+					} else {
+						detailMap[mapIndex] = mapValueAsString
+					}
+				}
+
 			default:
 				valueAsString := stringify(typedValue)
 				if isJson(valueAsString) {
