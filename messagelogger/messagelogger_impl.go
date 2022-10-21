@@ -46,13 +46,14 @@ var messageLoggerInstance *MessageLoggerImpl
 // Constructors
 // ----------------------------------------------------------------------------
 
+// TODO:
 func New() *MessageLoggerImpl {
 	result := &MessageLoggerImpl{
 		IdTemplate:      DefaultIdTemplate,
 		Logger:          &logger.LoggerImpl{},
 		MessageFormat:   &messageformat.MessageFormatJson{},
-		MessageLogLevel: &messageloglevel.MessageLogLevelSenzingApi{},
-		MessageStatus:   &messagestatus.MessageStatusSenzingApi{},
+		MessageLogLevel: &messageloglevel.MessageLogLevelNull{},
+		MessageStatus:   &messagestatus.MessageStatusNull{},
 	}
 	result.SetLogLevel(LevelError)
 	return result
@@ -62,6 +63,7 @@ func New() *MessageLoggerImpl {
 // Internal functions
 // ----------------------------------------------------------------------------
 
+// TODO:
 func init() {
 	messageLoggerInstance = New()
 }
@@ -98,34 +100,47 @@ func (messagelogger *MessageLoggerImpl) logBasedOnLevel(level Level, messageBody
 
 // --- LogLevel ---------------------------------------------------------------
 
+// TODO:
 func SetLogLevel(level Level) MessageLoggerInterface { return messageLoggerInstance.SetLogLevel(level) }
+
+// TODO:
 func (messagelogger *MessageLoggerImpl) SetLogLevel(level Level) MessageLoggerInterface {
 	messagelogger.Logger.SetLogLevel(logger.Level(level))
 	return messagelogger
 }
 
+// TODO:
 func GetLogLevel() Level { return messageLoggerInstance.GetLogLevel() }
+
+// TODO:
 func (messagelogger *MessageLoggerImpl) GetLogLevel() Level {
 	return Level(messagelogger.Logger.GetLogLevel())
 }
 
 // --- LogLevelFromString -----------------------------------------------------
 
+// TODO:
 func SetLogLevelFromString(levelString string) MessageLoggerInterface {
 	return messageLoggerInstance.SetLogLevelFromString(levelString)
 }
+
+// TODO:
 func (messagelogger *MessageLoggerImpl) SetLogLevelFromString(levelString string) MessageLoggerInterface {
 	logger.SetLogLevelFromString(levelString)
 	return messagelogger
 }
 
+// TODO:
 func GetLogLevelAsString() string { return messageLoggerInstance.GetLogLevelAsString() }
+
+// TODO:
 func (messagelogger *MessageLoggerImpl) GetLogLevelAsString() string {
 	return (messagelogger.Logger.GetLogLevelAsString())
 }
 
 // --- MessageLogger ----------------------------------------------------------
 
+// TODO:
 func GetMessageLogger() *MessageLoggerImpl { return messageLoggerInstance }
 
 // ----------------------------------------------------------------------------
@@ -137,12 +152,17 @@ func Log(errorNumber int, details ...interface{}) error {
 	return messageLoggerInstance.Log(errorNumber, details...)
 }
 
+// TODO:
+func Message(errorNumber int, details ...interface{}) (string, error) {
+	return messageLoggerInstance.Message(errorNumber, details...)
+}
+
 // ----------------------------------------------------------------------------
 // Interface methods
 // ----------------------------------------------------------------------------
 
-// Inspect the error to see what the level is and log based on the level method.
-func (messagelogger *MessageLoggerImpl) Log(errorNumber int, details ...interface{}) error {
+// TODO:
+func (messagelogger *MessageLoggerImpl) Message(errorNumber int, details ...interface{}) (string, error) {
 	var err error = nil
 
 	idTemplate := "%d"
@@ -160,14 +180,25 @@ func (messagelogger *MessageLoggerImpl) Log(errorNumber int, details ...interfac
 
 	status, err := messageLoggerInstance.MessageStatus.CalculateMessageStatus(errorNumber, text)
 	if err != nil {
-		return err
+		return "", err
 	}
 
-	messageLevel, err := messagelogger.MessageLogLevel.CalculateMessageLogLevel(errorNumber, text)
+	result := messagelogger.MessageFormat.BuildMessage(id, status, text, details...)
+	return result, err
+}
+
+// TODO:
+func (messagelogger *MessageLoggerImpl) Log(errorNumber int, details ...interface{}) error {
+	var err error = nil
+
+	messageBody, err := messagelogger.Message(errorNumber, details...)
 	if err != nil {
 		return err
 	}
-	messageBody := messagelogger.MessageFormat.BuildMessage(id, status, text, details...)
+	messageLevel, err := messagelogger.MessageLogLevel.CalculateMessageLogLevel(errorNumber, messageBody)
+	if err != nil {
+		return err
+	}
 	messagelogger.logBasedOnLevel(Level(messageLevel), messageBody)
 	return err
 }

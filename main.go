@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"log"
 	"time"
 
@@ -60,6 +61,9 @@ func main() {
 		3003: "Dog name: %s",
 	}
 
+	aMessage, _ := messagelogger.Message(1, "Default: Test INFO message 1", programName, buildVersion, buildIteration)
+	fmt.Printf("%s\n", aMessage)
+
 	xLogger := messagelogger.GetMessageLogger()
 	xLogger.Messages = messages_2
 
@@ -76,6 +80,8 @@ func main() {
 	}
 
 	messagelogger.Log(3003, "Rover", detailsMap, detailsMap2)
+	aMessage, _ = messagelogger.Message(3003, "Rover", detailsMap, detailsMap2)
+	fmt.Printf("%s\n", aMessage)
 
 	// ------------------------------------------------------------------------
 	// Test a constructed logger.
