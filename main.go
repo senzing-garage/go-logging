@@ -129,8 +129,8 @@ func main() {
 	log.SetFlags(0)
 
 	terseMessageLogger := &messagelogger.MessageLoggerImpl{
-		IdTemplate:      "test-%04d",
-		Messages:        messageTemplates,
+		IdTemplate: "test-%04d",
+		// Messages:        messageTemplates,
 		MessageFormat:   &messageformat.MessageFormatTerse{},
 		MessageLogLevel: &messageloglevel.MessageLogLevelNull{},
 		Logger:          &logger.LoggerImpl{},
@@ -145,6 +145,31 @@ func main() {
 	terseMessageLogger.Log(2000, programName, buildVersion, buildIteration)
 	terseMessageLogger.Log(3000, programName, buildVersion, buildIteration)
 	terseMessageLogger.Log(4000, programName, buildVersion, buildIteration)
+
+	fmt.Printf("\n\n--- Test 12: Add message templates ---------------------------------------------\n\n")
+
+	terseMessageLogger.Messages = messageTemplates
+
+	terseMessageLogger.Log(0, "Custom message")
+	terseMessageLogger.Log(1000, programName, buildVersion, buildIteration)
+	terseMessageLogger.Log(2000, programName, buildVersion, buildIteration)
+	terseMessageLogger.Log(3000, programName, buildVersion, buildIteration)
+	terseMessageLogger.Log(4000, programName, buildVersion, buildIteration)
+
+	fmt.Printf("\n\n--- Test 13: Change message leveling -------------------------------------------\n\n")
+
+	terseMessageLogger.MessageLogLevel = &messageloglevel.MessageLogLevelSenzingApi{}
+
+	terseMessageLogger.Log(0, "Custom message")
+	terseMessageLogger.Log(1000, programName, buildVersion, buildIteration)
+	terseMessageLogger.Log(2000, programName, buildVersion, buildIteration)
+	terseMessageLogger.Log(3000, programName, buildVersion, buildIteration)
+	terseMessageLogger.Log(4000, programName, buildVersion, buildIteration)
+
+	fmt.Printf("\n\n--- Test 14: Add logging golang errors -----------------------------------------\n\n")
+
+	terseMessageLogger.Log(1000, programName, buildVersion, buildIteration, error_1)
+	terseMessageLogger.Log(2000, programName, buildVersion, buildIteration, error_1, "Just some text", error_2)
 
 	// ------------------------------------------------------------------------
 	// The following demonstrates the low-level logger calls for
