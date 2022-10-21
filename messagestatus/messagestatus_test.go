@@ -1,4 +1,4 @@
-package messageloglevel
+package messagestatus
 
 import (
 	"fmt"
@@ -21,7 +21,7 @@ func printActual(test *testing.T, actual interface{}) {
 	printResult(test, "Actual", actual)
 }
 
-func testError(test *testing.T, testObject MessageLogLevelInterface, err error) {
+func testError(test *testing.T, testObject MessageStatusInterface, err error) {
 	if err != nil {
 		test.Log("Error:", err.Error())
 	}
@@ -34,21 +34,8 @@ func testError(test *testing.T, testObject MessageLogLevelInterface, err error) 
 // -- BuildError --------------------------------------------------------------
 
 func TestSenzingApiBuildError(test *testing.T) {
-	testObject := &MessageLogLevelSenzingApi{}
-	actual, err := testObject.CalculateMessageLogLevel(1, "This is message text")
-	testError(test, testObject, err)
-	printActual(test, actual)
-}
-
-// ----------------------------------------------------------------------------
-// Test interface functions for MessageLevelInfo - names begin with "Test"
-// ----------------------------------------------------------------------------
-
-// -- BuildError --------------------------------------------------------------
-
-func TestInfoBuildError(test *testing.T) {
-	testObject := &MessageLogLevelInfo{}
-	actual, err := testObject.CalculateMessageLogLevel(1, "This is message text")
+	testObject := &MessageStatusSenzingApi{}
+	actual, err := testObject.CalculateMessageStatus(1, "This is message text")
 	testError(test, testObject, err)
 	printActual(test, actual)
 }

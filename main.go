@@ -48,18 +48,22 @@ func main() {
 
 	// --- Simple case with default MessageFormat, no Messages, no MessageLevel
 
+	messagelogger.SetLogLevel(messagelogger.LevelTrace)
+
 	messagelogger.Log(1, "Default: Test INFO message 1", programName, buildVersion, buildIteration)
 
 	// --- Simple case with
 
 	var messages_2 = map[int]string{
-		1: "message-1",
-		2: "Program name: %s; Build version %s; Build iterations %s;",
-		3: "Dog name: %s",
+		1:    "message-1",
+		2002: "Program name: %s; Build version %s; Build iterations %s;",
+		3003: "Dog name: %s",
 	}
-	messagelogger.SetMessages(messages_2)
 
-	messagelogger.Log(2, programName, buildVersion, buildIteration)
+	xLogger := messagelogger.GetMessageLogger()
+	xLogger.Messages = messages_2
+
+	messagelogger.Log(2002, programName, buildVersion, buildIteration)
 
 	var detailsMap = map[string]string{
 		"Guy": "Bob",
@@ -71,7 +75,7 @@ func main() {
 		"Girl": "Jane",
 	}
 
-	messagelogger.Log(3, "Rover", detailsMap, detailsMap2)
+	messagelogger.Log(3003, "Rover", detailsMap, detailsMap2)
 
 	// ------------------------------------------------------------------------
 	// Test a constructed logger.
@@ -82,12 +86,12 @@ func main() {
 		Messages:        messages_2,
 		MessageFormat:   &messageformat.MessageFormatTerse{},
 		MessageLogLevel: &messageloglevel.MessageLogLevelSenzingApi{},
+		Logger:          &logger.LoggerImpl{},
 	}
 
-	terseMessageLogger.SetLogger(&logger.LoggerImpl{})
 	terseMessageLogger.SetLogLevel(messagelogger.LevelDebug)
 
-	terseMessageLogger.Log(103, "Terse: Test INFO message 1", programName, buildVersion, buildIteration)
+	terseMessageLogger.Log(4004, "Terse: Test INFO message 1", programName, buildVersion, buildIteration)
 
 	// Log a message.
 
