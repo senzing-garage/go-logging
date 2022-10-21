@@ -7,11 +7,6 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-const (
-	EnablePrinting = 1
-	TruncateLength = 300
-)
-
 // ----------------------------------------------------------------------------
 // Test interface functions - names begin with "Test"
 // ----------------------------------------------------------------------------
@@ -25,58 +20,134 @@ func TestLevels(test *testing.T) {
 	assert.True(test, LevelFatal < LevelPanic, "Fatal")
 }
 
-// -- SetLevel ----------------------------------------------------------------
+// -- SetLogLevel -------------------------------------------------------------
 
 func TestSetLevel(test *testing.T) {
-	SetLevel(LevelPanic)
-	SetLevel(LevelFatal)
-	SetLevel(LevelError)
-	SetLevel(LevelWarn)
-	SetLevel(LevelInfo)
-	SetLevel(LevelDebug)
-	SetLevel(LevelTrace)
+	SetLogLevel(LevelPanic)
+	SetLogLevel(LevelFatal)
+	SetLogLevel(LevelError)
+	SetLogLevel(LevelWarn)
+	SetLogLevel(LevelInfo)
+	SetLogLevel(LevelDebug)
+	SetLogLevel(LevelTrace)
 }
 
-// -- GetLevel ----------------------------------------------------------------
+// -- SetLogLevelFromString ---------------------------------------------------
 
-func TestGetLevel(test *testing.T) {
+func TestSetLogLevelFromString(test *testing.T) {
+
+	var levelString string
+
+	levelString = "PANIC"
+	SetLogLevelFromString(levelString)
+	assert.True(test, LevelPanic == GetLogLevel(), "Panic")
+
+	levelString = "fatal"
+	SetLogLevelFromString(levelString)
+	assert.True(test, LevelFatal == GetLogLevel(), "Fatal")
+
+	levelString = "ErRoR"
+	SetLogLevelFromString(levelString)
+	assert.True(test, LevelError == GetLogLevel(), "Error")
+
+	levelString = "waRN"
+	SetLogLevelFromString(levelString)
+	assert.True(test, LevelWarn == GetLogLevel(), "Warn")
+
+	levelString = "INFO"
+	SetLogLevelFromString(levelString)
+	assert.True(test, LevelInfo == GetLogLevel(), "Info")
+
+	levelString = "DEBUG"
+	SetLogLevelFromString(levelString)
+	assert.True(test, LevelDebug == GetLogLevel(), "Debug")
+
+	levelString = "TRACE"
+	SetLogLevelFromString(levelString)
+	assert.True(test, LevelTrace == GetLogLevel(), "Trace")
+
+	levelString = "Bad-Level-String"
+	SetLogLevelFromString(levelString)
+	assert.True(test, LevelPanic == GetLogLevel(), "Unknown string returns Panic")
+
+}
+
+// -- GetLogLevel -------------------------------------------------------------
+
+func TestGetLogLevel(test *testing.T) {
 
 	var level Level
 
 	level = LevelPanic
-	SetLevel(level)
-	assert.True(test, level == GetLevel(), "Panic")
+	SetLogLevel(level)
+	assert.True(test, level == GetLogLevel(), "Panic")
 
 	level = LevelFatal
-	SetLevel(level)
-	assert.True(test, level == GetLevel(), "Fatal")
+	SetLogLevel(level)
+	assert.True(test, level == GetLogLevel(), "Fatal")
 
 	level = LevelError
-	SetLevel(level)
-	assert.True(test, level == GetLevel(), "Error")
+	SetLogLevel(level)
+	assert.True(test, level == GetLogLevel(), "Error")
 
 	level = LevelWarn
-	SetLevel(level)
-	assert.True(test, level == GetLevel(), "Warn")
+	SetLogLevel(level)
+	assert.True(test, level == GetLogLevel(), "Warn")
 
 	level = LevelInfo
-	SetLevel(level)
-	assert.True(test, level == GetLevel(), "Info")
+	SetLogLevel(level)
+	assert.True(test, level == GetLogLevel(), "Info")
 
 	level = LevelDebug
-	SetLevel(level)
-	assert.True(test, level == GetLevel(), "Debug")
+	SetLogLevel(level)
+	assert.True(test, level == GetLogLevel(), "Debug")
 
 	level = LevelTrace
-	SetLevel(level)
-	assert.True(test, level == GetLevel(), "Trace")
+	SetLogLevel(level)
+	assert.True(test, level == GetLogLevel(), "Trace")
+
+}
+
+// -- GetLogLevelAsString -----------------------------------------------------
+
+func TestGetLogLevelAsString(test *testing.T) {
+
+	var level Level
+
+	level = LevelPanic
+	SetLogLevel(level)
+	assert.True(test, GetLogLevelAsString() == "PANIC", "Panic")
+
+	level = LevelFatal
+	SetLogLevel(level)
+	assert.True(test, GetLogLevelAsString() == "FATAL", "Fatal")
+
+	level = LevelError
+	SetLogLevel(level)
+	assert.True(test, GetLogLevelAsString() == "ERROR", "Error")
+
+	level = LevelWarn
+	SetLogLevel(level)
+	assert.True(test, GetLogLevelAsString() == "WARN", "Warn")
+
+	level = LevelInfo
+	SetLogLevel(level)
+	assert.True(test, GetLogLevelAsString() == "INFO", "Info")
+
+	level = LevelDebug
+	SetLogLevel(level)
+	assert.True(test, GetLogLevelAsString() == "DEBUG", "Debug")
+
+	level = LevelTrace
+	SetLogLevel(level)
+	assert.True(test, GetLogLevelAsString() == "TRACE", "Trace")
 
 }
 
 // -- IsPanic -----------------------------------------------------------------
 
 func TestIsPanic(test *testing.T) {
-	SetLevel(LevelPanic)
+	SetLogLevel(LevelPanic)
 	assert.False(test, IsTrace(), "Trace")
 	assert.False(test, IsDebug(), "Debug")
 	assert.False(test, IsInfo(), "Info")
@@ -89,7 +160,7 @@ func TestIsPanic(test *testing.T) {
 // -- IsFatal -----------------------------------------------------------------
 
 func TestIsFatal(test *testing.T) {
-	SetLevel(LevelFatal)
+	SetLogLevel(LevelFatal)
 	assert.False(test, IsTrace(), "Trace")
 	assert.False(test, IsDebug(), "Debug")
 	assert.False(test, IsInfo(), "Info")
@@ -102,7 +173,7 @@ func TestIsFatal(test *testing.T) {
 // -- IsError -----------------------------------------------------------------
 
 func TestIsError(test *testing.T) {
-	SetLevel(LevelError)
+	SetLogLevel(LevelError)
 	assert.False(test, IsTrace(), "Trace")
 	assert.False(test, IsDebug(), "Debug")
 	assert.False(test, IsInfo(), "Info")
@@ -115,7 +186,7 @@ func TestIsError(test *testing.T) {
 // -- IsWarn ------------------------------------------------------------------
 
 func TestIsWarn(test *testing.T) {
-	SetLevel(LevelWarn)
+	SetLogLevel(LevelWarn)
 	assert.False(test, IsTrace(), "Trace")
 	assert.False(test, IsDebug(), "Debug")
 	assert.False(test, IsInfo(), "Info")
@@ -128,7 +199,7 @@ func TestIsWarn(test *testing.T) {
 // -- IsInfo ------------------------------------------------------------------
 
 func TestIsInfo(test *testing.T) {
-	SetLevel(LevelInfo)
+	SetLogLevel(LevelInfo)
 	assert.False(test, IsTrace(), "Trace")
 	assert.False(test, IsDebug(), "Debug")
 	assert.True(test, IsInfo(), "Info")
@@ -141,7 +212,7 @@ func TestIsInfo(test *testing.T) {
 // -- IsDebug -----------------------------------------------------------------
 
 func TestIsDebug(test *testing.T) {
-	SetLevel(LevelDebug)
+	SetLogLevel(LevelDebug)
 	assert.False(test, IsTrace(), "Trace")
 	assert.True(test, IsDebug(), "Debug")
 	assert.True(test, IsInfo(), "Info")
@@ -154,7 +225,7 @@ func TestIsDebug(test *testing.T) {
 // -- IsTrace -----------------------------------------------------------------
 
 func TestIsTrace(test *testing.T) {
-	SetLevel(LevelTrace)
+	SetLogLevel(LevelTrace)
 	assert.True(test, IsTrace(), "Trace")
 	assert.True(test, IsDebug(), "Debug")
 	assert.True(test, IsInfo(), "Info")
@@ -175,7 +246,7 @@ func TestIsTrace(test *testing.T) {
 // -- Error -------------------------------------------------------------------
 
 func TestError(test *testing.T) {
-	SetLevel(LevelError)
+	SetLogLevel(LevelError)
 	assert.NotZero(test, Error("test"), "string")
 	assert.NotZero(test, Errorf("test %s", "something"), "format")
 }
@@ -183,7 +254,7 @@ func TestError(test *testing.T) {
 // -- Warn --------------------------------------------------------------------
 
 func TestWarn(test *testing.T) {
-	SetLevel(LevelWarn)
+	SetLogLevel(LevelWarn)
 	assert.NotZero(test, Warn("test"), "string")
 	assert.NotZero(test, Warnf("test %s", "something"), "format")
 }
@@ -191,7 +262,7 @@ func TestWarn(test *testing.T) {
 // -- Info --------------------------------------------------------------------
 
 func TestInfo(test *testing.T) {
-	SetLevel(LevelInfo)
+	SetLogLevel(LevelInfo)
 	assert.NotZero(test, Info("test"), "string")
 	assert.NotZero(test, Infof("test %s", "something"), "format")
 }
@@ -199,7 +270,7 @@ func TestInfo(test *testing.T) {
 // -- Debug -------------------------------------------------------------------
 
 func TestDebug(test *testing.T) {
-	SetLevel(LevelDebug)
+	SetLogLevel(LevelDebug)
 	assert.NotZero(test, Debug("test"), "string")
 	assert.NotZero(test, Debugf("test %s", "something"), "format")
 }
@@ -207,7 +278,7 @@ func TestDebug(test *testing.T) {
 // -- Trace -------------------------------------------------------------------
 
 func TestTrace(test *testing.T) {
-	SetLevel(LevelTrace)
+	SetLogLevel(LevelTrace)
 	assert.NotZero(test, Trace("test"), "string")
 	assert.NotZero(test, Tracef("test %s", "something"), "format")
 }
@@ -215,12 +286,12 @@ func TestTrace(test *testing.T) {
 // -- Miscellaneous -----------------------------------------------------------
 
 func TestFluentInterface(test *testing.T) {
-	SetLevel(LevelTrace)
+	SetLogLevel(LevelTrace)
 	Trace("trace").Debug("debug").Info("info").Warn("warn").Error("error")
 }
 
 func TestVaradic(test *testing.T) {
-	SetLevel(LevelDebug)
+	SetLogLevel(LevelDebug)
 	_, err := time.LoadLocation("bob")
 	Info("Should be error: ", err)
 }

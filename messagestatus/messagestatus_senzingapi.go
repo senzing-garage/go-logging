@@ -1,37 +1,24 @@
-// The logger package is a set of method to help with common tasks.
-//
-// The purpose of a logger object is:
-//   - ...
-//   - ...
-//   - ...
-package messagebuilder
+/*
+Package helper ...
+*/
+package messagestatus
 
 // ----------------------------------------------------------------------------
 // Types
 // ----------------------------------------------------------------------------
 
-type MessageBuilder struct{}
+type MessageStatusSenzingApi struct{}
 
 // ----------------------------------------------------------------------------
 // Variables
 // ----------------------------------------------------------------------------
 
-var messagebuilder *MessageBuilder
-
-// Important:  The number listed is one more than the highest number for the MessageLevel.
-// For instance:  0-999 is info;  1000-1999 is warning; 2000-2999 is error.
-var MessageLevelMap = map[int]string{
-	1000:  "info",
-	2000:  "warning",
-	3000:  "error",
-	4000:  "debug",
-	5000:  "trace",
-	7000:  "retryable",
-	9000:  "reserved",
-	10000: "fatal",
+var senzingApiStatusMap = map[int]string{
+	1000: "user-input-error",
+	2000: "retryable",
 }
 
-var SenzingErrorsMap = map[string]string{
+var senzingApiErrorsMap = map[string]string{
 	"0002E":  "info",
 	"0007E":  "error",
 	"0023E":  "error",
@@ -61,4 +48,21 @@ var SenzingErrorsMap = map[string]string{
 	"30122E": "error",
 	"30123E": "error",
 	"9000E":  "error",
+}
+
+// ----------------------------------------------------------------------------
+// Interface methods
+// ----------------------------------------------------------------------------
+
+// TODO:
+func (messagelevel *MessageStatusSenzingApi) CalculateMessageStatus(errorNumber int, text string) (string, error) {
+	var err error = nil
+	var result = ""
+
+	result, ok := senzingApiStatusMap[errorNumber]
+	if ok {
+		return result, err
+	}
+
+	return result, err
 }

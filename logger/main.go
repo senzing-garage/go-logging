@@ -12,17 +12,6 @@ package logger
 
 type Level int
 
-type Logger struct {
-	level   Level
-	isDebug bool
-	isError bool
-	isFatal bool
-	isInfo  bool
-	isPanic bool
-	isTrace bool
-	isWarn  bool
-}
-
 // ----------------------------------------------------------------------------
 // Constants
 // ----------------------------------------------------------------------------
@@ -42,18 +31,68 @@ const (
 )
 
 const (
-	LevelDebugName  = "DEBUG"
-	LevelErrorName  = "ERROR"
-	LevelFatalName  = "FATAL"
-	LevelInfoName   = "INFO"
-	LevelPanicName  = "PANIC"
-	LevelTraceName  = "TRACE"
-	LevelWarnName   = "WARN"
-	MessageIdFormat = "senzing-6511%04d"
+	LevelDebugName = "DEBUG"
+	LevelErrorName = "ERROR"
+	LevelFatalName = "FATAL"
+	LevelInfoName  = "INFO"
+	LevelPanicName = "PANIC"
+	LevelTraceName = "TRACE"
+	LevelWarnName  = "WARN"
+	// MessageIdFormat = "senzing-6511%04d"
 )
+
+// ----------------------------------------------------------------------------
+// Interfaces
+// ----------------------------------------------------------------------------
+
+type LoggerInterface interface {
+	Debug(v ...interface{}) LoggerInterface
+	Debugf(format string, v ...interface{}) LoggerInterface
+	Error(v ...interface{}) LoggerInterface
+	Errorf(format string, v ...interface{}) LoggerInterface
+	Fatal(v ...interface{}) LoggerInterface
+	Fatalf(format string, v ...interface{}) LoggerInterface
+	GetLogLevel() Level
+	GetLogLevelAsString() string
+	Info(v ...interface{}) LoggerInterface
+	Infof(format string, v ...interface{}) LoggerInterface
+	IsDebug() bool
+	IsError() bool
+	IsFatal() bool
+	IsInfo() bool
+	IsPanic() bool
+	IsTrace() bool
+	IsWarn() bool
+	Panic(v ...interface{}) LoggerInterface
+	Panicf(format string, v ...interface{}) LoggerInterface
+	SetLogLevel(level Level) LoggerInterface
+	SetLogLevelFromString(levelString string) LoggerInterface
+	Trace(v ...interface{}) LoggerInterface
+	Tracef(format string, v ...interface{}) LoggerInterface
+	Warn(v ...interface{}) LoggerInterface
+	Warnf(format string, v ...interface{}) LoggerInterface
+}
 
 // ----------------------------------------------------------------------------
 // Variables
 // ----------------------------------------------------------------------------
 
-var logger *Logger
+var levelToTextMap = map[Level]string{
+	LevelTrace: LevelTraceName,
+	LevelDebug: LevelDebugName,
+	LevelInfo:  LevelInfoName,
+	LevelWarn:  LevelWarnName,
+	LevelError: LevelErrorName,
+	LevelFatal: LevelFatalName,
+	LevelPanic: LevelPanicName,
+}
+
+var textToLevelMap = map[string]Level{
+	LevelTraceName: LevelTrace,
+	LevelDebugName: LevelDebug,
+	LevelInfoName:  LevelInfo,
+	LevelWarnName:  LevelWarn,
+	LevelErrorName: LevelError,
+	LevelFatalName: LevelFatal,
+	LevelPanicName: LevelPanic,
+}

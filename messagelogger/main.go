@@ -12,8 +12,6 @@ package messagelogger
 
 type Level int
 
-type MessageLogger struct{}
-
 // ----------------------------------------------------------------------------
 // Constants
 // ----------------------------------------------------------------------------
@@ -31,7 +29,14 @@ const (
 )
 
 // ----------------------------------------------------------------------------
-// Variables
+// Interfaces
 // ----------------------------------------------------------------------------
 
-var messagelogger *MessageLogger
+type MessageLoggerInterface interface {
+	GetLogLevel() Level
+	GetLogLevelAsString() string
+	Log(errorNumber int, details ...interface{}) error
+	Message(errorNumber int, details ...interface{}) (string, error)
+	SetLogLevel(level Level) MessageLoggerInterface
+	SetLogLevelFromString(levelString string) MessageLoggerInterface
+}
