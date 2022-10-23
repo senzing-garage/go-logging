@@ -12,6 +12,7 @@ import (
 	"github.com/senzing/go-logging/messagelogger"
 	"github.com/senzing/go-logging/messageloglevel"
 	"github.com/senzing/go-logging/messagestatus"
+	"github.com/senzing/go-logging/messagetext"
 )
 
 // Values updated via "go install -ldflags" parameters.
@@ -29,6 +30,14 @@ const MessageIdFormat = "senzing-9999%04d"
 func complexProcess() string {
 	time.Sleep(1000 * time.Second)
 	return "slept"
+}
+
+func boilerplateLogging() {
+	messagelogger.Log(0, "Custom message")
+	messagelogger.Log(1000, programName, buildVersion, buildIteration)
+	messagelogger.Log(2000, programName, buildVersion, buildIteration)
+	messagelogger.Log(3000, programName, buildVersion, buildIteration)
+	messagelogger.Log(4000, programName, buildVersion, buildIteration)
 }
 
 // ----------------------------------------------------------------------------
@@ -49,14 +58,13 @@ func main() {
 	// --- Simple case with default MessageFormat, no Messages, no MessageLevel
 
 	fmt.Printf("\n\n--- Test 1: No customization ---------------------------------------------------\n\n")
+	boilerplateLogging()
 
-	messagelogger.Log(0, "Custom message")
-	messagelogger.Log(1000, programName, buildVersion, buildIteration)
-	messagelogger.Log(2000, programName, buildVersion, buildIteration)
-	messagelogger.Log(3000, programName, buildVersion, buildIteration)
-	messagelogger.Log(4000, programName, buildVersion, buildIteration)
+	fmt.Printf("\n\n--- Test 2: Add customized id --------------------------------------------------\n\n")
+	messagelogger.GetMessageLogger().SetMessageIdTemplate("senzing-9999%04d")
+	boilerplateLogging()
 
-	fmt.Printf("\n\n--- Test 2: Add message templates ----------------------------------------------\n\n")
+	fmt.Printf("\n\n--- Test 3: Add message templates ----------------------------------------------\n\n")
 
 	var messageTemplates = map[int]string{
 		0:    "No variable substitution",
@@ -65,35 +73,20 @@ func main() {
 		3000: "Program name: %s; Build version %s; Build iterations %s;",
 		4000: "Program name: %s; Build version %s; Build iterations %s; Unknown: %s",
 	}
-	messagelogger.GetMessageLogger().Messages = messageTemplates
+	messagelogger.GetMessageLogger().SetMessages(messageTemplates)
+	boilerplateLogging()
 
-	messagelogger.Log(0, "Custom message")
-	messagelogger.Log(1000, programName, buildVersion, buildIteration)
-	messagelogger.Log(2000, programName, buildVersion, buildIteration)
-	messagelogger.Log(3000, programName, buildVersion, buildIteration)
-	messagelogger.Log(4000, programName, buildVersion, buildIteration)
-
-	fmt.Printf("\n\n--- Test 3: Add message levels -------------------------------------------------\n\n")
+	fmt.Printf("\n\n--- Test 4: Add message levels -------------------------------------------------\n\n")
 
 	messagelogger.GetMessageLogger().MessageLogLevel = &messageloglevel.MessageLogLevelSenzingApi{}
+	boilerplateLogging()
 
-	messagelogger.Log(0, "Custom message")
-	messagelogger.Log(1000, programName, buildVersion, buildIteration)
-	messagelogger.Log(2000, programName, buildVersion, buildIteration)
-	messagelogger.Log(3000, programName, buildVersion, buildIteration)
-	messagelogger.Log(4000, programName, buildVersion, buildIteration)
-
-	fmt.Printf("\n\n--- Test 4: Add status ---------------------------------------------------------\n\n")
+	fmt.Printf("\n\n--- Test 5: Add status ---------------------------------------------------------\n\n")
 
 	messagelogger.GetMessageLogger().MessageStatus = &messagestatus.MessageStatusSenzingApi{}
+	boilerplateLogging()
 
-	messagelogger.Log(0, "Custom message")
-	messagelogger.Log(1000, programName, buildVersion, buildIteration)
-	messagelogger.Log(2000, programName, buildVersion, buildIteration)
-	messagelogger.Log(3000, programName, buildVersion, buildIteration)
-	messagelogger.Log(4000, programName, buildVersion, buildIteration)
-
-	fmt.Printf("\n\n--- Test 5: Add logging golang errors ------------------------------------------\n\n")
+	fmt.Printf("\n\n--- Test 6: Add logging golang errors ------------------------------------------\n\n")
 
 	error_1 := errors.New("first error")
 	error_2 := errors.New("second error")
@@ -102,7 +95,7 @@ func main() {
 	messagelogger.Log(1000, programName, buildVersion, buildIteration, error_1)
 	messagelogger.Log(2000, programName, buildVersion, buildIteration, error_1, "Just some text", error_2)
 
-	fmt.Printf("\n\n--- Test 6: Using Maps ---------------------------------------------------------\n\n")
+	fmt.Printf("\n\n--- Test 7: Using Maps ---------------------------------------------------------\n\n")
 
 	messageTemplates[1001] = "Using maps"
 
@@ -130,11 +123,14 @@ func main() {
 	log.SetFlags(0)
 
 	terseMessageLogger := &messagelogger.MessageLoggerImpl{
-		MessageId: &messageid.MessageIdDefault{IdTemplate: "test-%04d"},
-		// Messages:        messageTemplates,
-		MessageFormat:   &messageformat.MessageFormatTerse{},
-		MessageLogLevel: &messageloglevel.MessageLogLevelNull{},
 		Logger:          &logger.LoggerImpl{},
+		MessageFormat:   &messageformat.MessageFormatTerse{},
+		MessageId:       &messageid.MessageIdDefault{},
+		MessageLogLevel: &messageloglevel.MessageLogLevelNull{},
+		MessageStatus:   &messagestatus.MessageStatusNull{},
+		MessageText: &messagetext.MessageTextDefault{
+			Messages: messageTemplates,
+		},
 	}
 
 	terseMessageLogger.SetLogLevel(messagelogger.LevelDebug)
@@ -148,8 +144,6 @@ func main() {
 	terseMessageLogger.Log(4000, programName, buildVersion, buildIteration)
 
 	fmt.Printf("\n\n--- Test 12: Add message templates ---------------------------------------------\n\n")
-
-	terseMessageLogger.Messages = messageTemplates
 
 	terseMessageLogger.Log(0, "Custom message")
 	terseMessageLogger.Log(1000, programName, buildVersion, buildIteration)

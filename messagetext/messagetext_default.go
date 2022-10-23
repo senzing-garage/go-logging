@@ -33,3 +33,8 @@ func (messagetext *MessageTextDefault) MessageText(errorNumber int, details ...i
 
 	return result, err
 }
+
+// TODO:
+func (messagetext *MessageTextDefault) SetMessages(messages map[int]string) {
+	messagetext.Messages = messages
+}

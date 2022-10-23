@@ -39,4 +39,6 @@ type MessageLoggerInterface interface {
 	Message(errorNumber int, details ...interface{}) (string, error)
 	SetLogLevel(level Level) MessageLoggerInterface
 	SetLogLevelFromString(levelString string) MessageLoggerInterface
+	SetMessageIdTemplate(idTemplate string)
+	SetMessages(messages map[int]string)
 }

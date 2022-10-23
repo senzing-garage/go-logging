@@ -21,7 +21,6 @@ type MessageLoggerImpl struct {
 	MessageFormat   messageformat.MessageFormatInterface
 	MessageId       messageid.MessageIdInterface
 	MessageLogLevel messageloglevel.MessageLogLevelInterface
-	Messages        map[int]string
 	MessageStatus   messagestatus.MessageStatusInterface
 	MessageText     messagetext.MessageTextInterface
 }
@@ -49,11 +48,12 @@ var messageLoggerInstance *MessageLoggerImpl
 // TODO:
 func New() *MessageLoggerImpl {
 	result := &MessageLoggerImpl{
-		MessageId:       &messageid.MessageIdDefault{},
 		Logger:          &logger.LoggerImpl{},
 		MessageFormat:   &messageformat.MessageFormatJson{},
+		MessageId:       &messageid.MessageIdDefault{},
 		MessageLogLevel: &messageloglevel.MessageLogLevelNull{},
 		MessageStatus:   &messagestatus.MessageStatusNull{},
+		MessageText:     &messagetext.MessageTextDefault{},
 	}
 	result.SetLogLevel(LevelInfo)
 	return result
@@ -138,6 +138,26 @@ func (messagelogger *MessageLoggerImpl) GetLogLevelAsString() string {
 	return (messagelogger.Logger.GetLogLevelAsString())
 }
 
+// --- MessageIdTemplate ------------------------------------------------------
+
+// TODO:
+func SetMessageIdTemplate(idTemplate string) { messageLoggerInstance.SetMessageIdTemplate(idTemplate) }
+
+// TODO:
+func (messagelogger *MessageLoggerImpl) SetMessageIdTemplate(idTemplate string) {
+	messagelogger.MessageId.SetMessageIdTemplate(idTemplate)
+}
+
+// --- Messages ---------------------------------------------------------------
+
+// TODO:
+func SetMessages(messages map[int]string) { messageLoggerInstance.SetMessages(messages) }
+
+// TODO:
+func (messagelogger *MessageLoggerImpl) SetMessages(messages map[int]string) {
+	messagelogger.MessageText.SetMessages(messages)
+}
+
 // --- MessageLogger ----------------------------------------------------------
 
 // TODO:
@@ -180,7 +200,7 @@ func (messagelogger *MessageLoggerImpl) Message(errorNumber int, details ...inte
 		return "", err
 	}
 
-	result, err := messagelogger.MessageFormat.BuildMessage(id, status, text, details...)
+	result, err := messagelogger.MessageFormat.Message(id, status, text, details...)
 	if err != nil {
 		return "", err
 	}

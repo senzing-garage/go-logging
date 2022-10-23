@@ -18,8 +18,17 @@ type MessageIdDefault struct {
 // ----------------------------------------------------------------------------
 
 // TODO:
-func (mesageId *MessageIdDefault) MessageId(errorNumber int) (string, error) {
+func (messageId *MessageIdDefault) MessageId(errorNumber int) (string, error) {
 	var err error = nil
-	result := fmt.Sprintf(mesageId.IdTemplate, errorNumber)
+	idTemplate := "%04d"
+	if len(messageId.IdTemplate) > 0 {
+		idTemplate = messageId.IdTemplate
+	}
+	result := fmt.Sprintf(idTemplate, errorNumber)
 	return result, err
+}
+
+// TODO:
+func (messagetext *MessageIdDefault) SetMessageIdTemplate(idTemplate string) {
+	messagetext.IdTemplate = idTemplate
 }

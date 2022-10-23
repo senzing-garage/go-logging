@@ -91,7 +91,7 @@ func TestJsonMessageNothing(test *testing.T) {
 
 func TestTerseBuildError(test *testing.T) {
 	testObject := &MessageFormatTerse{}
-	err := testObject.BuildError("id-1", "try-again", "text-1", 123, "bob")
+	err := testObject.Error("id-1", "try-again", "text-1", 123, "bob")
 	test.Logf("%v", err)
 }
 
