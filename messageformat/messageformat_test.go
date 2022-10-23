@@ -33,11 +33,11 @@ func testError(test *testing.T, testObject MessageFormatInterface, err error) {
 
 // -- Error -------------------------------------------------------------------
 
-func TestJsonError(test *testing.T) {
-	testObject := &MessageFormatJson{}
-	err := testObject.Error("id-1", "try-again", "text-1", 123, "bob")
-	test.Logf("%v", err)
-}
+// func TestJsonError(test *testing.T) {
+// 	testObject := &MessageFormatJson{}
+// 	err := testObject.Error("id-1", "try-again", "text-1", 123, "bob")
+// 	test.Logf("%v", err)
+// }
 
 // -- Message -----------------------------------------------------------------
 
@@ -89,11 +89,11 @@ func TestJsonMessageNothing(test *testing.T) {
 
 // -- Error -------------------------------------------------------------------
 
-func TestTerseBuildError(test *testing.T) {
-	testObject := &MessageFormatTerse{}
-	err := testObject.Error("id-1", "try-again", "text-1", 123, "bob")
-	test.Logf("%v", err)
-}
+// func TestTerseBuildError(test *testing.T) {
+// 	testObject := &MessageFormatTerse{}
+// 	err := testObject.Error("id-1", "try-again", "text-1", 123, "bob")
+// 	test.Logf("%v", err)
+// }
 
 // -- Message -----------------------------------------------------------------
 
