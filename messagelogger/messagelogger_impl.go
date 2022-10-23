@@ -180,7 +180,11 @@ func (messagelogger *MessageLoggerImpl) Message(errorNumber int, details ...inte
 		return "", err
 	}
 
-	result := messagelogger.MessageFormat.BuildMessage(id, status, text, details...)
+	result, err := messagelogger.MessageFormat.BuildMessage(id, status, text, details...)
+	if err != nil {
+		return "", err
+	}
+
 	return result, err
 }
 

@@ -19,11 +19,17 @@ type MessageFormatTerse struct {
 // Interface methods
 // ----------------------------------------------------------------------------
 
-func (messageFormat *MessageFormatTerse) BuildError(id string, status string, text string, details ...interface{}) error {
-	return errors.New(messageFormat.BuildMessage(id, status, text, details...))
+func (messageFormat *MessageFormatTerse) Error(id string, status string, text string, details ...interface{}) error {
+	message, err := messageFormat.Message(id, status, text, details...)
+	if err != nil {
+		return err
+	}
+	return errors.New(message)
 }
 
-func (messageFormat *MessageFormatTerse) BuildMessage(id string, status string, text string, details ...interface{}) string {
+func (messageFormat *MessageFormatTerse) Message(id string, status string, text string, details ...interface{}) (string, error) {
+	var err error = nil
+
 	result := ""
 	if len(id) > 0 {
 		result = result + fmt.Sprintf("%s: ", id)
@@ -42,5 +48,5 @@ func (messageFormat *MessageFormatTerse) BuildMessage(id string, status string, 
 		result = result + fmt.Sprintf("%v ", detailMap)
 	}
 
-	return result
+	return result, err
 }
