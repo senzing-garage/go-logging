@@ -6,6 +6,6 @@ package messageformat
 // ----------------------------------------------------------------------------
 
 type MessageFormatInterface interface {
-	BuildError(id string, status string, text string, details ...interface{}) error
-	BuildMessage(id string, status string, text string, details ...interface{}) string
+	Error(id string, status string, text string, details ...interface{}) error
+	Message(id string, status string, text string, details ...interface{}) (string, error)
 }

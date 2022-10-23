@@ -1,15 +1,16 @@
-// The messagestatus package is a set of methods logging messages.
+// The messageid package...
 //
 // The purpose of a logger object is:
 //   - ...
 //   - ...
 //   - ...
-package messagestatus
+package messagetext
 
 // ----------------------------------------------------------------------------
 // Interfaces
 // ----------------------------------------------------------------------------
 
-type MessageStatusInterface interface {
-	MessageStatus(errorNumber int, text string) (string, error)
+type MessageTextInterface interface {
+	MessageText(errorNumber int, details ...interface{}) (string, error)
+	SetMessages(messages map[int]string)
 }

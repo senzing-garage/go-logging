@@ -69,12 +69,18 @@ func stringify(unknown interface{}) string {
 // Interface methods
 // ----------------------------------------------------------------------------
 
-func (messageFormat *MessageFormatJson) BuildError(id string, status string, text string, details ...interface{}) error {
-	return errors.New(messageFormat.BuildMessage(id, status, text, details...))
+func (messageFormat *MessageFormatJson) Error(id string, status string, text string, details ...interface{}) error {
+	message, err := messageFormat.Message(id, status, text, details...)
+	if err != nil {
+		return err
+	}
+	return errors.New(message)
 }
 
 // Build a message given details as strings.
-func (messageFormat *MessageFormatJson) BuildMessage(id string, status string, text string, details ...interface{}) string {
+func (messageFormat *MessageFormatJson) Message(id string, status string, text string, details ...interface{}) (string, error) {
+
+	var err error = nil
 
 	if len(id) > 0 {
 		messageFormat.Id = id
@@ -135,7 +141,7 @@ func (messageFormat *MessageFormatJson) BuildMessage(id string, status string, t
 	// Convert to JSON.
 
 	result, _ := json.Marshal(messageFormat)
-	return string(result)
+	return string(result), err
 }
 
 // Parse JSON message.

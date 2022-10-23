@@ -5,12 +5,13 @@ package messagelogger
 
 import (
 	"fmt"
-	"strings"
 
 	"github.com/senzing/go-logging/logger"
 	"github.com/senzing/go-logging/messageformat"
+	"github.com/senzing/go-logging/messageid"
 	"github.com/senzing/go-logging/messageloglevel"
 	"github.com/senzing/go-logging/messagestatus"
+	"github.com/senzing/go-logging/messagetext"
 )
 
 // ----------------------------------------------------------------------------
@@ -18,23 +19,13 @@ import (
 // ----------------------------------------------------------------------------
 
 type MessageLoggerImpl struct {
-	IdTemplate      string
 	Logger          logger.LoggerInterface
 	MessageFormat   messageformat.MessageFormatInterface
+	MessageId       messageid.MessageIdInterface
 	MessageLogLevel messageloglevel.MessageLogLevelInterface
-	Messages        map[int]string
 	MessageStatus   messagestatus.MessageStatusInterface
+	MessageText     messagetext.MessageTextInterface
 }
-
-// ----------------------------------------------------------------------------
-// Constants
-// ----------------------------------------------------------------------------
-
-// Must match what's in logger/main.go
-
-const (
-	DefaultIdTemplate = "senzing-9999%04d"
-)
 
 // ----------------------------------------------------------------------------
 // Variables
@@ -49,11 +40,12 @@ var messageLoggerInstance *MessageLoggerImpl
 // TODO:
 func New() *MessageLoggerImpl {
 	result := &MessageLoggerImpl{
-		IdTemplate:      DefaultIdTemplate,
 		Logger:          &logger.LoggerImpl{},
 		MessageFormat:   &messageformat.MessageFormatJson{},
+		MessageId:       &messageid.MessageIdDefault{},
 		MessageLogLevel: &messageloglevel.MessageLogLevelNull{},
 		MessageStatus:   &messagestatus.MessageStatusNull{},
+		MessageText:     &messagetext.MessageTextDefault{},
 	}
 	result.SetLogLevel(LevelInfo)
 	return result
@@ -138,6 +130,32 @@ func (messagelogger *MessageLoggerImpl) GetLogLevelAsString() string {
 	return (messagelogger.Logger.GetLogLevelAsString())
 }
 
+// --- MessageIdTemplate ------------------------------------------------------
+
+// TODO:
+func SetMessageIdTemplate(idTemplate string) MessageLoggerInterface {
+	return messageLoggerInstance.SetMessageIdTemplate(idTemplate)
+}
+
+// TODO:
+func (messagelogger *MessageLoggerImpl) SetMessageIdTemplate(idTemplate string) MessageLoggerInterface {
+	messagelogger.MessageId.SetMessageIdTemplate(idTemplate)
+	return messagelogger
+}
+
+// --- Messages ---------------------------------------------------------------
+
+// TODO:
+func SetMessages(messages map[int]string) MessageLoggerInterface {
+	return messageLoggerInstance.SetMessages(messages)
+}
+
+// TODO:
+func (messagelogger *MessageLoggerImpl) SetMessages(messages map[int]string) MessageLoggerInterface {
+	messagelogger.MessageText.SetMessages(messages)
+	return messagelogger
+}
+
 // --- MessageLogger ----------------------------------------------------------
 
 // TODO:
@@ -165,25 +183,35 @@ func Message(errorNumber int, details ...interface{}) (string, error) {
 func (messagelogger *MessageLoggerImpl) Message(errorNumber int, details ...interface{}) (string, error) {
 	var err error = nil
 
-	idTemplate := "%d"
-	if messagelogger.IdTemplate != "" {
-		idTemplate = messagelogger.IdTemplate
+	id := fmt.Sprintf("%d", errorNumber)
+	if messagelogger.MessageId != nil {
+		id, err = messagelogger.MessageId.MessageId(errorNumber)
+		if err != nil {
+			return "", err
+		}
 	}
-	id := fmt.Sprintf(idTemplate, errorNumber)
 
 	text := ""
-	textTemplate, ok := messagelogger.Messages[errorNumber]
-	if ok {
-		textRaw := fmt.Sprintf(textTemplate, details...)
-		text = strings.Split(textRaw, "%!(")[0]
+	if messagelogger.MessageText != nil {
+		text, err = messagelogger.MessageText.MessageText(errorNumber, details...)
+		if err != nil {
+			return "", err
+		}
 	}
 
-	status, err := messageLoggerInstance.MessageStatus.CalculateMessageStatus(errorNumber, text)
+	status := ""
+	if messagelogger.MessageStatus != nil {
+		status, err = messageLoggerInstance.MessageStatus.MessageStatus(errorNumber, text)
+		if err != nil {
+			return "", err
+		}
+	}
+
+	result, err := messagelogger.MessageFormat.Message(id, status, text, details...)
 	if err != nil {
 		return "", err
 	}
 
-	result := messagelogger.MessageFormat.BuildMessage(id, status, text, details...)
 	return result, err
 }
 
@@ -195,9 +223,13 @@ func (messagelogger *MessageLoggerImpl) Log(errorNumber int, details ...interfac
 	if err != nil {
 		return err
 	}
-	messageLevel, err := messagelogger.MessageLogLevel.CalculateMessageLogLevel(errorNumber, messageBody)
-	if err != nil {
-		return err
+
+	messageLevel := logger.LevelInfo
+	if messagelogger.MessageLogLevel != nil {
+		messageLevel, err = messagelogger.MessageLogLevel.MessageLogLevel(errorNumber, messageBody)
+		if err != nil {
+			return err
+		}
 	}
 	messagelogger.logBasedOnLevel(Level(messageLevel), messageBody)
 	return err

@@ -35,7 +35,7 @@ func testError(test *testing.T, testObject MessageLogLevelInterface, err error) 
 
 func TestSenzingApiBuildError(test *testing.T) {
 	testObject := &MessageLogLevelSenzingApi{}
-	actual, err := testObject.CalculateMessageLogLevel(1, "This is message text")
+	actual, err := testObject.MessageLogLevel(1, "This is message text")
 	testError(test, testObject, err)
 	printActual(test, actual)
 }
@@ -48,7 +48,7 @@ func TestSenzingApiBuildError(test *testing.T) {
 
 func TestInfoBuildError(test *testing.T) {
 	testObject := &MessageLogLevelInfo{}
-	actual, err := testObject.CalculateMessageLogLevel(1, "This is message text")
+	actual, err := testObject.MessageLogLevel(1, "This is message text")
 	testError(test, testObject, err)
 	printActual(test, actual)
 }

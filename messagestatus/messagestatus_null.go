@@ -14,7 +14,7 @@ type MessageStatusNull struct{}
 // ----------------------------------------------------------------------------
 
 // TODO:
-func (messagelevel *MessageStatusNull) CalculateMessageStatus(errorNumber int, text string) (string, error) {
+func (messagelevel *MessageStatusNull) MessageStatus(errorNumber int, text string) (string, error) {
 	var err error = nil
 	var result = ""
 	return result, err

@@ -1,4 +1,4 @@
-package messagestatus
+package messageid
 
 import (
 	"fmt"
@@ -21,21 +21,23 @@ func printActual(test *testing.T, actual interface{}) {
 	printResult(test, "Actual", actual)
 }
 
-func testError(test *testing.T, testObject MessageStatusInterface, err error) {
+func testError(test *testing.T, testObject MessageIdInterface, err error) {
 	if err != nil {
 		test.Log("Error:", err.Error())
 	}
 }
 
 // ----------------------------------------------------------------------------
-// Test interface functions for MessageLevelSenzingApi - names begin with "Test"
+// Test interface functions for MessageId - names begin with "Test"
 // ----------------------------------------------------------------------------
 
-// -- BuildError --------------------------------------------------------------
+// -- MessageId ---------------------------------------------------------------
 
-func TestSenzingApiBuildError(test *testing.T) {
-	testObject := &MessageStatusSenzingApi{}
-	actual, err := testObject.MessageStatus(1, "This is message text")
+func TestMessageId(test *testing.T) {
+	testObject := &MessageIdDefault{
+		IdTemplate: "senzing-9999%04d",
+	}
+	actual, err := testObject.MessageId(1)
 	testError(test, testObject, err)
 	printActual(test, actual)
 }
