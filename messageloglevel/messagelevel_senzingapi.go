@@ -43,7 +43,7 @@ var MessageLevelMap = map[int]logger.Level{
 // ----------------------------------------------------------------------------
 
 // TODO:
-func (messagelevel *MessageLogLevelSenzingApi) CalculateMessageLogLevel(errorNumber int, message string) (logger.Level, error) {
+func (messagelevel *MessageLogLevelSenzingApi) MessageLogLevel(errorNumber int, message string) (logger.Level, error) {
 	var err error = nil
 	var result = logger.LevelPanic
 

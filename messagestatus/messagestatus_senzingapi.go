@@ -55,7 +55,7 @@ var senzingApiErrorsMap = map[string]string{
 // ----------------------------------------------------------------------------
 
 // TODO:
-func (messagelevel *MessageStatusSenzingApi) CalculateMessageStatus(errorNumber int, text string) (string, error) {
+func (messagelevel *MessageStatusSenzingApi) MessageStatus(errorNumber int, text string) (string, error) {
 	var err error = nil
 	var result = ""
 

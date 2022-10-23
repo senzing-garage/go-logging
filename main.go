@@ -8,6 +8,7 @@ import (
 
 	"github.com/senzing/go-logging/logger"
 	"github.com/senzing/go-logging/messageformat"
+	"github.com/senzing/go-logging/messageid"
 	"github.com/senzing/go-logging/messagelogger"
 	"github.com/senzing/go-logging/messageloglevel"
 	"github.com/senzing/go-logging/messagestatus"
@@ -129,7 +130,7 @@ func main() {
 	log.SetFlags(0)
 
 	terseMessageLogger := &messagelogger.MessageLoggerImpl{
-		IdTemplate: "test-%04d",
+		MessageId: &messageid.MessageIdDefault{IdTemplate: "test-%04d"},
 		// Messages:        messageTemplates,
 		MessageFormat:   &messageformat.MessageFormatTerse{},
 		MessageLogLevel: &messageloglevel.MessageLogLevelNull{},

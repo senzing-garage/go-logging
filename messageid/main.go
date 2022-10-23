@@ -11,5 +11,5 @@ package messageid
 // ----------------------------------------------------------------------------
 
 type MessageIdInterface interface {
-	GetMessageId(errorNumber int) (string, error)
+	MessageId(errorNumber int) (string, error)
 }

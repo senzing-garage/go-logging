@@ -35,7 +35,7 @@ func testError(test *testing.T, testObject MessageStatusInterface, err error) {
 
 func TestSenzingApiBuildError(test *testing.T) {
 	testObject := &MessageStatusSenzingApi{}
-	actual, err := testObject.CalculateMessageStatus(1, "This is message text")
+	actual, err := testObject.MessageStatus(1, "This is message text")
 	testError(test, testObject, err)
 	printActual(test, actual)
 }

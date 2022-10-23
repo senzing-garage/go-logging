@@ -1,16 +1,19 @@
 /*
 Package helper ...
 */
-package messageid
+package messagetext
 
-import "fmt"
+import (
+	"fmt"
+	"strings"
+)
 
 // ----------------------------------------------------------------------------
 // Types
 // ----------------------------------------------------------------------------
 
-type MessageIdDefault struct {
-	IdTemplate string
+type MessageTextDefault struct {
+	Messages map[int]string
 }
 
 // ----------------------------------------------------------------------------
@@ -18,8 +21,15 @@ type MessageIdDefault struct {
 // ----------------------------------------------------------------------------
 
 // TODO:
-func (mesageId *MessageIdDefault) MessageId(errorNumber int) (string, error) {
+func (messagetext *MessageTextDefault) MessageText(errorNumber int, details ...interface{}) (string, error) {
 	var err error = nil
-	result := fmt.Sprintf(mesageId.IdTemplate, errorNumber)
+
+	result := ""
+	textTemplate, ok := messagetext.Messages[errorNumber]
+	if ok {
+		textRaw := fmt.Sprintf(textTemplate, details...)
+		result = strings.Split(textRaw, "%!(")[0]
+	}
+
 	return result, err
 }
