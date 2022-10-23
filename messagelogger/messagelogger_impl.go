@@ -133,21 +133,27 @@ func (messagelogger *MessageLoggerImpl) GetLogLevelAsString() string {
 // --- MessageIdTemplate ------------------------------------------------------
 
 // TODO:
-func SetMessageIdTemplate(idTemplate string) { messageLoggerInstance.SetMessageIdTemplate(idTemplate) }
+func SetMessageIdTemplate(idTemplate string) MessageLoggerInterface {
+	return messageLoggerInstance.SetMessageIdTemplate(idTemplate)
+}
 
 // TODO:
-func (messagelogger *MessageLoggerImpl) SetMessageIdTemplate(idTemplate string) {
+func (messagelogger *MessageLoggerImpl) SetMessageIdTemplate(idTemplate string) MessageLoggerInterface {
 	messagelogger.MessageId.SetMessageIdTemplate(idTemplate)
+	return messagelogger
 }
 
 // --- Messages ---------------------------------------------------------------
 
 // TODO:
-func SetMessages(messages map[int]string) { messageLoggerInstance.SetMessages(messages) }
+func SetMessages(messages map[int]string) MessageLoggerInterface {
+	return messageLoggerInstance.SetMessages(messages)
+}
 
 // TODO:
-func (messagelogger *MessageLoggerImpl) SetMessages(messages map[int]string) {
+func (messagelogger *MessageLoggerImpl) SetMessages(messages map[int]string) MessageLoggerInterface {
 	messagelogger.MessageText.SetMessages(messages)
+	return messagelogger
 }
 
 // --- MessageLogger ----------------------------------------------------------
