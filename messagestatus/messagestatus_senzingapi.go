@@ -78,7 +78,7 @@ var senzingApiErrorsMap = map[string]string{
 // 4000-4999 trace
 // 5000-5999 fatal
 // 6000-6999 panic
-var MessageLevelMap = map[int]logger.Level{
+var messageLevelMap = map[int]logger.Level{
 	1000: logger.LevelInfo,
 	2000: logger.LevelWarn,
 	3000: logger.LevelError,
@@ -88,7 +88,7 @@ var MessageLevelMap = map[int]logger.Level{
 	7000: logger.LevelPanic,
 }
 
-var MessageLevelToStringMap = map[logger.Level]string{
+var messageLevelToStringMap = map[logger.Level]string{
 	logger.LevelInfo:  logger.LevelInfoName,
 	logger.LevelWarn:  logger.LevelWarnName,
 	logger.LevelError: logger.LevelErrorName,
@@ -116,7 +116,7 @@ var MessagePrecedence = []string{
 // ----------------------------------------------------------------------------
 
 // TODO:
-func (messagelevel *MessageStatusSenzingApi) MessageStatus(errorNumber int, details ...interface{}) (string, error) {
+func (messagelevel *MessageStatusSenzingApi) MessageStatus(messageNumber int, details ...interface{}) (string, error) {
 	var err error = nil
 	var result = ""
 
@@ -153,12 +153,12 @@ func (messagelevel *MessageStatusSenzingApi) MessageStatus(errorNumber int, deta
 		}
 	}
 
-	// --- Status based on errorNumber ----------------------------------------
+	// --- Status based on messageNumber ----------------------------------------
 
 	// Create a list of sorted keys.
 
-	messageLevelKeys := make([]int, 0, len(MessageLevelMap))
-	for key := range MessageLevelMap {
+	messageLevelKeys := make([]int, 0, len(messageLevelMap))
+	for key := range messageLevelMap {
 		messageLevelKeys = append(messageLevelKeys, key)
 	}
 	sort.Ints(messageLevelKeys)
@@ -167,13 +167,13 @@ func (messagelevel *MessageStatusSenzingApi) MessageStatus(errorNumber int, deta
 
 	finalMessageLevel := logger.LevelPanic
 	for _, messageLevelKey := range messageLevelKeys {
-		if errorNumber < messageLevelKey {
-			finalMessageLevel = MessageLevelMap[messageLevelKey]
+		if messageNumber < messageLevelKey {
+			finalMessageLevel = messageLevelMap[messageLevelKey]
 			break
 		}
 	}
 
-	result, ok := MessageLevelToStringMap[finalMessageLevel]
+	result, ok := messageLevelToStringMap[finalMessageLevel]
 	if ok {
 		return result, err
 	}

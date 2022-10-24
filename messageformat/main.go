@@ -1,4 +1,6 @@
-// The message package formats messages into a JSON string.
+/*
+Package messageformat formats messages into a JSON string.
+*/
 package messageformat
 
 // ----------------------------------------------------------------------------

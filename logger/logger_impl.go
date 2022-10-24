@@ -1,5 +1,10 @@
 /*
-Package helper ...
+Package logger provides a layer over go's log to
+add Trace, Debug, Info, Warn, and Error levels.
+
+It also implements IsXxxx() functions
+that can be used as guards
+(https://en.wikipedia.org/wiki/Guard_(computer_science))
 */
 package logger
 
@@ -34,6 +39,7 @@ var loggerInstance *LoggerImpl
 // Constructors
 // ----------------------------------------------------------------------------
 
+// Create a new default instance of the logger.
 func New() *LoggerImpl {
 	result := &LoggerImpl{}
 	result.SetLogLevel(LevelInfo)

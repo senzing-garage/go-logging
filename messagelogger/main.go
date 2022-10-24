@@ -1,9 +1,6 @@
-// The messagelogger package is a set of methods logging messages.
-//
-// The purpose of a logger object is:
-//   - ...
-//   - ...
-//   - ...
+/*
+Package logger provides...
+*/
 package messagelogger
 
 // ----------------------------------------------------------------------------
@@ -33,11 +30,11 @@ const (
 // ----------------------------------------------------------------------------
 
 type MessageLoggerInterface interface {
-	Error(errorNumber int, details ...interface{}) error
+	Error(messageNumber int, details ...interface{}) error
 	GetLogLevel() Level
 	GetLogLevelAsString() string
-	Log(errorNumber int, details ...interface{}) error
-	Message(errorNumber int, details ...interface{}) (string, error)
+	Log(messageNumber int, details ...interface{}) error
+	Message(messageNumber int, details ...interface{}) (string, error)
 	SetIdTemplate(idTemplate string) MessageLoggerInterface
 	SetLogLevel(level Level) MessageLoggerInterface
 	SetLogLevelFromString(levelString string) MessageLoggerInterface

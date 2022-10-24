@@ -1,9 +1,7 @@
-// The messageid package...
-//
-// The purpose of a logger object is:
-//   - ...
-//   - ...
-//   - ...
+/*
+Package messagetext produces a string used in a "text"
+field of a log message.
+*/
 package messagetext
 
 // ----------------------------------------------------------------------------
@@ -11,6 +9,6 @@ package messagetext
 // ----------------------------------------------------------------------------
 
 type MessageTextInterface interface {
-	MessageText(errorNumber int, details ...interface{}) (string, error)
+	MessageText(messageNumber int, details ...interface{}) (string, error)
 	SetTextTemplates(messages map[int]string)
 }

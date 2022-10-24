@@ -167,18 +167,18 @@ func GetMessageLogger() *MessageLoggerImpl { return messageLoggerInstance }
 // ----------------------------------------------------------------------------
 
 // TODO:
-func Error(errorNumber int, details ...interface{}) error {
-	return messageLoggerInstance.Error(errorNumber, details...)
+func Error(messageNumber int, details ...interface{}) error {
+	return messageLoggerInstance.Error(messageNumber, details...)
 }
 
 // TODO:
-func Log(errorNumber int, details ...interface{}) error {
-	return messageLoggerInstance.Log(errorNumber, details...)
+func Log(messageNumber int, details ...interface{}) error {
+	return messageLoggerInstance.Log(messageNumber, details...)
 }
 
 // TODO:
-func Message(errorNumber int, details ...interface{}) (string, error) {
-	return messageLoggerInstance.Message(errorNumber, details...)
+func Message(messageNumber int, details ...interface{}) (string, error) {
+	return messageLoggerInstance.Message(messageNumber, details...)
 }
 
 // ----------------------------------------------------------------------------
@@ -186,8 +186,8 @@ func Message(errorNumber int, details ...interface{}) (string, error) {
 // ----------------------------------------------------------------------------
 
 // TODO:
-func (messagelogger *MessageLoggerImpl) Error(errorNumber int, details ...interface{}) error {
-	errorMessage, err := messagelogger.Message(errorNumber, details...)
+func (messagelogger *MessageLoggerImpl) Error(messageNumber int, details ...interface{}) error {
+	errorMessage, err := messagelogger.Message(messageNumber, details...)
 	if err != nil {
 		return err
 	}
@@ -195,12 +195,12 @@ func (messagelogger *MessageLoggerImpl) Error(errorNumber int, details ...interf
 }
 
 // TODO:
-func (messagelogger *MessageLoggerImpl) Message(errorNumber int, details ...interface{}) (string, error) {
+func (messagelogger *MessageLoggerImpl) Message(messageNumber int, details ...interface{}) (string, error) {
 	var err error = nil
 
-	id := fmt.Sprintf("%d", errorNumber)
+	id := fmt.Sprintf("%d", messageNumber)
 	if messagelogger.MessageId != nil {
-		id, err = messagelogger.MessageId.MessageId(errorNumber, details...)
+		id, err = messagelogger.MessageId.MessageId(messageNumber, details...)
 		if err != nil {
 			return "", err
 		}
@@ -208,7 +208,7 @@ func (messagelogger *MessageLoggerImpl) Message(errorNumber int, details ...inte
 
 	text := ""
 	if messagelogger.MessageText != nil {
-		text, err = messagelogger.MessageText.MessageText(errorNumber, details...)
+		text, err = messagelogger.MessageText.MessageText(messageNumber, details...)
 		if err != nil {
 			return "", err
 		}
@@ -216,7 +216,7 @@ func (messagelogger *MessageLoggerImpl) Message(errorNumber int, details ...inte
 
 	status := ""
 	if messagelogger.MessageStatus != nil {
-		status, err = messageLoggerInstance.MessageStatus.MessageStatus(errorNumber, details...)
+		status, err = messagelogger.MessageStatus.MessageStatus(messageNumber, details...)
 		if err != nil {
 			return "", err
 		}
@@ -231,17 +231,17 @@ func (messagelogger *MessageLoggerImpl) Message(errorNumber int, details ...inte
 }
 
 // TODO:
-func (messagelogger *MessageLoggerImpl) Log(errorNumber int, details ...interface{}) error {
+func (messagelogger *MessageLoggerImpl) Log(messageNumber int, details ...interface{}) error {
 	var err error = nil
 
-	messageBody, err := messagelogger.Message(errorNumber, details...)
+	messageBody, err := messagelogger.Message(messageNumber, details...)
 	if err != nil {
 		return err
 	}
 
 	messageLevel := logger.LevelInfo
 	if messagelogger.MessageLogLevel != nil {
-		messageLevel, err = messagelogger.MessageLogLevel.MessageLogLevel(errorNumber, details...)
+		messageLevel, err = messagelogger.MessageLogLevel.MessageLogLevel(messageNumber, details...)
 		if err != nil {
 			return err
 		}

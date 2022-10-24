@@ -1,9 +1,6 @@
-// The messagestatus package is a set of methods logging messages.
-//
-// The purpose of a logger object is:
-//   - ...
-//   - ...
-//   - ...
+/*
+Package messagestatus provides "status" values.
+*/
 package messagestatus
 
 // ----------------------------------------------------------------------------
@@ -11,5 +8,5 @@ package messagestatus
 // ----------------------------------------------------------------------------
 
 type MessageStatusInterface interface {
-	MessageStatus(errorNumber int, details ...interface{}) (string, error)
+	MessageStatus(messageNumber int, details ...interface{}) (string, error)
 }

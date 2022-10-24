@@ -33,14 +33,14 @@ var NameToLevelMap = map[string]logger.Level{
 // ----------------------------------------------------------------------------
 
 // TODO:
-func (messagelevel *MessageLogLevelSenzingApi) MessageLogLevel(errorNumber int, details ...interface{}) (logger.Level, error) {
+func (messagelevel *MessageLogLevelSenzingApi) MessageLogLevel(messageNumber int, details ...interface{}) (logger.Level, error) {
 	var err error = nil
 	var result = logger.LevelError
 
 	// Get Status string.
 
 	messageStatus := &messagestatus.MessageStatusSenzingApi{}
-	status, err := messageStatus.MessageStatus(errorNumber, details...)
+	status, err := messageStatus.MessageStatus(messageNumber, details...)
 	if err != nil {
 		return result, err
 	}

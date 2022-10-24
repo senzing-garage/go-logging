@@ -5,10 +5,10 @@ package messageformat
 
 import (
 	"encoding/json"
-	// "errors"
 	"fmt"
 	"reflect"
 	"strconv"
+	"sync"
 )
 
 // ----------------------------------------------------------------------------
@@ -16,12 +16,18 @@ import (
 // ----------------------------------------------------------------------------
 
 type MessageFormatJson struct {
+	Details interface{}   `json:"details,omitempty"`
+	Errors  []interface{} `json:"errors,omitempty"`
 	Id      string        `json:"id,omitempty"`
 	Status  string        `json:"status,omitempty"`
 	Text    interface{}   `json:"text,omitempty"`
-	Details interface{}   `json:"details,omitempty"`
-	Errors  []interface{} `json:"errors,omitempty"`
 }
+
+// ----------------------------------------------------------------------------
+// Variables
+// ----------------------------------------------------------------------------
+
+var lock sync.Mutex
 
 // ----------------------------------------------------------------------------
 // Internal methods
@@ -67,7 +73,22 @@ func stringify(unknown interface{}) string {
 // Build a message given details as strings.
 func (messageFormat *MessageFormatJson) Message(id string, status string, text string, details ...interface{}) (string, error) {
 
+	// Because the structure could be shared, thread safty needs to be implemented.
+
+	lock.Lock()
+	defer lock.Unlock()
+
 	var err error = nil
+
+	// Clear old values.
+
+	messageFormat.Details = nil
+	messageFormat.Errors = nil
+	messageFormat.Id = ""
+	messageFormat.Status = ""
+	messageFormat.Text = nil
+
+	// Set new values.
 
 	if len(id) > 0 {
 		messageFormat.Id = id
