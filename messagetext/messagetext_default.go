@@ -1,6 +1,5 @@
 /*
-The MessageTextDefault implementation maps the error number
-to a format string.
+The MessageTextDefault implementation maps the error number to a format string.
 The format string is populated with values submitted.
 */
 package messagetext
@@ -15,8 +14,7 @@ import (
 // ----------------------------------------------------------------------------
 
 /*
-MessageTextDefault uses simple format string replacement
-to produce a "text" string.
+MessageTextDefault uses simple format string replacement to produce a "text" string.
 */
 type MessageTextDefault struct {
 
@@ -29,7 +27,8 @@ type MessageTextDefault struct {
 // ----------------------------------------------------------------------------
 
 /*
- */
+Get the "text" value given the message id and it's details.
+*/
 func (messagetext *MessageTextDefault) MessageText(messageNumber int, details ...interface{}) (string, error) {
 	var err error = nil
 
@@ -45,6 +44,15 @@ func (messagetext *MessageTextDefault) MessageText(messageNumber int, details ..
 
 /*
 Set the map of message ids to format strings.
+Example map:
+
+	var textTemplates = map[int]string{
+		5:    "The favorite number for %s is %d",
+		999:  "A test of INFO",
+		1000: "A test of WARN",
+		2000: "A test of ERROR",
+	}
+	messagelogger.GetMessageLogger().SetTextTemplates(textTemplates)
 */
 func (messagetext *MessageTextDefault) SetTextTemplates(messages map[int]string) {
 	messagetext.TextTemplates = messages

@@ -1,5 +1,5 @@
 /*
-Package helper ...
+MessageStatusSenzingApi calculates a status value based on message id and Senzing return code.
 */
 package messagestatus
 
@@ -98,7 +98,7 @@ var messageLevelToStringMap = map[logger.Level]string{
 	logger.LevelPanic: logger.LevelPanicName,
 }
 
-var MessagePrecedence = []string{
+var messagePrecedence = []string{
 	logger.LevelPanicName,
 	logger.LevelFatalName,
 	ErrorUnrecoverable,
@@ -115,7 +115,9 @@ var MessagePrecedence = []string{
 // Interface methods
 // ----------------------------------------------------------------------------
 
-// TODO:
+/*
+Get the "status" value given the message id and it's details.
+*/
 func (messagelevel *MessageStatusSenzingApi) MessageStatus(messageNumber int, details ...interface{}) (string, error) {
 	var err error = nil
 	var result = ""
@@ -144,9 +146,9 @@ func (messagelevel *MessageStatusSenzingApi) MessageStatus(messageNumber int, de
 	// In the list of Senzing errors, determine the highest priority error.
 
 	if len(senzingErrors) > 0 {
-		for _, MessagePrecedenceLevel := range MessagePrecedence {
+		for _, messagePrecedenceLevel := range messagePrecedence {
 			for _, senzingError := range senzingErrors {
-				if senzingError == MessagePrecedenceLevel {
+				if senzingError == messagePrecedenceLevel {
 					return senzingError, err
 				}
 			}
