@@ -2,7 +2,7 @@ module github.com/senzing/go-logging
 
 go 1.19
 
-require github.com/stretchr/testify v1.8.0
+require github.com/stretchr/testify v1.8.1
 
 require (
 	// github.com/aquilax/truncate v1.0.0
