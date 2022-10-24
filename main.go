@@ -76,7 +76,7 @@ func main() {
 	messagelogger.GetMessageLogger().SetTextTemplates(messageTemplates)
 	boilerplateLogging(messagelogger.GetMessageLogger())
 
-	fmt.Printf("\n\n--- Test 4: Add message levels -------------------------------------------------\n\n")
+	fmt.Printf("\n\n--- Test 4: Add log levels -----------------------------------------------------\n\n")
 
 	messagelogger.GetMessageLogger().MessageLogLevel = &messageloglevel.MessageLogLevelSenzingApi{}
 	boilerplateLogging(messagelogger.GetMessageLogger())
@@ -129,7 +129,7 @@ func main() {
 
 	terseMessageLogger.SetLogLevel(messagelogger.LevelDebug)
 
-	fmt.Printf("\n\n--- Test 11: -------------------------------------------------------------------\n\n")
+	fmt.Printf("\n\n--- Test 11: Original logger ---------------------------------------------------\n\n")
 	boilerplateLogging(terseMessageLogger)
 
 	fmt.Printf("\n\n--- Test 12: Add customized id -------------------------------------------------\n\n")
@@ -137,12 +137,12 @@ func main() {
 	terseMessageLogger.MessageId = &messageid.MessageIdDefault{IdTemplate: "test-%04d"}
 	boilerplateLogging(terseMessageLogger)
 
-	fmt.Printf("\n\n--- Test 13: Add message templates ---------------------------------------------\n\n")
+	fmt.Printf("\n\n--- Test 13: Add text ----------------------------------------------------------\n\n")
 
 	terseMessageLogger.MessageText = &messagetext.MessageTextDefault{TextTemplates: messageTemplates}
 	boilerplateLogging(terseMessageLogger)
 
-	fmt.Printf("\n\n--- Test 14: Add message levels ------------------------------------------------\n\n")
+	fmt.Printf("\n\n--- Test 14: Add log levels ----------------------------------------------------\n\n")
 
 	terseMessageLogger.MessageLogLevel = &messageloglevel.MessageLogLevelSenzingApi{}
 	boilerplateLogging(terseMessageLogger)
