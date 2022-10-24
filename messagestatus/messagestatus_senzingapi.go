@@ -3,6 +3,14 @@ Package helper ...
 */
 package messagestatus
 
+import (
+	"errors"
+	"sort"
+	"strings"
+
+	"github.com/senzing/go-logging/logger"
+)
+
 // ----------------------------------------------------------------------------
 // Types
 // ----------------------------------------------------------------------------
@@ -10,11 +18,25 @@ package messagestatus
 type MessageStatusSenzingApi struct{}
 
 // ----------------------------------------------------------------------------
+// Constants
+// ----------------------------------------------------------------------------
+
+// --- Exception hierarchy ----------------------------------------------------
+
+const (
+	ErrorRetryable     = "retryable"
+	ErrorBadUserInput  = "bad-input"
+	ErrorUnrecoverable = "unrecoverable"
+)
+
+// ----------------------------------------------------------------------------
 // Variables
 // ----------------------------------------------------------------------------
 
 var senzingApiErrorsMap = map[string]string{
-	"0002E":  "info",
+	"0002E":  logger.LevelInfoName,
+	"0019E":  ErrorUnrecoverable,
+	"0099E":  ErrorRetryable, // Fake error.
 	"0007E":  "error",
 	"0023E":  "error",
 	"0024E":  "error",
@@ -46,6 +68,8 @@ var senzingApiErrorsMap = map[string]string{
 }
 
 // Important:  The number listed is one more than the highest number for the MessageLevel.
+// This should be kept in sync with go-logging/logger/main.go
+
 // Message ranges:
 // 0000-0999 info
 // 1000-1999 warning
@@ -64,6 +88,29 @@ var MessageLevelMap = map[int]logger.Level{
 	7000: logger.LevelPanic,
 }
 
+var MessageLevelToStringMap = map[logger.Level]string{
+	logger.LevelInfo:  logger.LevelInfoName,
+	logger.LevelWarn:  logger.LevelWarnName,
+	logger.LevelError: logger.LevelErrorName,
+	logger.LevelDebug: logger.LevelDebugName,
+	logger.LevelTrace: logger.LevelTraceName,
+	logger.LevelFatal: logger.LevelFatalName,
+	logger.LevelPanic: logger.LevelPanicName,
+}
+
+var MessagePrecedence = []string{
+	logger.LevelPanicName,
+	logger.LevelFatalName,
+	ErrorUnrecoverable,
+	ErrorBadUserInput,
+	ErrorRetryable,
+	logger.LevelErrorName,
+	logger.LevelWarnName,
+	logger.LevelInfoName,
+	logger.LevelDebugName,
+	logger.LevelTraceName,
+}
+
 // ----------------------------------------------------------------------------
 // Interface methods
 // ----------------------------------------------------------------------------
@@ -73,12 +120,65 @@ func (messagelevel *MessageStatusSenzingApi) MessageStatus(errorNumber int, deta
 	var err error = nil
 	var result = ""
 
-	mapIndex := "0000E"
+	// --- Status based on Senzing error number -------------------------------
 
-	result, ok := senzingApiErrorsMap[mapIndex]
+	// Create a list of Senzing errors.
+
+	var senzingErrors []string
+	if len(details) > 0 {
+		for index := len(details) - 1; index >= 0; index-- {
+			detail := details[index]
+			switch typedDetail := detail.(type) {
+			case error:
+				errorMessage := typedDetail.Error()
+				messageSplits := strings.Split(errorMessage, "|")
+				for key, value := range senzingApiErrorsMap {
+					if messageSplits[0] == key {
+						senzingErrors = append(senzingErrors, value)
+					}
+				}
+			}
+		}
+	}
+
+	// In the list of Senzing errors, determine the highest priority error.
+
+	if len(senzingErrors) > 0 {
+		for _, MessagePrecedenceLevel := range MessagePrecedence {
+			for _, senzingError := range senzingErrors {
+				if senzingError == MessagePrecedenceLevel {
+					return senzingError, err
+				}
+			}
+		}
+	}
+
+	// --- Status based on errorNumber ----------------------------------------
+
+	// Create a list of sorted keys.
+
+	messageLevelKeys := make([]int, 0, len(MessageLevelMap))
+	for key := range MessageLevelMap {
+		messageLevelKeys = append(messageLevelKeys, key)
+	}
+	sort.Ints(messageLevelKeys)
+
+	// Using the sorted message number, find the level.
+
+	finalMessageLevel := logger.LevelPanic
+	for _, messageLevelKey := range messageLevelKeys {
+		if errorNumber < messageLevelKey {
+			finalMessageLevel = MessageLevelMap[messageLevelKey]
+			break
+		}
+	}
+
+	result, ok := MessageLevelToStringMap[finalMessageLevel]
 	if ok {
 		return result, err
 	}
 
-	return result, err
+	// --- At this point, failed to find status -------------------------------
+
+	return "", errors.New("could not determine status")
 }

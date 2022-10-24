@@ -38,7 +38,6 @@ const (
 	LevelPanicName = "PANIC"
 	LevelTraceName = "TRACE"
 	LevelWarnName  = "WARN"
-	// MessageIdFormat = "senzing-6511%04d"
 )
 
 // ----------------------------------------------------------------------------

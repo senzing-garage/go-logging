@@ -1,6 +1,7 @@
 package messageloglevel
 
 import (
+	"errors"
 	"fmt"
 	"testing"
 )
@@ -33,9 +34,19 @@ func testError(test *testing.T, testObject MessageLogLevelInterface, err error) 
 
 // -- BuildError --------------------------------------------------------------
 
-func TestSenzingApiBuildError(test *testing.T) {
+func TestSenzingApiMessageLogLevel(test *testing.T) {
 	testObject := &MessageLogLevelSenzingApi{}
 	actual, err := testObject.MessageLogLevel(1, "This is message text")
+	testError(test, testObject, err)
+	printActual(test, actual)
+}
+
+func TestSenzingApiMessageLogLevelWithErrors(test *testing.T) {
+	anError1 := errors.New("0019E|Configuration not found")
+	anError2 := errors.New("0099E|Made up error")
+
+	testObject := &MessageLogLevelSenzingApi{}
+	actual, err := testObject.MessageLogLevel(1, "A", 1, testObject, anError1, anError2)
 	testError(test, testObject, err)
 	printActual(test, actual)
 }
@@ -44,9 +55,9 @@ func TestSenzingApiBuildError(test *testing.T) {
 // Test interface functions for MessageLevelInfo - names begin with "Test"
 // ----------------------------------------------------------------------------
 
-// -- BuildError --------------------------------------------------------------
+// -- MessageLogLevel ---------------------------------------------------------
 
-func TestInfoBuildError(test *testing.T) {
+func TestMessageLogLevel(test *testing.T) {
 	testObject := &MessageLogLevelInfo{}
 	actual, err := testObject.MessageLogLevel(1, "This is message text")
 	testError(test, testObject, err)
