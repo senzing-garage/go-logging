@@ -31,11 +31,18 @@ func testError(test *testing.T, testObject MessageStatusInterface, err error) {
 // Test interface functions for MessageLevelSenzingApi - names begin with "Test"
 // ----------------------------------------------------------------------------
 
-// -- BuildError --------------------------------------------------------------
+// -- MessageStatus -----------------------------------------------------------
 
-func TestSenzingApiBuildError(test *testing.T) {
+func TestMessageStatus(test *testing.T) {
 	testObject := &MessageStatusSenzingApi{}
-	actual, err := testObject.MessageStatus(1, "This is message text")
+	actual, err := testObject.MessageStatus(1)
+	testError(test, testObject, err)
+	printActual(test, actual)
+}
+
+func TestMessageStatusWithDetails(test *testing.T) {
+	testObject := &MessageStatusSenzingApi{}
+	actual, err := testObject.MessageStatus(1, "A", 1, testObject)
 	testError(test, testObject, err)
 	printActual(test, actual)
 }

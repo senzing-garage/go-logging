@@ -11,5 +11,5 @@ package messagestatus
 // ----------------------------------------------------------------------------
 
 type MessageStatusInterface interface {
-	MessageStatus(errorNumber int, text string) (string, error)
+	MessageStatus(errorNumber int, details ...interface{}) (string, error)
 }

@@ -13,5 +13,5 @@ import "github.com/senzing/go-logging/logger"
 // ----------------------------------------------------------------------------
 
 type MessageLogLevelInterface interface {
-	MessageLogLevel(errorNumber int, message string) (logger.Level, error)
+	MessageLogLevel(errorNumber int, details ...interface{}) (logger.Level, error)
 }

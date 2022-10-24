@@ -4,6 +4,7 @@ Package helper ...
 package messagelogger
 
 import (
+	"errors"
 	"fmt"
 
 	"github.com/senzing/go-logging/logger"
@@ -166,6 +167,11 @@ func GetMessageLogger() *MessageLoggerImpl { return messageLoggerInstance }
 // ----------------------------------------------------------------------------
 
 // TODO:
+func Error(errorNumber int, details ...interface{}) error {
+	return messageLoggerInstance.Error(errorNumber, details...)
+}
+
+// TODO:
 func Log(errorNumber int, details ...interface{}) error {
 	return messageLoggerInstance.Log(errorNumber, details...)
 }
@@ -180,12 +186,21 @@ func Message(errorNumber int, details ...interface{}) (string, error) {
 // ----------------------------------------------------------------------------
 
 // TODO:
+func (messagelogger *MessageLoggerImpl) Error(errorNumber int, details ...interface{}) error {
+	errorMessage, err := messagelogger.Message(errorNumber, details...)
+	if err != nil {
+		return err
+	}
+	return errors.New(errorMessage)
+}
+
+// TODO:
 func (messagelogger *MessageLoggerImpl) Message(errorNumber int, details ...interface{}) (string, error) {
 	var err error = nil
 
 	id := fmt.Sprintf("%d", errorNumber)
 	if messagelogger.MessageId != nil {
-		id, err = messagelogger.MessageId.MessageId(errorNumber)
+		id, err = messagelogger.MessageId.MessageId(errorNumber, details...)
 		if err != nil {
 			return "", err
 		}
@@ -201,7 +216,7 @@ func (messagelogger *MessageLoggerImpl) Message(errorNumber int, details ...inte
 
 	status := ""
 	if messagelogger.MessageStatus != nil {
-		status, err = messageLoggerInstance.MessageStatus.MessageStatus(errorNumber, text)
+		status, err = messageLoggerInstance.MessageStatus.MessageStatus(errorNumber, details...)
 		if err != nil {
 			return "", err
 		}
@@ -226,7 +241,7 @@ func (messagelogger *MessageLoggerImpl) Log(errorNumber int, details ...interfac
 
 	messageLevel := logger.LevelInfo
 	if messagelogger.MessageLogLevel != nil {
-		messageLevel, err = messagelogger.MessageLogLevel.MessageLogLevel(errorNumber, messageBody)
+		messageLevel, err = messagelogger.MessageLogLevel.MessageLogLevel(errorNumber, details...)
 		if err != nil {
 			return err
 		}

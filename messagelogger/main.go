@@ -33,6 +33,7 @@ const (
 // ----------------------------------------------------------------------------
 
 type MessageLoggerInterface interface {
+	Error(errorNumber int, details ...interface{}) error
 	GetLogLevel() Level
 	GetLogLevelAsString() string
 	Log(errorNumber int, details ...interface{}) error

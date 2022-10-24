@@ -18,7 +18,7 @@ type MessageIdDefault struct {
 // ----------------------------------------------------------------------------
 
 // TODO:
-func (messageId *MessageIdDefault) MessageId(errorNumber int) (string, error) {
+func (messageId *MessageIdDefault) MessageId(errorNumber int, details ...interface{}) (string, error) {
 	var err error = nil
 	idTemplate := "%04d"
 	if len(messageId.IdTemplate) > 0 {

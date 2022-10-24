@@ -15,11 +15,6 @@ import (
 // Types
 // ----------------------------------------------------------------------------
 
-// type JsonDetail struct {
-// 	Key   string `json:"key"`
-// 	Value string `json:"value"`
-// }
-
 type MessageFormatJson struct {
 	Id      string        `json:"id,omitempty"`
 	Status  string        `json:"status,omitempty"`
@@ -68,14 +63,6 @@ func stringify(unknown interface{}) string {
 // ----------------------------------------------------------------------------
 // Interface methods
 // ----------------------------------------------------------------------------
-
-// func (messageFormat *MessageFormatJson) Error(id string, status string, text string, details ...interface{}) error {
-// 	message, err := messageFormat.Message(id, status, text, details...)
-// 	if err != nil {
-// 		return err
-// 	}
-// 	return errors.New(message)
-// }
 
 // Build a message given details as strings.
 func (messageFormat *MessageFormatJson) Message(id string, status string, text string, details ...interface{}) (string, error) {

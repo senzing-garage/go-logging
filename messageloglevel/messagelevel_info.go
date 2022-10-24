@@ -18,7 +18,7 @@ type MessageLogLevelInfo struct{}
 // ----------------------------------------------------------------------------
 
 // TODO:
-func (messagelevel *MessageLogLevelInfo) MessageLogLevel(errorNumber int, message string) (logger.Level, error) {
+func (messagelevel *MessageLogLevelInfo) MessageLogLevel(errorNumber int, details ...interface{}) (logger.Level, error) {
 	var err error = nil
 	return logger.LevelInfo, err
 }

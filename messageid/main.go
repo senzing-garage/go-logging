@@ -11,6 +11,6 @@ package messageid
 // ----------------------------------------------------------------------------
 
 type MessageIdInterface interface {
-	MessageId(errorNumber int) (string, error)
+	MessageId(errorNumber int, details ...interface{}) (string, error)
 	SetMessageIdTemplate(string)
 }
