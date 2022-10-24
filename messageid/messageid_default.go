@@ -29,6 +29,6 @@ func (messageId *MessageIdDefault) MessageId(errorNumber int, details ...interfa
 }
 
 // TODO:
-func (messagetext *MessageIdDefault) SetMessageIdTemplate(idTemplate string) {
+func (messagetext *MessageIdDefault) SetIdTemplate(idTemplate string) {
 	messagetext.IdTemplate = idTemplate
 }

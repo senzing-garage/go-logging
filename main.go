@@ -61,10 +61,10 @@ func main() {
 	boilerplateLogging(messagelogger.GetMessageLogger())
 
 	fmt.Printf("\n\n--- Test 2: Add customized id --------------------------------------------------\n\n")
-	messagelogger.GetMessageLogger().SetMessageIdTemplate("senzing-9999%04d")
+	messagelogger.GetMessageLogger().SetIdTemplate("senzing-9999%04d")
 	boilerplateLogging(messagelogger.GetMessageLogger())
 
-	fmt.Printf("\n\n--- Test 3: Add message templates ----------------------------------------------\n\n")
+	fmt.Printf("\n\n--- Test 3: Add text -----------------------------------------------------------\n\n")
 
 	var messageTemplates = map[int]string{
 		0:    "No variable substitution",
@@ -73,7 +73,7 @@ func main() {
 		3000: "Program name: %s; Build version %s; Build iterations %s;",
 		4000: "Program name: %s; Build version %s; Build iterations %s; Unknown: %s",
 	}
-	messagelogger.GetMessageLogger().SetMessages(messageTemplates)
+	messagelogger.GetMessageLogger().SetTextTemplates(messageTemplates)
 	boilerplateLogging(messagelogger.GetMessageLogger())
 
 	fmt.Printf("\n\n--- Test 4: Add message levels -------------------------------------------------\n\n")
@@ -139,7 +139,7 @@ func main() {
 
 	fmt.Printf("\n\n--- Test 13: Add message templates ---------------------------------------------\n\n")
 
-	terseMessageLogger.MessageText = &messagetext.MessageTextDefault{Messages: messageTemplates}
+	terseMessageLogger.MessageText = &messagetext.MessageTextDefault{TextTemplates: messageTemplates}
 	boilerplateLogging(terseMessageLogger)
 
 	fmt.Printf("\n\n--- Test 14: Add message levels ------------------------------------------------\n\n")

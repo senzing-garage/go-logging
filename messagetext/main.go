@@ -12,5 +12,5 @@ package messagetext
 
 type MessageTextInterface interface {
 	MessageText(errorNumber int, details ...interface{}) (string, error)
-	SetMessages(messages map[int]string)
+	SetTextTemplates(messages map[int]string)
 }

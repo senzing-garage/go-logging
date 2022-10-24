@@ -13,7 +13,7 @@ import (
 // ----------------------------------------------------------------------------
 
 type MessageTextDefault struct {
-	Messages map[int]string
+	TextTemplates map[int]string
 }
 
 // ----------------------------------------------------------------------------
@@ -25,7 +25,7 @@ func (messagetext *MessageTextDefault) MessageText(errorNumber int, details ...i
 	var err error = nil
 
 	result := ""
-	textTemplate, ok := messagetext.Messages[errorNumber]
+	textTemplate, ok := messagetext.TextTemplates[errorNumber]
 	if ok {
 		textRaw := fmt.Sprintf(textTemplate, details...)
 		result = strings.Split(textRaw, "%!(")[0]
@@ -35,6 +35,6 @@ func (messagetext *MessageTextDefault) MessageText(errorNumber int, details ...i
 }
 
 // TODO:
-func (messagetext *MessageTextDefault) SetMessages(messages map[int]string) {
-	messagetext.Messages = messages
+func (messagetext *MessageTextDefault) SetTextTemplates(messages map[int]string) {
+	messagetext.TextTemplates = messages
 }

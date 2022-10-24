@@ -38,8 +38,8 @@ type MessageLoggerInterface interface {
 	GetLogLevelAsString() string
 	Log(errorNumber int, details ...interface{}) error
 	Message(errorNumber int, details ...interface{}) (string, error)
+	SetIdTemplate(idTemplate string) MessageLoggerInterface
 	SetLogLevel(level Level) MessageLoggerInterface
 	SetLogLevelFromString(levelString string) MessageLoggerInterface
-	SetMessageIdTemplate(idTemplate string) MessageLoggerInterface
-	SetMessages(messages map[int]string) MessageLoggerInterface
+	SetTextTemplates(messages map[int]string) MessageLoggerInterface
 }

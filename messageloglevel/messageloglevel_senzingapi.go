@@ -37,17 +37,22 @@ func (messagelevel *MessageLogLevelSenzingApi) MessageLogLevel(errorNumber int, 
 	var err error = nil
 	var result = logger.LevelError
 
+	// Get Status string.
+
 	messageStatus := &messagestatus.MessageStatusSenzingApi{}
 	status, err := messageStatus.MessageStatus(errorNumber, details...)
-
 	if err != nil {
 		return result, err
 	}
+
+	// If status is a known logging level, return it.
 
 	result, ok := NameToLevelMap[status]
 	if ok {
 		return result, err
 	}
+
+	// Anything else is an "ERROR"
 
 	return logger.LevelError, err
 }

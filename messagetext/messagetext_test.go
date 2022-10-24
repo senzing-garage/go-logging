@@ -35,7 +35,7 @@ func testError(test *testing.T, testObject MessageTextInterface, err error) {
 
 func TestMessageText(test *testing.T) {
 	testObject := &MessageTextDefault{
-		Messages: map[int]string{
+		TextTemplates: map[int]string{
 			1: "Bob's middle initial is \"%s\" and his favorite number is %d.",
 		},
 	}
