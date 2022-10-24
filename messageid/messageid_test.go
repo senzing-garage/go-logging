@@ -41,3 +41,12 @@ func TestMessageId(test *testing.T) {
 	testError(test, testObject, err)
 	printActual(test, actual)
 }
+
+func TestMessageIdWithDetails(test *testing.T) {
+	testObject := &MessageIdDefault{
+		IdTemplate: "senzing-9999%04d",
+	}
+	actual, err := testObject.MessageId(1, "A", 1, testObject)
+	testError(test, testObject, err)
+	printActual(test, actual)
+}

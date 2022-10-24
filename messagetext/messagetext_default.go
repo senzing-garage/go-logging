@@ -1,5 +1,6 @@
 /*
-Package helper ...
+The MessageTextDefault implementation maps the error number to a format string.
+The format string is populated with values submitted.
 */
 package messagetext
 
@@ -12,20 +13,27 @@ import (
 // Types
 // ----------------------------------------------------------------------------
 
+/*
+MessageTextDefault uses simple format string replacement to produce a "text" string.
+*/
 type MessageTextDefault struct {
-	Messages map[int]string
+
+	// A map from message ids to format string.
+	TextTemplates map[int]string
 }
 
 // ----------------------------------------------------------------------------
 // Interface methods
 // ----------------------------------------------------------------------------
 
-// TODO:
-func (messagetext *MessageTextDefault) MessageText(errorNumber int, details ...interface{}) (string, error) {
+/*
+Get the "text" value given the message id and it's details.
+*/
+func (messagetext *MessageTextDefault) MessageText(messageNumber int, details ...interface{}) (string, error) {
 	var err error = nil
 
 	result := ""
-	textTemplate, ok := messagetext.Messages[errorNumber]
+	textTemplate, ok := messagetext.TextTemplates[messageNumber]
 	if ok {
 		textRaw := fmt.Sprintf(textTemplate, details...)
 		result = strings.Split(textRaw, "%!(")[0]
@@ -34,7 +42,18 @@ func (messagetext *MessageTextDefault) MessageText(errorNumber int, details ...i
 	return result, err
 }
 
-// TODO:
-func (messagetext *MessageTextDefault) SetMessages(messages map[int]string) {
-	messagetext.Messages = messages
+/*
+Set the map of message ids to format strings.
+Example map:
+
+	var textTemplates = map[int]string{
+		5:    "The favorite number for %s is %d",
+		999:  "A test of INFO",
+		1000: "A test of WARN",
+		2000: "A test of ERROR",
+	}
+	messagelogger.GetMessageLogger().SetTextTemplates(textTemplates)
+*/
+func (messagetext *MessageTextDefault) SetTextTemplates(messages map[int]string) {
+	messagetext.TextTemplates = messages
 }

@@ -1,9 +1,6 @@
-// The messageid package...
-//
-// The purpose of a logger object is:
-//   - ...
-//   - ...
-//   - ...
+/*
+Package logger provides...
+*/
 package messageid
 
 // ----------------------------------------------------------------------------
@@ -11,6 +8,6 @@ package messageid
 // ----------------------------------------------------------------------------
 
 type MessageIdInterface interface {
-	MessageId(errorNumber int) (string, error)
-	SetMessageIdTemplate(string)
+	MessageId(messageNumber int, details ...interface{}) (string, error)
+	SetIdTemplate(string)
 }

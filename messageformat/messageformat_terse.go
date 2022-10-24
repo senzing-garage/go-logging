@@ -4,7 +4,7 @@ Package message ...
 package messageformat
 
 import (
-	"errors"
+	// "errors"
 	"fmt"
 )
 
@@ -12,20 +12,11 @@ import (
 // Types
 // ----------------------------------------------------------------------------
 
-type MessageFormatTerse struct {
-}
+type MessageFormatTerse struct{}
 
 // ----------------------------------------------------------------------------
 // Interface methods
 // ----------------------------------------------------------------------------
-
-func (messageFormat *MessageFormatTerse) Error(id string, status string, text string, details ...interface{}) error {
-	message, err := messageFormat.Message(id, status, text, details...)
-	if err != nil {
-		return err
-	}
-	return errors.New(message)
-}
 
 func (messageFormat *MessageFormatTerse) Message(id string, status string, text string, details ...interface{}) (string, error) {
 	var err error = nil

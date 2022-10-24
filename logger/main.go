@@ -1,9 +1,6 @@
-// The logger package is a set of method to help with common tasks.
-//
-// The purpose of a logger object is:
-//   - ...
-//   - ...
-//   - ...
+/*
+Bob was here in main.go
+*/
 package logger
 
 // ----------------------------------------------------------------------------
@@ -38,7 +35,6 @@ const (
 	LevelPanicName = "PANIC"
 	LevelTraceName = "TRACE"
 	LevelWarnName  = "WARN"
-	// MessageIdFormat = "senzing-6511%04d"
 )
 
 // ----------------------------------------------------------------------------

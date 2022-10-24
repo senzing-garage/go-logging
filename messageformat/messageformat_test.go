@@ -31,14 +31,6 @@ func testError(test *testing.T, testObject MessageFormatInterface, err error) {
 // Test interface functions for MessageFormatJson - names begin with "Test"
 // ----------------------------------------------------------------------------
 
-// -- Error -------------------------------------------------------------------
-
-func TestJsonError(test *testing.T) {
-	testObject := &MessageFormatJson{}
-	err := testObject.Error("id-1", "try-again", "text-1", 123, "bob")
-	test.Logf("%v", err)
-}
-
 // -- Message -----------------------------------------------------------------
 
 func TestJsonMessage(test *testing.T) {
@@ -86,14 +78,6 @@ func TestJsonMessageNothing(test *testing.T) {
 // ----------------------------------------------------------------------------
 // Test interface functions for MessageFormatTerse - names begin with "Test"
 // ----------------------------------------------------------------------------
-
-// -- Error -------------------------------------------------------------------
-
-func TestTerseBuildError(test *testing.T) {
-	testObject := &MessageFormatTerse{}
-	err := testObject.Error("id-1", "try-again", "text-1", 123, "bob")
-	test.Logf("%v", err)
-}
 
 // -- Message -----------------------------------------------------------------
 
