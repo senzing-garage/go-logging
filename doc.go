@@ -18,14 +18,14 @@ Output:
 
 	INFO {"id":"0001"}
 
-# Details
+# Examples
 
 In each of the following examples, remember to include the following imports:
 
 	import "log"
 	import "github.com/senzing/go-logging/messagelogger"
 
-## Configure log
+-- Configure log --------------------------------------------------------------
 
 The "log" can be independently configured.
 Example:
@@ -37,7 +37,7 @@ Output:
 
 	YYYY/MM/DD HH:MM:SS INFO {"id":"0002"}
 
-## Customize the "id" field
+-- Customize the id field -----------------------------------------------------
 
 To create a unique identifier, not just an integer,
 a go format string
@@ -53,7 +53,7 @@ Output:
 
 	INFO {"id":"senzing-99990003"}
 
-## Log additional information
+-- Log additional information -------------------------------------------------
 
 In addition to a message identification integer, other types can be logged.
 Example:
@@ -71,7 +71,7 @@ Output:
 The fields submitted in the *.Log()* call are seen in the "details"	field of the log message.
 They will be listed in the order specified in the *.Log()* call.
 
-## Using additional information in a text field
+-- Adding a text field --------------------------------------------------------
 
 The additional information that is submitted in a *.Log()* call can be used to create a text message.
 A map that maps error numbers to format-templates needs to be created and identified to the logger.
@@ -93,7 +93,13 @@ Output:
 Notice that the information used to build the "text" still remains in the "details".
 This is by design.
 
-## Log level
+-- Log level ------------------------------------------------------------------
+
+	messagelogger.Log(5, "Robert Smith", 12345, aMap, logger.LevelError)
+
+Output:
+
+	ERROR {"details":{"1":"Robert Smith","2":12345,"3":"(map[int]string)map[10:ten 20:twenty]","4":"(logger.Level)4"},"id":"senzing-99990005","text":"The favorite number for Robert Smith is 12345"}
 
 The logging level can be automated by identifying a MessageLogLevel of type MessageLogLevelInterface.
 
@@ -106,7 +112,7 @@ Output:
 	INFO {"id":"senzing-99990999","text":"A test of INFO"}
 	WARN {"id":"senzing-99991000","text":"A test of WARN"}
 
-## Status
+-- Status ---------------------------------------------------------------------
 
 A status field can be added to the log message by
 by identifying a MessageStatus of type MessageStatusInterface.
@@ -120,7 +126,7 @@ Output:
 	INFO {"id":"senzing-99990999","status":"INFO","text":"A test of INFO"}
 	WARN {"id":"senzing-99991000","status":"WARN","text":"A test of WARN"}
 
-## Log errors
+-- Log errors------------------------------------------------------------------
 
 Go errors can also be logged.
 They will show up in the "errors" field.
