@@ -6,6 +6,12 @@ For examples of use, see https://github.com/Senzing/go-logging/blob/main/message
 package messagetext
 
 // ----------------------------------------------------------------------------
+// Types
+// ----------------------------------------------------------------------------
+
+type MessageNumber int
+
+// ----------------------------------------------------------------------------
 // Interfaces
 // ----------------------------------------------------------------------------
 
@@ -16,4 +22,15 @@ type MessageTextInterface interface {
 
 	// Set the map of message ids to format strings.
 	SetTextTemplates(messages map[int]string)
+}
+
+// ----------------------------------------------------------------------------
+// Functions
+// ----------------------------------------------------------------------------
+
+/*
+Cast an integer to a message number.
+*/
+func MsgNumber(messageNumber int) MessageNumber {
+	return MessageNumber(messageNumber)
 }

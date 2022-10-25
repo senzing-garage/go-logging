@@ -31,12 +31,29 @@ MessageText gets the "text" value given the message number and it's details.
 */
 func (messagetext *MessageTextDefault) MessageText(messageNumber int, details ...interface{}) (string, error) {
 	var err error = nil
-
 	result := ""
-	textTemplate, ok := messagetext.TextTemplates[messageNumber]
-	if ok {
-		textRaw := fmt.Sprintf(textTemplate, details...)
-		result = strings.Split(textRaw, "%!(")[0]
+
+	if len(details) > 0 {
+		for index := len(details) - 1; index >= 0; index-- {
+			detail := details[index]
+			switch typedDetail := detail.(type) {
+			case MessageNumber:
+				textTemplate, ok := messagetext.TextTemplates[int(typedDetail)]
+				if ok {
+					textRaw := fmt.Sprintf(textTemplate, details...)
+					result = strings.Split(textRaw, "%!(")[0]
+					break
+				}
+			}
+		}
+	}
+
+	if result == "" {
+		textTemplate, ok := messagetext.TextTemplates[messageNumber]
+		if ok {
+			textRaw := fmt.Sprintf(textTemplate, details...)
+			result = strings.Split(textRaw, "%!(")[0]
+		}
 	}
 
 	return result, err
