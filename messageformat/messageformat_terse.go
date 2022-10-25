@@ -1,10 +1,9 @@
 /*
-Package message ...
+The MessageFormatTerse implementation returns a very terse message.
 */
 package messageformat
 
 import (
-	// "errors"
 	"fmt"
 )
 

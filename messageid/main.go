@@ -1,10 +1,10 @@
 /*
-Package logger provides...
+Package messageid customizes message identifieers.
 */
 package messageid
 
 // ----------------------------------------------------------------------------
-// Interfaces
+// Types
 // ----------------------------------------------------------------------------
 
 type MessageIdInterface interface {

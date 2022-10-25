@@ -36,15 +36,28 @@ func testError(test *testing.T, testObject MessageTextInterface, err error) {
 // Test interface functions for MessageLevelSenzingApi - names begin with "Test"
 // ----------------------------------------------------------------------------
 
-// -- BuildError --------------------------------------------------------------
+// -- MessageText -------------------------------------------------------------
 
 func TestMessageText(test *testing.T) {
 	testObject := &MessageTextDefault{
 		TextTemplates: map[int]string{
 			1: "Bob's middle initial is \"%s\" and his favorite number is %d.",
+			2: "Sally got an \"%s\" on the paper.",
 		},
 	}
 	actual, err := testObject.MessageText(1, "A", 1)
+	testError(test, testObject, err)
+	printActual(test, actual)
+}
+
+func TestMessageTextWithMessageNumber(test *testing.T) {
+	testObject := &MessageTextDefault{
+		TextTemplates: map[int]string{
+			1: "Bob's middle initial is \"%s\" and his favorite number is %d.",
+			2: "Sally got an \"%s\" on the paper.",
+		},
+	}
+	actual, err := testObject.MessageText(1, "A", 1, MsgNumber(2))
 	testError(test, testObject, err)
 	printActual(test, actual)
 }

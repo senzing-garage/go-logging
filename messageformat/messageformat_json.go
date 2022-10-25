@@ -1,14 +1,11 @@
 /*
-Package message ...
+The MessageFormatJson implementation returns a message in the JSON format.
 */
 package messageformat
 
 import (
 	"encoding/json"
-	"fmt"
-	"reflect"
 	"strconv"
-	"sync"
 )
 
 // ----------------------------------------------------------------------------
@@ -21,49 +18,6 @@ type MessageFormatJson struct {
 	Id      string        `json:"id,omitempty"`
 	Status  string        `json:"status,omitempty"`
 	Text    interface{}   `json:"text,omitempty"`
-}
-
-// ----------------------------------------------------------------------------
-// Variables
-// ----------------------------------------------------------------------------
-
-var lock sync.Mutex
-
-// ----------------------------------------------------------------------------
-// Internal methods
-// ----------------------------------------------------------------------------
-
-func isJson(unknownString string) bool {
-	var jsonString json.RawMessage
-	return json.Unmarshal([]byte(unknownString), &jsonString) == nil
-}
-
-func jsonAsInterface(unknownString string) interface{} {
-	var jsonString json.RawMessage
-	json.Unmarshal([]byte(unknownString), &jsonString)
-	return jsonString
-}
-
-func stringify(unknown interface{}) string {
-	// See https://pkg.go.dev/fmt for format strings.
-	var result string
-	switch value := unknown.(type) {
-	case string:
-		result = value
-	case int:
-		result = fmt.Sprintf("%d", value)
-	case float64:
-		result = fmt.Sprintf("%g", value)
-	case bool:
-		result = fmt.Sprintf("%t", value)
-	case error:
-		result = value.Error()
-	default:
-		xType := reflect.TypeOf(unknown)
-		xValue := reflect.ValueOf(unknown)
-		result = fmt.Sprintf("(%s)%+v", xType, xValue)
-	}
-	return result
 }
 
 // ----------------------------------------------------------------------------

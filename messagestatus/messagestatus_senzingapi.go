@@ -1,5 +1,5 @@
 /*
-MessageStatusSenzingApi calculates a status value based on message id and Senzing return code.
+The MessageStatusSenzingApi implementation calculates a status value based on message id and Senzing return code.
 */
 package messagestatus
 
@@ -115,9 +115,7 @@ var messagePrecedence = []string{
 // Interface methods
 // ----------------------------------------------------------------------------
 
-/*
-Get the "status" value given the message id and it's details.
-*/
+// Get the "status" value given the message id and it's details.
 func (messagelevel *MessageStatusSenzingApi) MessageStatus(messageNumber int, details ...interface{}) (string, error) {
 	var err error = nil
 	var result = ""

@@ -1,10 +1,10 @@
 /*
-Package messagetext produces a string used in a "status" field of a log message.
+Package messagestatus produces a string used in a "status" field of a log message.
 */
 package messagestatus
 
 // ----------------------------------------------------------------------------
-// Interfaces
+// Types
 // ----------------------------------------------------------------------------
 
 type MessageStatusInterface interface {
