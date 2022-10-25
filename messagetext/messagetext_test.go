@@ -1,3 +1,8 @@
+/*
+For more information, see [test].
+
+[test]: messagetext/messagetext_test.go
+*/
 package messagetext
 
 import (

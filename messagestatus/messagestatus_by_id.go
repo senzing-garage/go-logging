@@ -29,16 +29,20 @@ type MessageStatusById struct{}
 // Constants
 // ----------------------------------------------------------------------------
 
-// Important:  The number listed is one more than the highest number for the MessageLevel.
-// This should be kept in sync with go-logging/logger/main.go
-// Message ranges:
-// 0000-0999 INFO
-// 1000-1999 WARN
-// 2000-2999 ERROR
-// 3000-3999 DEBUG
-// 4000-4999 TRACE
-// 5000-5999 FATAL
-// 6000-6999 PANIC
+/*
+The numbers used to divide the logging levels.
+
+Important:  The number listed is one more than the highest number for the MessageLevel.
+This should be kept in sync with go-logging/logger/main.go
+Message ranges:
+0000-0999 INFO
+1000-1999 WARN
+2000-2999 ERROR
+3000-3999 DEBUG
+4000-4999 TRACE
+5000-5999 FATAL
+6000-6999 PANIC
+*/
 var messageLevelMapById = map[int]logger.Level{
 	1000: logger.LevelInfo,
 	2000: logger.LevelWarn,

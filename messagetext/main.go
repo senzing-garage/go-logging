@@ -1,5 +1,7 @@
 /*
 Package messagetext produces a string used in a "text" field of a log message.
+
+For examples of use, see https://github.com/Senzing/go-logging/blob/main/messagetext/messagetext_test.go
 */
 package messagetext
 
