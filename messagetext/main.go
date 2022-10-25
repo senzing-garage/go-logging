@@ -11,10 +11,6 @@ package messagetext
 
 type MessageNumber int
 
-// ----------------------------------------------------------------------------
-// Interfaces
-// ----------------------------------------------------------------------------
-
 type MessageTextInterface interface {
 
 	// Get the "text" value for a message id and its details.
@@ -25,12 +21,10 @@ type MessageTextInterface interface {
 }
 
 // ----------------------------------------------------------------------------
-// Functions
+// Public functions
 // ----------------------------------------------------------------------------
 
-/*
-Cast an integer to a message number.
-*/
+// Cast an integer to a message number.
 func MsgNumber(messageNumber int) MessageNumber {
 	return MessageNumber(messageNumber)
 }

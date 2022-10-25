@@ -1,5 +1,5 @@
 /*
-Package helper ...
+The MessageLogLevelSenzingApi implementation returns the logger.Level based on the "status" value.
 */
 package messageloglevel
 
@@ -32,7 +32,6 @@ var NameToLevelMap = map[string]logger.Level{
 // Interface methods
 // ----------------------------------------------------------------------------
 
-// TODO:
 func (messagelevel *MessageLogLevelSenzingApi) MessageLogLevel(messageNumber int, details ...interface{}) (logger.Level, error) {
 	var err error = nil
 	var result = logger.LevelError

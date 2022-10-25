@@ -26,9 +26,7 @@ type MessageTextDefault struct {
 // Interface methods
 // ----------------------------------------------------------------------------
 
-/*
-MessageText gets the "text" value given the message number and it's details.
-*/
+// MessageText gets the "text" value given the message number and it's details.
 func (messagetext *MessageTextDefault) MessageText(messageNumber int, details ...interface{}) (string, error) {
 	var err error = nil
 	result := ""

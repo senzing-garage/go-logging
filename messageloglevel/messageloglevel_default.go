@@ -1,5 +1,5 @@
 /*
-MessageLogLevelDefault returns the logger.Level based on a any logger.Level in details parameter.
+The MessageLogLevelDefault implementation returns the logger.Level based on a any logger.Level in details parameter.
 */
 package messageloglevel
 
@@ -31,9 +31,7 @@ var logLevelPrecedence = []logger.Level{
 // Interface methods
 // ----------------------------------------------------------------------------
 
-/*
-Return a logger.level based on one or more logger.level types in the details parameter.
-*/
+// Return a logger.level based on one or more logger.level types in the details parameter.
 func (messagelevel *MessageLogLevelDefault) MessageLogLevel(messageNumber int, details ...interface{}) (logger.Level, error) {
 	var err error = nil
 	result := logger.LevelInfo

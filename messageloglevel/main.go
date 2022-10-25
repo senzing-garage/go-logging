@@ -1,12 +1,12 @@
 /*
-Package logger provides...
+Package messageloglevel returns the "final" log level.
 */
 package messageloglevel
 
 import "github.com/senzing/go-logging/logger"
 
 // ----------------------------------------------------------------------------
-// Interfaces
+// Types
 // ----------------------------------------------------------------------------
 
 type MessageLogLevelInterface interface {

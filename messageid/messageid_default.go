@@ -1,5 +1,5 @@
 /*
-Package helper ...
+The MessageIdDefault implementation returns a message id based on a message template.
 */
 package messageid
 
@@ -17,7 +17,6 @@ type MessageIdDefault struct {
 // Interface methods
 // ----------------------------------------------------------------------------
 
-// TODO:
 func (messageId *MessageIdDefault) MessageId(messageNumber int, details ...interface{}) (string, error) {
 	var err error = nil
 	idTemplate := "%04d"
@@ -28,7 +27,6 @@ func (messageId *MessageIdDefault) MessageId(messageNumber int, details ...inter
 	return result, err
 }
 
-// TODO:
 func (messagetext *MessageIdDefault) SetIdTemplate(idTemplate string) {
 	messagetext.IdTemplate = idTemplate
 }

@@ -1,5 +1,5 @@
 /*
-MessageStatusById returns a logger level based on the message id.
+The MessageStatusById implementation returns a status based on the message id.
 Message ranges:
 
 	0000-0999 INFO
@@ -67,9 +67,7 @@ var messageLevelToStringMapById = map[logger.Level]string{
 // Interface methods
 // ----------------------------------------------------------------------------
 
-/*
-Get the "status" value given the message id and it's details.
-*/
+// Get the "status" value given the message id and it's details.
 func (messagelevel *MessageStatusById) MessageStatus(messageNumber int, details ...interface{}) (string, error) {
 	var err error = nil
 	var result = ""

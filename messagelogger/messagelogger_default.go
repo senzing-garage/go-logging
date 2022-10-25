@@ -58,7 +58,6 @@ func (messagelogger *MessageLoggerDefault) logBasedOnLevel(level Level, messageB
 // Interface methods
 // ----------------------------------------------------------------------------
 
-// TODO:
 func (messagelogger *MessageLoggerDefault) Error(messageNumber int, details ...interface{}) error {
 	errorMessage, err := messagelogger.Message(messageNumber, details...)
 	if err != nil {
@@ -67,17 +66,14 @@ func (messagelogger *MessageLoggerDefault) Error(messageNumber int, details ...i
 	return errors.New(errorMessage)
 }
 
-// TODO:
 func (messagelogger *MessageLoggerDefault) GetLogLevel() Level {
 	return Level(messagelogger.Logger.GetLogLevel())
 }
 
-// TODO:
 func (messagelogger *MessageLoggerDefault) GetLogLevelAsString() string {
 	return (messagelogger.Logger.GetLogLevelAsString())
 }
 
-// TODO:
 func (messagelogger *MessageLoggerDefault) Log(messageNumber int, details ...interface{}) error {
 	var err error = nil
 
@@ -97,7 +93,6 @@ func (messagelogger *MessageLoggerDefault) Log(messageNumber int, details ...int
 	return err
 }
 
-// TODO:
 func (messagelogger *MessageLoggerDefault) Message(messageNumber int, details ...interface{}) (string, error) {
 	var err error = nil
 
@@ -133,61 +128,51 @@ func (messagelogger *MessageLoggerDefault) Message(messageNumber int, details ..
 	return result, err
 }
 
-// TODO:
 func (messagelogger *MessageLoggerDefault) SetIdTemplate(idTemplate string) MessageLoggerInterface {
 	messagelogger.MessageId.SetIdTemplate(idTemplate)
 	return messagelogger
 }
 
-// TODO:
 func (messagelogger *MessageLoggerDefault) SetLogger(logger logger.LoggerInterface) MessageLoggerInterface {
 	messagelogger.Logger = logger
 	return messagelogger
 }
 
-// TODO:
 func (messagelogger *MessageLoggerDefault) SetLogLevel(level Level) MessageLoggerInterface {
 	messagelogger.Logger.SetLogLevel(logger.Level(level))
 	return messagelogger
 }
 
-// TODO:
 func (messagelogger *MessageLoggerDefault) SetLogLevelFromString(levelString string) MessageLoggerInterface {
 	logger.SetLogLevelFromString(levelString)
 	return messagelogger
 }
 
-// TODO:
 func (messagelogger *MessageLoggerDefault) SetMessageFormat(messageFormat messageformat.MessageFormatInterface) MessageLoggerInterface {
 	messagelogger.MessageFormat = messageFormat
 	return messagelogger
 }
 
-// TODO:
 func (messagelogger *MessageLoggerDefault) SetMessageId(messageId messageid.MessageIdInterface) MessageLoggerInterface {
 	messagelogger.MessageId = messageId
 	return messagelogger
 }
 
-// TODO:
 func (messagelogger *MessageLoggerDefault) SetMessageLogLevel(messageLogLevel messageloglevel.MessageLogLevelInterface) MessageLoggerInterface {
 	messagelogger.MessageLogLevel = messageLogLevel
 	return messagelogger
 }
 
-// TODO:
 func (messagelogger *MessageLoggerDefault) SetMessageStatus(messageStatus messagestatus.MessageStatusInterface) MessageLoggerInterface {
 	messagelogger.MessageStatus = messageStatus
 	return messagelogger
 }
 
-// TODO:
 func (messagelogger *MessageLoggerDefault) SetMessageText(messageText messagetext.MessageTextInterface) MessageLoggerInterface {
 	messagelogger.MessageText = messageText
 	return messagelogger
 }
 
-// TODO:
 func (messagelogger *MessageLoggerDefault) SetTextTemplates(messages map[int]string) MessageLoggerInterface {
 	messagelogger.MessageText.SetTextTemplates(messages)
 	return messagelogger

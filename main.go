@@ -186,7 +186,7 @@ func main() {
 	log.SetFlags(0)
 
 	terseMessageLogger := &messagelogger.MessageLoggerDefault{
-		Logger:        &logger.LoggerImpl{},
+		Logger:        &logger.LoggerDefault{},
 		MessageFormat: &messageformat.MessageFormatTerse{},
 	}
 

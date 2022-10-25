@@ -1,5 +1,5 @@
 /*
-Package helper ...
+The MessageLogLevelNull implementation always returns the logger.Level of INFO.
 */
 package messageloglevel
 
@@ -17,7 +17,7 @@ type MessageLogLevelNull struct{}
 // Interface methods
 // ----------------------------------------------------------------------------
 
-// TODO:
+// Always return log level of INFO.
 func (messagelevel *MessageLogLevelNull) MessageLogLevel(messageNumber int, details ...interface{}) (logger.Level, error) {
 	var err error = nil
 	return logger.LevelInfo, err
