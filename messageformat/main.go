@@ -1,5 +1,5 @@
 /*
-Package messageformat formats messages into a JSON string.
+Package messageformat renders messages.
 */
 package messageformat
 
