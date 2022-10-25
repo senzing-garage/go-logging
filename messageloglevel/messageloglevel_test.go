@@ -119,10 +119,26 @@ func TestSenzingApiMessageLogLevelWithErrors(test *testing.T) {
 
 // -- MessageLogLevel ---------------------------------------------------------
 
-func TestMessageLogLevel(test *testing.T) {
-	testObject := &MessageLogLevelInfo{}
+func TestMessageLogLevelDefault(test *testing.T) {
+	testObject := &MessageLogLevelDefault{}
 	actual, err := testObject.MessageLogLevel(1, "This is message text")
 	testError(test, testObject, err)
 	printActual(test, actual)
 	assert.True(test, actual == logger.LevelInfo)
+}
+
+func TestMessageLogLevelDefaultWarn(test *testing.T) {
+	testObject := &MessageLogLevelDefault{}
+	actual, err := testObject.MessageLogLevel(1, "This is message text", logger.LevelWarn)
+	testError(test, testObject, err)
+	printActual(test, actual)
+	assert.True(test, actual == logger.LevelWarn)
+}
+
+func TestMessageLogLevelDefaultError(test *testing.T) {
+	testObject := &MessageLogLevelDefault{}
+	actual, err := testObject.MessageLogLevel(1, "This is message text", logger.LevelWarn, logger.LevelError)
+	testError(test, testObject, err)
+	printActual(test, actual)
+	assert.True(test, actual == logger.LevelError)
 }

@@ -89,22 +89,26 @@ func main() {
 
 	fmt.Printf("\n\n--- Test 6: --------------------------------------------------------------------\n\n")
 
-	messagelogger.GetMessageLogger().MessageLogLevel = &messageloglevel.MessageLogLevelSenzingApi{}
-
-	messagelogger.Log(999)
-	messagelogger.Log(1000)
+	messagelogger.Log(5, "Robert Smith", 12345, aMap, logger.LevelError)
 
 	fmt.Printf("\n\n--- Test 7: --------------------------------------------------------------------\n\n")
 
-	messagelogger.GetMessageLogger().MessageStatus = &messagestatus.MessageStatusById{}
+	messagelogger.GetMessageLogger().MessageLogLevel = &messageloglevel.MessageLogLevelSenzingApi{}
 
 	messagelogger.Log(999)
 	messagelogger.Log(1000)
 
 	fmt.Printf("\n\n--- Test 8: --------------------------------------------------------------------\n\n")
 
-	err1 := errors.New("Error #1")
-	err2 := errors.New("Error #2")
+	messagelogger.GetMessageLogger().MessageStatus = &messagestatus.MessageStatusById{}
+
+	messagelogger.Log(999)
+	messagelogger.Log(1000)
+
+	fmt.Printf("\n\n--- Test 9: --------------------------------------------------------------------\n\n")
+
+	err1 := errors.New("error #1")
+	err2 := errors.New("error #2")
 	messagelogger.Log(2000, "Message", err1, err2)
 
 	// ------------------------------------------------------------------------

@@ -1,5 +1,5 @@
 /*
-Package messagestatus provides "status" values.
+Package messagetext produces a string used in a "status" field of a log message.
 */
 package messagestatus
 

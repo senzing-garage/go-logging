@@ -44,7 +44,7 @@ func New() *MessageLoggerImpl {
 		Logger:          &logger.LoggerImpl{},
 		MessageFormat:   &messageformat.MessageFormatJson{},
 		MessageId:       &messageid.MessageIdDefault{},
-		MessageLogLevel: &messageloglevel.MessageLogLevelNull{},
+		MessageLogLevel: &messageloglevel.MessageLogLevelDefault{},
 		MessageStatus:   &messagestatus.MessageStatusNull{},
 		MessageText:     &messagetext.MessageTextDefault{},
 	}
@@ -161,6 +161,11 @@ func (messagelogger *MessageLoggerImpl) SetTextTemplates(messages map[int]string
 
 // TODO:
 func GetMessageLogger() *MessageLoggerImpl { return messageLoggerInstance }
+
+// TODO:
+func SetMessageLogger(messageLogger *MessageLoggerImpl) {
+	messageLoggerInstance = messageLogger
+}
 
 // ----------------------------------------------------------------------------
 // Instance functions
