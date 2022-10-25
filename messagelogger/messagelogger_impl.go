@@ -162,6 +162,11 @@ func (messagelogger *MessageLoggerImpl) SetTextTemplates(messages map[int]string
 // TODO:
 func GetMessageLogger() *MessageLoggerImpl { return messageLoggerInstance }
 
+// TODO:
+func SetMessageLogger(messageLogger *MessageLoggerImpl) {
+	messageLoggerInstance = messageLogger
+}
+
 // ----------------------------------------------------------------------------
 // Instance functions
 // ----------------------------------------------------------------------------
