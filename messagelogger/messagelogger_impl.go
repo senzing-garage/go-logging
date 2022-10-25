@@ -44,7 +44,7 @@ func New() *MessageLoggerImpl {
 		Logger:          &logger.LoggerImpl{},
 		MessageFormat:   &messageformat.MessageFormatJson{},
 		MessageId:       &messageid.MessageIdDefault{},
-		MessageLogLevel: &messageloglevel.MessageLogLevelNull{},
+		MessageLogLevel: &messageloglevel.MessageLogLevelDefault{},
 		MessageStatus:   &messagestatus.MessageStatusNull{},
 		MessageText:     &messagetext.MessageTextDefault{},
 	}

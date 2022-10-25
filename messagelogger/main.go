@@ -14,7 +14,6 @@ type Level int
 // ----------------------------------------------------------------------------
 
 // Must match what's in logger/main.go
-
 const (
 	LevelTrace Level = iota
 	LevelDebug
