@@ -1,4 +1,6 @@
 /*
+Package logger is a decorator over Go's log package.
+
 The LoggerDefault implementation  provides a layer over go's log to
 add Trace, Debug, Info, Warn, and Error levels.
 

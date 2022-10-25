@@ -1,5 +1,5 @@
 /*
-Package messageid customizes message identifieers.
+Package messageid produces customized message identifiers.
 */
 package messageid
 

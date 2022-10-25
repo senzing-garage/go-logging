@@ -1,5 +1,5 @@
 /*
-Package messageloglevel returns the "final" log level.
+Package messageloglevel produces a log level.
 */
 package messageloglevel
 
