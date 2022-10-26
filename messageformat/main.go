@@ -7,7 +7,6 @@ import (
 	"encoding/json"
 	"fmt"
 	"reflect"
-	"sync"
 )
 
 // ----------------------------------------------------------------------------
@@ -17,12 +16,6 @@ import (
 type MessageFormatInterface interface {
 	Message(id string, status string, text string, details ...interface{}) (string, error)
 }
-
-// ----------------------------------------------------------------------------
-// Variables
-// ----------------------------------------------------------------------------
-
-var lock sync.Mutex
 
 // ----------------------------------------------------------------------------
 // Internal functions
