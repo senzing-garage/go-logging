@@ -39,7 +39,7 @@ func testError(test *testing.T, testObject MessageTextInterface, err error) {
 // -- MessageText -------------------------------------------------------------
 
 func TestMessageText(test *testing.T) {
-	testObject := &MessageTextDefault{
+	testObject := &MessageTextTemplated{
 		TextTemplates: map[int]string{
 			1: "Bob's middle initial is \"%s\" and his favorite number is %d.",
 			2: "Sally got an \"%s\" on the paper.",
@@ -51,7 +51,7 @@ func TestMessageText(test *testing.T) {
 }
 
 func TestMessageTextWithMessageNumber(test *testing.T) {
-	testObject := &MessageTextDefault{
+	testObject := &MessageTextTemplated{
 		TextTemplates: map[int]string{
 			1: "Bob's middle initial is \"%s\" and his favorite number is %d.",
 			2: "Sally got an \"%s\" on the paper.",

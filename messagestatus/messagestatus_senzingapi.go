@@ -116,7 +116,7 @@ var messagePrecedence = []string{
 // ----------------------------------------------------------------------------
 
 // Get the "status" value given the message id and it's details.
-func (messagelevel *MessageStatusSenzingApi) MessageStatus(messageNumber int, details ...interface{}) (string, error) {
+func (messageStatus *MessageStatusSenzingApi) MessageStatus(messageNumber int, details ...interface{}) (string, error) {
 	var err error = nil
 	var result = ""
 

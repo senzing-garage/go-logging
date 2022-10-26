@@ -1,19 +1,22 @@
 /*
-The MessageStatusNull implementation returns an empty string for a status value.
+The MessageTextNull implementation always returns an empty string.
 */
-package messagestatus
+package messagetext
 
 // ----------------------------------------------------------------------------
 // Types
 // ----------------------------------------------------------------------------
 
-type MessageStatusNull struct{}
+/*
+MessageTextNull always returns an empty string.
+*/
+type MessageTextNull struct{}
 
 // ----------------------------------------------------------------------------
 // Interface methods
 // ----------------------------------------------------------------------------
 
-// Get the "status" value given the message id and it's details.
-func (messageStatus *MessageStatusNull) MessageStatus(messageNumber int, details ...interface{}) (string, error) {
+// MessageText always returns an empty string.
+func (messageText *MessageTextNull) MessageText(messageNumber int, details ...interface{}) (string, error) {
 	return "", nil
 }

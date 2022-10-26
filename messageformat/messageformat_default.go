@@ -1,5 +1,5 @@
 /*
-The MessageFormatTerse implementation returns a very terse message.
+The MessageFormatDefault implementation returns a simple string.
 */
 package messageformat
 
@@ -11,13 +11,13 @@ import (
 // Types
 // ----------------------------------------------------------------------------
 
-type MessageFormatTerse struct{}
+type MessageFormatDefault struct{}
 
 // ----------------------------------------------------------------------------
 // Interface methods
 // ----------------------------------------------------------------------------
 
-func (messageFormat *MessageFormatTerse) Message(id string, status string, text string, details ...interface{}) (string, error) {
+func (messageFormat *MessageFormatDefault) Message(id string, status string, text string, details ...interface{}) (string, error) {
 	var err error = nil
 
 	result := ""
@@ -33,9 +33,9 @@ func (messageFormat *MessageFormatTerse) Message(id string, status string, text 
 	if len(details) > 0 {
 		detailMap := make(map[int]interface{})
 		for index, value := range details {
-			detailMap[index+1] = value
+			detailMap[index+1] = fmt.Sprintf("%#v", value)
 		}
-		result = result + fmt.Sprintf("%v ", detailMap)
+		result = result + fmt.Sprintf("[%v] ", detailMap)
 	}
 
 	return result, err

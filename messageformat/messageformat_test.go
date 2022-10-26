@@ -82,7 +82,7 @@ func TestJsonMessageNothing(test *testing.T) {
 // -- Message -----------------------------------------------------------------
 
 func TestTerseMessage(test *testing.T) {
-	testObject := &MessageFormatTerse{}
+	testObject := &MessageFormatDefault{}
 	actual, err := testObject.Message("id-1", "try-again", "text-1", 123, "bob")
 	testError(test, testObject, err)
 	printActual(test, actual)

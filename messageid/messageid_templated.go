@@ -9,14 +9,20 @@ import "fmt"
 // Types
 // ----------------------------------------------------------------------------
 
-type MessageIdDefault struct{}
+type MessageIdTemplated struct {
+	IdTemplate string
+}
 
 // ----------------------------------------------------------------------------
 // Interface methods
 // ----------------------------------------------------------------------------
 
-func (messageId *MessageIdDefault) MessageId(messageNumber int, details ...interface{}) (string, error) {
+func (messageId *MessageIdTemplated) MessageId(messageNumber int, details ...interface{}) (string, error) {
 	var err error = nil
-	result := fmt.Sprintf("%v", messageNumber)
+	idTemplate := "%04d"
+	if len(messageId.IdTemplate) > 0 {
+		idTemplate = messageId.IdTemplate
+	}
+	result := fmt.Sprintf(idTemplate, messageNumber)
 	return result, err
 }

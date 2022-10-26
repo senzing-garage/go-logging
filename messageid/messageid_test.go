@@ -28,13 +28,13 @@ func testError(test *testing.T, testObject MessageIdInterface, err error) {
 }
 
 // ----------------------------------------------------------------------------
-// Test interface functions for MessageId - names begin with "Test"
+// Test interface functions for MessageIdTemplate - names begin with "Test"
 // ----------------------------------------------------------------------------
 
 // -- MessageId ---------------------------------------------------------------
 
 func TestMessageId(test *testing.T) {
-	testObject := &MessageIdDefault{
+	testObject := &MessageIdTemplated{
 		IdTemplate: "senzing-9999%04d",
 	}
 	actual, err := testObject.MessageId(1)
@@ -43,7 +43,7 @@ func TestMessageId(test *testing.T) {
 }
 
 func TestMessageIdWithDetails(test *testing.T) {
-	testObject := &MessageIdDefault{
+	testObject := &MessageIdTemplated{
 		IdTemplate: "senzing-9999%04d",
 	}
 	actual, err := testObject.MessageId(1, "A", 1, testObject)

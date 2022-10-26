@@ -49,7 +49,7 @@ func stringify(unknown interface{}) string {
 	default:
 		xType := reflect.TypeOf(unknown)
 		xValue := reflect.ValueOf(unknown)
-		result = fmt.Sprintf("(%s)%+v", xType, xValue)
+		result = fmt.Sprintf("(%s)%#v", xType, xValue)
 	}
 	return result
 }

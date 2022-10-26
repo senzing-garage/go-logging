@@ -15,12 +15,14 @@ import (
 type MessageFormatJson struct {
 }
 
+// Order is important.
+// It should be id, status, text, errors, details.
 type messageFormatJson struct {
-	Details interface{}   `json:"details,omitempty"`
-	Errors  []interface{} `json:"errors,omitempty"`
 	Id      string        `json:"id,omitempty"`
 	Status  string        `json:"status,omitempty"`
 	Text    interface{}   `json:"text,omitempty"`
+	Errors  []interface{} `json:"errors,omitempty"`
+	Details interface{}   `json:"details,omitempty"`
 }
 
 // ----------------------------------------------------------------------------
