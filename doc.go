@@ -7,7 +7,7 @@ that sits on top of Go's log package (https://pkg.go.dev/log).
 # Overview
 
 The Senzing go-logging packages use the message number to coordinate aspects of the log message such as
-message identification, message text, status, logging level.
+message identification, message text, status, and logging level.
 
 go-logging also allows different formatting options such as JSON or simply terse messages.
 
@@ -19,7 +19,7 @@ to avoid calling a Log() method that
 wouldn't print anyway because of the logging level.
 For instance, there's no reason to call a DEBUG Log() method when the
 logging level is set to INFO.  Guards prevent this.
-Example
+Example:
 
 	if logger.IsDebug() {
 		logger.Debugf("%s", complexProcess())
@@ -43,9 +43,10 @@ Output:
 The following examples can be seen in actual code at
 https://github.com/Senzing/go-logging/blob/main/main.go
 
-In each of the following examples, remember to include the following imports:
+In each of the following examples, the following imports are assumed:
 
 	import "log"
+	import "github.com/senzing/go-logging/logger"
 	import "github.com/senzing/go-logging/messagelogger"
 
 -- Configure log --------------------------------------------------------------
@@ -128,8 +129,6 @@ This is by design.
 
 A log level can be specified anywhere after the first parameter (the message number parameter).
 Example:
-
-	import "github.com/senzing/go-logging/logger"
 
 	messageLogger.Log(6, "Robert Smith", 12345, aMap, logger.LevelError)
 
