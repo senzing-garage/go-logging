@@ -6,6 +6,25 @@ that sits on top of Go's log package (https://pkg.go.dev/log).
 
 # Overview
 
+The Senzing go-logging packages use the message number to coordinate aspects of the log message such as
+message identification, message text, status, logging level.
+
+go-logging also allows different formatting options such as JSON or simply terse messages.
+
+go-logging extends the levels of logging to include:
+Trace, Debug, Info, Warn, Error, Fatal, and Panic.
+
+go-logging supports "guards", IsXxxxx() methods,
+to avoid calling a Log() method that
+wouldn't print anyway because of the logging level.
+For instance, there's no reason to call a DEBUG Log() method when the
+logging level is set to INFO.  Guards prevent this.
+Example
+
+	if logger.IsDebug() {
+		logger.Debugf("%s", complexProcess())
+	}
+
 The basic use of senzing/go-logging looks like this:
 
 	import "log"
