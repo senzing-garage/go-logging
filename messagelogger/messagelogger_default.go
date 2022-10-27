@@ -100,24 +100,18 @@ func (messagelogger *MessageLoggerDefault) Message(messageNumber int, details ..
 	if messagelogger.MessageId != nil {
 		id, err = messagelogger.MessageId.MessageId(messageNumber, details...)
 		if err != nil {
-			return "", err
+			id = fmt.Sprintf("%d", messageNumber)
 		}
 	}
 
 	text := ""
 	if messagelogger.MessageText != nil {
-		text, err = messagelogger.MessageText.MessageText(messageNumber, details...)
-		if err != nil {
-			return "", err
-		}
+		text, _ = messagelogger.MessageText.MessageText(messageNumber, details...)
 	}
 
 	status := ""
 	if messagelogger.MessageStatus != nil {
-		status, err = messagelogger.MessageStatus.MessageStatus(messageNumber, details...)
-		if err != nil {
-			return "", err
-		}
+		status, _ = messagelogger.MessageStatus.MessageStatus(messageNumber, details...)
 	}
 
 	result, err := messagelogger.MessageFormat.Message(id, status, text, details...)
@@ -128,15 +122,15 @@ func (messagelogger *MessageLoggerDefault) Message(messageNumber int, details ..
 	return result, err
 }
 
-func (messagelogger *MessageLoggerDefault) SetIdTemplate(idTemplate string) MessageLoggerInterface {
-	messagelogger.MessageId.SetIdTemplate(idTemplate)
-	return messagelogger
-}
+// func (messagelogger *MessageLoggerDefault) SetIdTemplate(idTemplate string) MessageLoggerInterface {
+// 	messagelogger.MessageId.SetIdTemplate(idTemplate)
+// 	return messagelogger
+// }
 
-func (messagelogger *MessageLoggerDefault) SetLogger(logger logger.LoggerInterface) MessageLoggerInterface {
-	messagelogger.Logger = logger
-	return messagelogger
-}
+// func (messagelogger *MessageLoggerDefault) SetLogger(logger logger.LoggerInterface) MessageLoggerInterface {
+// 	messagelogger.Logger = logger
+// 	return messagelogger
+// }
 
 func (messagelogger *MessageLoggerDefault) SetLogLevel(level Level) MessageLoggerInterface {
 	messagelogger.Logger.SetLogLevel(logger.Level(level))
@@ -148,32 +142,32 @@ func (messagelogger *MessageLoggerDefault) SetLogLevelFromString(levelString str
 	return messagelogger
 }
 
-func (messagelogger *MessageLoggerDefault) SetMessageFormat(messageFormat messageformat.MessageFormatInterface) MessageLoggerInterface {
-	messagelogger.MessageFormat = messageFormat
-	return messagelogger
-}
+// func (messagelogger *MessageLoggerDefault) SetMessageFormat(messageFormat messageformat.MessageFormatInterface) MessageLoggerInterface {
+// 	messagelogger.MessageFormat = messageFormat
+// 	return messagelogger
+// }
 
-func (messagelogger *MessageLoggerDefault) SetMessageId(messageId messageid.MessageIdInterface) MessageLoggerInterface {
-	messagelogger.MessageId = messageId
-	return messagelogger
-}
+// func (messagelogger *MessageLoggerDefault) SetMessageId(messageId messageid.MessageIdInterface) MessageLoggerInterface {
+// 	messagelogger.MessageId = messageId
+// 	return messagelogger
+// }
 
-func (messagelogger *MessageLoggerDefault) SetMessageLogLevel(messageLogLevel messageloglevel.MessageLogLevelInterface) MessageLoggerInterface {
-	messagelogger.MessageLogLevel = messageLogLevel
-	return messagelogger
-}
+// func (messagelogger *MessageLoggerDefault) SetMessageLogLevel(messageLogLevel messageloglevel.MessageLogLevelInterface) MessageLoggerInterface {
+// 	messagelogger.MessageLogLevel = messageLogLevel
+// 	return messagelogger
+// }
 
-func (messagelogger *MessageLoggerDefault) SetMessageStatus(messageStatus messagestatus.MessageStatusInterface) MessageLoggerInterface {
-	messagelogger.MessageStatus = messageStatus
-	return messagelogger
-}
+// func (messagelogger *MessageLoggerDefault) SetMessageStatus(messageStatus messagestatus.MessageStatusInterface) MessageLoggerInterface {
+// 	messagelogger.MessageStatus = messageStatus
+// 	return messagelogger
+// }
 
-func (messagelogger *MessageLoggerDefault) SetMessageText(messageText messagetext.MessageTextInterface) MessageLoggerInterface {
-	messagelogger.MessageText = messageText
-	return messagelogger
-}
+// func (messagelogger *MessageLoggerDefault) SetMessageText(messageText messagetext.MessageTextInterface) MessageLoggerInterface {
+// 	messagelogger.MessageText = messageText
+// 	return messagelogger
+// }
 
-func (messagelogger *MessageLoggerDefault) SetTextTemplates(messages map[int]string) MessageLoggerInterface {
-	messagelogger.MessageText.SetTextTemplates(messages)
-	return messagelogger
-}
+// func (messagelogger *MessageLoggerDefault) SetTextTemplates(messages map[int]string) MessageLoggerInterface {
+// 	messagelogger.MessageText.SetTextTemplates(messages)
+// 	return messagelogger
+// }

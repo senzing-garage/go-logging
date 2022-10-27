@@ -11,14 +11,16 @@ import (
 // Types
 // ----------------------------------------------------------------------------
 
-type MessageLogLevelNull struct{}
+type MessageLogLevelStatic struct {
+	LogLevel logger.Level
+}
 
 // ----------------------------------------------------------------------------
 // Interface methods
 // ----------------------------------------------------------------------------
 
 // Always return log level of INFO.
-func (messagelevel *MessageLogLevelNull) MessageLogLevel(messageNumber int, details ...interface{}) (logger.Level, error) {
+func (messageLogLevel *MessageLogLevelStatic) MessageLogLevel(messageNumber int, details ...interface{}) (logger.Level, error) {
 	var err error = nil
-	return logger.LevelInfo, err
+	return messageLogLevel.LogLevel, err
 }

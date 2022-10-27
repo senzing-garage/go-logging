@@ -1,5 +1,5 @@
 /*
-Package messageformat formats messages into a JSON string.
+Package messageformat renders messages.
 */
 package messageformat
 
@@ -7,7 +7,6 @@ import (
 	"encoding/json"
 	"fmt"
 	"reflect"
-	"sync"
 )
 
 // ----------------------------------------------------------------------------
@@ -17,12 +16,6 @@ import (
 type MessageFormatInterface interface {
 	Message(id string, status string, text string, details ...interface{}) (string, error)
 }
-
-// ----------------------------------------------------------------------------
-// Variables
-// ----------------------------------------------------------------------------
-
-var lock sync.Mutex
 
 // ----------------------------------------------------------------------------
 // Internal functions
@@ -56,7 +49,7 @@ func stringify(unknown interface{}) string {
 	default:
 		xType := reflect.TypeOf(unknown)
 		xValue := reflect.ValueOf(unknown)
-		result = fmt.Sprintf("(%s)%+v", xType, xValue)
+		result = fmt.Sprintf("(%s)%#v", xType, xValue)
 	}
 	return result
 }

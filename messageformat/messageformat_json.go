@@ -13,11 +13,16 @@ import (
 // ----------------------------------------------------------------------------
 
 type MessageFormatJson struct {
-	Details interface{}   `json:"details,omitempty"`
-	Errors  []interface{} `json:"errors,omitempty"`
+}
+
+// Order is important.
+// It should be id, status, text, errors, details.
+type messageFormatJson struct {
 	Id      string        `json:"id,omitempty"`
 	Status  string        `json:"status,omitempty"`
 	Text    interface{}   `json:"text,omitempty"`
+	Errors  []interface{} `json:"errors,omitempty"`
+	Details interface{}   `json:"details,omitempty"`
 }
 
 // ----------------------------------------------------------------------------
@@ -29,34 +34,24 @@ func (messageFormat *MessageFormatJson) Message(id string, status string, text s
 
 	// Because the structure could be shared, thread safty needs to be implemented.
 
-	lock.Lock()
-	defer lock.Unlock()
-
 	var err error = nil
-
-	// Clear old values.
-
-	messageFormat.Details = nil
-	messageFormat.Errors = nil
-	messageFormat.Id = ""
-	messageFormat.Status = ""
-	messageFormat.Text = nil
+	messageBuilder := &messageFormatJson{}
 
 	// Set new values.
 
 	if len(id) > 0 {
-		messageFormat.Id = id
+		messageBuilder.Id = id
 	}
 
 	if len(status) > 0 {
-		messageFormat.Status = status
+		messageBuilder.Status = status
 	}
 
 	if len(text) > 0 {
 		if isJson(text) {
-			messageFormat.Text = jsonAsInterface(text)
+			messageBuilder.Text = jsonAsInterface(text)
 		} else {
-			messageFormat.Text = text
+			messageBuilder.Text = text
 		}
 	}
 
@@ -71,7 +66,7 @@ func (messageFormat *MessageFormatJson) Message(id string, status string, text s
 				if isJson(errorMessage) {
 					priorError = jsonAsInterface(errorMessage)
 				} else {
-					priorError = MessageFormatJson{
+					priorError = &messageFormatJson{
 						Text: errorMessage,
 					}
 				}
@@ -96,13 +91,13 @@ func (messageFormat *MessageFormatJson) Message(id string, status string, text s
 				}
 			}
 		}
-		messageFormat.Errors = errorsList
-		messageFormat.Details = detailMap
+		messageBuilder.Errors = errorsList
+		messageBuilder.Details = detailMap
 	}
 
 	// Convert to JSON.
 
-	result, _ := json.Marshal(messageFormat)
+	result, _ := json.Marshal(messageBuilder)
 	return string(result), err
 }
 

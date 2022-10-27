@@ -16,9 +16,9 @@ import (
 /*
 MessageTextDefault uses simple format string replacement to produce a "text" string.
 */
-type MessageTextDefault struct {
+type MessageTextTemplated struct {
 
-	// A map from message numbers to format string. See SetTextTemplates.
+	// A map from message numbers to format string.
 	TextTemplates map[int]string
 }
 
@@ -27,16 +27,18 @@ type MessageTextDefault struct {
 // ----------------------------------------------------------------------------
 
 // MessageText gets the "text" value given the message number and it's details.
-func (messagetext *MessageTextDefault) MessageText(messageNumber int, details ...interface{}) (string, error) {
+func (messageText *MessageTextTemplated) MessageText(messageNumber int, details ...interface{}) (string, error) {
 	var err error = nil
 	result := ""
+
+	// Determine if a message number was passed in via "details" parameter.
 
 	if len(details) > 0 {
 		for index := len(details) - 1; index >= 0; index-- {
 			detail := details[index]
 			switch typedDetail := detail.(type) {
 			case MessageNumber:
-				textTemplate, ok := messagetext.TextTemplates[int(typedDetail)]
+				textTemplate, ok := messageText.TextTemplates[int(typedDetail)]
 				if ok {
 					textRaw := fmt.Sprintf(textTemplate, details...)
 					result = strings.Split(textRaw, "%!(")[0]
@@ -46,8 +48,10 @@ func (messagetext *MessageTextDefault) MessageText(messageNumber int, details ..
 		}
 	}
 
+	// The normal case is that the message number is passed in as the "messageNumber" parameter.
+
 	if result == "" {
-		textTemplate, ok := messagetext.TextTemplates[messageNumber]
+		textTemplate, ok := messageText.TextTemplates[messageNumber]
 		if ok {
 			textRaw := fmt.Sprintf(textTemplate, details...)
 			result = strings.Split(textRaw, "%!(")[0]
@@ -69,6 +73,6 @@ Example map:
 	}
 	messagelogger.GetMessageLogger().SetTextTemplates(textTemplates)
 */
-func (messagetext *MessageTextDefault) SetTextTemplates(messages map[int]string) {
-	messagetext.TextTemplates = messages
-}
+// func (messagetext *MessageTextDefault) SetTextTemplates(messages map[int]string) {
+// 	messagetext.TextTemplates = messages
+// }

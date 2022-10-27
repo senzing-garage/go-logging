@@ -15,9 +15,6 @@ type MessageTextInterface interface {
 
 	// Get the "text" value for a message id and its details.
 	MessageText(messageNumber int, details ...interface{}) (string, error)
-
-	// Set the map of message ids to format strings.
-	SetTextTemplates(messages map[int]string)
 }
 
 // ----------------------------------------------------------------------------

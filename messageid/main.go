@@ -1,5 +1,5 @@
 /*
-Package messageid customizes message identifieers.
+Package messageid produces customized message identifiers.
 */
 package messageid
 
@@ -9,5 +9,4 @@ package messageid
 
 type MessageIdInterface interface {
 	MessageId(messageNumber int, details ...interface{}) (string, error)
-	SetIdTemplate(string)
 }

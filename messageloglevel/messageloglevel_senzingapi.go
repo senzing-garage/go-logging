@@ -32,7 +32,7 @@ var NameToLevelMap = map[string]logger.Level{
 // Interface methods
 // ----------------------------------------------------------------------------
 
-func (messagelevel *MessageLogLevelSenzingApi) MessageLogLevel(messageNumber int, details ...interface{}) (logger.Level, error) {
+func (messageLogLevel *MessageLogLevelSenzingApi) MessageLogLevel(messageNumber int, details ...interface{}) (logger.Level, error) {
 	var err error = nil
 	var result = logger.LevelError
 

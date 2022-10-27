@@ -1,51 +1,125 @@
 package messagelogger
 
-import "testing"
+import (
+	"testing"
+
+	"github.com/senzing/go-logging/logger"
+	"github.com/senzing/go-logging/messageformat"
+	"github.com/senzing/go-logging/messagetext"
+)
 
 // const MessageIdFormat = "senzing-9999%04d"
+
+// const printResults = 1
+
+// ----------------------------------------------------------------------------
+// Internal functions - names begin with lowercase letter
+// ----------------------------------------------------------------------------
+
+// func printResult(test *testing.T, title string, result interface{}) {
+// 	if printResults == 1 {
+// 		test.Logf("%s: %v", title, fmt.Sprintf("%v", result))
+// 	}
+// }
+
+// func printActual(test *testing.T, actual interface{}) {
+// 	printResult(test, "Actual", actual)
+// }
+
+func testError(test *testing.T, testObject MessageLoggerInterface, err error) {
+	if err != nil {
+		test.Log("Error:", err.Error())
+	}
+}
 
 // ----------------------------------------------------------------------------
 // Test interface functions - names begin with "Test"
 // ----------------------------------------------------------------------------
 
-// -- LogMessage --------------------------------------------------------------
+// -- Log using New() with defaults ---------------------------------------------
 
-func TestLogMessage(test *testing.T) {
-	Log(2000, "Test message", "Variable1", "Variable2")
+func TestDefaultLogMessage(test *testing.T) {
+	testObject, err := New()
+	testError(test, testObject, err)
+	testObject.Log(1, "Bob was here.", "So was Jane.")
 }
 
-// -- LogMessageFromError -----------------------------------------------------
+func TestDefaultLogMessageErrorLevels(test *testing.T) {
+	testObject, err := New()
+	testError(test, testObject, err)
+	testObject.Log(1)
+	testObject.Log(2, logger.LevelTrace)
+	testObject.Log(3, logger.LevelDebug)
+	testObject.Log(4, logger.LevelInfo)
+	testObject.Log(5, logger.LevelWarn)
+	testObject.Log(6, logger.LevelError)
+	// testObject.Log(7, logger.LevelFatal)
+	// testObject.Log(8, logger.LevelPanic)
+}
 
-// func TestLogMessageFromError(test *testing.T) {
-// 	anError := errors.New("This is a new error")
-// 	LogMessageFromError(MessageIdFormat, 2001, "Test message", anError, "Variable1", "Variable2")
-// }
+func TestDefaultLogMessageWithMap(test *testing.T) {
+	testObject, err := New()
+	testError(test, testObject, err)
+	stringMap := map[string]string{
+		"Husband": "Bob",
+		"Wife":    "Jane",
+	}
+	testObject.Log(1001, "A couple", stringMap)
+}
 
-// -- LogMessageFromErrorUsingMap ---------------------------------------------
+func TestDefaultLogMessageWithObject(test *testing.T) {
+	testObject, err := New()
+	testError(test, testObject, err)
+	testObject.Log(2000, "An object", testObject)
+}
 
-// func TestLogMessageFromErrorUsingMap(test *testing.T) {
-// 	anError := errors.New("This is a new error")
-// 	jsonData := `{"SOCIAL_HANDLE": "flavorh", "DATE_OF_BIRTH": "4/8/1983", "ADDR_STATE": "LA"}`
-// 	detailsMap := map[string]interface{}{
-// 		"FirstVariable":  "First value",
-// 		"SecondVariable": "Second value",
-// 		"TestClass":      test,
-// 		"JSON":           jsonData,
-// 	}
-// 	LogMessageFromErrorUsingMap(MessageIdFormat, 2002, "Test message", anError, detailsMap)
-// }
+// -- Log using New() with defaults ---------------------------------------------
 
-// -- LogMessageUsingMap ------------------------------------------------------
+func TestNewLogMessageErrorLevels(test *testing.T) {
+	testObject, err := New(logger.LevelWarn)
+	testError(test, testObject, err)
+	testObject.Log(1)
+	testObject.Log(2, logger.LevelTrace)
+	testObject.Log(3, logger.LevelDebug)
+	testObject.Log(4, logger.LevelInfo)
+	testObject.Log(5, logger.LevelWarn)
+	testObject.Log(6, logger.LevelError)
+	// testObject.Log(7, logger.LevelFatal)
+	// testObject.Log(8, logger.LevelPanic)
+}
 
-// func TestLogMessageUsingMap(test *testing.T) {
+func TestNewJsonFormatting(test *testing.T) {
+	messageFormat := &messageformat.MessageFormatJson{}
+	testObject, err := New(messageFormat)
+	testError(test, testObject, err)
+	testObject.Log(1, "Bob was here.", "So was Jane.")
+}
 
-// 	jsonData := `{"SOCIAL_HANDLE": "flavorh", "DATE_OF_BIRTH": "4/8/1983", "ADDR_STATE": "LA"}`
-// 	detailsMap := map[string]interface{}{
-// 		"FirstVariable":  "First value",
-// 		"SecondVariable": "Second value",
-// 		"TestClass":      test,
-// 		"JSON":           jsonData,
-// 	}
+func TestNewMessageTemplates(test *testing.T) {
+	messageFormat := &messageformat.MessageFormatJson{}
+	messageText := &messagetext.MessageTextTemplated{
+		TextTemplates: map[int]string{
+			1: "%s knows %s",
+			2: "%s does not know %s",
+		},
+	}
+	testObject, err := New(messageText, messageFormat)
+	testError(test, testObject, err)
+	testObject.Log(1, "Bob", "Jane", testObject)
+	testObject.Log(2, "Bob", "Harry")
+}
 
-// 	LogMessageUsingMap(MessageIdFormat, 2003, "Test message", detailsMap)
-// }
+func TestNewBadInterfaces(test *testing.T) {
+	messageFormat := &messageformat.MessageFormatJson{}
+	messageText := &messagetext.MessageTextTemplated{
+		TextTemplates: map[int]string{
+			1: "%s knows %s",
+			2: "%s does not know %s",
+		},
+	}
+	messageLogger := &MessageLoggerDefault{}
+	testObject, err := New(messageText, messageLogger, messageFormat, "ABC", 123)
+	testError(test, testObject, err)
+	testObject.Log(1, "Bob", "Jane", testObject)
+	testObject.Log(2, "Bob", "Harry", err)
+}
