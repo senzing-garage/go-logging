@@ -75,13 +75,13 @@ Output:
 
 	INFO senzing-99990004: [map[1:"Robert Smith" 2:12345 3:map[int]string{10:"ten", 20:"twenty"}]]
 
-The fields submitted in the *.Log()* call are seen in the "details"	field of the log message.
-They will be listed in the order specified in the *.Log()* call.
+The fields submitted in the Log() call are seen in a map in the log message.
+They will be listed in the order specified in the Log() call.
 
 -- Adding a text field --------------------------------------------------------
 
-The additional information that is submitted in a *.Log()* call can be used to create a text message.
-A map that maps error numbers to format-templates needs to be created and identified to the logger.
+The additional information that is submitted in a Log() call can be used to create a text message.
+By mapping message numbers to format strings, the Log() call will create formatted text output.
 Example:
 
 	messageText := &messagetext.MessageTextTemplated{
@@ -102,13 +102,15 @@ Output:
 
 	INFO senzing-99990005: The favorite number for Robert Smith is 12345. [map[1:"Robert Smith" 2:12345 3:map[int]string{10:"ten", 20:"twenty"}]]
 
-Notice that the information used to build the "text" still remains in the "details".
+Notice that the information used to build the formatted text still remains in the map.
 This is by design.
 
 -- Log level ------------------------------------------------------------------
 
 A log level can be specified anywhere after the first parameter (the message number parameter).
 Example:
+
+	import "github.com/senzing/go-logging/logger"
 
 	messageLogger.Log(6, "Robert Smith", 12345, aMap, logger.LevelError)
 
@@ -144,7 +146,7 @@ Output:
 -- Status ---------------------------------------------------------------------
 
 A status field can be added to the log message by
-by identifying a MessageStatus of type MessageStatusInterface.
+identifying a MessageStatus of type MessageStatusInterface.
 One method is to identify ranges of messages ids and their
 corresponding statuses.
 Example:
