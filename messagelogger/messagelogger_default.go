@@ -100,24 +100,18 @@ func (messagelogger *MessageLoggerDefault) Message(messageNumber int, details ..
 	if messagelogger.MessageId != nil {
 		id, err = messagelogger.MessageId.MessageId(messageNumber, details...)
 		if err != nil {
-			return "", err
+			id = fmt.Sprintf("%d", messageNumber)
 		}
 	}
 
 	text := ""
 	if messagelogger.MessageText != nil {
-		text, err = messagelogger.MessageText.MessageText(messageNumber, details...)
-		if err != nil {
-			return "", err
-		}
+		text, _ = messagelogger.MessageText.MessageText(messageNumber, details...)
 	}
 
 	status := ""
 	if messagelogger.MessageStatus != nil {
-		status, err = messagelogger.MessageStatus.MessageStatus(messageNumber, details...)
-		if err != nil {
-			return "", err
-		}
+		status, _ = messagelogger.MessageStatus.MessageStatus(messageNumber, details...)
 	}
 
 	result, err := messagelogger.MessageFormat.Message(id, status, text, details...)

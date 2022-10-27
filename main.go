@@ -4,25 +4,19 @@ BOB WAS in go-logging/main.go
 package main
 
 import (
+	"errors"
 	"fmt"
 	"log"
 	"time"
 
 	"github.com/senzing/go-logging/logger"
+	"github.com/senzing/go-logging/messageformat"
 	"github.com/senzing/go-logging/messageid"
 	"github.com/senzing/go-logging/messagelogger"
 	"github.com/senzing/go-logging/messageloglevel"
 	"github.com/senzing/go-logging/messagestatus"
 	"github.com/senzing/go-logging/messagetext"
 )
-
-// Values updated via "go install -ldflags" parameters.
-
-var programName string = "unknown"
-var buildVersion string = "0.0.0"
-var buildIteration string = "0"
-
-const MessageIdFormat = "senzing-9999%04d"
 
 // ----------------------------------------------------------------------------
 // Internal functions
@@ -33,46 +27,37 @@ func complexProcess() string {
 	return "slept"
 }
 
-func boilerplateLogging(aLogger messagelogger.MessageLoggerInterface) {
-	aLogger.Log(0, "Custom message")
-	aLogger.Log(1000, programName, buildVersion, buildIteration)
-	aLogger.Log(2000, programName, buildVersion, buildIteration)
-	aLogger.Log(3000, programName, buildVersion, buildIteration)
-	aLogger.Log(4000, programName, buildVersion, buildIteration)
-}
-
 // ----------------------------------------------------------------------------
 // Main
 // ----------------------------------------------------------------------------
 
 func main() {
 
-	// Configure the "log" standard library.
+	// ------------------------------------------------------------------------
+	// The following demonstrates the high-level messagelogger calls.
+	// ------------------------------------------------------------------------
 
-	fmt.Printf("\n--- Test 1: --------------------------------------------------------------------\n\n")
+	fmt.Printf("\n--- Test 1: - Overview -----------------------------------------------------------\n\n")
 
 	log.SetFlags(0)
 	messageLogger, _ := messagelogger.New()
-
 	messageLogger.Log(1)
 
-	fmt.Printf("\n\n--- Test 2: --------------------------------------------------------------------\n\n")
+	fmt.Printf("\n\n--- Test 2: - Configure log ----------------------------------------------------\n\n")
 
 	log.SetFlags(log.LstdFlags)
 	messageLogger.Log(2)
 
-	fmt.Printf("\n\n--- Test 3: --------------------------------------------------------------------\n\n")
+	fmt.Printf("\n\n--- Test 3: - Customize the id field -------------------------------------------\n\n")
 
 	log.SetFlags(0)
-
 	messageId := &messageid.MessageIdTemplated{
 		IdTemplate: "senzing-9999%04d",
 	}
-
 	messageLogger, _ = messagelogger.New(messageId)
 	messageLogger.Log(3)
 
-	fmt.Printf("\n\n--- Test 4: --------------------------------------------------------------------\n\n")
+	fmt.Printf("\n\n--- Test 4: - Log additional information ---------------------------------------\n\n")
 
 	aMap := map[int]string{
 		10: "ten",
@@ -80,25 +65,27 @@ func main() {
 	}
 	messageLogger.Log(4, "Robert Smith", 12345, aMap)
 
-	fmt.Printf("\n\n--- Test 5: --------------------------------------------------------------------\n\n")
+	fmt.Printf("\n\n--- Test 5: - Adding a text field ----------------------------------------------\n\n")
 
 	messageText := &messagetext.MessageTextTemplated{
 		TextTemplates: map[int]string{
-			5:    "The favorite number for %s is %d",
-			999:  "A test of INFO",
-			1000: "A test of WARN",
-			2000: "A test of ERROR",
+			5:    "The favorite number for %s is %d.",
+			6:    "Person number #%[2]d is %[1]s.",
+			10:   "Example errors.",
+			11:   "%s has a score of %d.",
+			999:  "A test of INFO.",
+			1000: "A test of WARN.",
+			2000: "A test of ERROR.",
 		},
 	}
-
 	messageLogger, _ = messagelogger.New(messageId, messageText)
 	messageLogger.Log(5, "Robert Smith", 12345, aMap)
 
-	fmt.Printf("\n\n--- Test 6: --------------------------------------------------------------------\n\n")
+	fmt.Printf("\n\n--- Test 6: - Log level --------------------------------------------------------\n\n")
 
 	messageLogger.Log(6, "Robert Smith", 12345, aMap, logger.LevelError)
 
-	fmt.Printf("\n\n--- Test 7: --------------------------------------------------------------------\n\n")
+	fmt.Printf("\n\n--- Test 7: - Log level --------------------------------------------------------\n\n")
 
 	messageLogLevel := &messageloglevel.MessageLogLevelByIdRange{
 		IdRanges: map[int]logger.Level{
@@ -112,11 +99,11 @@ func main() {
 		},
 	}
 	messageLogger, _ = messagelogger.New(messageLogLevel, messageId, messageText)
-
 	messageLogger.Log(999)
 	messageLogger.Log(1000)
+	messageLogger.Log(2000)
 
-	fmt.Printf("\n\n--- Test 8: --------------------------------------------------------------------\n\n")
+	fmt.Printf("\n\n--- Test 8: - Status -----------------------------------------------------------\n\n")
 
 	messageStatus := &messagestatus.MessageStatusByIdRange{
 		IdRanges: map[int]string{
@@ -129,143 +116,37 @@ func main() {
 			6000: logger.LevelPanicName,
 		},
 	}
-
 	messageLogger, _ = messagelogger.New(messageLogLevel, messageId, messageText, messageStatus)
-
 	messageLogger.Log(999)
 	messageLogger.Log(1000)
 	messageLogger.Log(2000)
 
-	fmt.Printf("\n\n--- Test 9: --------------------------------------------------------------------\n\n")
+	fmt.Printf("\n\n--- Test 9: - Status -----------------------------------------------------------\n\n")
 
 	messageStatus2 := &messagestatus.MessageStatusById{
 		StatusTemplates: map[int]string{
 			999:  "Foo",
 			1000: "Bar",
-			1001: "Baz",
+			2000: "Baz",
 		},
 	}
-
 	messageLogger, _ = messagelogger.New(messageLogLevel, messageId, messageText, messageStatus2)
-
 	messageLogger.Log(999)
 	messageLogger.Log(1000)
 	messageLogger.Log(2000)
 
-	fmt.Printf("\n\n--- Test 10: -------------------------------------------------------------------\n\n")
+	fmt.Printf("\n\n--- Test 10: - Logging errors --------------------------------------------------\n\n")
 
-	// err1 := errors.New("error #1")
-	// err2 := errors.New("error #2")
-	// messagelogger.Log(2000, "Message", err1, err2)
+	err1 := errors.New("error #1")
+	err2 := errors.New("error #2")
+	messageLogger.Log(10, err1, err2)
 
-	// ------------------------------------------------------------------------
-	// The following demonstrates the high-level messagelogger calls for
-	// LogMessage, LogMessageUsingMap, and LogMessageFromError.
-	// ------------------------------------------------------------------------
+	fmt.Printf("\n\n--- Test 11: - Formatting ------------------------------------------------------\n\n")
 
-	// log.SetFlags(log.Llongfile | log.Ldate | log.Lmicroseconds | log.LUTC)
-
-	// // --- Simple case with default MessageFormat, no Messages, no MessageLevel
-
-	// fmt.Printf("\n\n--- Test 11: No customization --------------------------------------------------\n\n")
-	// boilerplateLogging(messageLogger)
-
-	// fmt.Printf("\n\n--- Test 12: Add customized id -------------------------------------------------\n\n")
-	// // messagelogger.GetMessageLogger().SetIdTemplate("senzing-9999%04d")
-	// // boilerplateLogging(messagelogger.GetMessageLogger())
-
-	// fmt.Printf("\n\n--- Test 13: Add text ----------------------------------------------------------\n\n")
-
-	// var messageTemplates = map[int]string{
-	// 	0:    "No variable substitution",
-	// 	1000: "Program name: %s;",
-	// 	2000: "Program name: %s; Build version %s;",
-	// 	3000: "Program name: %s; Build version %s; Build iterations %s;",
-	// 	4000: "Program name: %s; Build version %s; Build iterations %s; Unknown: %s",
-	// }
-	// messagelogger.GetMessageLogger().SetTextTemplates(messageTemplates)
-	// boilerplateLogging(messagelogger.GetMessageLogger())
-
-	// fmt.Printf("\n\n--- Test 14: Add log levels ----------------------------------------------------\n\n")
-
-	// messagelogger.GetMessageLogger().MessageLogLevel = &messageloglevel.MessageLogLevelSenzingApi{}
-	// boilerplateLogging(messagelogger.GetMessageLogger())
-
-	// fmt.Printf("\n\n--- Test 15: Add status --------------------------------------------------------\n\n")
-
-	// messagelogger.GetMessageLogger().MessageStatus = &messagestatus.MessageStatusSenzingApi{}
-	// boilerplateLogging(messagelogger.GetMessageLogger())
-
-	// fmt.Printf("\n\n--- Test 16: Add logging golang errors -----------------------------------------\n\n")
-
-	// error_1 := errors.New("first error")
-	// error_2 := errors.New("second error")
-
-	// messagelogger.Log(0, "Custom message", error_1)
-	// messagelogger.Log(1000, programName, buildVersion, buildIteration, error_1)
-	// messagelogger.Log(2000, programName, buildVersion, buildIteration, error_1, "Just some text", error_2)
-
-	// fmt.Printf("\n\n--- Test 17: Using Maps --------------------------------------------------------\n\n")
-
-	// messageTemplates[1001] = "Using maps"
-
-	// var detailsMap = map[string]string{
-	// 	"Husband": "Bob",
-	// 	"Wife":    "Mary",
-	// }
-
-	// var detailsMap2 = map[string]string{
-	// 	"Son":      "Bobbie",
-	// 	"Daughter": "Jane",
-	// }
-
-	// messagelogger.Log(1000, detailsMap, detailsMap2)
-	// messagelogger.Log(1001, detailsMap, detailsMap2)
-
-	// ------------------------------------------------------------------------
-	// Test a custom logger
-	// ------------------------------------------------------------------------
-
-	// fmt.Printf("\n\n--------------------------------------------------------------------------------")
-	// fmt.Printf("\n--- Custom logger --------------------------------------------------------------")
-	// fmt.Printf("\n--------------------------------------------------------------------------------")
-
-	// log.SetFlags(0)
-
-	// terseMessageLogger := &messagelogger.MessageLoggerDefault{
-	// 	Logger:        &logger.LoggerDefault{},
-	// 	MessageFormat: &messageformat.MessageFormatTerse{},
-	// }
-
-	// terseMessageLogger.SetLogLevel(messagelogger.LevelDebug)
-
-	// fmt.Printf("\n\n--- Test 21: Original logger ---------------------------------------------------\n\n")
-	// boilerplateLogging(terseMessageLogger)
-
-	// fmt.Printf("\n\n--- Test 22: Add customized id -------------------------------------------------\n\n")
-
-	// terseMessageLogger.MessageId = &messageid.MessageIdDefault{IdTemplate: "test-%04d"}
-	// boilerplateLogging(terseMessageLogger)
-
-	// fmt.Printf("\n\n--- Test 23: Add text ----------------------------------------------------------\n\n")
-
-	// terseMessageLogger.MessageText = &messagetext.MessageTextDefault{TextTemplates: messageTemplates}
-	// boilerplateLogging(terseMessageLogger)
-
-	// fmt.Printf("\n\n--- Test 24: Add log levels ----------------------------------------------------\n\n")
-
-	// terseMessageLogger.MessageLogLevel = &messageloglevel.MessageLogLevelSenzingApi{}
-	// boilerplateLogging(terseMessageLogger)
-
-	// fmt.Printf("\n\n--- Test 25: Add status --------------------------------------------------------\n\n")
-
-	// terseMessageLogger.MessageStatus = &messagestatus.MessageStatusSenzingApi{}
-	// boilerplateLogging(terseMessageLogger)
-
-	// fmt.Printf("\n\n--- Test 26: Add logging golang errors -----------------------------------------\n\n")
-
-	// terseMessageLogger.Log(1000, programName, buildVersion, buildIteration, error_1)
-	// terseMessageLogger.Log(2000, programName, buildVersion, buildIteration, error_1, "Just some text", error_2)
+	messageFormat := &messageformat.MessageFormatJson{}
+	messageLogger, _ = messagelogger.New(messageLogLevel, messageFormat, messageId, messageText, messageStatus)
+	messageLogger.Log(1000)
+	messageLogger.Log(11, "Robert Smith", 12345, aMap, err1, err2)
 
 	// ------------------------------------------------------------------------
 	// The following demonstrates the low-level logger calls for
