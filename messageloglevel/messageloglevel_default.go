@@ -25,7 +25,7 @@ func (messageLogLevel *MessageLogLevelDefault) MessageLogLevel(messageNumber int
 	for _, value := range details {
 		switch typedValue := value.(type) {
 		case logger.Level:
-			return typedValue, err
+			result = typedValue
 		}
 	}
 
