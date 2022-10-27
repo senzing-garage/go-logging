@@ -21,6 +21,9 @@ Output:
 
 # Examples
 
+The following examples can be seen in actual code at
+https://github.com/Senzing/go-logging/blob/main/main.go
+
 In each of the following examples, remember to include the following imports:
 
 	import "log"
