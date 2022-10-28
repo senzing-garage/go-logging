@@ -11,12 +11,14 @@ import (
 // Types
 // ----------------------------------------------------------------------------
 
+// The MessageFormatDefault type is for creating terse, default formatted messages.
 type MessageFormatDefault struct{}
 
 // ----------------------------------------------------------------------------
 // Interface methods
 // ----------------------------------------------------------------------------
 
+// The Message method creates a terse, default formatted message.
 func (messageFormat *MessageFormatDefault) Message(id string, status string, text string, details ...interface{}) (string, error) {
 	var err error = nil
 

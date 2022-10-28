@@ -1,5 +1,5 @@
 /*
-Package messagetext produces a string used in a "text" field of a log message.
+The messagetext package produces a string used in a "text" field of a log message.
 
 For examples of use, see https://github.com/Senzing/go-logging/blob/main/messagetext/messagetext_test.go
 */
@@ -9,8 +9,10 @@ package messagetext
 // Types
 // ----------------------------------------------------------------------------
 
+// The MessageNumber type is used to identify the integer is a "message number" in detail parameters.
 type MessageNumber int
 
+// The MessageTextInterface type defines methods for creating message text.
 type MessageTextInterface interface {
 
 	// Get the "text" value for a message id and its details.
@@ -21,7 +23,7 @@ type MessageTextInterface interface {
 // Public functions
 // ----------------------------------------------------------------------------
 
-// Cast an integer to a message number.
+// The MsgNumber function casts an integer to a message number.
 func MsgNumber(messageNumber int) MessageNumber {
 	return MessageNumber(messageNumber)
 }

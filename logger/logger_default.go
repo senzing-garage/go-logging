@@ -1,5 +1,5 @@
 /*
-Package logger is a decorator over Go's log package.
+The logger package is a decorator over Go's log package.
 
 The LoggerDefault implementation  provides a layer over go's log to
 add Trace, Debug, Info, Warn, and Error levels.
@@ -20,6 +20,10 @@ import (
 // Types
 // ----------------------------------------------------------------------------
 
+/*
+The LoggerDefault type is for logging messages based on the following levels:
+TRACE, DEBUG, INFO, WARN, ERROR, FATAL, and PANIC.
+*/
 type LoggerDefault struct {
 	level   Level
 	isDebug bool

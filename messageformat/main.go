@@ -1,5 +1,5 @@
 /*
-Package messageformat renders messages.
+The messageformat package renders messages.
 */
 package messageformat
 
@@ -13,6 +13,7 @@ import (
 // Types
 // ----------------------------------------------------------------------------
 
+// The MessageFormatInterface type defines methods for producing formatting messages.
 type MessageFormatInterface interface {
 	Message(id string, status string, text string, details ...interface{}) (string, error)
 }

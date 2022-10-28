@@ -6,6 +6,26 @@ that sits on top of Go's log package (https://pkg.go.dev/log).
 
 # Overview
 
+The Senzing go-logging packages use the message number to coordinate aspects of the log message such as
+message identification, message text, status, and logging level.
+
+go-logging also allows different formatting options such as JSON or simply terse messages.
+
+go-logging extends the levels of logging to include:
+Trace, Debug, Info, Warn, Error, Fatal, and Panic.
+
+go-logging supports "guards",
+e.g. IsXxxxx() methods,
+to avoid calling a Log() method that
+wouldn't print anyway because of the logging level.
+For instance, there's no reason to call a DEBUG Log() method when the
+logging level is set to INFO.  Guards prevent this.
+Example:
+
+	if logger.IsDebug() {
+		logger.Debugf("%s", complexProcess())
+	}
+
 The basic use of senzing/go-logging looks like this:
 
 	import "log"
@@ -21,9 +41,13 @@ Output:
 
 # Examples
 
-In each of the following examples, remember to include the following imports:
+The following examples can be seen in actual code at
+https://github.com/Senzing/go-logging/blob/main/main.go
+
+In each of the following examples, the following imports are assumed:
 
 	import "log"
+	import "github.com/senzing/go-logging/logger"
 	import "github.com/senzing/go-logging/messagelogger"
 
 -- Configure log --------------------------------------------------------------
@@ -72,13 +96,13 @@ Output:
 
 	INFO senzing-99990004: [map[1:"Robert Smith" 2:12345 3:map[int]string{10:"ten", 20:"twenty"}]]
 
-The fields submitted in the *.Log()* call are seen in the "details"	field of the log message.
-They will be listed in the order specified in the *.Log()* call.
+The fields submitted in the Log() call are seen in a map in the log message.
+They will be listed in the order specified in the Log() call.
 
 -- Adding a text field --------------------------------------------------------
 
-The additional information that is submitted in a *.Log()* call can be used to create a text message.
-A map that maps error numbers to format-templates needs to be created and identified to the logger.
+The additional information that is submitted in a Log() call can be used to create a text message.
+By mapping message numbers to format strings, the Log() call will create formatted text output.
 Example:
 
 	messageText := &messagetext.MessageTextTemplated{
@@ -99,7 +123,7 @@ Output:
 
 	INFO senzing-99990005: The favorite number for Robert Smith is 12345. [map[1:"Robert Smith" 2:12345 3:map[int]string{10:"ten", 20:"twenty"}]]
 
-Notice that the information used to build the "text" still remains in the "details".
+Notice that the information used to build the formatted text still remains in the map.
 This is by design.
 
 -- Log level ------------------------------------------------------------------
@@ -141,7 +165,7 @@ Output:
 -- Status ---------------------------------------------------------------------
 
 A status field can be added to the log message by
-by identifying a MessageStatus of type MessageStatusInterface.
+identifying a MessageStatus of type MessageStatusInterface.
 One method is to identify ranges of messages ids and their
 corresponding statuses.
 Example:

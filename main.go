@@ -1,5 +1,5 @@
 /*
-BOB WAS in go-logging/main.go
+go-logging/main.go implements examples.
 */
 package main
 

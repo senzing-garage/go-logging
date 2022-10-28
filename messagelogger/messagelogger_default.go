@@ -1,5 +1,5 @@
 /*
-Package helper ...
+The MessageLoggerDefault implementation aggregates id, status, text, and details to return a formatted string.
 */
 package messagelogger
 
@@ -19,6 +19,7 @@ import (
 // Types
 // ----------------------------------------------------------------------------
 
+// The MessageLoggerDefault type is for constructing and logging messages.
 type MessageLoggerDefault struct {
 	Logger          logger.LoggerInterface
 	MessageFormat   messageformat.MessageFormatInterface
@@ -58,6 +59,7 @@ func (messagelogger *MessageLoggerDefault) logBasedOnLevel(level Level, messageB
 // Interface methods
 // ----------------------------------------------------------------------------
 
+// The Error method returns an error with the formatted message.
 func (messagelogger *MessageLoggerDefault) Error(messageNumber int, details ...interface{}) error {
 	errorMessage, err := messagelogger.Message(messageNumber, details...)
 	if err != nil {
@@ -66,14 +68,17 @@ func (messagelogger *MessageLoggerDefault) Error(messageNumber int, details ...i
 	return errors.New(errorMessage)
 }
 
+// The GetLogLevel method returns the current log level as a typed int.
 func (messagelogger *MessageLoggerDefault) GetLogLevel() Level {
 	return Level(messagelogger.Logger.GetLogLevel())
 }
 
+// The GetLogLevelAsString method returns the current log level as a string.
 func (messagelogger *MessageLoggerDefault) GetLogLevelAsString() string {
 	return (messagelogger.Logger.GetLogLevelAsString())
 }
 
+// The Log method sends the formatted message to the Go log framework.
 func (messagelogger *MessageLoggerDefault) Log(messageNumber int, details ...interface{}) error {
 	var err error = nil
 
@@ -93,6 +98,7 @@ func (messagelogger *MessageLoggerDefault) Log(messageNumber int, details ...int
 	return err
 }
 
+// The Message method returns a string with the formatted message.
 func (messagelogger *MessageLoggerDefault) Message(messageNumber int, details ...interface{}) (string, error) {
 	var err error = nil
 
@@ -122,52 +128,15 @@ func (messagelogger *MessageLoggerDefault) Message(messageNumber int, details ..
 	return result, err
 }
 
-// func (messagelogger *MessageLoggerDefault) SetIdTemplate(idTemplate string) MessageLoggerInterface {
-// 	messagelogger.MessageId.SetIdTemplate(idTemplate)
-// 	return messagelogger
-// }
-
-// func (messagelogger *MessageLoggerDefault) SetLogger(logger logger.LoggerInterface) MessageLoggerInterface {
-// 	messagelogger.Logger = logger
-// 	return messagelogger
-// }
-
+// The SetLogLevel method sets the log level given a typed int.
 func (messagelogger *MessageLoggerDefault) SetLogLevel(level Level) MessageLoggerInterface {
 	messagelogger.Logger.SetLogLevel(logger.Level(level))
 	return messagelogger
 }
 
+// The SetLogLevelFromString method sets the log level given a string.
+// Acceptable string values: TRACE, DEBUG, INFO, WARN, ERROR, FATAL, and PANIC.
 func (messagelogger *MessageLoggerDefault) SetLogLevelFromString(levelString string) MessageLoggerInterface {
-	logger.SetLogLevelFromString(levelString)
+	messagelogger.Logger.SetLogLevelFromString(levelString)
 	return messagelogger
 }
-
-// func (messagelogger *MessageLoggerDefault) SetMessageFormat(messageFormat messageformat.MessageFormatInterface) MessageLoggerInterface {
-// 	messagelogger.MessageFormat = messageFormat
-// 	return messagelogger
-// }
-
-// func (messagelogger *MessageLoggerDefault) SetMessageId(messageId messageid.MessageIdInterface) MessageLoggerInterface {
-// 	messagelogger.MessageId = messageId
-// 	return messagelogger
-// }
-
-// func (messagelogger *MessageLoggerDefault) SetMessageLogLevel(messageLogLevel messageloglevel.MessageLogLevelInterface) MessageLoggerInterface {
-// 	messagelogger.MessageLogLevel = messageLogLevel
-// 	return messagelogger
-// }
-
-// func (messagelogger *MessageLoggerDefault) SetMessageStatus(messageStatus messagestatus.MessageStatusInterface) MessageLoggerInterface {
-// 	messagelogger.MessageStatus = messageStatus
-// 	return messagelogger
-// }
-
-// func (messagelogger *MessageLoggerDefault) SetMessageText(messageText messagetext.MessageTextInterface) MessageLoggerInterface {
-// 	messagelogger.MessageText = messageText
-// 	return messagelogger
-// }
-
-// func (messagelogger *MessageLoggerDefault) SetTextTemplates(messages map[int]string) MessageLoggerInterface {
-// 	messagelogger.MessageText.SetTextTemplates(messages)
-// 	return messagelogger
-// }

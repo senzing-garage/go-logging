@@ -1,5 +1,5 @@
 /*
-The MessageStatusById implementation returns a status based on the message id.
+The MessageStatusById implementation returns a status based on the message number.
 */
 package messagestatus
 
@@ -11,6 +11,7 @@ import (
 // Types
 // ----------------------------------------------------------------------------
 
+// The MessageStatusById type is for returning a status based on the message number.
 type MessageStatusById struct {
 	StatusTemplates map[int]string
 }
@@ -19,7 +20,7 @@ type MessageStatusById struct {
 // Interface methods
 // ----------------------------------------------------------------------------
 
-// Get the "status" value given the message id.
+// The MessageStatus method gets the "status" value from MessageStatusById.StatusTemplates for the given the message number.
 func (messageStatus *MessageStatusById) MessageStatus(messageNumber int, details ...interface{}) (string, error) {
 	var err error = nil
 	var result = ""
