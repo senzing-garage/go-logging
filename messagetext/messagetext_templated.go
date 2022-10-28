@@ -1,5 +1,5 @@
 /*
-The MessageTextDefault implementation maps the message number to a format string.
+The MessageTextTemplated implementation maps the message number to a format string.
 The format string is populated with values submitted.
 */
 package messagetext
@@ -13,9 +13,7 @@ import (
 // Types
 // ----------------------------------------------------------------------------
 
-/*
-MessageTextDefault uses simple format string replacement to produce a "text" string.
-*/
+// The MessageTextTemplated type uses format string replacement to produce a "text" string.
 type MessageTextTemplated struct {
 
 	// A map from message numbers to format string.
@@ -26,7 +24,11 @@ type MessageTextTemplated struct {
 // Interface methods
 // ----------------------------------------------------------------------------
 
-// MessageText gets the "text" value given the message number and it's details.
+/*
+The MessageText method chooses a format string based on the message number and populates it from the details.
+To override the message number, submit a detail of type MessageNumber.
+The MessageNumber value will be used to choose the template from MessageTextTemplated.TextTemplates.
+*/
 func (messageText *MessageTextTemplated) MessageText(messageNumber int, details ...interface{}) (string, error) {
 	var err error = nil
 	result := ""
@@ -60,19 +62,3 @@ func (messageText *MessageTextTemplated) MessageText(messageNumber int, details 
 
 	return result, err
 }
-
-/*
-SetTextTemplates sets the map of message numbers to format strings.
-Example map:
-
-	var textTemplates = map[int]string{
-		5:    "The favorite number for %s is %d",
-		999:  "A test of INFO",
-		1000: "A test of WARN",
-		2000: "A test of ERROR",
-	}
-	messagelogger.GetMessageLogger().SetTextTemplates(textTemplates)
-*/
-// func (messagetext *MessageTextDefault) SetTextTemplates(messages map[int]string) {
-// 	messagetext.TextTemplates = messages
-// }

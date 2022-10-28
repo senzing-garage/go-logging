@@ -1,5 +1,5 @@
 /*
-Package messagelogger generates and logs messages.
+The messagelogger package generates messages, logs messages, or creates errors from messages.
 */
 package messagelogger
 
@@ -18,31 +18,28 @@ import (
 // Types
 // ----------------------------------------------------------------------------
 
-// For use with logging levels. (e.g. LevelInfo, LevelWarn, etc.)
+// The Level type is used for logging levels. (e.g. LevelInfo, LevelWarn, etc.)
 type Level int
 
+/*
+The MessageLoggerInterface type defines methods for creating messages, logging messages, and creating errors from messages.
+It also has convenience methods for setting and getting the current log level.
+*/
 type MessageLoggerInterface interface {
 	Error(messageNumber int, details ...interface{}) error
 	GetLogLevel() Level
 	GetLogLevelAsString() string
 	Log(messageNumber int, details ...interface{}) error
 	Message(messageNumber int, details ...interface{}) (string, error)
-	// SetIdTemplate(idTemplate string) MessageLoggerInterface
-	// SetLogger(logger logger.LoggerInterface) MessageLoggerInterface
 	SetLogLevel(level Level) MessageLoggerInterface
 	SetLogLevelFromString(levelString string) MessageLoggerInterface
-	// SetMessageFormat(messageFormat messageformat.MessageFormatInterface) MessageLoggerInterface
-	// SetMessageId(messageId messageid.MessageIdInterface) MessageLoggerInterface
-	// SetMessageLogLevel(messageLogLevel messageloglevel.MessageLogLevelInterface) MessageLoggerInterface
-	// SetMessageStatus(messageStatus messagestatus.MessageStatusInterface) MessageLoggerInterface
-	// SetMessageText(messageText messagetext.MessageTextInterface) MessageLoggerInterface
-	// SetTextTemplates(messages map[int]string) MessageLoggerInterface
 }
 
 // ----------------------------------------------------------------------------
 // Constants
 // ----------------------------------------------------------------------------
 
+// LevelXxxx values are an enumeration of typed integers representing logging levels.
 // Must match what's in logger/main.go
 const (
 	LevelTrace Level = iota
@@ -55,35 +52,31 @@ const (
 )
 
 // ----------------------------------------------------------------------------
-// Variables
-// ----------------------------------------------------------------------------
-
-// var messageLoggerInstance *MessageLoggerDefault
-
-// ----------------------------------------------------------------------------
 // Constructors
 // ----------------------------------------------------------------------------
 
 /*
-The New method creates a new instance of MessageLoggerDefault.
+The New function creates a new instance of MessageLoggerDefault.
 The default message logger uses default and null subcomponents.
 To use non-default subcomponents,
-parameters to New() can specify the subcomponent desired.
+adding parameters to New() can specify the subcomponent desired.
 The parameters can be of the following type and in any order:
-
-	logger.LoggerInterface
-	messageformat.MessageFormatInterface
-	messageid.MessageIdInterface
-	messageloglevel.MessageLogLevelInterface
-	messagestatus.MessageStatusInterface
-	messagetext.MessageTextInterface
-	logger.Level
+  - logger.LoggerInterface
+  - messageformat.MessageFormatInterface
+  - messageid.MessageIdInterface
+  - messageloglevel.MessageLogLevelInterface
+  - messagestatus.MessageStatusInterface
+  - messagetext.MessageTextInterface
+  - logger.Level
 
 If a type is specified multiple times,
 the last instance instance of the type specified wins.
 */
 func New(interfaces ...interface{}) (MessageLoggerInterface, error) {
 	var err error = nil
+
+	// Start with default values.
+
 	logLevel := LevelInfo
 	result := &MessageLoggerDefault{
 		Logger:          &logger.LoggerDefault{},
@@ -93,6 +86,8 @@ func New(interfaces ...interface{}) (MessageLoggerInterface, error) {
 		MessageStatus:   &messagestatus.MessageStatusNull{},
 		MessageText:     &messagetext.MessageTextNull{},
 	}
+
+	// Incorporate parameters.
 
 	var errorsList []interface{}
 	if len(interfaces) > 0 {
@@ -120,95 +115,13 @@ func New(interfaces ...interface{}) (MessageLoggerInterface, error) {
 			}
 		}
 	}
+	result.SetLogLevel(logLevel)
+
+	// Report any unknown parameters.
 
 	if len(errorsList) > 0 {
 		err = fmt.Errorf("unsupported interfaces: %#v", errorsList)
 	}
 
-	result.SetLogLevel(logLevel)
 	return result, err
 }
-
-// ----------------------------------------------------------------------------
-// Internal functions
-// ----------------------------------------------------------------------------
-
-// func init() {
-// 	messageLoggerInstance = New()
-// }
-
-// ----------------------------------------------------------------------------
-// Public functions
-// ----------------------------------------------------------------------------
-
-// func Error(messageNumber int, details ...interface{}) error {
-// 	return messageLoggerInstance.Error(messageNumber, details...)
-// }
-
-// func GetLogLevel() Level {
-// 	return messageLoggerInstance.GetLogLevel()
-// }
-
-// func GetLogLevelAsString() string {
-// 	return messageLoggerInstance.GetLogLevelAsString()
-// }
-
-// func Log(messageNumber int, details ...interface{}) error {
-// 	return messageLoggerInstance.Log(messageNumber, details...)
-// }
-
-// func Message(messageNumber int, details ...interface{}) (string, error) {
-// 	return messageLoggerInstance.Message(messageNumber, details...)
-// }
-
-// func MsgNumber(messageNumber int) messagetext.MessageNumber {
-// 	return messagetext.MsgNumber(messageNumber)
-// }
-
-// func GetMessageLogger() *MessageLoggerDefault {
-// 	return messageLoggerInstance
-// }
-
-// func SetIdTemplate(idTemplate string) MessageLoggerInterface {
-// 	return messageLoggerInstance.SetIdTemplate(idTemplate)
-// }
-
-// func SetLogger(logger logger.LoggerInterface) MessageLoggerInterface {
-// 	return messageLoggerInstance.SetLogger(logger)
-// }
-
-// func SetLogLevel(level Level) MessageLoggerInterface {
-// 	return messageLoggerInstance.SetLogLevel(level)
-// }
-
-// func SetLogLevelFromString(levelString string) MessageLoggerInterface {
-// 	return messageLoggerInstance.SetLogLevelFromString(levelString)
-// }
-
-// func SetMessageFormat(messageFormat messageformat.MessageFormatInterface) MessageLoggerInterface {
-// 	return messageLoggerInstance.SetMessageFormat(messageFormat)
-// }
-
-// func SetMessageId(messageId messageid.MessageIdInterface) MessageLoggerInterface {
-// 	return messageLoggerInstance.SetMessageId(messageId)
-// }
-
-// func SetMessageLogger(messageLogger *MessageLoggerDefault) {
-// 	messageLoggerInstance = messageLogger
-// }
-
-// func SetMessageLogLevel(messageLogLevel messageloglevel.MessageLogLevelInterface) MessageLoggerInterface {
-// 	return messageLoggerInstance.SetMessageLogLevel(messageLogLevel)
-// }
-
-// func SetMessageStatus(messageStatus messagestatus.MessageStatusInterface) MessageLoggerInterface {
-// 	return messageLoggerInstance.SetMessageStatus(messageStatus)
-// }
-
-// func SetMessageText(messageText messagetext.MessageTextInterface) MessageLoggerInterface {
-// 	return messageLoggerInstance.SetMessageText(messageText)
-// }
-
-// func SetTextTemplates(messages map[int]string) MessageLoggerInterface {
-// 	return messageLoggerInstance.SetTextTemplates(messages)
-// }

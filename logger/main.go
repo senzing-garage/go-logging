@@ -1,5 +1,5 @@
 /*
-Package logger is a decorator over Go's log package.
+The logger package is a decorator over Go's log package.
 */
 package logger
 
@@ -9,8 +9,10 @@ import "log"
 // Types
 // ----------------------------------------------------------------------------
 
+// The Level type is used in LevelXxxxx constants.
 type Level int
 
+// The LoggerInterface type defines guards, logging methods and get/set of logging level.
 type LoggerInterface interface {
 	Debug(v ...interface{}) LoggerInterface
 	Debugf(format string, v ...interface{}) LoggerInterface
@@ -46,8 +48,8 @@ type LoggerInterface interface {
 const noFormat = ""
 
 /*
-Supported levels of logging.
-Order is important for the LevelXxxx variables
+LevelXxxx values are an enumeration of typed integers representing logging levels.
+Order is important for the LevelXxxx variables.
 */
 const (
 	LevelTrace Level = iota
@@ -59,9 +61,7 @@ const (
 	LevelPanic
 )
 
-/*
-Strings printed when logging.
-*/
+// Strings printed when logging.
 const (
 	LevelDebugName = "DEBUG"
 	LevelErrorName = "ERROR"
@@ -76,6 +76,7 @@ const (
 // Variables
 // ----------------------------------------------------------------------------
 
+// Map from Log level as typed integer to string.
 var levelToTextMap = map[Level]string{
 	LevelTrace: LevelTraceName,
 	LevelDebug: LevelDebugName,
@@ -86,8 +87,10 @@ var levelToTextMap = map[Level]string{
 	LevelPanic: LevelPanicName,
 }
 
+// Default logger instance.
 var loggerInstance *LoggerDefault
 
+// Map from Log level as string to typed integer.
 var textToLevelMap = map[string]Level{
 	LevelTraceName: LevelTrace,
 	LevelDebugName: LevelDebug,
@@ -113,12 +116,13 @@ func New() *LoggerDefault {
 // Internal functions
 // ----------------------------------------------------------------------------
 
+// Initialize default instance.
 func init() {
 	loggerInstance = New()
 }
 
 // ----------------------------------------------------------------------------
-// Public functions
+// Public functions for default logger instance.
 // ----------------------------------------------------------------------------
 
 func Debug(v ...interface{}) LoggerInterface {

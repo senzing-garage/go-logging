@@ -12,9 +12,11 @@ import (
 // Types
 // ----------------------------------------------------------------------------
 
+// The MessageFormatJson type is for creating formatted messages in JSON.
 type MessageFormatJson struct {
 }
 
+// Fields in the formatted message.
 // Order is important.
 // It should be id, status, text, errors, details.
 type messageFormatJson struct {
@@ -29,15 +31,12 @@ type messageFormatJson struct {
 // Interface methods
 // ----------------------------------------------------------------------------
 
-// Build a message given details as strings.
+// The Message method creates a JSON formatted message.
 func (messageFormat *MessageFormatJson) Message(id string, status string, text string, details ...interface{}) (string, error) {
-
-	// Because the structure could be shared, thread safty needs to be implemented.
-
 	var err error = nil
 	messageBuilder := &messageFormatJson{}
 
-	// Set new values.
+	// Set output Id, Status, and Text fields.
 
 	if len(id) > 0 {
 		messageBuilder.Id = id
@@ -55,9 +54,14 @@ func (messageFormat *MessageFormatJson) Message(id string, status string, text s
 		}
 	}
 
+	// Work with details.
+
 	if len(details) > 0 {
 		var errorsList []interface{}
 		detailMap := make(map[string]interface{})
+
+		// Process different types of details.
+
 		for index, value := range details {
 			switch typedValue := value.(type) {
 			case error:
@@ -91,6 +95,9 @@ func (messageFormat *MessageFormatJson) Message(id string, status string, text s
 				}
 			}
 		}
+
+		// Set output Errors and Details fields.
+
 		messageBuilder.Errors = errorsList
 		messageBuilder.Details = detailMap
 	}
@@ -100,10 +107,3 @@ func (messageFormat *MessageFormatJson) Message(id string, status string, text s
 	result, _ := json.Marshal(messageBuilder)
 	return string(result), err
 }
-
-// Parse JSON message.
-// func ParseMessage(jsonString string) MessageFormatJson {
-// 	var message MessageFormatJson
-// 	json.Unmarshal([]byte(jsonString), &message)
-// 	return message
-// }

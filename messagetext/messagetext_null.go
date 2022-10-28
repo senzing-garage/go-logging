@@ -7,16 +7,14 @@ package messagetext
 // Types
 // ----------------------------------------------------------------------------
 
-/*
-MessageTextNull always returns an empty string.
-*/
+// The MessageTextNull type always returns an empty string.
 type MessageTextNull struct{}
 
 // ----------------------------------------------------------------------------
 // Interface methods
 // ----------------------------------------------------------------------------
 
-// MessageText always returns an empty string.
+// The MessageText method always returns an empty string.
 func (messageText *MessageTextNull) MessageText(messageNumber int, details ...interface{}) (string, error) {
 	return "", nil
 }

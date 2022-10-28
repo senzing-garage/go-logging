@@ -14,7 +14,8 @@ go-logging also allows different formatting options such as JSON or simply terse
 go-logging extends the levels of logging to include:
 Trace, Debug, Info, Warn, Error, Fatal, and Panic.
 
-go-logging supports "guards", IsXxxxx() methods,
+go-logging supports "guards",
+e.g. IsXxxxx() methods,
 to avoid calling a Log() method that
 wouldn't print anyway because of the logging level.
 For instance, there's no reason to call a DEBUG Log() method when the

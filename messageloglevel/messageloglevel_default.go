@@ -11,13 +11,14 @@ import (
 // Types
 // ----------------------------------------------------------------------------
 
+// The MessageLogLevelDefault type returns the logger.Level based on a any logger.Level in details parameter.
 type MessageLogLevelDefault struct{}
 
 // ----------------------------------------------------------------------------
 // Interface methods
 // ----------------------------------------------------------------------------
 
-// Return a logger.level based on one or more logger.level types in the details parameter.
+// The MessageLogLevel method returns a logger.level based on one or more logger.level types in the details parameter.
 func (messageLogLevel *MessageLogLevelDefault) MessageLogLevel(messageNumber int, details ...interface{}) (logger.Level, error) {
 	var err error = nil
 	result := logger.LevelInfo

@@ -13,6 +13,7 @@ import (
 // Types
 // ----------------------------------------------------------------------------
 
+// The MessageStatusByIdRange type is for determining a status based on what range a message number resides in.
 type MessageStatusByIdRange struct {
 	IdRanges map[int]string
 }
@@ -21,7 +22,7 @@ type MessageStatusByIdRange struct {
 // Interface methods
 // ----------------------------------------------------------------------------
 
-// Get the "status" value given the message id.
+// The MessageStatus method gets the "status" value from a range in MessageStatusByIdRange.IdRanges given the message id.
 func (messageStatus *MessageStatusByIdRange) MessageStatus(messageNumber int, details ...interface{}) (string, error) {
 	var err error = nil
 	var result = ""
