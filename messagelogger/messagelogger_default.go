@@ -80,7 +80,6 @@ func (messagelogger *MessageLoggerDefault) GetLogLevelAsString() string {
 
 // The Log method sends the formatted message to the Go log framework.
 func (messagelogger *MessageLoggerDefault) Log(messageNumber int, details ...interface{}) error {
-	var err error = nil
 
 	messageBody, err := messagelogger.Message(messageNumber, details...)
 	if err != nil {
@@ -100,7 +99,7 @@ func (messagelogger *MessageLoggerDefault) Log(messageNumber int, details ...int
 
 // The Message method returns a string with the formatted message.
 func (messagelogger *MessageLoggerDefault) Message(messageNumber int, details ...interface{}) (string, error) {
-	var err error = nil
+	var err error
 
 	id := fmt.Sprintf("%d", messageNumber)
 	if messagelogger.MessageId != nil {

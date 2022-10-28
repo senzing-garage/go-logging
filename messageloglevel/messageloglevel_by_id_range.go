@@ -27,7 +27,7 @@ type MessageLogLevelByIdRange struct {
 // The MessageLogLevel method returns a logger.level based on the message number.
 func (messageLogLevel *MessageLogLevelByIdRange) MessageLogLevel(messageNumber int, details ...interface{}) (logger.Level, error) {
 	var err error = nil
-	result := logger.LevelPanic
+	result := messageLogLevel.DefaultLogLevel
 
 	if messageLogLevel.IdRanges != nil {
 
@@ -48,7 +48,6 @@ func (messageLogLevel *MessageLogLevelByIdRange) MessageLogLevel(messageNumber i
 		}
 	}
 
-	result = messageLogLevel.DefaultLogLevel
 	err = fmt.Errorf("could not find error range for message number %d. Setting to level %d", messageNumber, result)
 	return result, err
 }
