@@ -6,6 +6,7 @@ import (
 	"github.com/senzing/go-logging/logger"
 	"github.com/senzing/go-logging/messageformat"
 	"github.com/senzing/go-logging/messagetext"
+	"github.com/stretchr/testify/assert"
 )
 
 // const MessageIdFormat = "senzing-9999%04d"
@@ -73,6 +74,18 @@ func TestDefaultLogMessageWithObject(test *testing.T) {
 	testObject.Log(2000, "An object", testObject)
 }
 
+func TestDefaultLogMessageIsXxxx(test *testing.T) {
+	testObject, err := New()
+	testError(test, testObject, err)
+	assert.False(test, testObject.IsTrace(), "Trace")
+	assert.False(test, testObject.IsDebug(), "Debug")
+	assert.True(test, testObject.IsInfo(), "Info")
+	assert.True(test, testObject.IsWarn(), "Warn")
+	assert.True(test, testObject.IsError(), "Error")
+	assert.True(test, testObject.IsFatal(), "Fatal")
+	assert.True(test, testObject.IsPanic(), "Panic")
+}
+
 // -- Log using New() with defaults ---------------------------------------------
 
 func TestNewLogMessageErrorLevels(test *testing.T) {
@@ -122,4 +135,28 @@ func TestNewBadInterfaces(test *testing.T) {
 	testError(test, testObject, err)
 	testObject.Log(1, "Bob", "Jane", testObject)
 	testObject.Log(2, "Bob", "Harry", err)
+}
+
+func TestDefaultLogMessageIsXxxxForTraceLevel(test *testing.T) {
+	testObject, err := New(logger.LevelTrace)
+	testError(test, testObject, err)
+	assert.True(test, testObject.IsTrace(), "Trace")
+	assert.True(test, testObject.IsDebug(), "Debug")
+	assert.True(test, testObject.IsInfo(), "Info")
+	assert.True(test, testObject.IsWarn(), "Warn")
+	assert.True(test, testObject.IsError(), "Error")
+	assert.True(test, testObject.IsFatal(), "Fatal")
+	assert.True(test, testObject.IsPanic(), "Panic")
+}
+
+func TestDefaultLogMessageIsXxxxForErrorLevel(test *testing.T) {
+	testObject, err := New(logger.LevelError)
+	testError(test, testObject, err)
+	assert.False(test, testObject.IsTrace(), "Trace")
+	assert.False(test, testObject.IsDebug(), "Debug")
+	assert.False(test, testObject.IsInfo(), "Info")
+	assert.False(test, testObject.IsWarn(), "Warn")
+	assert.True(test, testObject.IsError(), "Error")
+	assert.True(test, testObject.IsFatal(), "Fatal")
+	assert.True(test, testObject.IsPanic(), "Panic")
 }

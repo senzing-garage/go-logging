@@ -78,6 +78,41 @@ func (messagelogger *MessageLoggerDefault) GetLogLevelAsString() string {
 	return (messagelogger.Logger.GetLogLevelAsString())
 }
 
+// The IsDebug method return true if logging is DEBUG or lower.
+func (messagelogger *MessageLoggerDefault) IsDebug() bool {
+	return messagelogger.Logger.IsDebug()
+}
+
+// The IsError method return true if logging is ERROR or lower.
+func (messagelogger *MessageLoggerDefault) IsError() bool {
+	return messagelogger.Logger.IsError()
+}
+
+// The IsFatal method return true if logging is RATAL or lower.
+func (messagelogger *MessageLoggerDefault) IsFatal() bool {
+	return messagelogger.Logger.IsFatal()
+}
+
+// The IsInfo method return true if logging is INFO or lower.
+func (messagelogger *MessageLoggerDefault) IsInfo() bool {
+	return messagelogger.Logger.IsInfo()
+}
+
+// The IsPanic method return true if logging is PANIC or lower.
+func (messagelogger *MessageLoggerDefault) IsPanic() bool {
+	return messagelogger.Logger.IsPanic()
+}
+
+// The IsTrace method return true if logging is TRACE or lower.
+func (messagelogger *MessageLoggerDefault) IsTrace() bool {
+	return messagelogger.Logger.IsTrace()
+}
+
+// The IsWarn method return true if logging is WARN or lower.
+func (messagelogger *MessageLoggerDefault) IsWarn() bool {
+	return messagelogger.Logger.IsWarn()
+}
+
 // The Log method sends the formatted message to the Go log framework.
 func (messagelogger *MessageLoggerDefault) Log(messageNumber int, details ...interface{}) error {
 

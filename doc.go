@@ -14,7 +14,7 @@ go-logging also allows different formatting options such as JSON or simply terse
 go-logging extends the levels of logging to include:
 Trace, Debug, Info, Warn, Error, Fatal, and Panic.
 
-go-logging supports "guards",
+go-logging implements "guards",
 e.g. IsXxxxx() methods,
 to avoid calling a Log() method that
 wouldn't print anyway because of the logging level.
@@ -22,8 +22,8 @@ For instance, there's no reason to call a DEBUG Log() method when the
 logging level is set to INFO.  Guards prevent this.
 Example:
 
-	if logger.IsDebug() {
-		logger.Debugf("%s", complexProcess())
+	if messageLogger.IsDebug() {
+		messageLogger.Log(1, "Log only in DEBUG mode", complexProcess())
 	}
 
 The basic use of senzing/go-logging looks like this:
@@ -47,12 +47,11 @@ https://github.com/Senzing/go-logging/blob/main/main.go
 In each of the following examples, the following imports are assumed:
 
 	import "log"
-	import "github.com/senzing/go-logging/logger"
 	import "github.com/senzing/go-logging/messagelogger"
 
 -- Configure log --------------------------------------------------------------
 
-The "log" can be independently configured.
+The Go "log" package can be independently configured.
 Example:
 
 	log.SetFlags(log.LstdFlags)
@@ -130,6 +129,8 @@ This is by design.
 
 A log level can be specified anywhere after the first parameter (the message number parameter).
 Example:
+
+	import "github.com/senzing/go-logging/logger"
 
 	messageLogger.Log(6, "Robert Smith", 12345, aMap, logger.LevelError)
 
