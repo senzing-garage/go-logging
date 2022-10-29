@@ -29,6 +29,13 @@ type MessageLoggerInterface interface {
 	Error(messageNumber int, details ...interface{}) error
 	GetLogLevel() Level
 	GetLogLevelAsString() string
+	IsDebug() bool
+	IsError() bool
+	IsFatal() bool
+	IsInfo() bool
+	IsPanic() bool
+	IsTrace() bool
+	IsWarn() bool
 	Log(messageNumber int, details ...interface{}) error
 	Message(messageNumber int, details ...interface{}) (string, error)
 	SetLogLevel(level Level) MessageLoggerInterface
