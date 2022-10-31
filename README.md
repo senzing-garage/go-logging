@@ -49,5 +49,5 @@ Output:
  INFO 1:
 ```
 
-The API documentation is available at
+The API documentation and more examples are available at
 [pkg.go.dev/github.com/senzing/go-logging](https://pkg.go.dev/github.com/senzing/go-logging)
