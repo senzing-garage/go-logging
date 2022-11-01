@@ -52,7 +52,7 @@ func main() {
 
 	log.SetFlags(0)
 	messageId := &messageid.MessageIdTemplated{
-		IdTemplate: "senzing-9999%04d",
+		MessageIdTemplate: "senzing-9999%04d",
 	}
 	messageLogger, _ = messagelogger.New(messageId)
 	messageLogger.Log(3)

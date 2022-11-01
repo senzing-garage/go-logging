@@ -11,6 +11,16 @@ import (
 
 const printResults = 1
 
+var idRanges = map[int]string{
+	0000: logger.LevelInfoName,
+	1000: logger.LevelWarnName,
+	2000: logger.LevelErrorName,
+	3000: logger.LevelDebugName,
+	4000: logger.LevelTraceName,
+	5000: logger.LevelFatalName,
+	6000: logger.LevelPanicName,
+}
+
 // ----------------------------------------------------------------------------
 // Internal functions - names begin with lowercase letter
 // ----------------------------------------------------------------------------
@@ -38,7 +48,9 @@ func testError(test *testing.T, testObject MessageLogLevelInterface, err error) 
 // -- MessageLogLevel ---------------------------------------------------------
 
 func TestSenzingApiMessageLogLevelInfo(test *testing.T) {
-	testObject := &MessageLogLevelSenzingApi{}
+	testObject := &MessageLogLevelSenzingApi{
+		IdRanges: idRanges,
+	}
 	actual, err := testObject.MessageLogLevel(0)
 	testError(test, testObject, err)
 	printActual(test, actual)
@@ -46,7 +58,9 @@ func TestSenzingApiMessageLogLevelInfo(test *testing.T) {
 }
 
 func TestSenzingApiMessageLogLevelWarn(test *testing.T) {
-	testObject := &MessageLogLevelSenzingApi{}
+	testObject := &MessageLogLevelSenzingApi{
+		IdRanges: idRanges,
+	}
 	actual, err := testObject.MessageLogLevel(1000)
 	testError(test, testObject, err)
 	printActual(test, actual)
@@ -54,7 +68,9 @@ func TestSenzingApiMessageLogLevelWarn(test *testing.T) {
 }
 
 func TestSenzingApiMessageLogLevelError(test *testing.T) {
-	testObject := &MessageLogLevelSenzingApi{}
+	testObject := &MessageLogLevelSenzingApi{
+		IdRanges: idRanges,
+	}
 	actual, err := testObject.MessageLogLevel(2000)
 	testError(test, testObject, err)
 	printActual(test, actual)
@@ -62,7 +78,9 @@ func TestSenzingApiMessageLogLevelError(test *testing.T) {
 }
 
 func TestSenzingApiMessageLogLevelDebug(test *testing.T) {
-	testObject := &MessageLogLevelSenzingApi{}
+	testObject := &MessageLogLevelSenzingApi{
+		IdRanges: idRanges,
+	}
 	actual, err := testObject.MessageLogLevel(3000)
 	testError(test, testObject, err)
 	printActual(test, actual)
@@ -70,7 +88,9 @@ func TestSenzingApiMessageLogLevelDebug(test *testing.T) {
 }
 
 func TestSenzingApiMessageLogLevelTrace(test *testing.T) {
-	testObject := &MessageLogLevelSenzingApi{}
+	testObject := &MessageLogLevelSenzingApi{
+		IdRanges: idRanges,
+	}
 	actual, err := testObject.MessageLogLevel(4000)
 	testError(test, testObject, err)
 	printActual(test, actual)
@@ -78,7 +98,9 @@ func TestSenzingApiMessageLogLevelTrace(test *testing.T) {
 }
 
 func TestSenzingApiMessageLogLevelFatal(test *testing.T) {
-	testObject := &MessageLogLevelSenzingApi{}
+	testObject := &MessageLogLevelSenzingApi{
+		IdRanges: idRanges,
+	}
 	actual, err := testObject.MessageLogLevel(5000)
 	testError(test, testObject, err)
 	printActual(test, actual)
@@ -86,7 +108,9 @@ func TestSenzingApiMessageLogLevelFatal(test *testing.T) {
 }
 
 func TestSenzingApiMessageLogLevelPanic(test *testing.T) {
-	testObject := &MessageLogLevelSenzingApi{}
+	testObject := &MessageLogLevelSenzingApi{
+		IdRanges: idRanges,
+	}
 	actual, err := testObject.MessageLogLevel(6000)
 	testError(test, testObject, err)
 	printActual(test, actual)
@@ -94,7 +118,9 @@ func TestSenzingApiMessageLogLevelPanic(test *testing.T) {
 }
 
 func TestSenzingApiMessageLogLevelUnknown(test *testing.T) {
-	testObject := &MessageLogLevelSenzingApi{}
+	testObject := &MessageLogLevelSenzingApi{
+		IdRanges: idRanges,
+	}
 	actual, err := testObject.MessageLogLevel(7000)
 	testError(test, testObject, err)
 	printActual(test, actual)
@@ -105,7 +131,9 @@ func TestSenzingApiMessageLogLevelWithErrors(test *testing.T) {
 	anError1 := errors.New("0019E|Configuration not found")
 	anError2 := errors.New("0099E|Made up error")
 
-	testObject := &MessageLogLevelSenzingApi{}
+	testObject := &MessageLogLevelSenzingApi{
+		IdRanges: idRanges,
+	}
 	actual, err := testObject.MessageLogLevel(1, "A", 1, testObject, anError1, anError2)
 	testError(test, testObject, err)
 	printActual(test, actual)
