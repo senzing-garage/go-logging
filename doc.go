@@ -197,7 +197,7 @@ Status can also be individually assigned to message numbers.
 Example:
 
 	messageStatus2 := &messagestatus.MessageStatusById{
-		StatusTemplates: map[int]string{
+		IdStatus: map[int]string{
 			999:  "Foo",
 			1000: "Bar",
 			2000: "Baz",

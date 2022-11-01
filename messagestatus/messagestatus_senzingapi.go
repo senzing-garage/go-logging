@@ -22,6 +22,7 @@ If it doesn't exist, use the messageNumber to calculate a status.
 */
 type MessageStatusSenzingApi struct {
 	IdRanges map[int]string
+	IdStatus map[int]string
 }
 
 // ----------------------------------------------------------------------------
@@ -43,6 +44,7 @@ const (
 var senzingApiErrorsMap = map[string]string{
 	"0002E":  logger.LevelInfoName,
 	"0019E":  ErrorUnrecoverable,
+	"0037E":  ErrorBadUserInput,  // Unknown resolved entity value
 	"0063E":  ErrorUnrecoverable, // G2ConfigMgr is not initialized
 	"30121E": ErrorBadUserInput,  // JSON parsing Failure
 }
@@ -103,6 +105,15 @@ func (messageStatus *MessageStatusSenzingApi) MessageStatus(messageNumber int, d
 	}
 
 	// --- Status based on messageNumber ----------------------------------------
+
+	if messageStatus.IdStatus != nil {
+		result, ok := messageStatus.IdStatus[messageNumber]
+		if ok {
+			return result, err
+		}
+	}
+
+	// --- Status based on messageNumber range ----------------------------------
 
 	if messageStatus.IdRanges != nil {
 

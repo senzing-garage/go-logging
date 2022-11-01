@@ -124,7 +124,7 @@ func main() {
 	fmt.Printf("\n\n--- Test 9: - Status -----------------------------------------------------------\n\n")
 
 	messageStatus2 := &messagestatus.MessageStatusById{
-		StatusTemplates: map[int]string{
+		IdStatus: map[int]string{
 			999:  "Foo",
 			1000: "Bar",
 			2000: "Baz",
