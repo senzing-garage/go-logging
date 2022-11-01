@@ -1,7 +1,7 @@
 package main
 
 import (
-    "testing"
+	"testing"
 )
 
 /*
@@ -9,5 +9,5 @@ import (
  */
 
 func TestMain(testing *testing.T) {
-    main()
+	main()
 }
