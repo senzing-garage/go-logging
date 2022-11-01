@@ -21,8 +21,8 @@ looking at the Senzing error code.
 If it doesn't exist, use the messageNumber to calculate a status.
 */
 type MessageStatusSenzingApi struct {
-	IdRanges map[int]string
-	IdStatus map[int]string
+	IdRanges   map[int]string
+	IdStatuses map[int]string
 }
 
 // ----------------------------------------------------------------------------
@@ -133,8 +133,8 @@ func (messageStatus *MessageStatusSenzingApi) MessageStatus(messageNumber int, d
 
 	// --- Status based on messageNumber ----------------------------------------
 
-	if messageStatus.IdStatus != nil {
-		result, ok := messageStatus.IdStatus[messageNumber]
+	if messageStatus.IdStatuses != nil {
+		result, ok := messageStatus.IdStatuses[messageNumber]
 		if ok {
 			return result, err
 		}

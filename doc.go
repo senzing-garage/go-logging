@@ -105,7 +105,7 @@ By mapping message numbers to format strings, the Log() call will create formatt
 Example:
 
 	messageText := &messagetext.MessageTextTemplated{
-		TextTemplates: map[int]string{
+		IdMessage: map[int]string{
 			5:    "The favorite number for %s is %d.",
 			6:    "Person number #%[2]d is %[1]s.",
 			10:   "Example errors.",

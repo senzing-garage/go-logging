@@ -111,7 +111,7 @@ func TestNewJsonFormatting(test *testing.T) {
 func TestNewMessageTemplates(test *testing.T) {
 	messageFormat := &messageformat.MessageFormatJson{}
 	messageText := &messagetext.MessageTextTemplated{
-		TextTemplates: map[int]string{
+		IdMessages: map[int]string{
 			1: "%s knows %s",
 			2: "%s does not know %s",
 		},
@@ -125,7 +125,7 @@ func TestNewMessageTemplates(test *testing.T) {
 func TestNewBadInterfaces(test *testing.T) {
 	messageFormat := &messageformat.MessageFormatJson{}
 	messageText := &messagetext.MessageTextTemplated{
-		TextTemplates: map[int]string{
+		IdMessages: map[int]string{
 			1: "%s knows %s",
 			2: "%s does not know %s",
 		},

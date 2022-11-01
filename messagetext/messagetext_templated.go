@@ -17,7 +17,7 @@ import (
 type MessageTextTemplated struct {
 
 	// A map from message numbers to format string.
-	TextTemplates map[int]string
+	IdMessages map[int]string
 }
 
 // ----------------------------------------------------------------------------
@@ -27,7 +27,7 @@ type MessageTextTemplated struct {
 /*
 The MessageText method chooses a format string based on the message number and populates it from the details.
 To override the message number, submit a detail of type MessageNumber.
-The MessageNumber value will be used to choose the template from MessageTextTemplated.TextTemplates.
+The MessageNumber value will be used to choose the template from MessageTextTemplated.IdMessage.
 */
 func (messageText *MessageTextTemplated) MessageText(messageNumber int, details ...interface{}) (string, error) {
 	var err error = nil
@@ -40,7 +40,7 @@ func (messageText *MessageTextTemplated) MessageText(messageNumber int, details 
 			detail := details[index]
 			switch typedDetail := detail.(type) {
 			case MessageNumber:
-				textTemplate, ok := messageText.TextTemplates[int(typedDetail)]
+				textTemplate, ok := messageText.IdMessages[int(typedDetail)]
 				if ok {
 					textRaw := fmt.Sprintf(textTemplate, details...)
 					result = strings.Split(textRaw, "%!(")[0]
@@ -53,7 +53,7 @@ func (messageText *MessageTextTemplated) MessageText(messageNumber int, details 
 	// The normal case is that the message number is passed in as the "messageNumber" parameter.
 
 	if result == "" {
-		textTemplate, ok := messageText.TextTemplates[messageNumber]
+		textTemplate, ok := messageText.IdMessages[messageNumber]
 		if ok {
 			textRaw := fmt.Sprintf(textTemplate, details...)
 			result = strings.Split(textRaw, "%!(")[0]
