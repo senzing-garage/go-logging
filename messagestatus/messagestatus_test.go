@@ -49,7 +49,7 @@ func TestMessageStatus(test *testing.T) {
 
 func TestMessageStatusXXX(test *testing.T) {
 	testObject := &MessageStatusSenzingApi{
-		IdStatus: map[int]string{
+		IdStatuses: map[int]string{
 			1: "bob",
 			2: "mary",
 			3: "jane",

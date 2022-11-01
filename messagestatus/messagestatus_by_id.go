@@ -13,7 +13,7 @@ import (
 
 // The MessageStatusById type is for returning a status based on the message number.
 type MessageStatusById struct {
-	IdStatus map[int]string
+	IdStatuses map[int]string
 }
 
 // ----------------------------------------------------------------------------
@@ -25,8 +25,8 @@ func (messageStatus *MessageStatusById) MessageStatus(messageNumber int, details
 	var err error = nil
 	var result = ""
 
-	if messageStatus.IdStatus != nil {
-		result, ok := messageStatus.IdStatus[messageNumber]
+	if messageStatus.IdStatuses != nil {
+		result, ok := messageStatus.IdStatuses[messageNumber]
 		if ok {
 			return result, err
 		}

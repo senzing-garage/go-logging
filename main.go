@@ -68,7 +68,7 @@ func main() {
 	fmt.Printf("\n\n--- Test 5: - Adding a text field ----------------------------------------------\n\n")
 
 	messageText := &messagetext.MessageTextTemplated{
-		TextTemplates: map[int]string{
+		IdMessages: map[int]string{
 			5:    "The favorite number for %s is %d.",
 			6:    "Person number #%[2]d is %[1]s.",
 			10:   "Example errors.",
@@ -124,7 +124,7 @@ func main() {
 	fmt.Printf("\n\n--- Test 9: - Status -----------------------------------------------------------\n\n")
 
 	messageStatus2 := &messagestatus.MessageStatusById{
-		IdStatus: map[int]string{
+		IdStatuses: map[int]string{
 			999:  "Foo",
 			1000: "Bar",
 			2000: "Baz",
