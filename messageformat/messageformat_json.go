@@ -13,8 +13,7 @@ import (
 // ----------------------------------------------------------------------------
 
 // The MessageFormatJson type is for creating formatted messages in JSON.
-type MessageFormatJson struct {
-}
+type MessageFormatJson struct{}
 
 // Fields in the formatted message.
 // Order is important.

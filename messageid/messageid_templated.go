@@ -11,7 +11,7 @@ import "fmt"
 
 // The MessageIdTemplated type is for creating message identifier based on a template.
 type MessageIdTemplated struct {
-	IdTemplate string
+	MessageIdTemplate string
 }
 
 // ----------------------------------------------------------------------------
@@ -22,10 +22,10 @@ type MessageIdTemplated struct {
 // If IdTemplate is not set, the value "%04d" is used.
 func (messageId *MessageIdTemplated) MessageId(messageNumber int, details ...interface{}) (string, error) {
 	var err error = nil
-	idTemplate := "%04d"
-	if len(messageId.IdTemplate) > 0 {
-		idTemplate = messageId.IdTemplate
+	messageIdTemplate := "%04d"
+	if len(messageId.MessageIdTemplate) > 0 {
+		messageIdTemplate = messageId.MessageIdTemplate
 	}
-	result := fmt.Sprintf(idTemplate, messageNumber)
+	result := fmt.Sprintf(messageIdTemplate, messageNumber)
 	return result, err
 }

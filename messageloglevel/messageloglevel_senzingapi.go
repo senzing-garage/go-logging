@@ -13,7 +13,10 @@ import (
 // ----------------------------------------------------------------------------
 
 // The MessageLogLevelSenzingApi type is for calculating the log level based on the status value.
-type MessageLogLevelSenzingApi struct{}
+type MessageLogLevelSenzingApi struct {
+	IdRanges   map[int]string
+	IdStatuses map[int]string
+}
 
 // ----------------------------------------------------------------------------
 // Variables
@@ -41,15 +44,8 @@ func (messageLogLevel *MessageLogLevelSenzingApi) MessageLogLevel(messageNumber 
 	// Get Status string.
 
 	messageStatus := &messagestatus.MessageStatusSenzingApi{
-		IdRanges: map[int]string{
-			0000: logger.LevelInfoName,
-			1000: logger.LevelWarnName,
-			2000: logger.LevelErrorName,
-			3000: logger.LevelDebugName,
-			4000: logger.LevelTraceName,
-			5000: logger.LevelFatalName,
-			6000: logger.LevelPanicName,
-		},
+		IdRanges:   messageLogLevel.IdRanges,
+		IdStatuses: messageLogLevel.IdStatuses,
 	}
 	status, err := messageStatus.MessageStatus(messageNumber, details...)
 	if err != nil {

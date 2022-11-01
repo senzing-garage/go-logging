@@ -29,11 +29,21 @@ type MessageStatusSenzingApi struct {
 // Constants
 // ----------------------------------------------------------------------------
 
-// Types of Senzing errors
+/*
+Types of Senzing errors.
+These are the strings that may be returned from MessageStatus()
+*/
 const (
-	ErrorRetryable     = "retryable"
+	Debug              = logger.LevelDebugName
+	Error              = logger.LevelErrorName
 	ErrorBadUserInput  = "bad-input"
+	ErrorRetryable     = "retryable"
 	ErrorUnrecoverable = "unrecoverable"
+	Fatal              = logger.LevelFatalName
+	Info               = logger.LevelInfoName
+	Panic              = logger.LevelPanicName
+	Trace              = logger.LevelTraceName
+	Warn               = logger.LevelWarnName
 )
 
 // ----------------------------------------------------------------------------
@@ -42,24 +52,25 @@ const (
 
 // A map of Senzing errors to the corresponding error level.
 var senzingApiErrorsMap = map[string]string{
-	"0002E":  logger.LevelInfoName,
+	"0002E":  Info,
 	"0019E":  ErrorUnrecoverable,
 	"0037E":  ErrorBadUserInput,  // Unknown resolved entity value
 	"0063E":  ErrorUnrecoverable, // G2ConfigMgr is not initialized
 	"30121E": ErrorBadUserInput,  // JSON parsing Failure
 }
 
+// The order of severity/verbosity from most severe to most verbose.
 var messagePrecedence = []string{
-	logger.LevelPanicName,
-	logger.LevelFatalName,
+	Panic,
+	Fatal,
 	ErrorUnrecoverable,
 	ErrorBadUserInput,
 	ErrorRetryable,
-	logger.LevelErrorName,
-	logger.LevelWarnName,
-	logger.LevelInfoName,
-	logger.LevelDebugName,
-	logger.LevelTraceName,
+	Error,
+	Warn,
+	Info,
+	Debug,
+	Trace,
 }
 
 func (messageStatus *MessageStatusSenzingApi) messageStatusBySenzingError(messageNumber int, details ...interface{}) string {
@@ -97,7 +108,7 @@ func (messageStatus *MessageStatusSenzingApi) messageStatusBySenzingError(messag
 	return ""
 }
 
-func (messageStatus *MessageStatusSenzingApi) messageStatusByIdRange(messageNumber int) string {
+func (messageStatus *MessageStatusSenzingApi) messageStatusByIdRanges(messageNumber int) string {
 	// Create a list of sorted keys.
 
 	messageLevelKeys := make([]int, 0, len(messageStatus.IdRanges))
@@ -143,7 +154,7 @@ func (messageStatus *MessageStatusSenzingApi) MessageStatus(messageNumber int, d
 	// --- Status based on messageNumber range ----------------------------------
 
 	if messageStatus.IdRanges != nil {
-		result = messageStatus.messageStatusByIdRange(messageNumber)
+		result = messageStatus.messageStatusByIdRanges(messageNumber)
 		if len(result) > 0 {
 			return result, err
 		}

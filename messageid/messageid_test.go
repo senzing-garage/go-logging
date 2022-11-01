@@ -35,7 +35,7 @@ func testError(test *testing.T, testObject MessageIdInterface, err error) {
 
 func TestMessageId(test *testing.T) {
 	testObject := &MessageIdTemplated{
-		IdTemplate: "senzing-9999%04d",
+		MessageIdTemplate: "senzing-9999%04d",
 	}
 	actual, err := testObject.MessageId(1)
 	testError(test, testObject, err)
@@ -44,7 +44,7 @@ func TestMessageId(test *testing.T) {
 
 func TestMessageIdWithDetails(test *testing.T) {
 	testObject := &MessageIdTemplated{
-		IdTemplate: "senzing-9999%04d",
+		MessageIdTemplate: "senzing-9999%04d",
 	}
 	actual, err := testObject.MessageId(1, "A", 1, testObject)
 	testError(test, testObject, err)
