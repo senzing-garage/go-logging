@@ -36,7 +36,7 @@ These are the strings that may be returned from MessageStatus()
 const (
 	Debug              = logger.LevelDebugName
 	Error              = logger.LevelErrorName
-	ErrorBadUserInput  = "bad-input"
+	ErrorBadUserInput  = "bad_user_input"
 	ErrorRetryable     = "retryable"
 	ErrorUnrecoverable = "unrecoverable"
 	Fatal              = logger.LevelFatalName
