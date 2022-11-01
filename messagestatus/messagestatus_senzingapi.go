@@ -62,16 +62,7 @@ var messagePrecedence = []string{
 	logger.LevelTraceName,
 }
 
-// ----------------------------------------------------------------------------
-// Interface methods
-// ----------------------------------------------------------------------------
-
-// The MessageStatus method returns a status based on a message number indexed into senzingApiErrorsMap.
-func (messageStatus *MessageStatusSenzingApi) MessageStatus(messageNumber int, details ...interface{}) (string, error) {
-	var err error = nil
-	var result = ""
-
-	// --- Status based on Senzing error passed in via details ----------------
+func (messageStatus *MessageStatusSenzingApi) messageStatusBySenzingError(messageNumber int, details ...interface{}) string {
 
 	// Create a list of Senzing errors by looking at details in reverse order.
 
@@ -98,10 +89,46 @@ func (messageStatus *MessageStatusSenzingApi) MessageStatus(messageNumber int, d
 		for _, messagePrecedenceLevel := range messagePrecedence {
 			for _, senzingError := range senzingErrors {
 				if senzingError == messagePrecedenceLevel {
-					return senzingError, err
+					return senzingError
 				}
 			}
 		}
+	}
+	return ""
+}
+
+func (messageStatus *MessageStatusSenzingApi) messageStatusByIdRange(messageNumber int) string {
+	// Create a list of sorted keys.
+
+	messageLevelKeys := make([]int, 0, len(messageStatus.IdRanges))
+	for key := range messageStatus.IdRanges {
+		messageLevelKeys = append(messageLevelKeys, key)
+	}
+	sort.Sort(sort.Reverse(sort.IntSlice(messageLevelKeys)))
+
+	// Using the sorted message number, find the level.
+
+	for _, messageLevelKey := range messageLevelKeys {
+		if messageNumber >= messageLevelKey {
+			return messageStatus.IdRanges[messageLevelKey]
+		}
+	}
+	return ""
+}
+
+// ----------------------------------------------------------------------------
+// Interface methods
+// ----------------------------------------------------------------------------
+
+// The MessageStatus method returns a status based on a message number indexed into senzingApiErrorsMap.
+func (messageStatus *MessageStatusSenzingApi) MessageStatus(messageNumber int, details ...interface{}) (string, error) {
+	var err error = nil
+
+	// --- Status based on Senzing error passed in via details ----------------
+
+	result := messageStatus.messageStatusBySenzingError(messageNumber, details...)
+	if len(result) > 0 {
+		return result, err
 	}
 
 	// --- Status based on messageNumber ----------------------------------------
@@ -116,21 +143,9 @@ func (messageStatus *MessageStatusSenzingApi) MessageStatus(messageNumber int, d
 	// --- Status based on messageNumber range ----------------------------------
 
 	if messageStatus.IdRanges != nil {
-
-		// Create a list of sorted keys.
-
-		messageLevelKeys := make([]int, 0, len(messageStatus.IdRanges))
-		for key := range messageStatus.IdRanges {
-			messageLevelKeys = append(messageLevelKeys, key)
-		}
-		sort.Sort(sort.Reverse(sort.IntSlice(messageLevelKeys)))
-
-		// Using the sorted message number, find the level.
-
-		for _, messageLevelKey := range messageLevelKeys {
-			if messageNumber >= messageLevelKey {
-				return messageStatus.IdRanges[messageLevelKey], err
-			}
+		result = messageStatus.messageStatusByIdRange(messageNumber)
+		if len(result) > 0 {
+			return result, err
 		}
 	}
 
