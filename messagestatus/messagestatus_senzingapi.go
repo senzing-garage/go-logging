@@ -36,9 +36,9 @@ These are the strings that may be returned from MessageStatus()
 const (
 	Debug              = logger.LevelDebugName
 	Error              = logger.LevelErrorName
-	ErrorBadUserInput  = "bad-input"
-	ErrorRetryable     = "retryable"
-	ErrorUnrecoverable = "unrecoverable"
+	ErrorBadUserInput  = logger.LevelErrorName + "_bad_user_input"
+	ErrorRetryable     = logger.LevelErrorName + "_retryable"
+	ErrorUnrecoverable = logger.LevelErrorName + "_unrecoverable"
 	Fatal              = logger.LevelFatalName
 	Info               = logger.LevelInfoName
 	Panic              = logger.LevelPanicName
@@ -55,7 +55,9 @@ var senzingApiErrorsMap = map[string]string{
 	"0002E":  Info,
 	"0019E":  ErrorUnrecoverable,
 	"0037E":  ErrorBadUserInput,  // Unknown resolved entity value
+	"0052E":  ErrorBadUserInput,  // Unknown relationship ID value
 	"0063E":  ErrorUnrecoverable, // G2ConfigMgr is not initialized
+	"7221E":  ErrorUnrecoverable, // No engine configuration registered
 	"30121E": ErrorBadUserInput,  // JSON parsing Failure
 }
 
