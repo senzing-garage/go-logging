@@ -9,6 +9,26 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
+var testCases = []struct {
+	name            string
+	messageNumber   int
+	details         []interface{}
+	expectedDefault logger.Level
+}{
+	{
+		name:            "Test case: #1",
+		messageNumber:   1,
+		details:         []interface{}{123, "bob"},
+		expectedDefault: logger.LevelInfo,
+	},
+	{
+		name:            "Test case: #1",
+		messageNumber:   1001,
+		details:         []interface{}{123, "bob"},
+		expectedDefault: logger.LevelInfo,
+	},
+}
+
 const printResults = 1
 
 var idLevels = map[int]string{
@@ -189,3 +209,39 @@ func TestMessageLogLevelDefaultError(test *testing.T) {
 	printActual(test, actual)
 	assert.True(test, actual == logger.LevelError)
 }
+
+// ----------------------------------------------------------------------------
+// Test interface functions for MessageIdSenzing - names begin with "Test"
+// ----------------------------------------------------------------------------
+
+func TestDefaultMessageLogLevel(test *testing.T) {
+	for _, testCase := range testCases {
+		if testCase.expectedDefault > 0 {
+			test.Run(testCase.name, func(test *testing.T) {
+				testObject := &MessageLogLevelDefault{}
+				actual, err := testObject.MessageLogLevel(testCase.messageNumber, testCase.details...)
+				testError(test, testObject, err)
+				assert.Equal(test, testCase.expectedDefault, actual, testCase.name)
+			})
+		}
+	}
+}
+
+// ----------------------------------------------------------------------------
+// Test interface functions for MessageIdSenzing - names begin with "Test"
+// ----------------------------------------------------------------------------
+
+// func TestDefaultMessageId(test *testing.T) {
+// 	for _, testCase := range testCases {
+// 		if len(testCase.expectedTemplated) > 0 {
+// 			test.Run(testCase.name, func(test *testing.T) {
+// 				testObject := &MessageIdSenzing{
+// 					MessageIdTemplate: testCase.template,
+// 				}
+// 				actual, err := testObject.MessageId(testCase.messageNumber, testCase.details...)
+// 				testError(test, testObject, err)
+// 				assert.Equal(test, testCase.expectedTemplated, actual, testCase.name)
+// 			})
+// 		}
+// 	}
+// }

@@ -1,25 +1,71 @@
 package messageformat
 
 import (
-	"fmt"
 	"testing"
+
+	"github.com/stretchr/testify/assert"
 )
 
-const printResults = 1
+var testCases = []struct {
+	name            string
+	id              string
+	status          string
+	text            string
+	details         []interface{}
+	expectedJSON    string
+	expectedDefault string
+}{
+	{
+		name:            "Test case: #1",
+		id:              "id-1",
+		status:          "status-1",
+		text:            "text-1",
+		details:         []interface{}{123, "bob"},
+		expectedJSON:    `{"id":"id-1","status":"status-1","text":"text-1","details":{"1":123,"2":"bob"}}`,
+		expectedDefault: `id-1: (status-1) text-1 [map[1:123 2:"bob"]]`,
+	},
+	{
+		name:            "Test case: #2 - no id",
+		status:          "status-2",
+		text:            "text-2",
+		details:         []interface{}{123, "bob"},
+		expectedJSON:    `{"status":"status-2","text":"text-2","details":{"1":123,"2":"bob"}}`,
+		expectedDefault: `(status-2) text-2 [map[1:123 2:"bob"]]`,
+	},
+	{
+		name:            "Test case: #3 - no status",
+		id:              "id-3",
+		text:            "text-3",
+		details:         []interface{}{123, "bob"},
+		expectedJSON:    `{"id":"id-3","text":"text-3","details":{"1":123,"2":"bob"}}`,
+		expectedDefault: `id-3: text-3 [map[1:123 2:"bob"]]`,
+	},
+	{
+		name:            "Test case: #4 - no text",
+		id:              "id-4",
+		status:          "status-4",
+		details:         []interface{}{123, "bob"},
+		expectedJSON:    `{"id":"id-4","status":"status-4","details":{"1":123,"2":"bob"}}`,
+		expectedDefault: `id-4: (status-4) [map[1:123 2:"bob"]]`,
+	},
+	{
+		name:            "Test case: #5 - no details",
+		id:              "id-5",
+		status:          "status-5",
+		text:            "text-5",
+		expectedJSON:    `{"id":"id-5","status":"status-5","text":"text-5"}`,
+		expectedDefault: `id-5: (status-5) text-5`,
+	},
+	{
+		name:            "Test case: #6",
+		expectedJSON:    `{}`,
+		expectedDefault: ``,
+	},
+}
 
 // ----------------------------------------------------------------------------
 // Internal functions - names begin with lowercase letter
 // ----------------------------------------------------------------------------
-
-func printResult(test *testing.T, title string, result interface{}) {
-	if printResults == 1 {
-		test.Logf("%s: %v", title, fmt.Sprintf("%v", result))
-	}
-}
-
-func printActual(test *testing.T, actual interface{}) {
-	printResult(test, "Actual", actual)
-}
 
 func testError(test *testing.T, testObject MessageFormatInterface, err error) {
 	if err != nil {
@@ -28,62 +74,52 @@ func testError(test *testing.T, testObject MessageFormatInterface, err error) {
 }
 
 // ----------------------------------------------------------------------------
+// Test interface functions for MessageFormatDefault - names begin with "Test"
+// ----------------------------------------------------------------------------
+
+func TestDefaultMessages(test *testing.T) {
+	testObject := &MessageFormatDefault{}
+	for _, testCase := range testCases {
+		if len(testCase.expectedDefault) > 0 {
+			test.Run(testCase.name, func(test *testing.T) {
+				actual, err := testObject.Message(testCase.id, testCase.status, testCase.text, testCase.details...)
+				testError(test, testObject, err)
+				assert.Equal(test, testCase.expectedDefault, actual, testCase.name)
+			})
+		}
+	}
+}
+
+// ----------------------------------------------------------------------------
 // Test interface functions for MessageFormatJson - names begin with "Test"
 // ----------------------------------------------------------------------------
 
-// -- Message -----------------------------------------------------------------
-
-func TestJsonMessage(test *testing.T) {
+func TestJsonMessages(test *testing.T) {
 	testObject := &MessageFormatJson{}
-	actual, err := testObject.Message("id-2", "try-again", "text-2", 123, "bob")
-	testError(test, testObject, err)
-	printActual(test, actual)
-}
-
-func TestJsonMessageNoId(test *testing.T) {
-	testObject := &MessageFormatJson{}
-	actual, err := testObject.Message("", "try-again", "text-3", 123, "bob")
-	testError(test, testObject, err)
-	printActual(test, actual)
-}
-
-func TestJsonMessageNoStatus(test *testing.T) {
-	testObject := &MessageFormatJson{}
-	actual, err := testObject.Message("id-4", "", "text-4", 123, "bob")
-	testError(test, testObject, err)
-	printActual(test, actual)
-}
-
-func TestJsonMessageNoText(test *testing.T) {
-	testObject := &MessageFormatJson{}
-	actual, err := testObject.Message("id-5", "try-again", "", 123, "bob")
-	testError(test, testObject, err)
-	printActual(test, actual)
-}
-
-func TestJsonMessageNoDetails(test *testing.T) {
-	testObject := &MessageFormatJson{}
-	actual, err := testObject.Message("id-6", "try-again", "text-6")
-	testError(test, testObject, err)
-	printActual(test, actual)
-}
-
-func TestJsonMessageNothing(test *testing.T) {
-	testObject := &MessageFormatJson{}
-	actual, err := testObject.Message("", "", "")
-	testError(test, testObject, err)
-	printActual(test, actual)
+	for _, testCase := range testCases {
+		if len(testCase.expectedJSON) > 0 {
+			test.Run(testCase.name, func(test *testing.T) {
+				actual, err := testObject.Message(testCase.id, testCase.status, testCase.text, testCase.details...)
+				testError(test, testObject, err)
+				assert.Equal(test, testCase.expectedJSON, actual, testCase.name)
+			})
+		}
+	}
 }
 
 // ----------------------------------------------------------------------------
-// Test interface functions for MessageFormatTerse - names begin with "Test"
+// Test interface functions for MessageFormatJson - names begin with "Test"
 // ----------------------------------------------------------------------------
 
-// -- Message -----------------------------------------------------------------
-
-func TestTerseMessage(test *testing.T) {
-	testObject := &MessageFormatDefault{}
-	actual, err := testObject.Message("id-1", "try-again", "text-1", 123, "bob")
-	testError(test, testObject, err)
-	printActual(test, actual)
+func TestSenzingMessages(test *testing.T) {
+	testObject := &MessageFormatSenzing{}
+	for _, testCase := range testCases {
+		if len(testCase.expectedJSON) > 0 {
+			test.Run(testCase.name, func(test *testing.T) {
+				actual, err := testObject.Message(testCase.id, testCase.status, testCase.text, testCase.details...)
+				testError(test, testObject, err)
+				assert.Equal(test, testCase.expectedJSON, actual, testCase.name)
+			})
+		}
+	}
 }

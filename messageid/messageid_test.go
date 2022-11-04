@@ -1,25 +1,39 @@
 package messageid
 
 import (
-	"fmt"
 	"testing"
+
+	"github.com/stretchr/testify/assert"
 )
 
-const printResults = 1
+var testCases = []struct {
+	name              string
+	template          string
+	messageNumber     int
+	details           []interface{}
+	expectedDefault   string
+	expectedTemplated string
+}{
+	{
+		name:              "Test case: #1",
+		template:          "senzing-9999%04d",
+		messageNumber:     1,
+		expectedDefault:   `1`,
+		expectedTemplated: `senzing-99990001`,
+	},
+	{
+		name:              "Test case: #2",
+		template:          "senzing-9999%04d",
+		messageNumber:     2,
+		details:           []interface{}{123, "bob"},
+		expectedDefault:   `2`,
+		expectedTemplated: `senzing-99990002`,
+	},
+}
 
 // ----------------------------------------------------------------------------
 // Internal functions - names begin with lowercase letter
 // ----------------------------------------------------------------------------
-
-func printResult(test *testing.T, title string, result interface{}) {
-	if printResults == 1 {
-		test.Logf("%s: %v", title, fmt.Sprintf("%v", result))
-	}
-}
-
-func printActual(test *testing.T, actual interface{}) {
-	printResult(test, "Actual", actual)
-}
 
 func testError(test *testing.T, testObject MessageIdInterface, err error) {
 	if err != nil {
@@ -28,25 +42,37 @@ func testError(test *testing.T, testObject MessageIdInterface, err error) {
 }
 
 // ----------------------------------------------------------------------------
-// Test interface functions for MessageIdTemplate - names begin with "Test"
+// Test interface functions for MessageIdDefault - names begin with "Test"
 // ----------------------------------------------------------------------------
 
-// -- MessageId ---------------------------------------------------------------
-
-func TestMessageId(test *testing.T) {
-	testObject := &MessageIdTemplated{
-		MessageIdTemplate: "senzing-9999%04d",
+func TestDefaultMessageId(test *testing.T) {
+	for _, testCase := range testCases {
+		if len(testCase.expectedDefault) > 0 {
+			test.Run(testCase.name, func(test *testing.T) {
+				testObject := &MessageIdDefault{}
+				actual, err := testObject.MessageId(testCase.messageNumber, testCase.details...)
+				testError(test, testObject, err)
+				assert.Equal(test, testCase.expectedDefault, actual, testCase.name)
+			})
+		}
 	}
-	actual, err := testObject.MessageId(1)
-	testError(test, testObject, err)
-	printActual(test, actual)
 }
 
-func TestMessageIdWithDetails(test *testing.T) {
-	testObject := &MessageIdTemplated{
-		MessageIdTemplate: "senzing-9999%04d",
+// ----------------------------------------------------------------------------
+// Test interface functions for MessageIdTemplated - names begin with "Test"
+// ----------------------------------------------------------------------------
+
+func TestTemplatedMessageId(test *testing.T) {
+	for _, testCase := range testCases {
+		if len(testCase.expectedTemplated) > 0 {
+			test.Run(testCase.name, func(test *testing.T) {
+				testObject := &MessageIdTemplated{
+					MessageIdTemplate: testCase.template,
+				}
+				actual, err := testObject.MessageId(testCase.messageNumber, testCase.details...)
+				testError(test, testObject, err)
+				assert.Equal(test, testCase.expectedTemplated, actual, testCase.name)
+			})
+		}
 	}
-	actual, err := testObject.MessageId(1, "A", 1, testObject)
-	testError(test, testObject, err)
-	printActual(test, actual)
 }

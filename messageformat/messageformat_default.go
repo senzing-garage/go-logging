@@ -5,6 +5,7 @@ package messageformat
 
 import (
 	"fmt"
+	"strings"
 )
 
 // ----------------------------------------------------------------------------
@@ -39,6 +40,7 @@ func (messageFormat *MessageFormatDefault) Message(id string, status string, tex
 		}
 		result = result + fmt.Sprintf("[%v] ", detailMap)
 	}
+	result = strings.TrimSpace(result)
 
 	return result, err
 }
