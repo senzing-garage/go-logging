@@ -15,7 +15,7 @@ import (
 // ----------------------------------------------------------------------------
 
 // The MessageLogLevelDefault type returns the logger.Level based on a any logger.Level in details parameter.
-type MessageLogLevelDefault struct {
+type MessageLogLevelSenzing struct {
 	DefaultLogLevel        logger.Level
 	IdLevels               map[int]logger.Level // Specific message ids and the corresponding logger level.
 	IdRanges               map[int]logger.Level // The "low-bound" of a range and the corresponding logger level.
@@ -26,7 +26,7 @@ type MessageLogLevelDefault struct {
 // Internal methods
 // ----------------------------------------------------------------------------
 
-func (messageLogLevel *MessageLogLevelDefault) getSortedMessageLevelKeys() []int {
+func (messageLogLevel *MessageLogLevelSenzing) getSortedMessageLevelKeys() []int {
 	if messageLogLevel.sortedMessageLevelKeys == nil {
 		messageLogLevel.sortedMessageLevelKeys = make([]int, 0, len(messageLogLevel.IdRanges))
 		for key := range messageLogLevel.IdRanges {
@@ -42,7 +42,7 @@ func (messageLogLevel *MessageLogLevelDefault) getSortedMessageLevelKeys() []int
 // ----------------------------------------------------------------------------
 
 // The MessageLogLevel method returns a logger.level based on one or more logger.level types in the details parameter.
-func (messageLogLevel *MessageLogLevelDefault) MessageLogLevel(messageNumber int, details ...interface{}) (logger.Level, error) {
+func (messageLogLevel *MessageLogLevelSenzing) MessageLogLevel(messageNumber int, details ...interface{}) (logger.Level, error) {
 	var err error = nil
 
 	// First priority:  Log level explicitly given in details parameter.

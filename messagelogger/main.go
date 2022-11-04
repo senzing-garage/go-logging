@@ -4,6 +4,7 @@ The messagelogger package generates messages, logs messages, or creates errors f
 package messagelogger
 
 import (
+	"errors"
 	"fmt"
 
 	"github.com/senzing/go-logging/logger"
@@ -68,6 +69,7 @@ The default message logger uses default and null subcomponents.
 To use non-default subcomponents,
 adding parameters to New() can specify the subcomponent desired.
 The parameters can be of the following type and in any order:
+
   - logger.LoggerInterface
   - messageformat.MessageFormatInterface
   - messageid.MessageIdInterface
@@ -131,4 +133,73 @@ func New(interfaces ...interface{}) (MessageLoggerInterface, error) {
 	}
 
 	return result, err
+}
+
+func NewSenzingLogger(productIdentifier int, idMessages map[int]string, interfaces ...interface{}) (MessageLoggerInterface, error) {
+	var err error = nil
+
+	// Detect incorrect parameter values.
+
+	if productIdentifier <= 0 || productIdentifier >= 10000 {
+		err = errors.New("productIdentifier must be in range 1..9999. See https://github.com/Senzing/knowledge-base/blob/main/lists/senzing-product-ids.md")
+		return nil, err
+	}
+
+	if idMessages == nil {
+		err = errors.New("messages must be a map[int]string")
+		return nil, err
+	}
+
+	// Construct the components of the messagelogger.
+
+	messageFormat := &messageformat.MessageFormatSenzing{}
+
+	messageId := &messageid.MessageIdSenzing{
+		MessageIdTemplate: fmt.Sprintf("senzing-%04d", productIdentifier) + "%04d",
+	}
+
+	messageLogLevel := &messageloglevel.MessageLogLevelSenzing{
+		DefaultLogLevel: logger.LevelInfo,
+		IdRanges: map[int]logger.Level{
+			0000: logger.LevelInfo,
+			1000: logger.LevelWarn,
+			2000: logger.LevelError,
+			3000: logger.LevelDebug,
+			4000: logger.LevelTrace,
+			5000: logger.LevelFatal,
+			6000: logger.LevelPanic,
+		},
+	}
+
+	messageStatus := &messagestatus.MessageStatusSenzing{
+		IdRanges: map[int]string{
+			0000: logger.LevelInfoName,
+			1000: logger.LevelWarnName,
+			2000: logger.LevelErrorName,
+			3000: logger.LevelDebugName,
+			4000: logger.LevelTraceName,
+			5000: logger.LevelFatalName,
+			6000: logger.LevelPanicName,
+		},
+	}
+
+	messageText := &messagetext.MessageTextSenzing{
+		IdMessages: idMessages,
+	}
+
+	var newInterfaces = []interface{}{
+		messageId,
+		messageFormat,
+		messageLogLevel,
+		messageStatus,
+		messageText,
+	}
+
+	// Add other user-supplied interfaces to newInterfaces.
+
+	newInterfaces = append(newInterfaces, interfaces...)
+
+	// Using a Factory Pattern, build the messagelogger.
+
+	return New(newInterfaces...)
 }

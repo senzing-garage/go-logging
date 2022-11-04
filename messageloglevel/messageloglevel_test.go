@@ -11,6 +11,16 @@ import (
 
 const printResults = 1
 
+var idLevels = map[int]string{
+	0001: logger.LevelInfoName,
+	0002: logger.LevelWarnName,
+	0003: logger.LevelErrorName,
+	0004: logger.LevelDebugName,
+	0005: logger.LevelTraceName,
+	0006: logger.LevelFatalName,
+	0007: logger.LevelPanicName,
+}
+
 var idRanges = map[int]string{
 	0000: logger.LevelInfoName,
 	1000: logger.LevelWarnName,
@@ -45,7 +55,16 @@ func testError(test *testing.T, testObject MessageLogLevelInterface, err error) 
 // Test interface functions for MessageLevelSenzingApi - names begin with "Test"
 // ----------------------------------------------------------------------------
 
-// -- MessageLogLevel ---------------------------------------------------------
+func TestSenzingApiMessageLogLevels(test *testing.T) {
+	testObject := &MessageLogLevelSenzingApi{
+		IdRanges: idRanges,
+	}
+
+	actual, err := testObject.MessageLogLevel(0)
+	testError(test, testObject, err)
+	printActual(test, actual)
+	assert.True(test, actual == logger.LevelInfo)
+}
 
 func TestSenzingApiMessageLogLevelInfo(test *testing.T) {
 	testObject := &MessageLogLevelSenzingApi{

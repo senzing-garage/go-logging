@@ -77,7 +77,7 @@ const (
 // ----------------------------------------------------------------------------
 
 // Map from Log level as typed integer to string.
-var levelToTextMap = map[Level]string{
+var LevelToTextMap = map[Level]string{
 	LevelTrace: LevelTraceName,
 	LevelDebug: LevelDebugName,
 	LevelInfo:  LevelInfoName,
@@ -91,7 +91,7 @@ var levelToTextMap = map[Level]string{
 var loggerInstance *LoggerDefault
 
 // Map from Log level as string to typed integer.
-var textToLevelMap = map[string]Level{
+var TextToLevelMap = map[string]Level{
 	LevelTraceName: LevelTrace,
 	LevelDebugName: LevelDebug,
 	LevelInfoName:  LevelInfo,
