@@ -45,7 +45,7 @@ func testError(test *testing.T, testObject MessageIdInterface, err error) {
 // Test interface functions for MessageIdDefault - names begin with "Test"
 // ----------------------------------------------------------------------------
 
-func TestDefaultMessageId(test *testing.T) {
+func TestMessageIdDefault(test *testing.T) {
 	for _, testCase := range testCases {
 		if len(testCase.expectedDefault) > 0 {
 			test.Run(testCase.name, func(test *testing.T) {
@@ -59,10 +59,29 @@ func TestDefaultMessageId(test *testing.T) {
 }
 
 // ----------------------------------------------------------------------------
+// Test interface functions for MessageIdSenzing - names begin with "Test"
+// ----------------------------------------------------------------------------
+
+func TestMessageIdSenzing(test *testing.T) {
+	for _, testCase := range testCases {
+		if len(testCase.expectedTemplated) > 0 {
+			test.Run(testCase.name, func(test *testing.T) {
+				testObject := &MessageIdSenzing{
+					MessageIdTemplate: testCase.template,
+				}
+				actual, err := testObject.MessageId(testCase.messageNumber, testCase.details...)
+				testError(test, testObject, err)
+				assert.Equal(test, testCase.expectedTemplated, actual, testCase.name)
+			})
+		}
+	}
+}
+
+// ----------------------------------------------------------------------------
 // Test interface functions for MessageIdTemplated - names begin with "Test"
 // ----------------------------------------------------------------------------
 
-func TestTemplatedMessageId(test *testing.T) {
+func TestMessageIdTemplated(test *testing.T) {
 	for _, testCase := range testCases {
 		if len(testCase.expectedTemplated) > 0 {
 			test.Run(testCase.name, func(test *testing.T) {

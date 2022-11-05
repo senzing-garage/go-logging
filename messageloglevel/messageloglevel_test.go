@@ -186,7 +186,7 @@ func TestSenzingApiMessageLogLevelWithErrors(test *testing.T) {
 
 // -- MessageLogLevel ---------------------------------------------------------
 
-func TestMessageLogLevelDefault(test *testing.T) {
+func TestMessageLogLevelDefaultX(test *testing.T) {
 	testObject := &MessageLogLevelDefault{}
 	actual, err := testObject.MessageLogLevel(1, "This is message text")
 	testError(test, testObject, err)
@@ -211,10 +211,10 @@ func TestMessageLogLevelDefaultError(test *testing.T) {
 }
 
 // ----------------------------------------------------------------------------
-// Test interface functions for MessageIdSenzing - names begin with "Test"
+// Test interface functions for MessageLogLevelDefault - names begin with "Test"
 // ----------------------------------------------------------------------------
 
-func TestDefaultMessageLogLevel(test *testing.T) {
+func TestMessageLogLevelDefault(test *testing.T) {
 	for _, testCase := range testCases {
 		if testCase.expectedDefault > 0 {
 			test.Run(testCase.name, func(test *testing.T) {

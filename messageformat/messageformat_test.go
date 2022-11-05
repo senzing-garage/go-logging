@@ -77,11 +77,11 @@ func testError(test *testing.T, testObject MessageFormatInterface, err error) {
 // Test interface functions for MessageFormatDefault - names begin with "Test"
 // ----------------------------------------------------------------------------
 
-func TestDefaultMessages(test *testing.T) {
-	testObject := &MessageFormatDefault{}
+func TestMessageFormatDefault(test *testing.T) {
 	for _, testCase := range testCases {
 		if len(testCase.expectedDefault) > 0 {
 			test.Run(testCase.name, func(test *testing.T) {
+				testObject := &MessageFormatDefault{}
 				actual, err := testObject.Message(testCase.id, testCase.status, testCase.text, testCase.details...)
 				testError(test, testObject, err)
 				assert.Equal(test, testCase.expectedDefault, actual, testCase.name)
@@ -94,11 +94,11 @@ func TestDefaultMessages(test *testing.T) {
 // Test interface functions for MessageFormatJson - names begin with "Test"
 // ----------------------------------------------------------------------------
 
-func TestJsonMessages(test *testing.T) {
-	testObject := &MessageFormatJson{}
+func TestMessageFormatJson(test *testing.T) {
 	for _, testCase := range testCases {
 		if len(testCase.expectedJSON) > 0 {
 			test.Run(testCase.name, func(test *testing.T) {
+				testObject := &MessageFormatJson{}
 				actual, err := testObject.Message(testCase.id, testCase.status, testCase.text, testCase.details...)
 				testError(test, testObject, err)
 				assert.Equal(test, testCase.expectedJSON, actual, testCase.name)
@@ -108,14 +108,14 @@ func TestJsonMessages(test *testing.T) {
 }
 
 // ----------------------------------------------------------------------------
-// Test interface functions for MessageFormatJson - names begin with "Test"
+// Test interface functions for MessageFormatSenzing - names begin with "Test"
 // ----------------------------------------------------------------------------
 
-func TestSenzingMessages(test *testing.T) {
-	testObject := &MessageFormatSenzing{}
+func TestMessageFormatSenzing(test *testing.T) {
 	for _, testCase := range testCases {
 		if len(testCase.expectedJSON) > 0 {
 			test.Run(testCase.name, func(test *testing.T) {
+				testObject := &MessageFormatSenzing{}
 				actual, err := testObject.Message(testCase.id, testCase.status, testCase.text, testCase.details...)
 				testError(test, testObject, err)
 				assert.Equal(test, testCase.expectedJSON, actual, testCase.name)
