@@ -223,8 +223,7 @@ Example:
 	err2 := errors.New("error #2")
 	messageLogger.Log(10, err1, err2)
 
-
-	Output:
+Output:
 
 	INFO senzing-99990010: Example errors. [map[1:error #1 2:error #2]]
 
