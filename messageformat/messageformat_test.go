@@ -69,7 +69,7 @@ var testCases = []struct {
 
 func testError(test *testing.T, testObject MessageFormatInterface, err error) {
 	if err != nil {
-		test.Log("Error:", err.Error())
+		assert.Fail(test, err.Error())
 	}
 }
 

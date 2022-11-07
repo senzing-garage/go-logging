@@ -9,35 +9,89 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-// const MessageIdFormat = "senzing-9999%04d"
+var idMessages = map[int]string{
+	1: "%s knows %s",
+	2: "%s does not know %s",
+}
 
-// const printResults = 1
+var messageFormat = &messageformat.MessageFormatJson{}
+var messageText = &messagetext.MessageTextTemplated{
+	IdMessages: idMessages,
+}
+
+var testCases = []struct {
+	name              string
+	productIdentifier int
+	idMessages        map[int]string
+	interfacesDefault []interface{}
+	interfacesSenzing []interface{}
+	messageNumber     int
+	details           []interface{}
+	expectedDefault   string
+	expectedJson      string
+}{
+	{
+		name:              "Test case: #1 - Info",
+		productIdentifier: 9999,
+		idMessages:        idMessages,
+		messageNumber:     0,
+		details:           []interface{}{"A", 1},
+		expectedDefault:   `0: [map[1:"A" 2:1]]`,
+		expectedJson:      `{"id":"senzing-99990000","status":"INFO","details":{"1":"A","2":1}}`,
+	},
+	{
+		name:              "Test case: #2 - Warn",
+		productIdentifier: 9999,
+		idMessages:        idMessages,
+		interfacesDefault: []interface{}{messageFormat},
+		messageNumber:     1000,
+		details:           []interface{}{"A", 1},
+		expectedDefault:   `{"id":"1000","details":{"1":"A","2":1}}`,
+		expectedJson:      `{"id":"senzing-99991000","status":"WARN","details":{"1":"A","2":1}}`,
+	},
+	{
+		name:              "Test case: #10 - Warn",
+		productIdentifier: 9999,
+		idMessages:        idMessages,
+		interfacesDefault: []interface{}{messageText},
+		messageNumber:     1,
+		details:           []interface{}{"Bob", "Jane"},
+		expectedDefault:   `1: Bob knows Jane [map[1:"Bob" 2:"Jane"]]`,
+		expectedJson:      `{"id":"senzing-99990001","status":"INFO","text":"Bob knows Jane","details":{"1":"Bob","2":"Jane"}}`,
+	},
+}
 
 // ----------------------------------------------------------------------------
 // Internal functions - names begin with lowercase letter
 // ----------------------------------------------------------------------------
 
-// func printResult(test *testing.T, title string, result interface{}) {
-// 	if printResults == 1 {
-// 		test.Logf("%s: %v", title, fmt.Sprintf("%v", result))
-// 	}
-// }
-
-// func printActual(test *testing.T, actual interface{}) {
-// 	printResult(test, "Actual", actual)
-// }
-
 func testError(test *testing.T, testObject MessageLoggerInterface, err error) {
 	if err != nil {
-		test.Log("Error:", err.Error())
+		assert.Fail(test, err.Error())
 	}
 }
 
 // ----------------------------------------------------------------------------
-// Test interface functions - names begin with "Test"
+// Test interface functions using New() - names begin with "Test"
 // ----------------------------------------------------------------------------
 
-// -- Log using New() with defaults ---------------------------------------------
+// -- Test Message() method ---------------------------------------------------
+
+func TestNew(test *testing.T) {
+	for _, testCase := range testCases {
+		if len(testCase.expectedDefault) > 0 {
+			test.Run(testCase.name, func(test *testing.T) {
+				testObject, err := New(testCase.interfacesDefault...)
+				testError(test, testObject, err)
+				actual, err := testObject.Message(testCase.messageNumber, testCase.details...)
+				testError(test, testObject, err)
+				assert.Equal(test, testCase.expectedDefault, actual, testCase.name)
+			})
+		}
+	}
+}
+
+// -- Test Log() method using New() -------------------------------------------
 
 func TestDefaultLogMessage(test *testing.T) {
 	testObject, err := New()
@@ -61,11 +115,7 @@ func TestDefaultLogMessageErrorLevels(test *testing.T) {
 func TestDefaultLogMessageWithMap(test *testing.T) {
 	testObject, err := New()
 	testError(test, testObject, err)
-	stringMap := map[string]string{
-		"Husband": "Bob",
-		"Wife":    "Jane",
-	}
-	testObject.Log(1001, "A couple", stringMap)
+	testObject.Log(1001, "A couple", idMessages)
 }
 
 func TestDefaultLogMessageWithObject(test *testing.T) {
@@ -74,19 +124,7 @@ func TestDefaultLogMessageWithObject(test *testing.T) {
 	testObject.Log(2000, "An object", testObject)
 }
 
-func TestDefaultLogMessageIsXxxx(test *testing.T) {
-	testObject, err := New()
-	testError(test, testObject, err)
-	assert.False(test, testObject.IsTrace(), "Trace")
-	assert.False(test, testObject.IsDebug(), "Debug")
-	assert.True(test, testObject.IsInfo(), "Info")
-	assert.True(test, testObject.IsWarn(), "Warn")
-	assert.True(test, testObject.IsError(), "Error")
-	assert.True(test, testObject.IsFatal(), "Fatal")
-	assert.True(test, testObject.IsPanic(), "Panic")
-}
-
-// -- Log using New() with defaults ---------------------------------------------
+// -- Test Log() method using New(...) ----------------------------------------
 
 func TestNewLogMessageErrorLevels(test *testing.T) {
 	testObject, err := New(logger.LevelWarn)
@@ -111,10 +149,7 @@ func TestNewJsonFormatting(test *testing.T) {
 func TestNewMessageTemplates(test *testing.T) {
 	messageFormat := &messageformat.MessageFormatJson{}
 	messageText := &messagetext.MessageTextTemplated{
-		IdMessages: map[int]string{
-			1: "%s knows %s",
-			2: "%s does not know %s",
-		},
+		IdMessages: idMessages,
 	}
 	testObject, err := New(messageText, messageFormat)
 	testError(test, testObject, err)
@@ -123,18 +158,30 @@ func TestNewMessageTemplates(test *testing.T) {
 }
 
 func TestNewBadInterfaces(test *testing.T) {
+	expectedErrContains := "unsupported interfaces"
 	messageFormat := &messageformat.MessageFormatJson{}
 	messageText := &messagetext.MessageTextTemplated{
-		IdMessages: map[int]string{
-			1: "%s knows %s",
-			2: "%s does not know %s",
-		},
+		IdMessages: idMessages,
 	}
 	messageLogger := &MessageLoggerDefault{}
-	testObject, err := New(messageText, messageLogger, messageFormat, "ABC", 123)
+	_, err := New(messageText, messageLogger, messageFormat, "ABC", 123)
+	if assert.Error(test, err) {
+		assert.ErrorContains(test, err, expectedErrContains)
+	}
+}
+
+// -- Test IsXxxx method ------------------------------------------------------
+
+func TestDefaultLogMessageIsXxxx(test *testing.T) {
+	testObject, err := New()
 	testError(test, testObject, err)
-	testObject.Log(1, "Bob", "Jane", testObject)
-	testObject.Log(2, "Bob", "Harry", err)
+	assert.False(test, testObject.IsTrace(), "Trace")
+	assert.False(test, testObject.IsDebug(), "Debug")
+	assert.True(test, testObject.IsInfo(), "Info")
+	assert.True(test, testObject.IsWarn(), "Warn")
+	assert.True(test, testObject.IsError(), "Error")
+	assert.True(test, testObject.IsFatal(), "Fatal")
+	assert.True(test, testObject.IsPanic(), "Panic")
 }
 
 func TestDefaultLogMessageIsXxxxForTraceLevel(test *testing.T) {
@@ -159,4 +206,24 @@ func TestDefaultLogMessageIsXxxxForErrorLevel(test *testing.T) {
 	assert.True(test, testObject.IsError(), "Error")
 	assert.True(test, testObject.IsFatal(), "Fatal")
 	assert.True(test, testObject.IsPanic(), "Panic")
+}
+
+// ----------------------------------------------------------------------------
+// Test interface functions using NewSenzingLogger() - names begin with "Test"
+// ----------------------------------------------------------------------------
+
+// -- Test Message() method ---------------------------------------------------
+
+func TestNewSenzingLogger(test *testing.T) {
+	for _, testCase := range testCases {
+		if len(testCase.expectedJson) > 0 {
+			test.Run(testCase.name, func(test *testing.T) {
+				testObject, err := NewSenzingLogger(testCase.productIdentifier, testCase.idMessages, testCase.interfacesSenzing...)
+				testError(test, testObject, err)
+				actual, err := testObject.Message(testCase.messageNumber, testCase.details...)
+				testError(test, testObject, err)
+				assert.Equal(test, testCase.expectedJson, actual, testCase.name)
+			})
+		}
+	}
 }

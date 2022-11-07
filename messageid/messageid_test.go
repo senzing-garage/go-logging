@@ -37,7 +37,7 @@ var testCases = []struct {
 
 func testError(test *testing.T, testObject MessageIdInterface, err error) {
 	if err != nil {
-		test.Log("Error:", err.Error())
+		assert.Fail(test, err.Error())
 	}
 }
 

@@ -19,21 +19,6 @@ type MessageLogLevelSenzingApi struct {
 }
 
 // ----------------------------------------------------------------------------
-// Variables
-// ----------------------------------------------------------------------------
-
-// Pseudo-constant.
-var nameToLevelMap = map[string]logger.Level{
-	logger.LevelInfoName:  logger.LevelInfo,
-	logger.LevelWarnName:  logger.LevelWarn,
-	logger.LevelErrorName: logger.LevelError,
-	logger.LevelDebugName: logger.LevelDebug,
-	logger.LevelTraceName: logger.LevelTrace,
-	logger.LevelFatalName: logger.LevelFatal,
-	logger.LevelPanicName: logger.LevelPanic,
-}
-
-// ----------------------------------------------------------------------------
 // Interface methods
 // ----------------------------------------------------------------------------
 
@@ -66,7 +51,7 @@ func (messageLogLevel *MessageLogLevelSenzingApi) MessageLogLevel(messageNumber 
 
 	// If status is a known logging level, return it.
 
-	result, ok := nameToLevelMap[status]
+	result, ok := logger.TextToLevelMap[status]
 	if ok {
 		return result, err
 	}

@@ -1,7 +1,7 @@
 package messageloglevel
 
 import (
-	"fmt"
+	"errors"
 	"testing"
 
 	"github.com/senzing/go-logging/logger"
@@ -150,8 +150,6 @@ var testCases = []struct {
 	},
 }
 
-const printResults = 1
-
 var idRanges = map[int]logger.Level{
 	0000: logger.LevelInfo,
 	1000: logger.LevelWarn,
@@ -166,19 +164,9 @@ var idRanges = map[int]logger.Level{
 // Internal functions - names begin with lowercase letter
 // ----------------------------------------------------------------------------
 
-func printResult(test *testing.T, title string, result interface{}) {
-	if printResults == 1 {
-		test.Logf("%s: %v", title, fmt.Sprintf("%v", result))
-	}
-}
-
-func printActual(test *testing.T, actual interface{}) {
-	printResult(test, "Actual", actual)
-}
-
 func testError(test *testing.T, testObject MessageLogLevelInterface, err error) {
 	if err != nil {
-		test.Log("Error:", err.Error())
+		assert.Fail(test, err.Error())
 	}
 }
 
@@ -265,78 +253,24 @@ func TestMessageLogLevelSenzingApi(test *testing.T) {
 	}
 }
 
-// func TestSenzingApiMessageLogLevelError(test *testing.T) {
-// 	testObject := &MessageLogLevelSenzingApi{
-// 		IdRanges: idRanges,
-// 	}
-// 	actual, err := testObject.MessageLogLevel(2000)
-// 	testError(test, testObject, err)
-// 	printActual(test, actual)
-// 	assert.True(test, actual == logger.LevelError)
-// }
+func TestSenzingApiMessageLogLevelWithErrors(test *testing.T) {
+	expected := logger.LevelError
+	anError1 := errors.New("0019E|Configuration not found")
+	anError2 := errors.New("0099E|Made up error")
 
-// func TestSenzingApiMessageLogLevelDebug(test *testing.T) {
-// 	testObject := &MessageLogLevelSenzingApi{
-// 		IdRanges: idRanges,
-// 	}
-// 	actual, err := testObject.MessageLogLevel(3000)
-// 	testError(test, testObject, err)
-// 	printActual(test, actual)
-// 	assert.True(test, actual == logger.LevelDebug)
-// }
+	idRangesStrings := make(map[int]string)
+	for key, value := range idRanges {
+		idRangesStrings[key] = logger.LevelToTextMap[value]
+	}
 
-// func TestSenzingApiMessageLogLevelTrace(test *testing.T) {
-// 	testObject := &MessageLogLevelSenzingApi{
-// 		IdRanges: idRanges,
-// 	}
-// 	actual, err := testObject.MessageLogLevel(4000)
-// 	testError(test, testObject, err)
-// 	printActual(test, actual)
-// 	assert.True(test, actual == logger.LevelTrace)
-// }
-
-// func TestSenzingApiMessageLogLevelFatal(test *testing.T) {
-// 	testObject := &MessageLogLevelSenzingApi{
-// 		IdRanges: idRanges,
-// 	}
-// 	actual, err := testObject.MessageLogLevel(5000)
-// 	testError(test, testObject, err)
-// 	printActual(test, actual)
-// 	assert.True(test, actual == logger.LevelFatal)
-// }
-
-// func TestSenzingApiMessageLogLevelPanic(test *testing.T) {
-// 	testObject := &MessageLogLevelSenzingApi{
-// 		IdRanges: idRanges,
-// 	}
-// 	actual, err := testObject.MessageLogLevel(6000)
-// 	testError(test, testObject, err)
-// 	printActual(test, actual)
-// 	assert.True(test, actual == logger.LevelPanic)
-// }
-
-// func TestSenzingApiMessageLogLevelUnknown(test *testing.T) {
-// 	testObject := &MessageLogLevelSenzingApi{
-// 		IdRanges: idRanges,
-// 	}
-// 	actual, err := testObject.MessageLogLevel(7000)
-// 	testError(test, testObject, err)
-// 	printActual(test, actual)
-// 	assert.True(test, actual == logger.LevelPanic)
-// }
-
-// func TestSenzingApiMessageLogLevelWithErrors(test *testing.T) {
-// 	anError1 := errors.New("0019E|Configuration not found")
-// 	anError2 := errors.New("0099E|Made up error")
-
-// 	testObject := &MessageLogLevelSenzingApi{
-// 		IdRanges: idRanges,
-// 	}
-// 	actual, err := testObject.MessageLogLevel(1, "A", 1, testObject, anError1, anError2)
-// 	testError(test, testObject, err)
-// 	printActual(test, actual)
-// 	assert.True(test, actual == logger.LevelError)
-// }
+	testObject := &MessageLogLevelSenzingApi{
+		IdRanges:   idRangesStrings,
+		IdStatuses: idRangesStrings,
+	}
+	actual, err := testObject.MessageLogLevel(1, "A", 1, testObject, anError1, anError2)
+	testError(test, testObject, err)
+	assert.Equal(test, expected, actual)
+}
 
 // ----------------------------------------------------------------------------
 // Test interface functions for MessageLogLevelStatic - names begin with "Test"
