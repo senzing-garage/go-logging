@@ -29,6 +29,17 @@ func (messageLogLevel *MessageLogLevelByIdRange) MessageLogLevel(messageNumber i
 	var err error = nil
 	result := messageLogLevel.DefaultLogLevel
 
+	// First priority:  Log level explicitly given in details parameter.
+
+	for _, value := range details {
+		switch typedValue := value.(type) {
+		case logger.Level:
+			return typedValue, err
+		}
+	}
+
+	// Second priority: Message in a range.
+
 	if messageLogLevel.IdRanges != nil {
 
 		// Since maps aren't sorted, create a list of sorted keys.

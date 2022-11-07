@@ -1,7 +1,6 @@
 package messageloglevel
 
 import (
-	"errors"
 	"fmt"
 	"testing"
 
@@ -11,44 +10,156 @@ import (
 
 var testCases = []struct {
 	name            string
+	idRanges        map[int]logger.Level
 	messageNumber   int
 	details         []interface{}
 	expectedDefault logger.Level
 }{
 	{
 		name:            "Test case: #1",
-		messageNumber:   1,
+		idRanges:        idRanges,
+		messageNumber:   0,
 		details:         []interface{}{123, "bob"},
 		expectedDefault: logger.LevelInfo,
 	},
 	{
-		name:            "Test case: #1",
-		messageNumber:   1001,
+		name:            "Test case: #2",
+		idRanges:        idRanges,
+		messageNumber:   1000,
 		details:         []interface{}{123, "bob"},
+		expectedDefault: logger.LevelWarn,
+	},
+	{
+		name:            "Test case: #3",
+		idRanges:        idRanges,
+		messageNumber:   2000,
+		details:         []interface{}{123, "bob"},
+		expectedDefault: logger.LevelError,
+	},
+	{
+		name:            "Test case: #4",
+		idRanges:        idRanges,
+		messageNumber:   3000,
+		details:         []interface{}{123, "bob"},
+		expectedDefault: logger.LevelDebug,
+	},
+	{
+		name:            "Test case: #5",
+		idRanges:        idRanges,
+		messageNumber:   4000,
+		details:         []interface{}{123, "bob"},
+		expectedDefault: logger.LevelTrace,
+	},
+	{
+		name:            "Test case: #6",
+		idRanges:        idRanges,
+		messageNumber:   5000,
+		details:         []interface{}{123, "bob"},
+		expectedDefault: logger.LevelFatal,
+	},
+	{
+		name:            "Test case: #7",
+		idRanges:        idRanges,
+		messageNumber:   6000,
+		details:         []interface{}{123, "bob"},
+		expectedDefault: logger.LevelPanic,
+	},
+	{
+		name:            "Test case: #8",
+		idRanges:        idRanges,
+		messageNumber:   7000,
+		details:         []interface{}{123, "bob"},
+		expectedDefault: logger.LevelPanic,
+	},
+	{
+		name:            "Test case: #9",
+		idRanges:        idRanges,
+		messageNumber:   9999,
+		details:         []interface{}{123, "bob"},
+		expectedDefault: logger.LevelPanic,
+	},
+	{
+		name:            "Test case: #10",
+		idRanges:        idRanges,
+		messageNumber:   1001,
+		details:         []interface{}{123, "bob", logger.LevelInfo},
 		expectedDefault: logger.LevelInfo,
+	},
+	{
+		name:            "Test case: #11",
+		idRanges:        idRanges,
+		messageNumber:   1001,
+		details:         []interface{}{123, "bob", logger.LevelWarn},
+		expectedDefault: logger.LevelWarn,
+	},
+	{
+		name:            "Test case: #12",
+		idRanges:        idRanges,
+		messageNumber:   1001,
+		details:         []interface{}{123, "bob", logger.LevelError},
+		expectedDefault: logger.LevelError,
+	},
+	{
+		name:            "Test case: #13",
+		idRanges:        idRanges,
+		messageNumber:   1001,
+		details:         []interface{}{123, "bob", logger.LevelDebug},
+		expectedDefault: logger.LevelDebug,
+	},
+	{
+		name:            "Test case: #14",
+		idRanges:        idRanges,
+		messageNumber:   1001,
+		details:         []interface{}{123, "bob", logger.LevelTrace},
+		expectedDefault: logger.LevelTrace,
+	},
+	{
+		name:            "Test case: #15",
+		idRanges:        idRanges,
+		messageNumber:   1001,
+		details:         []interface{}{123, "bob", logger.LevelFatal},
+		expectedDefault: logger.LevelFatal,
+	},
+	{
+		name:            "Test case: #16",
+		idRanges:        idRanges,
+		messageNumber:   1001,
+		details:         []interface{}{123, "bob", logger.LevelPanic},
+		expectedDefault: logger.LevelPanic,
+	},
+	{
+		name:            "Test case: #17",
+		idRanges:        idRanges,
+		messageNumber:   1001,
+		details:         []interface{}{123, "bob", logger.LevelPanic},
+		expectedDefault: logger.LevelPanic,
+	},
+	{
+		name:            "Test case: #18",
+		idRanges:        idRanges,
+		messageNumber:   1001,
+		details:         []interface{}{123, "bob", logger.LevelInfo, logger.LevelDebug},
+		expectedDefault: logger.LevelInfo,
+	},
+	{
+		name:            "Test case: #19",
+		idRanges:        idRanges,
+		messageNumber:   1001,
+		details:         []interface{}{123, "bob", logger.LevelDebug, logger.LevelInfo},
+		expectedDefault: logger.LevelDebug,
 	},
 }
 
 const printResults = 1
 
-var idLevels = map[int]string{
-	0001: logger.LevelInfoName,
-	0002: logger.LevelWarnName,
-	0003: logger.LevelErrorName,
-	0004: logger.LevelDebugName,
-	0005: logger.LevelTraceName,
-	0006: logger.LevelFatalName,
-	0007: logger.LevelPanicName,
-}
-
-var idRanges = map[int]string{
-	0000: logger.LevelInfoName,
-	1000: logger.LevelWarnName,
-	2000: logger.LevelErrorName,
-	3000: logger.LevelDebugName,
-	4000: logger.LevelTraceName,
-	5000: logger.LevelFatalName,
-	6000: logger.LevelPanicName,
+var idRanges = map[int]logger.Level{
+	0000: logger.LevelInfo,
+	1000: logger.LevelWarn,
+	2000: logger.LevelError,
+	3000: logger.LevelDebug,
+	4000: logger.LevelTrace,
+	5000: logger.LevelFatal,
+	6000: logger.LevelPanic,
 }
 
 // ----------------------------------------------------------------------------
@@ -72,142 +183,22 @@ func testError(test *testing.T, testObject MessageLogLevelInterface, err error) 
 }
 
 // ----------------------------------------------------------------------------
-// Test interface functions for MessageLevelSenzingApi - names begin with "Test"
+// Test interface functions for MessageStatusById - names begin with "Test"
 // ----------------------------------------------------------------------------
 
-func TestSenzingApiMessageLogLevels(test *testing.T) {
-	testObject := &MessageLogLevelSenzingApi{
-		IdRanges: idRanges,
+func TestMessageLogLevelByIdRange(test *testing.T) {
+	for _, testCase := range testCases {
+		if testCase.expectedDefault > 0 {
+			test.Run(testCase.name, func(test *testing.T) {
+				testObject := &MessageLogLevelByIdRange{
+					IdRanges: testCase.idRanges,
+				}
+				actual, err := testObject.MessageLogLevel(testCase.messageNumber, testCase.details...)
+				testError(test, testObject, err)
+				assert.Equal(test, testCase.expectedDefault, actual, testCase.name)
+			})
+		}
 	}
-
-	actual, err := testObject.MessageLogLevel(0)
-	testError(test, testObject, err)
-	printActual(test, actual)
-	assert.True(test, actual == logger.LevelInfo)
-}
-
-func TestSenzingApiMessageLogLevelInfo(test *testing.T) {
-	testObject := &MessageLogLevelSenzingApi{
-		IdRanges: idRanges,
-	}
-	actual, err := testObject.MessageLogLevel(0)
-	testError(test, testObject, err)
-	printActual(test, actual)
-	assert.True(test, actual == logger.LevelInfo)
-}
-
-func TestSenzingApiMessageLogLevelWarn(test *testing.T) {
-	testObject := &MessageLogLevelSenzingApi{
-		IdRanges: idRanges,
-	}
-	actual, err := testObject.MessageLogLevel(1000)
-	testError(test, testObject, err)
-	printActual(test, actual)
-	assert.True(test, actual == logger.LevelWarn)
-}
-
-func TestSenzingApiMessageLogLevelError(test *testing.T) {
-	testObject := &MessageLogLevelSenzingApi{
-		IdRanges: idRanges,
-	}
-	actual, err := testObject.MessageLogLevel(2000)
-	testError(test, testObject, err)
-	printActual(test, actual)
-	assert.True(test, actual == logger.LevelError)
-}
-
-func TestSenzingApiMessageLogLevelDebug(test *testing.T) {
-	testObject := &MessageLogLevelSenzingApi{
-		IdRanges: idRanges,
-	}
-	actual, err := testObject.MessageLogLevel(3000)
-	testError(test, testObject, err)
-	printActual(test, actual)
-	assert.True(test, actual == logger.LevelDebug)
-}
-
-func TestSenzingApiMessageLogLevelTrace(test *testing.T) {
-	testObject := &MessageLogLevelSenzingApi{
-		IdRanges: idRanges,
-	}
-	actual, err := testObject.MessageLogLevel(4000)
-	testError(test, testObject, err)
-	printActual(test, actual)
-	assert.True(test, actual == logger.LevelTrace)
-}
-
-func TestSenzingApiMessageLogLevelFatal(test *testing.T) {
-	testObject := &MessageLogLevelSenzingApi{
-		IdRanges: idRanges,
-	}
-	actual, err := testObject.MessageLogLevel(5000)
-	testError(test, testObject, err)
-	printActual(test, actual)
-	assert.True(test, actual == logger.LevelFatal)
-}
-
-func TestSenzingApiMessageLogLevelPanic(test *testing.T) {
-	testObject := &MessageLogLevelSenzingApi{
-		IdRanges: idRanges,
-	}
-	actual, err := testObject.MessageLogLevel(6000)
-	testError(test, testObject, err)
-	printActual(test, actual)
-	assert.True(test, actual == logger.LevelPanic)
-}
-
-func TestSenzingApiMessageLogLevelUnknown(test *testing.T) {
-	testObject := &MessageLogLevelSenzingApi{
-		IdRanges: idRanges,
-	}
-	actual, err := testObject.MessageLogLevel(7000)
-	testError(test, testObject, err)
-	printActual(test, actual)
-	assert.True(test, actual == logger.LevelPanic)
-}
-
-func TestSenzingApiMessageLogLevelWithErrors(test *testing.T) {
-	anError1 := errors.New("0019E|Configuration not found")
-	anError2 := errors.New("0099E|Made up error")
-
-	testObject := &MessageLogLevelSenzingApi{
-		IdRanges: idRanges,
-	}
-	actual, err := testObject.MessageLogLevel(1, "A", 1, testObject, anError1, anError2)
-	testError(test, testObject, err)
-	printActual(test, actual)
-	assert.True(test, actual == logger.LevelError)
-
-}
-
-// ----------------------------------------------------------------------------
-// Test interface functions for MessageLevelInfo - names begin with "Test"
-// ----------------------------------------------------------------------------
-
-// -- MessageLogLevel ---------------------------------------------------------
-
-func TestMessageLogLevelDefaultX(test *testing.T) {
-	testObject := &MessageLogLevelDefault{}
-	actual, err := testObject.MessageLogLevel(1, "This is message text")
-	testError(test, testObject, err)
-	printActual(test, actual)
-	assert.True(test, actual == logger.LevelInfo)
-}
-
-func TestMessageLogLevelDefaultWarn(test *testing.T) {
-	testObject := &MessageLogLevelDefault{}
-	actual, err := testObject.MessageLogLevel(1, "This is message text", logger.LevelWarn)
-	testError(test, testObject, err)
-	printActual(test, actual)
-	assert.True(test, actual == logger.LevelWarn)
-}
-
-func TestMessageLogLevelDefaultError(test *testing.T) {
-	testObject := &MessageLogLevelDefault{}
-	actual, err := testObject.MessageLogLevel(1, "This is message text", logger.LevelWarn, logger.LevelError)
-	testError(test, testObject, err)
-	printActual(test, actual)
-	assert.True(test, actual == logger.LevelError)
 }
 
 // ----------------------------------------------------------------------------
@@ -218,7 +209,9 @@ func TestMessageLogLevelDefault(test *testing.T) {
 	for _, testCase := range testCases {
 		if testCase.expectedDefault > 0 {
 			test.Run(testCase.name, func(test *testing.T) {
-				testObject := &MessageLogLevelDefault{}
+				testObject := &MessageLogLevelDefault{
+					IdRanges: testCase.idRanges,
+				}
 				actual, err := testObject.MessageLogLevel(testCase.messageNumber, testCase.details...)
 				testError(test, testObject, err)
 				assert.Equal(test, testCase.expectedDefault, actual, testCase.name)
@@ -228,20 +221,138 @@ func TestMessageLogLevelDefault(test *testing.T) {
 }
 
 // ----------------------------------------------------------------------------
-// Test interface functions for MessageIdSenzing - names begin with "Test"
+// Test interface functions for MessageLogLevelSenzing - names begin with "Test"
 // ----------------------------------------------------------------------------
 
-// func TestDefaultMessageId(test *testing.T) {
-// 	for _, testCase := range testCases {
-// 		if len(testCase.expectedTemplated) > 0 {
-// 			test.Run(testCase.name, func(test *testing.T) {
-// 				testObject := &MessageIdSenzing{
-// 					MessageIdTemplate: testCase.template,
-// 				}
-// 				actual, err := testObject.MessageId(testCase.messageNumber, testCase.details...)
-// 				testError(test, testObject, err)
-// 				assert.Equal(test, testCase.expectedTemplated, actual, testCase.name)
-// 			})
-// 		}
+func TestMessageLogLevelSenzing(test *testing.T) {
+	for _, testCase := range testCases {
+		if testCase.expectedDefault > 0 {
+			test.Run(testCase.name, func(test *testing.T) {
+				testObject := &MessageLogLevelSenzing{
+					IdRanges: testCase.idRanges,
+				}
+				actual, err := testObject.MessageLogLevel(testCase.messageNumber, testCase.details...)
+				testError(test, testObject, err)
+				assert.Equal(test, testCase.expectedDefault, actual, testCase.name)
+			})
+		}
+	}
+}
+
+// ----------------------------------------------------------------------------
+// Test interface functions for MessageLogLevelSenzingApi - names begin with "Test"
+// ----------------------------------------------------------------------------
+
+func TestMessageLogLevelSenzingApi(test *testing.T) {
+
+	idRangesStrings := make(map[int]string)
+	for key, value := range idRanges {
+		idRangesStrings[key] = logger.LevelToTextMap[value]
+	}
+
+	for _, testCase := range testCases {
+		if testCase.expectedDefault > 0 {
+			test.Run(testCase.name, func(test *testing.T) {
+				testObject := &MessageLogLevelSenzingApi{
+					IdRanges:   idRangesStrings,
+					IdStatuses: idRangesStrings,
+				}
+				actual, err := testObject.MessageLogLevel(testCase.messageNumber, testCase.details...)
+				testError(test, testObject, err)
+				assert.Equal(test, testCase.expectedDefault, actual, testCase.name)
+			})
+		}
+	}
+}
+
+// func TestSenzingApiMessageLogLevelError(test *testing.T) {
+// 	testObject := &MessageLogLevelSenzingApi{
+// 		IdRanges: idRanges,
 // 	}
+// 	actual, err := testObject.MessageLogLevel(2000)
+// 	testError(test, testObject, err)
+// 	printActual(test, actual)
+// 	assert.True(test, actual == logger.LevelError)
 // }
+
+// func TestSenzingApiMessageLogLevelDebug(test *testing.T) {
+// 	testObject := &MessageLogLevelSenzingApi{
+// 		IdRanges: idRanges,
+// 	}
+// 	actual, err := testObject.MessageLogLevel(3000)
+// 	testError(test, testObject, err)
+// 	printActual(test, actual)
+// 	assert.True(test, actual == logger.LevelDebug)
+// }
+
+// func TestSenzingApiMessageLogLevelTrace(test *testing.T) {
+// 	testObject := &MessageLogLevelSenzingApi{
+// 		IdRanges: idRanges,
+// 	}
+// 	actual, err := testObject.MessageLogLevel(4000)
+// 	testError(test, testObject, err)
+// 	printActual(test, actual)
+// 	assert.True(test, actual == logger.LevelTrace)
+// }
+
+// func TestSenzingApiMessageLogLevelFatal(test *testing.T) {
+// 	testObject := &MessageLogLevelSenzingApi{
+// 		IdRanges: idRanges,
+// 	}
+// 	actual, err := testObject.MessageLogLevel(5000)
+// 	testError(test, testObject, err)
+// 	printActual(test, actual)
+// 	assert.True(test, actual == logger.LevelFatal)
+// }
+
+// func TestSenzingApiMessageLogLevelPanic(test *testing.T) {
+// 	testObject := &MessageLogLevelSenzingApi{
+// 		IdRanges: idRanges,
+// 	}
+// 	actual, err := testObject.MessageLogLevel(6000)
+// 	testError(test, testObject, err)
+// 	printActual(test, actual)
+// 	assert.True(test, actual == logger.LevelPanic)
+// }
+
+// func TestSenzingApiMessageLogLevelUnknown(test *testing.T) {
+// 	testObject := &MessageLogLevelSenzingApi{
+// 		IdRanges: idRanges,
+// 	}
+// 	actual, err := testObject.MessageLogLevel(7000)
+// 	testError(test, testObject, err)
+// 	printActual(test, actual)
+// 	assert.True(test, actual == logger.LevelPanic)
+// }
+
+// func TestSenzingApiMessageLogLevelWithErrors(test *testing.T) {
+// 	anError1 := errors.New("0019E|Configuration not found")
+// 	anError2 := errors.New("0099E|Made up error")
+
+// 	testObject := &MessageLogLevelSenzingApi{
+// 		IdRanges: idRanges,
+// 	}
+// 	actual, err := testObject.MessageLogLevel(1, "A", 1, testObject, anError1, anError2)
+// 	testError(test, testObject, err)
+// 	printActual(test, actual)
+// 	assert.True(test, actual == logger.LevelError)
+// }
+
+// ----------------------------------------------------------------------------
+// Test interface functions for MessageLogLevelStatic - names begin with "Test"
+// ----------------------------------------------------------------------------
+
+func TestMessageLogLevelStatic(test *testing.T) {
+	for _, testCase := range testCases {
+		if testCase.expectedDefault > 0 {
+			test.Run(testCase.name, func(test *testing.T) {
+				testObject := &MessageLogLevelStatic{
+					LogLevel: logger.LevelWarn,
+				}
+				actual, err := testObject.MessageLogLevel(testCase.messageNumber, testCase.details...)
+				testError(test, testObject, err)
+				assert.Equal(test, logger.LevelWarn, actual, testCase.name)
+			})
+		}
+	}
+}

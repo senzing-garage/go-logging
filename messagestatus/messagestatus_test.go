@@ -171,7 +171,7 @@ func TestMessageStatusSenzingApi(test *testing.T) {
 	}
 }
 
-func TestMessageStatusFor0037E(test *testing.T) {
+func TestMessageStatusSenzingApiWith0037E(test *testing.T) {
 	expected := "ERROR_bad_user_input"
 	anError := errors.New("0037E|Unknown resolved entity value '2'")
 	testObject := &MessageStatusSenzingApi{}
@@ -180,7 +180,7 @@ func TestMessageStatusFor0037E(test *testing.T) {
 	assert.Equal(test, expected, actual)
 }
 
-func TestMessageStatusWithSenzingApiError(test *testing.T) {
+func TestMessageStatusSenzingApiWithSenzingApiError(test *testing.T) {
 	expected := "ERROR_bad_user_input"
 	anError := errors.New("0037E|Unknown resolved entity value")
 	testObject := &MessageStatusSenzingApi{
@@ -193,7 +193,7 @@ func TestMessageStatusWithSenzingApiError(test *testing.T) {
 	assert.Equal(test, expected, actual)
 }
 
-func TestMessageStatusWith2SenzingApiError2(test *testing.T) {
+func TestMessageStatusSenzingApiWith2SenzingApiError2(test *testing.T) {
 	expected := "ERROR_unrecoverable"
 	anError1 := errors.New("0019E|Configuration not found")
 	anError2 := errors.New("0099E|Made up error")
@@ -207,7 +207,7 @@ func TestMessageStatusWith2SenzingApiError2(test *testing.T) {
 	assert.Equal(test, expected, actual)
 }
 
-func TestMessageStatusWithUnknownError(test *testing.T) {
+func TestMessageStatusSenzingApiWithUnknownError(test *testing.T) {
 	expected := logger.LevelWarnName
 	anError := errors.New("1234E|Made up error")
 	testObject := &MessageStatusSenzingApi{

@@ -39,7 +39,19 @@ var nameToLevelMap = map[string]logger.Level{
 
 // The MessageLogLevel method returns a log level based on the status value.
 func (messageLogLevel *MessageLogLevelSenzingApi) MessageLogLevel(messageNumber int, details ...interface{}) (logger.Level, error) {
+	var err error = nil
 	var result = logger.LevelError
+
+	// First priority:  Log level explicitly given in details parameter.
+
+	for _, value := range details {
+		switch typedValue := value.(type) {
+		case logger.Level:
+			return typedValue, err
+		}
+	}
+
+	// Second priority: Calculate log level from the status.
 
 	// Get Status string.
 
