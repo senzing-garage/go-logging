@@ -181,7 +181,7 @@ func main() {
 	logger.Error("error prints")
 	logger.Errorf("error A: %s B: %s C: %d", "aaa", "bbb", 35)
 
-	// Note:  the first Fatal or Panic issued will exit the program.
+	// Note: The first Fatal or Panic issued will exit the program.
 
 	fmt.Printf("\n--- Test Fatal - should be empty ----------------------------------------------\n")
 	//	logger.Fatal("fatal prints")

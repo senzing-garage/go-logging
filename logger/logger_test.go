@@ -7,6 +7,104 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
+var testCases = []struct {
+	name          string
+	logLevel      Level
+	logLevelName  string
+	expectedTrace bool
+	expectedDebug bool
+	expectedInfo  bool
+	expectedWarn  bool
+	expectedError bool
+	expectedFatal bool
+	expectedPanic bool
+}{
+	{
+		name:          "Test case: #1 - Trace",
+		logLevel:      LevelTrace,
+		logLevelName:  LevelTraceName,
+		expectedTrace: true,
+		expectedDebug: true,
+		expectedInfo:  true,
+		expectedWarn:  true,
+		expectedError: true,
+		expectedFatal: true,
+		expectedPanic: true,
+	},
+	{
+		name:          "Test case: #2 - Debug",
+		logLevel:      LevelDebug,
+		logLevelName:  LevelDebugName,
+		expectedTrace: false,
+		expectedDebug: true,
+		expectedInfo:  true,
+		expectedWarn:  true,
+		expectedError: true,
+		expectedFatal: true,
+		expectedPanic: true,
+	},
+	{
+		name:          "Test case: #3 - Info",
+		logLevel:      LevelInfo,
+		logLevelName:  LevelInfoName,
+		expectedTrace: false,
+		expectedDebug: false,
+		expectedInfo:  true,
+		expectedWarn:  true,
+		expectedError: true,
+		expectedFatal: true,
+		expectedPanic: true,
+	},
+	{
+		name:          "Test case: #4 - Warn",
+		logLevel:      LevelWarn,
+		logLevelName:  LevelWarnName,
+		expectedTrace: false,
+		expectedDebug: false,
+		expectedInfo:  false,
+		expectedWarn:  true,
+		expectedError: true,
+		expectedFatal: true,
+		expectedPanic: true,
+	},
+	{
+		name:          "Test case: #5 - Error",
+		logLevel:      LevelError,
+		logLevelName:  LevelErrorName,
+		expectedTrace: false,
+		expectedDebug: false,
+		expectedInfo:  false,
+		expectedWarn:  false,
+		expectedError: true,
+		expectedFatal: true,
+		expectedPanic: true,
+	},
+	{
+		name:          "Test case: #6 - Fatal",
+		logLevel:      LevelFatal,
+		logLevelName:  LevelFatalName,
+		expectedTrace: false,
+		expectedDebug: false,
+		expectedInfo:  false,
+		expectedWarn:  false,
+		expectedError: false,
+		expectedFatal: true,
+		expectedPanic: true,
+	},
+	{
+		name:          "Test case: #7 - Panic",
+		logLevel:      LevelPanic,
+		logLevelName:  LevelPanicName,
+		expectedTrace: false,
+		expectedDebug: false,
+		expectedInfo:  false,
+		expectedWarn:  false,
+		expectedError: false,
+		expectedFatal: false,
+		expectedPanic: true,
+	},
+}
+
 // ----------------------------------------------------------------------------
 // Test interface functions - names begin with "Test"
 // ----------------------------------------------------------------------------
@@ -23,225 +121,69 @@ func TestLevels(test *testing.T) {
 // -- SetLogLevel -------------------------------------------------------------
 
 func TestSetLevel(test *testing.T) {
-	SetLogLevel(LevelPanic)
-	SetLogLevel(LevelFatal)
-	SetLogLevel(LevelError)
-	SetLogLevel(LevelWarn)
-	SetLogLevel(LevelInfo)
-	SetLogLevel(LevelDebug)
-	SetLogLevel(LevelTrace)
+	for _, testCase := range testCases {
+		test.Run(testCase.name, func(test *testing.T) {
+			SetLogLevel(testCase.logLevel)
+		})
+	}
 }
 
 // -- SetLogLevelFromString ---------------------------------------------------
 
 func TestSetLogLevelFromString(test *testing.T) {
+	for _, testCase := range testCases {
+		test.Run(testCase.name, func(test *testing.T) {
+			SetLogLevelFromString(testCase.logLevelName)
+			assert.Equal(test, testCase.logLevel, GetLogLevel(), testCase.name)
+		})
+	}
+}
 
-	var levelString string
-
-	levelString = "PANIC"
-	SetLogLevelFromString(levelString)
-	assert.True(test, LevelPanic == GetLogLevel(), "Panic")
-
-	levelString = "fatal"
-	SetLogLevelFromString(levelString)
-	assert.True(test, LevelFatal == GetLogLevel(), "Fatal")
-
-	levelString = "ErRoR"
-	SetLogLevelFromString(levelString)
-	assert.True(test, LevelError == GetLogLevel(), "Error")
-
-	levelString = "waRN"
-	SetLogLevelFromString(levelString)
-	assert.True(test, LevelWarn == GetLogLevel(), "Warn")
-
-	levelString = "INFO"
-	SetLogLevelFromString(levelString)
-	assert.True(test, LevelInfo == GetLogLevel(), "Info")
-
-	levelString = "DEBUG"
-	SetLogLevelFromString(levelString)
-	assert.True(test, LevelDebug == GetLogLevel(), "Debug")
-
-	levelString = "TRACE"
-	SetLogLevelFromString(levelString)
-	assert.True(test, LevelTrace == GetLogLevel(), "Trace")
-
-	levelString = "Bad-Level-String"
+func TestSetLogLevelFromStringBadString(test *testing.T) {
+	levelString := "Bad-Level-String"
 	SetLogLevelFromString(levelString)
 	assert.True(test, LevelPanic == GetLogLevel(), "Unknown string returns Panic")
-
 }
 
 // -- GetLogLevel -------------------------------------------------------------
 
 func TestGetLogLevel(test *testing.T) {
-
-	var level Level
-
-	level = LevelPanic
-	SetLogLevel(level)
-	assert.True(test, level == GetLogLevel(), "Panic")
-
-	level = LevelFatal
-	SetLogLevel(level)
-	assert.True(test, level == GetLogLevel(), "Fatal")
-
-	level = LevelError
-	SetLogLevel(level)
-	assert.True(test, level == GetLogLevel(), "Error")
-
-	level = LevelWarn
-	SetLogLevel(level)
-	assert.True(test, level == GetLogLevel(), "Warn")
-
-	level = LevelInfo
-	SetLogLevel(level)
-	assert.True(test, level == GetLogLevel(), "Info")
-
-	level = LevelDebug
-	SetLogLevel(level)
-	assert.True(test, level == GetLogLevel(), "Debug")
-
-	level = LevelTrace
-	SetLogLevel(level)
-	assert.True(test, level == GetLogLevel(), "Trace")
-
+	for _, testCase := range testCases {
+		test.Run(testCase.name, func(test *testing.T) {
+			SetLogLevel(testCase.logLevel)
+			assert.Equal(test, testCase.logLevel, GetLogLevel(), testCase.name)
+		})
+	}
 }
 
 // -- GetLogLevelAsString -----------------------------------------------------
 
 func TestGetLogLevelAsString(test *testing.T) {
-
-	var level Level
-
-	level = LevelPanic
-	SetLogLevel(level)
-	assert.True(test, GetLogLevelAsString() == "PANIC", "Panic")
-
-	level = LevelFatal
-	SetLogLevel(level)
-	assert.True(test, GetLogLevelAsString() == "FATAL", "Fatal")
-
-	level = LevelError
-	SetLogLevel(level)
-	assert.True(test, GetLogLevelAsString() == "ERROR", "Error")
-
-	level = LevelWarn
-	SetLogLevel(level)
-	assert.True(test, GetLogLevelAsString() == "WARN", "Warn")
-
-	level = LevelInfo
-	SetLogLevel(level)
-	assert.True(test, GetLogLevelAsString() == "INFO", "Info")
-
-	level = LevelDebug
-	SetLogLevel(level)
-	assert.True(test, GetLogLevelAsString() == "DEBUG", "Debug")
-
-	level = LevelTrace
-	SetLogLevel(level)
-	assert.True(test, GetLogLevelAsString() == "TRACE", "Trace")
-
+	for _, testCase := range testCases {
+		test.Run(testCase.name, func(test *testing.T) {
+			SetLogLevel(testCase.logLevel)
+			assert.Equal(test, testCase.logLevelName, GetLogLevelAsString(), testCase.name)
+		})
+	}
 }
 
-// -- IsPanic -----------------------------------------------------------------
+// -- IsXxxxx -----------------------------------------------------------------
 
-func TestIsPanic(test *testing.T) {
-	SetLogLevel(LevelPanic)
-	assert.False(test, IsTrace(), "Trace")
-	assert.False(test, IsDebug(), "Debug")
-	assert.False(test, IsInfo(), "Info")
-	assert.False(test, IsWarn(), "Warn")
-	assert.False(test, IsError(), "Error")
-	assert.False(test, IsFatal(), "Fatal")
-	assert.True(test, IsPanic(), "Panic")
+func TestIsXxxx(test *testing.T) {
+	for _, testCase := range testCases {
+		test.Run(testCase.name, func(test *testing.T) {
+			SetLogLevel(testCase.logLevel)
+			assert.Equal(test, testCase.logLevelName, GetLogLevelAsString(), testCase.name)
+			assert.Equal(test, testCase.expectedTrace, IsTrace(), "Trace")
+			assert.Equal(test, testCase.expectedDebug, IsDebug(), "Debug")
+			assert.Equal(test, testCase.expectedInfo, IsInfo(), "Info")
+			assert.Equal(test, testCase.expectedWarn, IsWarn(), "Warn")
+			assert.Equal(test, testCase.expectedError, IsError(), "Error")
+			assert.Equal(test, testCase.expectedFatal, IsFatal(), "Fatal")
+			assert.Equal(test, testCase.expectedPanic, IsPanic(), "Panic")
+		})
+	}
 }
-
-// -- IsFatal -----------------------------------------------------------------
-
-func TestIsFatal(test *testing.T) {
-	SetLogLevel(LevelFatal)
-	assert.False(test, IsTrace(), "Trace")
-	assert.False(test, IsDebug(), "Debug")
-	assert.False(test, IsInfo(), "Info")
-	assert.False(test, IsWarn(), "Warn")
-	assert.False(test, IsError(), "Error")
-	assert.True(test, IsFatal(), "Fatal")
-	assert.True(test, IsPanic(), "Panic")
-}
-
-// -- IsError -----------------------------------------------------------------
-
-func TestIsError(test *testing.T) {
-	SetLogLevel(LevelError)
-	assert.False(test, IsTrace(), "Trace")
-	assert.False(test, IsDebug(), "Debug")
-	assert.False(test, IsInfo(), "Info")
-	assert.False(test, IsWarn(), "Warn")
-	assert.True(test, IsError(), "Error")
-	assert.True(test, IsFatal(), "Fatal")
-	assert.True(test, IsPanic(), "Panic")
-}
-
-// -- IsWarn ------------------------------------------------------------------
-
-func TestIsWarn(test *testing.T) {
-	SetLogLevel(LevelWarn)
-	assert.False(test, IsTrace(), "Trace")
-	assert.False(test, IsDebug(), "Debug")
-	assert.False(test, IsInfo(), "Info")
-	assert.True(test, IsWarn(), "Warn")
-	assert.True(test, IsError(), "Error")
-	assert.True(test, IsFatal(), "Fatal")
-	assert.True(test, IsPanic(), "Panic")
-}
-
-// -- IsInfo ------------------------------------------------------------------
-
-func TestIsInfo(test *testing.T) {
-	SetLogLevel(LevelInfo)
-	assert.False(test, IsTrace(), "Trace")
-	assert.False(test, IsDebug(), "Debug")
-	assert.True(test, IsInfo(), "Info")
-	assert.True(test, IsWarn(), "Warn")
-	assert.True(test, IsError(), "Error")
-	assert.True(test, IsFatal(), "Fatal")
-	assert.True(test, IsPanic(), "Panic")
-}
-
-// -- IsDebug -----------------------------------------------------------------
-
-func TestIsDebug(test *testing.T) {
-	SetLogLevel(LevelDebug)
-	assert.False(test, IsTrace(), "Trace")
-	assert.True(test, IsDebug(), "Debug")
-	assert.True(test, IsInfo(), "Info")
-	assert.True(test, IsWarn(), "Warn")
-	assert.True(test, IsError(), "Error")
-	assert.True(test, IsFatal(), "Fatal")
-	assert.True(test, IsPanic(), "Panic")
-}
-
-// -- IsTrace -----------------------------------------------------------------
-
-func TestIsTrace(test *testing.T) {
-	SetLogLevel(LevelTrace)
-	assert.True(test, IsTrace(), "Trace")
-	assert.True(test, IsDebug(), "Debug")
-	assert.True(test, IsInfo(), "Info")
-	assert.True(test, IsWarn(), "Warn")
-	assert.True(test, IsError(), "Error")
-	assert.True(test, IsFatal(), "Fatal")
-	assert.True(test, IsPanic(), "Panic")
-}
-
-// -- Panic -------------------------------------------------------------------
-
-// No tests.
-
-// -- Fatal -------------------------------------------------------------------
-
-// No tests.
 
 // -- Error -------------------------------------------------------------------
 
