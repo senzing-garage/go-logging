@@ -8,6 +8,16 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
+var idRanges = map[int]logger.Level{
+	0000: logger.LevelInfo,
+	1000: logger.LevelWarn,
+	2000: logger.LevelError,
+	3000: logger.LevelDebug,
+	4000: logger.LevelTrace,
+	5000: logger.LevelFatal,
+	6000: logger.LevelPanic,
+}
+
 var testCases = []struct {
 	name            string
 	idRanges        map[int]logger.Level
@@ -150,16 +160,6 @@ var testCases = []struct {
 	},
 }
 
-var idRanges = map[int]logger.Level{
-	0000: logger.LevelInfo,
-	1000: logger.LevelWarn,
-	2000: logger.LevelError,
-	3000: logger.LevelDebug,
-	4000: logger.LevelTrace,
-	5000: logger.LevelFatal,
-	6000: logger.LevelPanic,
-}
-
 // ----------------------------------------------------------------------------
 // Internal functions - names begin with lowercase letter
 // ----------------------------------------------------------------------------
@@ -176,16 +176,14 @@ func testError(test *testing.T, testObject MessageLogLevelInterface, err error) 
 
 func TestMessageLogLevelByIdRange(test *testing.T) {
 	for _, testCase := range testCases {
-		if testCase.expectedDefault > 0 {
-			test.Run(testCase.name, func(test *testing.T) {
-				testObject := &MessageLogLevelByIdRange{
-					IdRanges: testCase.idRanges,
-				}
-				actual, err := testObject.MessageLogLevel(testCase.messageNumber, testCase.details...)
-				testError(test, testObject, err)
-				assert.Equal(test, testCase.expectedDefault, actual, testCase.name)
-			})
-		}
+		test.Run(testCase.name, func(test *testing.T) {
+			testObject := &MessageLogLevelByIdRange{
+				IdRanges: testCase.idRanges,
+			}
+			actual, err := testObject.MessageLogLevel(testCase.messageNumber, testCase.details...)
+			testError(test, testObject, err)
+			assert.Equal(test, testCase.expectedDefault, actual, testCase.name)
+		})
 	}
 }
 
@@ -195,16 +193,14 @@ func TestMessageLogLevelByIdRange(test *testing.T) {
 
 func TestMessageLogLevelDefault(test *testing.T) {
 	for _, testCase := range testCases {
-		if testCase.expectedDefault > 0 {
-			test.Run(testCase.name, func(test *testing.T) {
-				testObject := &MessageLogLevelDefault{
-					IdRanges: testCase.idRanges,
-				}
-				actual, err := testObject.MessageLogLevel(testCase.messageNumber, testCase.details...)
-				testError(test, testObject, err)
-				assert.Equal(test, testCase.expectedDefault, actual, testCase.name)
-			})
-		}
+		test.Run(testCase.name, func(test *testing.T) {
+			testObject := &MessageLogLevelDefault{
+				IdRanges: testCase.idRanges,
+			}
+			actual, err := testObject.MessageLogLevel(testCase.messageNumber, testCase.details...)
+			testError(test, testObject, err)
+			assert.Equal(test, testCase.expectedDefault, actual, testCase.name)
+		})
 	}
 }
 
@@ -214,16 +210,14 @@ func TestMessageLogLevelDefault(test *testing.T) {
 
 func TestMessageLogLevelSenzing(test *testing.T) {
 	for _, testCase := range testCases {
-		if testCase.expectedDefault > 0 {
-			test.Run(testCase.name, func(test *testing.T) {
-				testObject := &MessageLogLevelSenzing{
-					IdRanges: testCase.idRanges,
-				}
-				actual, err := testObject.MessageLogLevel(testCase.messageNumber, testCase.details...)
-				testError(test, testObject, err)
-				assert.Equal(test, testCase.expectedDefault, actual, testCase.name)
-			})
-		}
+		test.Run(testCase.name, func(test *testing.T) {
+			testObject := &MessageLogLevelSenzing{
+				IdRanges: testCase.idRanges,
+			}
+			actual, err := testObject.MessageLogLevel(testCase.messageNumber, testCase.details...)
+			testError(test, testObject, err)
+			assert.Equal(test, testCase.expectedDefault, actual, testCase.name)
+		})
 	}
 }
 
@@ -239,17 +233,15 @@ func TestMessageLogLevelSenzingApi(test *testing.T) {
 	}
 
 	for _, testCase := range testCases {
-		if testCase.expectedDefault > 0 {
-			test.Run(testCase.name, func(test *testing.T) {
-				testObject := &MessageLogLevelSenzingApi{
-					IdRanges:   idRangesStrings,
-					IdStatuses: idRangesStrings,
-				}
-				actual, err := testObject.MessageLogLevel(testCase.messageNumber, testCase.details...)
-				testError(test, testObject, err)
-				assert.Equal(test, testCase.expectedDefault, actual, testCase.name)
-			})
-		}
+		test.Run(testCase.name, func(test *testing.T) {
+			testObject := &MessageLogLevelSenzingApi{
+				IdRanges:   idRangesStrings,
+				IdStatuses: idRangesStrings,
+			}
+			actual, err := testObject.MessageLogLevel(testCase.messageNumber, testCase.details...)
+			testError(test, testObject, err)
+			assert.Equal(test, testCase.expectedDefault, actual, testCase.name)
+		})
 	}
 }
 
@@ -278,15 +270,13 @@ func TestSenzingApiMessageLogLevelWithErrors(test *testing.T) {
 
 func TestMessageLogLevelStatic(test *testing.T) {
 	for _, testCase := range testCases {
-		if testCase.expectedDefault > 0 {
-			test.Run(testCase.name, func(test *testing.T) {
-				testObject := &MessageLogLevelStatic{
-					LogLevel: logger.LevelWarn,
-				}
-				actual, err := testObject.MessageLogLevel(testCase.messageNumber, testCase.details...)
-				testError(test, testObject, err)
-				assert.Equal(test, logger.LevelWarn, actual, testCase.name)
-			})
-		}
+		test.Run(testCase.name, func(test *testing.T) {
+			testObject := &MessageLogLevelStatic{
+				LogLevel: logger.LevelWarn,
+			}
+			actual, err := testObject.MessageLogLevel(testCase.messageNumber, testCase.details...)
+			testError(test, testObject, err)
+			assert.Equal(test, logger.LevelWarn, actual, testCase.name)
+		})
 	}
 }

@@ -93,7 +93,7 @@ Example:
 
 Output:
 
-	INFO senzing-99990004: [map[1:"Robert Smith" 2:12345 3:map[int]string{10:"ten", 20:"twenty"}]]
+	INFO senzing-99990004: [map[1:Robert Smith 2:12345 3:map[int]string{10:"ten", 20:"twenty"}]]
 
 The fields submitted in the Log() call are seen in a map in the log message.
 They will be listed in the order specified in the Log() call.
@@ -120,7 +120,7 @@ Example:
 
 Output:
 
-	INFO senzing-99990005: The favorite number for Robert Smith is 12345. [map[1:"Robert Smith" 2:12345 3:map[int]string{10:"ten", 20:"twenty"}]]
+	INFO senzing-99990005: The favorite number for Robert Smith is 12345. [map[1:Robert Smith 2:12345 3:map[int]string{10:"ten", 20:"twenty"}]]
 
 Notice that the information used to build the formatted text still remains in the map.
 This is by design.
@@ -136,7 +136,7 @@ Example:
 
 Output:
 
-	ERROR senzing-99990006: Person number #12345 is Robert Smith. [map[1:"Robert Smith" 2:12345 3:map[int]string{10:"ten", 20:"twenty"} 4:4]]
+	ERROR senzing-99990006: Person number #12345 is Robert Smith. [map[1:Robert Smith 2:12345 3:map[int]string{10:"ten", 20:"twenty"} 4:4]]
 
 The logging level can be automated by identifying a MessageLogLevel of type MessageLogLevelInterface.
 Example:
@@ -223,9 +223,10 @@ Example:
 	err2 := errors.New("error #2")
 	messageLogger.Log(10, err1, err2)
 
-Output:
 
-	INFO senzing-99990010: Example errors. [map[1:&errors.errorString{s:"error #1"} 2:&errors.errorString{s:"error #2"}]]
+	Output:
+
+	INFO senzing-99990010: Example errors. [map[1:error #1 2:error #2]]
 
 -- Formatting -----------------------------------------------------------------
 
@@ -240,6 +241,6 @@ Example:
 Output:
 
 	WARN {"id":"senzing-99991000","status":"WARN","text":"A test of WARN."}
-	INFO {"id":"senzing-99990011","status":"INFO","text":"Robert Smith has a score of 12345.","errors":[{"text":"error #1"},{"text":"error #2"}],"details":{"1":"Robert Smith","2":12345,"3":"(map[int]string)map[int]string{10:\"ten\", 20:\"twenty\"}"}}
+	INFO {"id":"senzing-99990011","status":"INFO","text":"Robert Smith has a score of 12345.","errors":[{"text":"error #1"},{"text":"error #2"}],"details":{"1":"Robert Smith","2":12345,"3":"map[int]string{10:\"ten\", 20:\"twenty\"}"}}
 */
 package main

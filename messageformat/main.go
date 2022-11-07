@@ -6,7 +6,6 @@ package messageformat
 import (
 	"encoding/json"
 	"fmt"
-	"reflect"
 )
 
 // ----------------------------------------------------------------------------
@@ -50,9 +49,10 @@ func stringify(unknown interface{}) string {
 	case error:
 		result = value.Error()
 	default:
-		xType := reflect.TypeOf(unknown)
-		xValue := reflect.ValueOf(unknown)
-		result = fmt.Sprintf("(%s)%#v", xType, xValue)
+		// xType := reflect.TypeOf(unknown)
+		// xValue := reflect.ValueOf(unknown)
+		// result = fmt.Sprintf("(%s)%#v", xType, xValue)
+		result = fmt.Sprintf("%#v", unknown)
 	}
 	return result
 }
