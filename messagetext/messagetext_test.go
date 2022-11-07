@@ -6,58 +6,91 @@ For more information, see [test].
 package messagetext
 
 import (
-	"fmt"
 	"testing"
+
+	"github.com/stretchr/testify/assert"
 )
 
-const printResults = 1
+var testCases = []struct {
+	name            string
+	idMessages      map[int]string
+	messageNumber   int
+	details         []interface{}
+	expectedDefault string
+}{
+	{
+		name:          "Test case: #1",
+		messageNumber: 1,
+		idMessages: map[int]string{
+			1: `Bob's middle initial is "%s" and his favorite number is %d.`,
+		},
+		details:         []interface{}{"A", 1},
+		expectedDefault: `Bob's middle initial is "A" and his favorite number is 1.`,
+	},
+	{
+		name:          "Test case: #2 - Specific Message Number",
+		messageNumber: 1,
+		idMessages: map[int]string{
+			2: "Sally got an \"%s\" on the paper.",
+		},
+		details:         []interface{}{"A", 1, MsgNumber(2)},
+		expectedDefault: `Sally got an "A" on the paper.`,
+	},
+	{
+		name:          "Test case: #3 - GT/LT",
+		messageNumber: 1,
+		idMessages: map[int]string{
+			1: `>>>  Try this: "%s"  <<<`,
+		},
+		details:         []interface{}{"Test GT/LT"},
+		expectedDefault: `>>>  Try this: "Test GT/LT"  <<<`,
+	},
+}
 
 // ----------------------------------------------------------------------------
 // Internal functions - names begin with lowercase letter
 // ----------------------------------------------------------------------------
 
-func printResult(test *testing.T, title string, result interface{}) {
-	if printResults == 1 {
-		test.Logf("%s: %v", title, fmt.Sprintf("%v", result))
-	}
-}
-
-func printActual(test *testing.T, actual interface{}) {
-	printResult(test, "Actual", actual)
-}
-
 func testError(test *testing.T, testObject MessageTextInterface, err error) {
 	if err != nil {
-		test.Log("Error:", err.Error())
+		assert.Fail(test, err.Error())
 	}
 }
 
 // ----------------------------------------------------------------------------
-// Test interface functions for MessageLevelSenzingApi - names begin with "Test"
+// Test interface functions for MessageTextSenzing - names begin with "Test"
 // ----------------------------------------------------------------------------
 
-// -- MessageText -------------------------------------------------------------
-
-func TestMessageText(test *testing.T) {
-	testObject := &MessageTextTemplated{
-		IdMessages: map[int]string{
-			1: "Bob's middle initial is \"%s\" and his favorite number is %d.",
-			2: "Sally got an \"%s\" on the paper.",
-		},
+func TestMessageTextSenzing(test *testing.T) {
+	for _, testCase := range testCases {
+		if len(testCase.expectedDefault) > 0 {
+			test.Run(testCase.name, func(test *testing.T) {
+				testObject := &MessageTextSenzing{
+					IdMessages: testCase.idMessages,
+				}
+				actual, err := testObject.MessageText(testCase.messageNumber, testCase.details...)
+				testError(test, testObject, err)
+				assert.Equal(test, testCase.expectedDefault, actual, testCase.name)
+			})
+		}
 	}
-	actual, err := testObject.MessageText(1, "A", 1)
-	testError(test, testObject, err)
-	printActual(test, actual)
 }
 
-func TestMessageTextWithMessageNumber(test *testing.T) {
-	testObject := &MessageTextTemplated{
-		IdMessages: map[int]string{
-			1: "Bob's middle initial is \"%s\" and his favorite number is %d.",
-			2: "Sally got an \"%s\" on the paper.",
-		},
+// ----------------------------------------------------------------------------
+// Test interface functions for MessageTextTemplated - names begin with "Test"
+// ----------------------------------------------------------------------------
+
+func TestMessageTextTemplated(test *testing.T) {
+	for _, testCase := range testCases {
+		if len(testCase.expectedDefault) > 0 {
+			test.Run(testCase.name, func(test *testing.T) {
+				testObject := &MessageTextTemplated{
+					IdMessages: testCase.idMessages,
+				}
+				actual, err := testObject.MessageText(testCase.messageNumber, testCase.details...)
+				testError(test, testObject, err)
+				assert.Equal(test, testCase.expectedDefault, actual, testCase.name)
+			})
+		}
 	}
-	actual, err := testObject.MessageText(1, "A", 1, MsgNumber(2))
-	testError(test, testObject, err)
-	printActual(test, actual)
 }

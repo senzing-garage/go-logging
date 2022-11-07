@@ -107,7 +107,7 @@ func (logger *LoggerDefault) GetLogLevel() Level {
 }
 
 func (logger *LoggerDefault) GetLogLevelAsString() string {
-	return levelToTextMap[logger.level]
+	return LevelToTextMap[logger.level]
 }
 
 func (logger *LoggerDefault) Info(v ...interface{}) LoggerInterface {
@@ -182,7 +182,7 @@ func (logger *LoggerDefault) SetLogLevel(level Level) LoggerInterface {
 
 func (logger *LoggerDefault) SetLogLevelFromString(levelString string) LoggerInterface {
 	upperLevelString := strings.ToUpper(levelString)
-	level, ok := textToLevelMap[upperLevelString]
+	level, ok := TextToLevelMap[upperLevelString]
 	if !ok {
 		level = LevelPanic
 	}

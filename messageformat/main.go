@@ -6,7 +6,6 @@ package messageformat
 import (
 	"encoding/json"
 	"fmt"
-	"reflect"
 )
 
 // ----------------------------------------------------------------------------
@@ -37,6 +36,8 @@ func stringify(unknown interface{}) string {
 	// See https://pkg.go.dev/fmt for format strings.
 	var result string
 	switch value := unknown.(type) {
+	case nil:
+		result = "<nil>"
 	case string:
 		result = value
 	case int:
@@ -48,9 +49,10 @@ func stringify(unknown interface{}) string {
 	case error:
 		result = value.Error()
 	default:
-		xType := reflect.TypeOf(unknown)
-		xValue := reflect.ValueOf(unknown)
-		result = fmt.Sprintf("(%s)%#v", xType, xValue)
+		// xType := reflect.TypeOf(unknown)
+		// xValue := reflect.ValueOf(unknown)
+		// result = fmt.Sprintf("(%s)%#v", xType, xValue)
+		result = fmt.Sprintf("%#v", unknown)
 	}
 	return result
 }

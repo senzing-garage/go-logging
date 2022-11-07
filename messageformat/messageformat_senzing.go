@@ -15,12 +15,12 @@ import (
 // ----------------------------------------------------------------------------
 
 // The MessageFormatJson type is for creating formatted messages in JSON.
-type MessageFormatJson struct{}
+type MessageFormatSenzing struct{}
 
 // Fields in the formatted message.
 // Order is important.
 // It should be id, status, text, errors, details.
-type messageFormatJson struct {
+type messageFormatSenzing struct {
 	Id      string        `json:"id,omitempty"`
 	Status  string        `json:"status,omitempty"`
 	Text    interface{}   `json:"text,omitempty"`
@@ -33,9 +33,9 @@ type messageFormatJson struct {
 // ----------------------------------------------------------------------------
 
 // The Message method creates a JSON formatted message.
-func (messageFormat *MessageFormatJson) Message(id string, status string, text string, details ...interface{}) (string, error) {
+func (messageFormat *MessageFormatSenzing) Message(id string, status string, text string, details ...interface{}) (string, error) {
 	var err error = nil
-	messageBuilder := &messageFormatJson{}
+	messageBuilder := &messageFormatSenzing{}
 
 	// Set output Id, Status, and Text fields.
 
@@ -74,7 +74,7 @@ func (messageFormat *MessageFormatJson) Message(id string, status string, text s
 				if isJson(errorMessage) {
 					priorError = jsonAsInterface(errorMessage)
 				} else {
-					priorError = &messageFormatJson{
+					priorError = &messageFormatSenzing{
 						Text: errorMessage,
 					}
 				}

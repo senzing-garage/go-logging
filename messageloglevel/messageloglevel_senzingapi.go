@@ -19,27 +19,24 @@ type MessageLogLevelSenzingApi struct {
 }
 
 // ----------------------------------------------------------------------------
-// Variables
-// ----------------------------------------------------------------------------
-
-// Pseudo-constant.
-var nameToLevelMap = map[string]logger.Level{
-	logger.LevelInfoName:  logger.LevelInfo,
-	logger.LevelWarnName:  logger.LevelWarn,
-	logger.LevelErrorName: logger.LevelError,
-	logger.LevelDebugName: logger.LevelDebug,
-	logger.LevelTraceName: logger.LevelTrace,
-	logger.LevelFatalName: logger.LevelFatal,
-	logger.LevelPanicName: logger.LevelPanic,
-}
-
-// ----------------------------------------------------------------------------
 // Interface methods
 // ----------------------------------------------------------------------------
 
 // The MessageLogLevel method returns a log level based on the status value.
 func (messageLogLevel *MessageLogLevelSenzingApi) MessageLogLevel(messageNumber int, details ...interface{}) (logger.Level, error) {
+	var err error = nil
 	var result = logger.LevelError
+
+	// First priority:  Log level explicitly given in details parameter.
+
+	for _, value := range details {
+		switch typedValue := value.(type) {
+		case logger.Level:
+			return typedValue, err
+		}
+	}
+
+	// Second priority: Calculate log level from the status.
 
 	// Get Status string.
 
@@ -54,7 +51,7 @@ func (messageLogLevel *MessageLogLevelSenzingApi) MessageLogLevel(messageNumber 
 
 	// If status is a known logging level, return it.
 
-	result, ok := nameToLevelMap[status]
+	result, ok := logger.TextToLevelMap[status]
 	if ok {
 		return result, err
 	}

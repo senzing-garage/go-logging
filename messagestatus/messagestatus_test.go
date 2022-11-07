@@ -2,84 +2,186 @@ package messagestatus
 
 import (
 	"errors"
-	"fmt"
 	"testing"
 
 	"github.com/senzing/go-logging/logger"
+	"github.com/stretchr/testify/assert"
 )
 
-const printResults = 1
+var IdRanges = map[int]string{
+	0000: logger.LevelInfoName,
+	1000: logger.LevelWarnName,
+	2000: logger.LevelErrorName,
+	3000: logger.LevelDebugName,
+	4000: logger.LevelTraceName,
+	5000: logger.LevelFatalName,
+	6000: logger.LevelPanicName,
+}
+
+var testCases = []struct {
+	name            string
+	idRanges        map[int]string
+	IdStatuses      map[int]string
+	messageNumber   int
+	details         []interface{}
+	expectedDefault string
+}{
+	{
+		name:            "Test case: #1 - Info",
+		messageNumber:   0,
+		idRanges:        IdRanges,
+		IdStatuses:      IdRanges,
+		details:         []interface{}{"A", 1},
+		expectedDefault: logger.LevelInfoName,
+	},
+	{
+		name:            "Test case: #2 - Warn",
+		messageNumber:   1000,
+		idRanges:        IdRanges,
+		IdStatuses:      IdRanges,
+		details:         []interface{}{"A", 1},
+		expectedDefault: logger.LevelWarnName,
+	},
+	{
+		name:            "Test case: #3 - Error",
+		messageNumber:   2000,
+		idRanges:        IdRanges,
+		IdStatuses:      IdRanges,
+		details:         []interface{}{"A", 1},
+		expectedDefault: logger.LevelErrorName,
+	},
+	{
+		name:            "Test case: #4 - Debug",
+		messageNumber:   3000,
+		idRanges:        IdRanges,
+		IdStatuses:      IdRanges,
+		details:         []interface{}{"A", 1},
+		expectedDefault: logger.LevelDebugName,
+	},
+	{
+		name:            "Test case: #5 - Trace",
+		messageNumber:   4000,
+		idRanges:        IdRanges,
+		IdStatuses:      IdRanges,
+		details:         []interface{}{"A", 1},
+		expectedDefault: logger.LevelTraceName,
+	},
+	{
+		name:            "Test case: #6 - Fatal",
+		messageNumber:   5000,
+		idRanges:        IdRanges,
+		IdStatuses:      IdRanges,
+		details:         []interface{}{"A", 1},
+		expectedDefault: logger.LevelFatalName,
+	},
+	{
+		name:            "Test case: #7 - Panic",
+		messageNumber:   6000,
+		idRanges:        IdRanges,
+		IdStatuses:      IdRanges,
+		details:         []interface{}{"A", 1},
+		expectedDefault: logger.LevelPanicName,
+	},
+}
 
 // ----------------------------------------------------------------------------
 // Internal functions - names begin with lowercase letter
 // ----------------------------------------------------------------------------
 
-func printResult(test *testing.T, title string, result interface{}) {
-	if printResults == 1 {
-		test.Logf("%s: %v", title, fmt.Sprintf("%v", result))
-	}
-}
-
-func printActual(test *testing.T, actual interface{}) {
-	printResult(test, "Actual", actual)
-}
-
 func testError(test *testing.T, testObject MessageStatusInterface, err error) {
 	if err != nil {
-		test.Log("Error:", err.Error())
+		assert.Fail(test, err.Error())
 	}
 }
 
 // ----------------------------------------------------------------------------
-// Test interface functions for MessageLevelSenzingApi - names begin with "Test"
+// Test interface functions for MessageStatusById - names begin with "Test"
 // ----------------------------------------------------------------------------
 
-// -- MessageStatus -----------------------------------------------------------
-
-func TestMessageStatus(test *testing.T) {
-	testObject := &MessageStatusSenzingApi{
-		IdRanges: map[int]string{
-			0: logger.LevelInfoName,
-		},
+func TestMessageStatusById(test *testing.T) {
+	for _, testCase := range testCases {
+		if len(testCase.expectedDefault) > 0 {
+			test.Run(testCase.name, func(test *testing.T) {
+				testObject := &MessageStatusById{
+					IdStatuses: testCase.idRanges,
+				}
+				actual, err := testObject.MessageStatus(testCase.messageNumber, testCase.details...)
+				testError(test, testObject, err)
+				assert.Equal(test, testCase.expectedDefault, actual, testCase.name)
+			})
+		}
 	}
-	actual, err := testObject.MessageStatus(1)
-	testError(test, testObject, err)
-	printActual(test, actual)
 }
 
-func TestMessageStatusXXX(test *testing.T) {
-	testObject := &MessageStatusSenzingApi{
-		IdStatuses: map[int]string{
-			1: "bob",
-			2: "mary",
-			3: "jane",
-		},
+// ----------------------------------------------------------------------------
+// Test interface functions for MessageStatusByIdRange - names begin with "Test"
+// ----------------------------------------------------------------------------
+
+func TestMessageStatusByIdRange(test *testing.T) {
+	for _, testCase := range testCases {
+		if len(testCase.expectedDefault) > 0 {
+			test.Run(testCase.name, func(test *testing.T) {
+				testObject := &MessageStatusByIdRange{
+					IdRanges: testCase.idRanges,
+				}
+				actual, err := testObject.MessageStatus(testCase.messageNumber, testCase.details...)
+				testError(test, testObject, err)
+				assert.Equal(test, testCase.expectedDefault, actual, testCase.name)
+			})
+		}
 	}
-	actual, err := testObject.MessageStatus(2, "A", 1, testObject)
-	testError(test, testObject, err)
-	printActual(test, actual)
 }
 
-func TestMessageStatusFor0037E(test *testing.T) {
+// ----------------------------------------------------------------------------
+// Test interface functions for MessageStatusSenzing - names begin with "Test"
+// ----------------------------------------------------------------------------
+
+func TestMessageStatusSenzing(test *testing.T) {
+	for _, testCase := range testCases {
+		if len(testCase.expectedDefault) > 0 {
+			test.Run(testCase.name, func(test *testing.T) {
+				testObject := &MessageStatusSenzing{
+					IdRanges: testCase.idRanges,
+				}
+				actual, err := testObject.MessageStatus(testCase.messageNumber, testCase.details...)
+				testError(test, testObject, err)
+				assert.Equal(test, testCase.expectedDefault, actual, testCase.name)
+			})
+		}
+	}
+}
+
+// ----------------------------------------------------------------------------
+// Test interface functions for MessageStatusSenzingApi - names begin with "Test"
+// ----------------------------------------------------------------------------
+
+func TestMessageStatusSenzingApi(test *testing.T) {
+	for _, testCase := range testCases {
+		if len(testCase.expectedDefault) > 0 {
+			test.Run(testCase.name, func(test *testing.T) {
+				testObject := &MessageStatusSenzingApi{
+					IdRanges:   testCase.idRanges,
+					IdStatuses: testCase.idRanges,
+				}
+				actual, err := testObject.MessageStatus(testCase.messageNumber, testCase.details...)
+				testError(test, testObject, err)
+				assert.Equal(test, testCase.expectedDefault, actual, testCase.name)
+			})
+		}
+	}
+}
+
+func TestMessageStatusSenzingApiWith0037E(test *testing.T) {
+	expected := "ERROR_bad_user_input"
 	anError := errors.New("0037E|Unknown resolved entity value '2'")
 	testObject := &MessageStatusSenzingApi{}
 	actual, err := testObject.MessageStatus(1, "A", 1, testObject, anError)
 	testError(test, testObject, err)
-	printActual(test, actual)
+	assert.Equal(test, expected, actual)
 }
 
-func TestMessageStatusWithDetails(test *testing.T) {
-	testObject := &MessageStatusSenzingApi{
-		IdRanges: map[int]string{
-			0: logger.LevelInfoName,
-		},
-	}
-	actual, err := testObject.MessageStatus(1, "A", 1, testObject)
-	testError(test, testObject, err)
-	printActual(test, actual)
-}
-
-func TestMessageStatusWithSenzingApiError(test *testing.T) {
+func TestMessageStatusSenzingApiWithSenzingApiError(test *testing.T) {
+	expected := "ERROR_bad_user_input"
 	anError := errors.New("0037E|Unknown resolved entity value")
 	testObject := &MessageStatusSenzingApi{
 		IdRanges: map[int]string{
@@ -88,13 +190,13 @@ func TestMessageStatusWithSenzingApiError(test *testing.T) {
 	}
 	actual, err := testObject.MessageStatus(1, "A", 1, testObject, anError)
 	testError(test, testObject, err)
-	printActual(test, actual)
+	assert.Equal(test, expected, actual)
 }
 
-func TestMessageStatusWith2SenzingApiError2(test *testing.T) {
+func TestMessageStatusSenzingApiWith2SenzingApiError2(test *testing.T) {
+	expected := "ERROR_unrecoverable"
 	anError1 := errors.New("0019E|Configuration not found")
 	anError2 := errors.New("0099E|Made up error")
-
 	testObject := &MessageStatusSenzingApi{
 		IdRanges: map[int]string{
 			0: logger.LevelInfoName,
@@ -102,10 +204,11 @@ func TestMessageStatusWith2SenzingApiError2(test *testing.T) {
 	}
 	actual, err := testObject.MessageStatus(1, "A", 1, testObject, anError1, anError2)
 	testError(test, testObject, err)
-	printActual(test, actual)
+	assert.Equal(test, expected, actual)
 }
 
-func TestMessageStatusWithUnknownError(test *testing.T) {
+func TestMessageStatusSenzingApiWithUnknownError(test *testing.T) {
+	expected := logger.LevelWarnName
 	anError := errors.New("1234E|Made up error")
 	testObject := &MessageStatusSenzingApi{
 		IdRanges: map[int]string{
@@ -115,5 +218,5 @@ func TestMessageStatusWithUnknownError(test *testing.T) {
 	}
 	actual, err := testObject.MessageStatus(1000, "A", 1, testObject, anError)
 	testError(test, testObject, err)
-	printActual(test, actual)
+	assert.Equal(test, expected, actual)
 }
