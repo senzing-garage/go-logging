@@ -5,6 +5,7 @@ package messageformat
 
 import (
 	"fmt"
+	"reflect"
 	"strings"
 )
 
@@ -35,8 +36,25 @@ func (messageFormat *MessageFormatDefault) Message(id string, status string, tex
 	}
 	if len(details) > 0 {
 		detailMap := make(map[int]interface{})
-		for index, value := range details {
-			detailMap[index+1] = fmt.Sprintf("%#v", value)
+		for index, unknown := range details {
+			switch value := unknown.(type) {
+			case string:
+				detailMap[index+1] = value
+			case int:
+				detailMap[index+1] = value
+			case float64:
+				detailMap[index+1] = value
+			case bool:
+				detailMap[index+1] = fmt.Sprintf("%t", value)
+			case error:
+				detailMap[index+1] = value.Error()
+			case nil:
+				detailMap[index+1] = "<nil>"
+			default:
+				xType := reflect.TypeOf(unknown)
+				xValue := reflect.ValueOf(unknown)
+				detailMap[index+1] = fmt.Sprintf("(%s)%#v", xType, xValue)
+			}
 		}
 		result = result + fmt.Sprintf("[%v] ", detailMap)
 	}

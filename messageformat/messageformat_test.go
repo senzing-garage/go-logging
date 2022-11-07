@@ -22,7 +22,7 @@ var testCases = []struct {
 		text:            "text-1",
 		details:         []interface{}{123, "bob"},
 		expectedJSON:    `{"id":"id-1","status":"status-1","text":"text-1","details":{"1":123,"2":"bob"}}`,
-		expectedDefault: `id-1: (status-1) text-1 [map[1:123 2:"bob"]]`,
+		expectedDefault: `id-1: (status-1) text-1 [map[1:123 2:bob]]`,
 	},
 	{
 		name:            "Test case: #2 - no id",
@@ -30,7 +30,7 @@ var testCases = []struct {
 		text:            "text-2",
 		details:         []interface{}{123, "bob"},
 		expectedJSON:    `{"status":"status-2","text":"text-2","details":{"1":123,"2":"bob"}}`,
-		expectedDefault: `(status-2) text-2 [map[1:123 2:"bob"]]`,
+		expectedDefault: `(status-2) text-2 [map[1:123 2:bob]]`,
 	},
 	{
 		name:            "Test case: #3 - no status",
@@ -38,7 +38,7 @@ var testCases = []struct {
 		text:            "text-3",
 		details:         []interface{}{123, "bob"},
 		expectedJSON:    `{"id":"id-3","text":"text-3","details":{"1":123,"2":"bob"}}`,
-		expectedDefault: `id-3: text-3 [map[1:123 2:"bob"]]`,
+		expectedDefault: `id-3: text-3 [map[1:123 2:bob]]`,
 	},
 	{
 		name:            "Test case: #4 - no text",
@@ -46,7 +46,7 @@ var testCases = []struct {
 		status:          "status-4",
 		details:         []interface{}{123, "bob"},
 		expectedJSON:    `{"id":"id-4","status":"status-4","details":{"1":123,"2":"bob"}}`,
-		expectedDefault: `id-4: (status-4) [map[1:123 2:"bob"]]`,
+		expectedDefault: `id-4: (status-4) [map[1:123 2:bob]]`,
 	},
 	{
 		name:            "Test case: #5 - no details",

@@ -4,8 +4,10 @@ The MessageFormatJson implementation returns a message in the JSON format.
 package messageformat
 
 import (
+	"bytes"
 	"encoding/json"
 	"strconv"
+	"strings"
 )
 
 // ----------------------------------------------------------------------------
@@ -63,6 +65,9 @@ func (messageFormat *MessageFormatJson) Message(id string, status string, text s
 
 		for index, value := range details {
 			switch typedValue := value.(type) {
+			case nil:
+				detailMap[strconv.Itoa(index+1)] = "<nil>"
+
 			case error:
 				errorMessage := typedValue.Error()
 				var priorError interface{}
@@ -103,6 +108,18 @@ func (messageFormat *MessageFormatJson) Message(id string, status string, text s
 
 	// Convert to JSON.
 
-	result, _ := json.Marshal(messageBuilder)
-	return string(result), err
+	// Would love to do it this way, but HTML escaping happens.
+	// Reported in https://github.com/golang/go/issues/56630
+	// result, _ := json.Marshal(messageBuilder)
+	// return string(result), err
+
+	// Work-around.
+
+	var resultBytes bytes.Buffer
+	enc := json.NewEncoder(&resultBytes)
+	enc.SetEscapeHTML(false)
+	err = enc.Encode(messageBuilder)
+	result := strings.TrimSpace(resultBytes.String())
+
+	return result, err
 }

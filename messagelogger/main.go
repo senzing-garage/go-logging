@@ -88,12 +88,14 @@ func New(interfaces ...interface{}) (MessageLoggerInterface, error) {
 
 	logLevel := LevelInfo
 	result := &MessageLoggerDefault{
-		Logger:          &logger.LoggerDefault{},
-		MessageFormat:   &messageformat.MessageFormatDefault{},
-		MessageId:       &messageid.MessageIdDefault{},
-		MessageLogLevel: &messageloglevel.MessageLogLevelDefault{},
-		MessageStatus:   &messagestatus.MessageStatusNull{},
-		MessageText:     &messagetext.MessageTextNull{},
+		Logger:        &logger.LoggerDefault{},
+		MessageFormat: &messageformat.MessageFormatDefault{},
+		MessageId:     &messageid.MessageIdDefault{},
+		MessageLogLevel: &messageloglevel.MessageLogLevelDefault{
+			DefaultLogLevel: logger.LevelInfo,
+		},
+		MessageStatus: &messagestatus.MessageStatusNull{},
+		MessageText:   &messagetext.MessageTextNull{},
 	}
 
 	// Incorporate parameters.
