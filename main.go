@@ -33,22 +33,26 @@ func complexProcess() string {
 
 func main() {
 
+	fmt.Printf("\n\n-------------------------------------------------------------------------------")
+	fmt.Printf("\n--- High-level logger tests ---------------------------------------------------")
+	fmt.Printf("\n-------------------------------------------------------------------------------\n\n")
+
 	// ------------------------------------------------------------------------
 	// The following demonstrates the high-level messagelogger calls.
 	// ------------------------------------------------------------------------
 
-	fmt.Printf("\n--- Test 1: - Overview -----------------------------------------------------------\n\n")
+	fmt.Printf("\n--- Test 1: - Overview --------------------------------------------------------\n\n")
 
 	log.SetFlags(0)
 	messageLogger, _ := messagelogger.New()
 	messageLogger.Log(1)
 
-	fmt.Printf("\n\n--- Test 2: - Configure log ----------------------------------------------------\n\n")
+	fmt.Printf("\n\n--- Test 2: - Configure log ---------------------------------------------------\n\n")
 
 	log.SetFlags(log.LstdFlags)
 	messageLogger.Log(2)
 
-	fmt.Printf("\n\n--- Test 3: - Customize the id field -------------------------------------------\n\n")
+	fmt.Printf("\n\n--- Test 3: - Customize the id field ------------------------------------------\n\n")
 
 	log.SetFlags(0)
 	messageId := &messageid.MessageIdTemplated{
@@ -57,7 +61,7 @@ func main() {
 	messageLogger, _ = messagelogger.New(messageId)
 	messageLogger.Log(3)
 
-	fmt.Printf("\n\n--- Test 4: - Log additional information ---------------------------------------\n\n")
+	fmt.Printf("\n\n--- Test 4: - Log additional information --------------------------------------\n\n")
 
 	aMap := map[int]string{
 		10: "ten",
@@ -65,7 +69,7 @@ func main() {
 	}
 	messageLogger.Log(4, "Robert Smith", 12345, aMap)
 
-	fmt.Printf("\n\n--- Test 5: - Adding a text field ----------------------------------------------\n\n")
+	fmt.Printf("\n\n--- Test 5: - Adding a text field ---------------------------------------------\n\n")
 
 	messageText := &messagetext.MessageTextTemplated{
 		IdMessages: map[int]string{
@@ -81,11 +85,11 @@ func main() {
 	messageLogger, _ = messagelogger.New(messageId, messageText)
 	messageLogger.Log(5, "Robert Smith", 12345, aMap)
 
-	fmt.Printf("\n\n--- Test 6: - Log level --------------------------------------------------------\n\n")
+	fmt.Printf("\n\n--- Test 6: - Log level -------------------------------------------------------\n\n")
 
 	messageLogger.Log(6, "Robert Smith", 12345, aMap, logger.LevelError)
 
-	fmt.Printf("\n\n--- Test 7: - Log level --------------------------------------------------------\n\n")
+	fmt.Printf("\n\n--- Test 7: - Log level -------------------------------------------------------\n\n")
 
 	messageLogLevel := &messageloglevel.MessageLogLevelByIdRange{
 		IdRanges: map[int]logger.Level{
@@ -103,7 +107,7 @@ func main() {
 	messageLogger.Log(1000)
 	messageLogger.Log(2000)
 
-	fmt.Printf("\n\n--- Test 8: - Status -----------------------------------------------------------\n\n")
+	fmt.Printf("\n\n--- Test 8: - Status ----------------------------------------------------------\n\n")
 
 	messageStatus := &messagestatus.MessageStatusByIdRange{
 		IdRanges: map[int]string{
@@ -121,7 +125,7 @@ func main() {
 	messageLogger.Log(1000)
 	messageLogger.Log(2000)
 
-	fmt.Printf("\n\n--- Test 9: - Status -----------------------------------------------------------\n\n")
+	fmt.Printf("\n\n--- Test 9: - Status ----------------------------------------------------------\n\n")
 
 	messageStatus2 := &messagestatus.MessageStatusById{
 		IdStatuses: map[int]string{
@@ -135,13 +139,13 @@ func main() {
 	messageLogger.Log(1000)
 	messageLogger.Log(2000)
 
-	fmt.Printf("\n\n--- Test 10: - Logging errors --------------------------------------------------\n\n")
+	fmt.Printf("\n\n--- Test 10: - Logging errors -------------------------------------------------\n\n")
 
 	err1 := errors.New("error #1")
 	err2 := errors.New("error #2")
 	messageLogger.Log(10, err1, err2)
 
-	fmt.Printf("\n\n--- Test 11: - Formatting ------------------------------------------------------\n\n")
+	fmt.Printf("\n\n--- Test 11: - Formatting -----------------------------------------------------\n\n")
 
 	messageFormat := &messageformat.MessageFormatJson{}
 	messageLogger, _ = messagelogger.New(messageLogLevel, messageFormat, messageId, messageText, messageStatus)
@@ -153,50 +157,53 @@ func main() {
 	// Trace, Debug, Info, Warn, and Error.
 	// ------------------------------------------------------------------------
 
-	fmt.Printf("\n\n--------------------------------------------------------------------------------")
-	fmt.Printf("\n--- Low-level logger tests -----------------------------------------------------")
-	fmt.Printf("\n--------------------------------------------------------------------------------\n\n")
+	fmt.Printf("\n\n-------------------------------------------------------------------------------")
+	fmt.Printf("\n--- Low-level logger tests ----------------------------------------------------")
+	fmt.Printf("\n-------------------------------------------------------------------------------\n\n")
 
-	log.Println("Test Trace")
+	fmt.Printf("\n--- Test Trace - should be empty ----------------------------------------------\n")
 	logger.Trace("trace prints")
 	logger.Tracef("trace A: %s B: %s C: %d", "aaa", "bbb", 35)
 
-	log.Println("Test Debug")
+	fmt.Printf("\n--- Test Debug - should be empty ----------------------------------------------\n")
 	logger.Debug("debug prints")
 	logger.Debugf("debug A: %s B: %s C: %d", "aaa", "bbb", 35)
 
-	log.Println("Test Info")
+	fmt.Printf("\n--- Test Info -----------------------------------------------------------------\n")
 	logger.Info("info prints")
 	logger.Infof("info A: %s B: %s C: %d", "aaa", "bbb", 35)
 
-	log.Println("Test Warn")
+	fmt.Printf("\n--- Test Warn -----------------------------------------------------------------\n")
 	logger.Warn("warn prints")
 	logger.Warnf("warn A: %s B: %s C: %d", "aaa", "bbb", 35)
 
-	log.Println("Test Error")
+	fmt.Printf("\n--- Test Error ----------------------------------------------------------------\n")
 	logger.Error("error prints")
 	logger.Errorf("error A: %s B: %s C: %d", "aaa", "bbb", 35)
 
+	// Note:  the first Fatal or Panic issued will exit the program.
+
+	fmt.Printf("\n--- Test Fatal - should be empty ----------------------------------------------\n")
+	//	logger.Fatal("fatal prints")
+	//	logger.Fatalf("fatal A: %s B: %s C: %d", "aaa", "bbb", 35)
+
+	fmt.Printf("\n--- Test Panic - should be empty ----------------------------------------------\n")
+	//	logger.Fatal("fatal prints")
+	//	logger.Fatalf("fatal A: %s B: %s C: %d", "aaa", "bbb", 35)
+
 	// Avoid long running logging when appropriate.
 
+	fmt.Printf("\n--- Test IsDebug - should be empty --------------------------------------------\n")
 	if logger.IsDebug() {
 		logger.Debugf("%s", complexProcess())
 	}
 
-	// Note:  the first Fatal or Panic issued will exit the program.
-
-	log.Println("Test Fatal")
-	//	logger.Fatal("fatal prints")
-	//	logger.Fatalf("fatal A: %s B: %s C: %d", "aaa", "bbb", 35)
-
-	log.Println("Test Panic")
-	//		logger.Fatal("fatal prints")
-	//	logger.Fatalf("fatal A: %s B: %s C: %d", "aaa", "bbb", 35)
-
-	log.Println("Test varadic")
+	fmt.Printf("\n--- Test Varadic --------------------------------------------------------------\n")
 	_, err := time.LoadLocation("bob")
 	logger.Info("Should be error: ", err)
 
-	log.Println("End")
+	fmt.Printf("\n\n-------------------------------------------------------------------------------")
+	fmt.Printf("\n--- End -----------------------------------------------------------------------")
+	fmt.Printf("\n-------------------------------------------------------------------------------\n\n")
 
 }
