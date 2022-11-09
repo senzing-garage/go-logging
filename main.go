@@ -153,6 +153,42 @@ func main() {
 	messageLogger.Log(11, "Robert Smith", 12345, aMap, err1, err2)
 
 	// ------------------------------------------------------------------------
+	// The following demonstrates the system-wide logger calls.
+	// ------------------------------------------------------------------------
+
+	fmt.Printf("\n\n--- Test 12: - System loggers -------------------------------------------------\n\n")
+
+	messageLogger1, _ := messagelogger.New(logger.LevelInfo)
+	messageLogger2, _ := messagelogger.New(logger.LevelWarn)
+	messageLogger3, _ := messagelogger.New(logger.LevelError)
+
+	fmt.Println("------ Before")
+	messageLogger1.Log(2001)
+	messageLogger2.Log(2002)
+	messageLogger3.Log(2003)
+
+	fmt.Println("------ After")
+
+	messagelogger.SetLogLevel(messagelogger.LevelInfo)
+
+	messageLogger1.Log(2001)
+	messageLogger2.Log(2002)
+	messageLogger3.Log(2003)
+
+	fmt.Println("------ New loggers")
+
+	messageLogger4, _ := messagelogger.New(logger.LevelError)
+	messageLogger4.Log(2004)
+
+	fmt.Println("------ Inspection")
+
+	logLevel, _ := messagelogger.GetLogLevel()
+	logLevelName, _ := messagelogger.GetLogLevelAsString()
+
+	fmt.Printf("System log level: %d\n", logLevel)
+	fmt.Printf("System log level name: %s\n", logLevelName)
+
+	// ------------------------------------------------------------------------
 	// The following demonstrates the low-level logger calls for
 	// Trace, Debug, Info, Warn, and Error.
 	// ------------------------------------------------------------------------

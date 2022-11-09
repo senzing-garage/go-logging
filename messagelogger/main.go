@@ -6,6 +6,7 @@ package messagelogger
 import (
 	"errors"
 	"fmt"
+	"sync"
 
 	"github.com/senzing/go-logging/logger"
 	"github.com/senzing/go-logging/messageformat"
@@ -57,6 +58,17 @@ const (
 	LevelError
 	LevelFatal
 	LevelPanic
+)
+
+// ----------------------------------------------------------------------------
+// Variables
+// ----------------------------------------------------------------------------
+
+var (
+	lock                   = &sync.Mutex{}
+	isSystemLogLevelSet    = false
+	systemLogLevel         = LevelInfo
+	messageLoggerObservers = []MessageLoggerInterface{}
 )
 
 // ----------------------------------------------------------------------------
@@ -134,6 +146,23 @@ func New(interfaces ...interface{}) (MessageLoggerInterface, error) {
 		err = fmt.Errorf("unsupported interfaces: %#v", errorsList)
 	}
 
+	// If system logging level set, set this logger to that level and
+	// add this messageLogger to the Observers list.
+	// Do this in a thread-safe way.
+
+	lock.Lock()
+	defer lock.Unlock()
+
+	if isSystemLogLevelSet {
+		result.SetLogLevel(systemLogLevel)
+	}
+
+	if messageLoggerObservers == nil {
+		messageLoggerObservers = make([]MessageLoggerInterface, 0)
+	}
+
+	messageLoggerObservers = append(messageLoggerObservers, result)
+
 	return result, err
 }
 
@@ -204,4 +233,60 @@ func NewSenzingLogger(productIdentifier int, idMessages map[int]string, interfac
 	// Using a Factory Pattern, build the messagelogger.
 
 	return New(newInterfaces...)
+}
+
+// ----------------------------------------------------------------------------
+// Functions
+// ----------------------------------------------------------------------------
+
+func GetLogLevel() (Level, error) {
+	var err error = nil
+	if !isSystemLogLevelSet {
+		err = fmt.Errorf("system log level not set")
+	}
+	return systemLogLevel, err
+}
+
+func GetLogLevelAsString() (string, error) {
+	var err error = nil
+
+	logLevel, err := GetLogLevel()
+	if err != nil {
+		return "", err
+	}
+
+	levelName, ok := logger.LevelToTextMap[logger.Level(logLevel)]
+	if !ok {
+		err = fmt.Errorf("logLevel not found")
+	}
+
+	return levelName, err
+}
+
+func SetLogLevel(level Level) error {
+	var err error = nil
+
+	// Make this thread-safe.
+
+	lock.Lock()
+	defer lock.Unlock()
+
+	// Propagate level across all messageLoggers.
+
+	isSystemLogLevelSet = true
+	systemLogLevel = level
+	for _, messageLogger := range messageLoggerObservers {
+		messageLogger.SetLogLevel(systemLogLevel)
+	}
+	return err
+}
+
+func SetLogLevelFromString(levelName string) error {
+
+	level, ok := logger.TextToLevelMap[levelName]
+	if ok {
+		return SetLogLevel(Level(level))
+	}
+
+	return fmt.Errorf("unknown log level name: %s", levelName)
 }
