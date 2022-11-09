@@ -175,6 +175,14 @@ func main() {
 	messageLogger2.Log(2002)
 	messageLogger3.Log(2003)
 
+	fmt.Println("------ Inspection")
+
+	logLevel, _ := messagelogger.GetLogLevel()
+	logLevelName, _ := messagelogger.GetLogLevelAsString()
+
+	fmt.Printf("System log level: %d\n", logLevel)
+	fmt.Printf("System log level name: %s\n", logLevelName)
+
 	// ------------------------------------------------------------------------
 	// The following demonstrates the low-level logger calls for
 	// Trace, Debug, Info, Warn, and Error.

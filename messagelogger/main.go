@@ -247,7 +247,7 @@ func GetLogLevel() (Level, error) {
 	return systemLogLevel, err
 }
 
-func GetLogLevelAsString(level Level) (string, error) {
+func GetLogLevelAsString() (string, error) {
 	var err error = nil
 
 	logLevel, err := GetLogLevel()
