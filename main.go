@@ -175,6 +175,11 @@ func main() {
 	messageLogger2.Log(2002)
 	messageLogger3.Log(2003)
 
+	fmt.Println("------ New loggers")
+
+	messageLogger4, _ := messagelogger.New(logger.LevelError)
+	messageLogger4.Log(2004)
+
 	fmt.Println("------ Inspection")
 
 	logLevel, _ := messagelogger.GetLogLevel()
