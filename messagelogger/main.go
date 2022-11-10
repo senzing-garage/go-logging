@@ -9,11 +9,15 @@ import (
 	"sync"
 
 	"github.com/senzing/go-logging/logger"
+	"github.com/senzing/go-logging/messagedate"
+	"github.com/senzing/go-logging/messageduration"
 	"github.com/senzing/go-logging/messageformat"
 	"github.com/senzing/go-logging/messageid"
+	"github.com/senzing/go-logging/messagelocation"
 	"github.com/senzing/go-logging/messageloglevel"
 	"github.com/senzing/go-logging/messagestatus"
 	"github.com/senzing/go-logging/messagetext"
+	"github.com/senzing/go-logging/messagetime"
 )
 
 // ----------------------------------------------------------------------------
@@ -100,14 +104,18 @@ func New(interfaces ...interface{}) (MessageLoggerInterface, error) {
 
 	logLevel := LevelInfo
 	result := &MessageLoggerDefault{
-		Logger:        &logger.LoggerDefault{},
-		MessageFormat: &messageformat.MessageFormatDefault{},
-		MessageId:     &messageid.MessageIdDefault{},
+		Logger:          &logger.LoggerDefault{},
+		MessageDate:     &messagedate.MessageDateNull{},
+		MessageDuration: &messageduration.MessageDurationNull{},
+		MessageFormat:   &messageformat.MessageFormatDefault{},
+		MessageId:       &messageid.MessageIdDefault{},
+		MessageLocation: &messagelocation.MessageLocationNull{},
 		MessageLogLevel: &messageloglevel.MessageLogLevelDefault{
 			DefaultLogLevel: logger.LevelInfo,
 		},
 		MessageStatus: &messagestatus.MessageStatusNull{},
 		MessageText:   &messagetext.MessageTextNull{},
+		MessageTime:   &messagetime.MessageTimeNull{},
 	}
 
 	// Incorporate parameters.
@@ -118,16 +126,24 @@ func New(interfaces ...interface{}) (MessageLoggerInterface, error) {
 			switch typedValue := value.(type) {
 			case logger.LoggerInterface:
 				result.Logger = typedValue
+			case messagedate.MessageDateInterface:
+				result.MessageDate = typedValue
+			case messageduration.MessageDurationInterface:
+				result.MessageDuration = typedValue
 			case messageformat.MessageFormatInterface:
 				result.MessageFormat = typedValue
 			case messageid.MessageIdInterface:
 				result.MessageId = typedValue
+			case messagelocation.MessageLocationInterface:
+				result.MessageLocation = typedValue
 			case messageloglevel.MessageLogLevelInterface:
 				result.MessageLogLevel = typedValue
 			case messagestatus.MessageStatusInterface:
 				result.MessageStatus = typedValue
 			case messagetext.MessageTextInterface:
 				result.MessageText = typedValue
+			case messagetime.MessageTimeInterface:
+				result.MessageTime = typedValue
 			case logger.Level:
 				logLevelCandidate, ok := value.(logger.Level)
 				if ok {

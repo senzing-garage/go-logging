@@ -23,12 +23,12 @@ type MessageFormatSenzing struct{}
 type messageFormatSenzing struct {
 	Date     string        `json:"date,omitempty"`
 	Time     string        `json:"time,omitempty"`
-	Location string        `json:"location,omitempty"`
 	Level    string        `json:"level,omitempty"`
+	Location string        `json:"location,omitempty"`
 	Id       string        `json:"id,omitempty"`
 	Status   string        `json:"status,omitempty"`
 	Text     interface{}   `json:"text,omitempty"`
-	Duration string        `json:"duration,omitempty"`
+	Duration int64         `json:"duration,omitempty"`
 	Errors   []interface{} `json:"errors,omitempty"`
 	Details  interface{}   `json:"details,omitempty"`
 }
@@ -38,11 +38,27 @@ type messageFormatSenzing struct {
 // ----------------------------------------------------------------------------
 
 // The Message method creates a JSON formatted message.
-func (messageFormat *MessageFormatSenzing) Message(id string, status string, text string, details ...interface{}) (string, error) {
+func (messageFormat *MessageFormatSenzing) Message(date string, time string, level string, location string, id string, status string, text string, duration int64, details ...interface{}) (string, error) {
 	var err error = nil
 	messageBuilder := &messageFormatSenzing{}
 
 	// Set output Id, Status, and Text fields.
+
+	if len(date) > 0 {
+		messageBuilder.Date = date
+	}
+
+	if len(time) > 0 {
+		messageBuilder.Time = time
+	}
+
+	if len(level) > 0 {
+		messageBuilder.Level = level
+	}
+
+	if len(location) > 0 {
+		messageBuilder.Location = location
+	}
 
 	if len(id) > 0 {
 		messageBuilder.Id = id
@@ -59,6 +75,8 @@ func (messageFormat *MessageFormatSenzing) Message(id string, status string, tex
 			messageBuilder.Text = text
 		}
 	}
+
+	messageBuilder.Duration = duration
 
 	// Work with details.
 

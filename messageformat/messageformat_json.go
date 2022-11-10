@@ -33,7 +33,7 @@ type messageFormatJson struct {
 // ----------------------------------------------------------------------------
 
 // The Message method creates a JSON formatted message.
-func (messageFormat *MessageFormatJson) Message(id string, status string, text string, details ...interface{}) (string, error) {
+func (messageFormat *MessageFormatJson) Message(date string, time string, level string, location string, id string, status string, text string, duration int64, details ...interface{}) (string, error) {
 	var err error = nil
 	messageBuilder := &messageFormatJson{}
 
