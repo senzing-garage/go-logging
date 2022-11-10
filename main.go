@@ -242,4 +242,9 @@ func main() {
 	fmt.Printf("\n--- End -----------------------------------------------------------------------")
 	fmt.Printf("\n-------------------------------------------------------------------------------\n\n")
 
+	start := time.Now()
+	duration := time.Since(start)
+	fmt.Println(duration.Nanoseconds())
+	fmt.Printf("%f\n", duration.Seconds())
+
 }

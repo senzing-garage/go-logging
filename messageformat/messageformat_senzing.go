@@ -21,11 +21,16 @@ type MessageFormatSenzing struct{}
 // Order is important.
 // It should be id, status, text, errors, details.
 type messageFormatSenzing struct {
-	Id      string        `json:"id,omitempty"`
-	Status  string        `json:"status,omitempty"`
-	Text    interface{}   `json:"text,omitempty"`
-	Errors  []interface{} `json:"errors,omitempty"`
-	Details interface{}   `json:"details,omitempty"`
+	Date     string        `json:"date,omitempty"`
+	Time     string        `json:"time,omitempty"`
+	Location string        `json:"location,omitempty"`
+	Level    string        `json:"level,omitempty"`
+	Id       string        `json:"id,omitempty"`
+	Status   string        `json:"status,omitempty"`
+	Text     interface{}   `json:"text,omitempty"`
+	Duration string        `json:"duration,omitempty"`
+	Errors   []interface{} `json:"errors,omitempty"`
+	Details  interface{}   `json:"details,omitempty"`
 }
 
 // ----------------------------------------------------------------------------

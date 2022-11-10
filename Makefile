@@ -62,15 +62,19 @@ build: dependencies \
 
 .PHONY: test
 test:
-	@go test -v ./...
+#	@go test -v ./...
 #	@go test -v ./.
 #	@go test -v ./logger
+#	@go test -v ./messagedate
+#	@go test -v ./messageduration
 #	@go test -v ./messageformat
 #	@go test -v ./messageid
+#	@go test -v ./messagelocation
 #	@go test -v ./messagelogger
 #	@go test -v ./messageloglevel
 #	@go test -v ./messagestatus
 #	@go test -v ./messagetext
+	@go test -v ./messagetime
 
 
 # -----------------------------------------------------------------------------
