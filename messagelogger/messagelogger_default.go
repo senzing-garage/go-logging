@@ -198,12 +198,12 @@ func (messagelogger *MessageLoggerDefault) Message(messageNumber int, details ..
 		duration, _ = messagelogger.MessageDuration.MessageDuration(messageNumber, details...)
 	}
 
-	var errors []interface{}
+	var errors interface{}
 	if messagelogger.MessageErrors != nil {
 		errors, _ = messagelogger.MessageErrors.MessageErrors(messageNumber, details...)
 	}
 
-	var detailList []interface{}
+	var detailList interface{}
 	if messagelogger.MessageDetails != nil {
 		detailList, _ = messagelogger.MessageDetails.MessageDetails(messageNumber, details...)
 	}

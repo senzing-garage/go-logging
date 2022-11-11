@@ -15,6 +15,6 @@ type MessageErrorsNull struct{}
 // ----------------------------------------------------------------------------
 
 // The MessageErrors method returns an empty value.
-func (messageErrors *MessageErrorsNull) MessageErrors(messageNumber int, details ...interface{}) ([]interface{}, error) {
+func (messageErrors *MessageErrorsNull) MessageErrors(messageNumber int, details ...interface{}) (interface{}, error) {
 	return nil, nil
 }

@@ -37,11 +37,9 @@ type messageFormatJson struct {
 // ----------------------------------------------------------------------------
 
 // The Message method creates a JSON formatted message.
-func (messageFormat *MessageFormatJson) Message(date string, time string, level string, location string, id string, status string, text string, duration int64, errors []interface{}, details []interface{}) (string, error) {
+func (messageFormat *MessageFormatJson) Message(date string, time string, level string, location string, id string, status string, text string, duration int64, errors interface{}, details interface{}) (string, error) {
 	var err error = nil
 	messageBuilder := &messageFormatJson{}
-
-	// Set output Id, Status, and Text fields.
 
 	if len(date) > 0 {
 		messageBuilder.Date = date
@@ -77,11 +75,11 @@ func (messageFormat *MessageFormatJson) Message(date string, time string, level 
 
 	messageBuilder.Duration = duration
 
-	if len(errors) > 0 {
+	if errors != nil {
 		messageBuilder.Errors = errors
 	}
 
-	if len(details) > 0 {
+	if details != nil {
 		messageBuilder.Details = details
 	}
 

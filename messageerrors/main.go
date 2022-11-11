@@ -11,7 +11,7 @@ import "encoding/json"
 
 // The MessageErrorsInterface type defines methods for aggregating errors from details.
 type MessageErrorsInterface interface {
-	MessageErrors(messageNumber int, details ...interface{}) ([]interface{}, error)
+	MessageErrors(messageNumber int, details ...interface{}) (interface{}, error)
 }
 
 // ----------------------------------------------------------------------------

@@ -15,6 +15,6 @@ type MessageDetailsNull struct{}
 // ----------------------------------------------------------------------------
 
 // The MessageDetails method returns an empty value.
-func (messageDetails *MessageDetailsNull) MessageErrors(messageNumber int, details ...interface{}) ([]interface{}, error) {
+func (messageDetails *MessageDetailsNull) MessageDetails(messageNumber int, details ...interface{}) (interface{}, error) {
 	return nil, nil
 }

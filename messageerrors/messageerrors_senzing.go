@@ -19,7 +19,7 @@ type messageErrorsSenzing struct {
 // ----------------------------------------------------------------------------
 
 // The MessageErrors method returns an empty value.
-func (messageErrors *MessageErrorsSenzing) MessageErrors(messageNumber int, details ...interface{}) ([]interface{}, error) {
+func (messageErrors *MessageErrorsSenzing) MessageErrors(messageNumber int, details ...interface{}) (interface{}, error) {
 	var err error = nil
 	var result []interface{}
 

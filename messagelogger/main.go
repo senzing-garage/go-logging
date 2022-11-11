@@ -10,7 +10,9 @@ import (
 
 	"github.com/senzing/go-logging/logger"
 	"github.com/senzing/go-logging/messagedate"
+	"github.com/senzing/go-logging/messagedetails"
 	"github.com/senzing/go-logging/messageduration"
+	"github.com/senzing/go-logging/messageerrors"
 	"github.com/senzing/go-logging/messageformat"
 	"github.com/senzing/go-logging/messageid"
 	"github.com/senzing/go-logging/messagelevel"
@@ -106,7 +108,9 @@ func New(interfaces ...interface{}) (MessageLoggerInterface, error) {
 	result := &MessageLoggerDefault{
 		Logger:          &logger.LoggerDefault{},
 		MessageDate:     &messagedate.MessageDateNull{},
+		MessageDetails:  &messagedetails.MessageDetailsNull{},
 		MessageDuration: &messageduration.MessageDurationNull{},
+		MessageErrors:   &messageerrors.MessageErrorsNull{},
 		MessageFormat:   &messageformat.MessageFormatDefault{},
 		MessageId:       &messageid.MessageIdDefault{},
 		MessageLocation: &messagelocation.MessageLocationNull{},
@@ -128,16 +132,20 @@ func New(interfaces ...interface{}) (MessageLoggerInterface, error) {
 				result.Logger = typedValue
 			case messagedate.MessageDateInterface:
 				result.MessageDate = typedValue
+			case messagedetails.MessageDetailsInterface:
+				result.MessageDetails = typedValue
 			case messageduration.MessageDurationInterface:
 				result.MessageDuration = typedValue
+			case messageerrors.MessageErrorsInterface:
+				result.MessageErrors = typedValue
 			case messageformat.MessageFormatInterface:
 				result.MessageFormat = typedValue
 			case messageid.MessageIdInterface:
 				result.MessageId = typedValue
-			case messagelocation.MessageLocationInterface:
-				result.MessageLocation = typedValue
 			case messagelevel.MessageLevelInterface:
 				result.MessageLevel = typedValue
+			case messagelocation.MessageLocationInterface:
+				result.MessageLocation = typedValue
 			case messagestatus.MessageStatusInterface:
 				result.MessageStatus = typedValue
 			case messagetext.MessageTextInterface:
@@ -217,10 +225,13 @@ func NewSenzingLogger(productIdentifier int, idMessages map[int]string, interfac
 	messageDate := &messagedate.MessageDateSenzing{}
 	messageTime := &messagetime.MessageTimeSenzing{}
 	messageDuration := &messageduration.MessageDurationSenzing{}
+	messageFormat := &messageformat.MessageFormatSenzing{}
+	messageErrors := &messageerrors.MessageErrorsSenzing{}
+	messageDetails := &messagedetails.MessageDetailsSenzing{}
+
 	messageLocation := &messagelocation.MessageLocationSenzing{
 		CallerSkip: callerSkip,
 	}
-	messageFormat := &messageformat.MessageFormatSenzing{}
 
 	messageId := &messageid.MessageIdSenzing{
 		MessageIdTemplate: fmt.Sprintf("senzing-%04d", productIdentifier) + "%04d",
@@ -229,11 +240,11 @@ func NewSenzingLogger(productIdentifier int, idMessages map[int]string, interfac
 	messageLogLevel := &messagelevel.MessageLevelSenzing{
 		DefaultLogLevel: logger.LevelInfo,
 		IdRanges: map[int]logger.Level{
-			0000: logger.LevelInfo,
-			1000: logger.LevelWarn,
-			2000: logger.LevelError,
-			3000: logger.LevelDebug,
-			4000: logger.LevelTrace,
+			0000: logger.LevelTrace,
+			1000: logger.LevelDebug,
+			2000: logger.LevelInfo,
+			3000: logger.LevelWarn,
+			4000: logger.LevelError,
 			5000: logger.LevelFatal,
 			6000: logger.LevelPanic,
 		},
@@ -241,11 +252,11 @@ func NewSenzingLogger(productIdentifier int, idMessages map[int]string, interfac
 
 	messageStatus := &messagestatus.MessageStatusSenzing{
 		IdRanges: map[int]string{
-			0000: logger.LevelInfoName,
-			1000: logger.LevelWarnName,
-			2000: logger.LevelErrorName,
-			3000: logger.LevelDebugName,
-			4000: logger.LevelTraceName,
+			0000: logger.LevelTraceName,
+			1000: logger.LevelDebugName,
+			2000: logger.LevelInfoName,
+			3000: logger.LevelWarnName,
+			4000: logger.LevelErrorName,
 			5000: logger.LevelFatalName,
 			6000: logger.LevelPanicName,
 		},
@@ -265,6 +276,8 @@ func NewSenzingLogger(productIdentifier int, idMessages map[int]string, interfac
 		messageStatus,
 		messageText,
 		messageDuration,
+		messageErrors,
+		messageDetails,
 	}
 
 	// Add other user-supplied interfaces to newInterfaces.
