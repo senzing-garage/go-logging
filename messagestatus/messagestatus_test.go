@@ -95,7 +95,7 @@ func testError(test *testing.T, testObject MessageStatusInterface, err error) {
 }
 
 // ----------------------------------------------------------------------------
-// Test interface functions for MessageStatusById - names begin with "Test"
+// Test interface functions for MessageStatusById
 // ----------------------------------------------------------------------------
 
 func TestMessageStatusById(test *testing.T) {
@@ -114,7 +114,7 @@ func TestMessageStatusById(test *testing.T) {
 }
 
 // ----------------------------------------------------------------------------
-// Test interface functions for MessageStatusByIdRange - names begin with "Test"
+// Test interface functions for MessageStatusByIdRange
 // ----------------------------------------------------------------------------
 
 func TestMessageStatusByIdRange(test *testing.T) {
@@ -133,7 +133,7 @@ func TestMessageStatusByIdRange(test *testing.T) {
 }
 
 // ----------------------------------------------------------------------------
-// Test interface functions for MessageStatusSenzing - names begin with "Test"
+// Test interface functions for MessageStatusSenzing
 // ----------------------------------------------------------------------------
 
 func TestMessageStatusSenzing(test *testing.T) {
@@ -152,7 +152,7 @@ func TestMessageStatusSenzing(test *testing.T) {
 }
 
 // ----------------------------------------------------------------------------
-// Test interface functions for MessageStatusSenzingApi - names begin with "Test"
+// Test interface functions for MessageStatusSenzingApi
 // ----------------------------------------------------------------------------
 
 func TestMessageStatusSenzingApi(test *testing.T) {

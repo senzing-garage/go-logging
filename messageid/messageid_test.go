@@ -42,7 +42,7 @@ func testError(test *testing.T, testObject MessageIdInterface, err error) {
 }
 
 // ----------------------------------------------------------------------------
-// Test interface functions for MessageIdDefault - names begin with "Test"
+// Test interface functions for MessageIdDefault
 // ----------------------------------------------------------------------------
 
 func TestMessageIdDefault(test *testing.T) {
@@ -59,7 +59,7 @@ func TestMessageIdDefault(test *testing.T) {
 }
 
 // ----------------------------------------------------------------------------
-// Test interface functions for MessageIdSenzing - names begin with "Test"
+// Test interface functions for MessageIdSenzing
 // ----------------------------------------------------------------------------
 
 func TestMessageIdSenzing(test *testing.T) {
@@ -78,7 +78,7 @@ func TestMessageIdSenzing(test *testing.T) {
 }
 
 // ----------------------------------------------------------------------------
-// Test interface functions for MessageIdTemplated - names begin with "Test"
+// Test interface functions for MessageIdTemplated
 // ----------------------------------------------------------------------------
 
 func TestMessageIdTemplated(test *testing.T) {

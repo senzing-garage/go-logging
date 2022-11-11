@@ -21,11 +21,16 @@ type MessageFormatJson struct{}
 // Order is important.
 // It should be id, status, text, errors, details.
 type messageFormatJson struct {
-	Id      string        `json:"id,omitempty"`
-	Status  string        `json:"status,omitempty"`
-	Text    interface{}   `json:"text,omitempty"`
-	Errors  []interface{} `json:"errors,omitempty"`
-	Details interface{}   `json:"details,omitempty"`
+	Date     string        `json:"date,omitempty"`
+	Time     string        `json:"time,omitempty"`
+	Level    string        `json:"level,omitempty"`
+	Id       string        `json:"id,omitempty"`
+	Status   string        `json:"status,omitempty"`
+	Text     interface{}   `json:"text,omitempty"`
+	Duration int64         `json:"duration,omitempty"`
+	Location string        `json:"location,omitempty"`
+	Errors   []interface{} `json:"errors,omitempty"`
+	Details  interface{}   `json:"details,omitempty"`
 }
 
 // ----------------------------------------------------------------------------
@@ -38,6 +43,22 @@ func (messageFormat *MessageFormatJson) Message(date string, time string, level 
 	messageBuilder := &messageFormatJson{}
 
 	// Set output Id, Status, and Text fields.
+
+	if len(date) > 0 {
+		messageBuilder.Date = date
+	}
+
+	if len(time) > 0 {
+		messageBuilder.Time = time
+	}
+
+	if len(level) > 0 {
+		messageBuilder.Level = level
+	}
+
+	if len(location) > 0 {
+		messageBuilder.Location = location
+	}
 
 	if len(id) > 0 {
 		messageBuilder.Id = id
@@ -54,6 +75,8 @@ func (messageFormat *MessageFormatJson) Message(date string, time string, level 
 			messageBuilder.Text = text
 		}
 	}
+
+	messageBuilder.Duration = duration
 
 	// Work with details.
 

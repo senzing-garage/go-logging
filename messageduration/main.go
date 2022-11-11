@@ -1,14 +1,11 @@
 /*
-The messageloglevel package produces a log level.
+The messageduration package produces an int64 time duration value.
 */
 package messageduration
 
 // ----------------------------------------------------------------------------
 // Types
 // ----------------------------------------------------------------------------
-
-// The Level type is used in LevelXxxxx constants.
-type Duration int64
 
 // The MessageDurationInterface type defines methods for determining log level.
 type MessageDurationInterface interface {

@@ -31,7 +31,7 @@ func testError(test *testing.T, testObject MessageLocationInterface, err error) 
 }
 
 // ----------------------------------------------------------------------------
-// Test interface functions for MessageDateNull - names begin with "Test"
+// Test interface functions for MessageDateNull
 // ----------------------------------------------------------------------------
 
 func TestMessageDateNull(test *testing.T) {

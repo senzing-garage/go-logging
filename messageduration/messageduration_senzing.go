@@ -4,7 +4,9 @@ time.Duration seen in details.
 */
 package messageduration
 
-import "time"
+import (
+	"time"
+)
 
 // ----------------------------------------------------------------------------
 // Types

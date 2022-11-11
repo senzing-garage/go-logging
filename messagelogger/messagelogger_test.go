@@ -198,7 +198,7 @@ func testError(test *testing.T, testObject MessageLoggerInterface, err error) {
 }
 
 // ----------------------------------------------------------------------------
-// Test interface functions using New() - names begin with "Test"
+// Test interface functions using New()
 // ----------------------------------------------------------------------------
 
 // -- Test Message() method ---------------------------------------------------
@@ -325,7 +325,7 @@ func TestNewIsMethodDefault(test *testing.T) {
 }
 
 // ----------------------------------------------------------------------------
-// Test interface functions using NewSenzingLogger() - names begin with "Test"
+// Test interface functions using NewSenzingLogger()
 // ----------------------------------------------------------------------------
 
 // -- Test Message() method ---------------------------------------------------

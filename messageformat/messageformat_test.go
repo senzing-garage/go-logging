@@ -106,7 +106,7 @@ func testError(test *testing.T, testObject MessageFormatInterface, err error) {
 }
 
 // ----------------------------------------------------------------------------
-// Test interface functions for MessageFormatDefault - names begin with "Test"
+// Test interface functions for MessageFormatDefault
 // ----------------------------------------------------------------------------
 
 func TestMessageFormatDefault(test *testing.T) {
@@ -123,7 +123,7 @@ func TestMessageFormatDefault(test *testing.T) {
 }
 
 // ----------------------------------------------------------------------------
-// Test interface functions for MessageFormatJson - names begin with "Test"
+// Test interface functions for MessageFormatJson
 // ----------------------------------------------------------------------------
 
 func TestMessageFormatJson(test *testing.T) {
@@ -140,7 +140,7 @@ func TestMessageFormatJson(test *testing.T) {
 }
 
 // ----------------------------------------------------------------------------
-// Test interface functions for MessageFormatSenzing - names begin with "Test"
+// Test interface functions for MessageFormatSenzing
 // ----------------------------------------------------------------------------
 
 func TestMessageFormatSenzing(test *testing.T) {

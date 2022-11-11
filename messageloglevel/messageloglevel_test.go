@@ -171,7 +171,7 @@ func testError(test *testing.T, testObject MessageLogLevelInterface, err error) 
 }
 
 // ----------------------------------------------------------------------------
-// Test interface functions for MessageStatusById - names begin with "Test"
+// Test interface functions for MessageStatusById
 // ----------------------------------------------------------------------------
 
 func TestMessageLogLevelByIdRange(test *testing.T) {
@@ -188,7 +188,7 @@ func TestMessageLogLevelByIdRange(test *testing.T) {
 }
 
 // ----------------------------------------------------------------------------
-// Test interface functions for MessageLogLevelDefault - names begin with "Test"
+// Test interface functions for MessageLogLevelDefault
 // ----------------------------------------------------------------------------
 
 func TestMessageLogLevelDefault(test *testing.T) {
@@ -205,7 +205,7 @@ func TestMessageLogLevelDefault(test *testing.T) {
 }
 
 // ----------------------------------------------------------------------------
-// Test interface functions for MessageLogLevelSenzing - names begin with "Test"
+// Test interface functions for MessageLogLevelSenzing
 // ----------------------------------------------------------------------------
 
 func TestMessageLogLevelSenzing(test *testing.T) {
@@ -222,7 +222,7 @@ func TestMessageLogLevelSenzing(test *testing.T) {
 }
 
 // ----------------------------------------------------------------------------
-// Test interface functions for MessageLogLevelSenzingApi - names begin with "Test"
+// Test interface functions for MessageLogLevelSenzingApi
 // ----------------------------------------------------------------------------
 
 func TestMessageLogLevelSenzingApi(test *testing.T) {
@@ -265,7 +265,7 @@ func TestSenzingApiMessageLogLevelWithErrors(test *testing.T) {
 }
 
 // ----------------------------------------------------------------------------
-// Test interface functions for MessageLogLevelStatic - names begin with "Test"
+// Test interface functions for MessageLogLevelStatic
 // ----------------------------------------------------------------------------
 
 func TestMessageLogLevelStatic(test *testing.T) {

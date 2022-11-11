@@ -58,7 +58,7 @@ func testError(test *testing.T, testObject MessageTextInterface, err error) {
 }
 
 // ----------------------------------------------------------------------------
-// Test interface functions for MessageTextSenzing - names begin with "Test"
+// Test interface functions for MessageTextSenzing
 // ----------------------------------------------------------------------------
 
 func TestMessageTextSenzing(test *testing.T) {
@@ -77,7 +77,7 @@ func TestMessageTextSenzing(test *testing.T) {
 }
 
 // ----------------------------------------------------------------------------
-// Test interface functions for MessageTextTemplated - names begin with "Test"
+// Test interface functions for MessageTextTemplated
 // ----------------------------------------------------------------------------
 
 func TestMessageTextTemplated(test *testing.T) {
