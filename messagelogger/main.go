@@ -81,6 +81,98 @@ var (
 // Constructors
 // ----------------------------------------------------------------------------
 
+func new(interfaces ...interface{}) (MessageLoggerInterface, error) {
+	var err error = nil
+
+	// Start with default values.
+
+	logLevel := LevelInfo
+	result := &MessageLoggerDefault{
+		Logger:          &logger.LoggerDefault{},
+		MessageDate:     &messagedate.MessageDateNull{},
+		MessageDetails:  &messagedetails.MessageDetailsNull{},
+		MessageDuration: &messageduration.MessageDurationNull{},
+		MessageErrors:   &messageerrors.MessageErrorsNull{},
+		MessageFormat:   &messageformat.MessageFormatDefault{},
+		MessageId:       &messageid.MessageIdDefault{},
+		MessageLocation: &messagelocation.MessageLocationNull{},
+		MessageLevel: &messagelevel.MessageLevelDefault{
+			DefaultLogLevel: logger.LevelInfo,
+		},
+		MessageStatus: &messagestatus.MessageStatusNull{},
+		MessageText:   &messagetext.MessageTextNull{},
+		MessageTime:   &messagetime.MessageTimeNull{},
+	}
+
+	// Incorporate parameters.
+
+	var errorsList []interface{}
+	if len(interfaces) > 0 {
+		for _, value := range interfaces {
+
+			switch typedValue := value.(type) {
+			case logger.LoggerInterface:
+				result.Logger = typedValue
+			case messagedate.MessageDateInterface:
+				result.MessageDate = typedValue
+			case messagedetails.MessageDetailsInterface:
+				result.MessageDetails = typedValue
+			case messageduration.MessageDurationInterface:
+				result.MessageDuration = typedValue
+			case messageerrors.MessageErrorsInterface:
+				result.MessageErrors = typedValue
+			case messageformat.MessageFormatInterface:
+				result.MessageFormat = typedValue
+			case messageid.MessageIdInterface:
+				result.MessageId = typedValue
+			case messagelevel.MessageLevelInterface:
+				result.MessageLevel = typedValue
+			case messagelocation.MessageLocationInterface:
+				result.MessageLocation = typedValue
+			case messagestatus.MessageStatusInterface:
+				result.MessageStatus = typedValue
+			case messagetext.MessageTextInterface:
+				result.MessageText = typedValue
+			case messagetime.MessageTimeInterface:
+				result.MessageTime = typedValue
+			case logger.Level:
+				logLevelCandidate, ok := value.(logger.Level)
+				if ok {
+					logLevel = Level(logLevelCandidate)
+				}
+			default:
+				errorsList = append(errorsList, typedValue)
+			}
+		}
+	}
+	result.SetLogLevel(logLevel)
+
+	// Report any unknown parameters.
+
+	if len(errorsList) > 0 {
+		err = fmt.Errorf("unsupported interfaces: %#v", errorsList)
+	}
+
+	// If system logging level set, set this logger to that level and
+	// add this messageLogger to the Observers list.
+	// Do this in a thread-safe way.
+
+	lock.Lock()
+	defer lock.Unlock()
+
+	if isSystemLogLevelSet {
+		result.SetLogLevel(systemLogLevel)
+	}
+
+	if messageLoggerObservers == nil {
+		messageLoggerObservers = make([]MessageLoggerInterface, 0)
+	}
+
+	messageLoggerObservers = append(messageLoggerObservers, result)
+
+	return result, err
+}
+
 /*
 The New function creates a new instance of MessageLoggerDefault.
 The default message logger uses default and null subcomponents.
@@ -100,6 +192,23 @@ If a type is specified multiple times,
 the last instance instance of the type specified wins.
 */
 func New(interfaces ...interface{}) (MessageLoggerInterface, error) {
+
+	messageDetails := &messagedetails.MessageDetailsDefault{}
+
+	var newInterfaces = []interface{}{
+		messageDetails,
+	}
+
+	// Add other user-supplied interfaces to newInterfaces.
+
+	newInterfaces = append(newInterfaces, interfaces...)
+
+	// Using a Factory Pattern, build the messagelogger.
+
+	return new(newInterfaces...)
+}
+
+func NewXXX(interfaces ...interface{}) (MessageLoggerInterface, error) {
 	var err error = nil
 
 	// Start with default values.

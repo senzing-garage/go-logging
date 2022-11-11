@@ -19,7 +19,7 @@ type MessageDetailsSenzing struct{}
 // ----------------------------------------------------------------------------
 
 // The MessageDetails method returns an empty value.
-func (messageDetails *MessageDetailsSenzing) MessageErrors(messageNumber int, details ...interface{}) (interface{}, error) {
+func (messageDetails *MessageDetailsSenzing) MessageDetails(messageNumber int, details ...interface{}) (interface{}, error) {
 	var err error = nil
 
 	result := make(map[string]interface{})

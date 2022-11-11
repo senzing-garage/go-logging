@@ -3,6 +3,8 @@ The MessageErrorsSenzing implementation returns an empty value.
 */
 package messageerrors
 
+import "fmt"
+
 // ----------------------------------------------------------------------------
 // Types
 // ----------------------------------------------------------------------------
@@ -43,6 +45,8 @@ func (messageErrors *MessageErrorsSenzing) MessageErrors(messageNumber int, deta
 			result = append(result, priorError)
 		}
 	}
+
+	fmt.Printf(">>>> << >>> result: %v\n", result)
 
 	return result, err
 }

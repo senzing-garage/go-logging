@@ -4,6 +4,7 @@ The MessageDetailsDefault implementation returns an empty value.
 package messagedetails
 
 import (
+	"fmt"
 	"strconv"
 )
 
@@ -19,7 +20,7 @@ type MessageDetailsDefault struct{}
 // ----------------------------------------------------------------------------
 
 // The MessageDetails method returns an empty value.
-func (messageDetails *MessageDetailsDefault) MessageErrors(messageNumber int, details ...interface{}) (interface{}, error) {
+func (messageDetails *MessageDetailsDefault) MessageDetails(messageNumber int, details ...interface{}) (interface{}, error) {
 	var err error = nil
 
 	result := make(map[string]interface{})
@@ -27,12 +28,19 @@ func (messageDetails *MessageDetailsDefault) MessageErrors(messageNumber int, de
 	// Process different types of details.
 
 	for index, value := range details {
+
 		switch typedValue := value.(type) {
 		case nil:
 			result[strconv.Itoa(index+1)] = "<nil>"
 
+		case string, int, float64:
+			result[strconv.Itoa(index+1)] = typedValue
+
+		case bool:
+			result[strconv.Itoa(index+1)] = fmt.Sprintf("%t", typedValue)
+
 		case error:
-			// do nothing
+			// do nothing.
 
 		case map[string]string:
 			for mapIndex, mapValue := range typedValue {
