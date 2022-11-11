@@ -1,5 +1,5 @@
 /*
-The MessageFormatJson implementation returns a message in the JSON format.
+The MessageFormatSenzing implementation returns a message in the JSON format.
 */
 package messageformat
 
@@ -14,12 +14,12 @@ import (
 // Types
 // ----------------------------------------------------------------------------
 
-// The MessageFormatJson type is for creating formatted messages in JSON.
+// The MessageFormatSenzing type is for creating formatted messages in JSON.
 type MessageFormatSenzing struct{}
 
 // Fields in the formatted message.
 // Order is important.
-// It should be id, status, text, errors, details.
+// It should be date, time, level, id, status, text, duration, location, errors, details.
 type messageFormatSenzing struct {
 	Date     string        `json:"date,omitempty"`
 	Time     string        `json:"time,omitempty"`

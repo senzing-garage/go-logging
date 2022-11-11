@@ -19,7 +19,7 @@ type MessageFormatJson struct{}
 
 // Fields in the formatted message.
 // Order is important.
-// It should be id, status, text, errors, details.
+// It should be date, time, level, id, status, text, duration, location, errors, details.
 type messageFormatJson struct {
 	Date     string        `json:"date,omitempty"`
 	Time     string        `json:"time,omitempty"`

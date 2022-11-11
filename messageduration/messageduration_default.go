@@ -24,12 +24,10 @@ func (messageDuration *MessageDurationDefault) MessageDuration(messageNumber int
 	var err error = nil
 	result := int64(0)
 
-	if len(details) > 0 {
-		for _, value := range details {
-			switch typedValue := value.(type) {
-			case time.Duration:
-				return typedValue.Microseconds(), err
-			}
+	for _, value := range details {
+		switch typedValue := value.(type) {
+		case time.Duration:
+			return typedValue.Microseconds(), err
 		}
 	}
 

@@ -16,35 +16,35 @@ var testCases = []struct {
 	expectedSenzing int64
 }{
 	{
-		name:            "Test case: #1",
+		name:            "messageduration-01",
 		messageNumber:   1001,
 		details:         []interface{}{getDuration(1)},
 		expectedDefault: int64(0),
 		expectedSenzing: int64(1),
 	},
 	{
-		name:            "Test case: #2",
+		name:            "messageduration-02",
 		messageNumber:   1002,
 		details:         []interface{}{int64(2222)},
 		expectedDefault: int64(0),
 		expectedSenzing: int64(0),
 	},
 	{
-		name:            "Test case: #3",
+		name:            "messageduration-03",
 		messageNumber:   1003,
 		details:         []interface{}{getDuration(3333)},
 		expectedDefault: int64(3),
 		expectedSenzing: int64(3333),
 	},
 	{
-		name:            "Test case: #4",
+		name:            "messageduration-04",
 		messageNumber:   1000,
 		details:         []interface{}{getDuration(4444)},
 		expectedDefault: int64(4),
 		expectedSenzing: int64(4444),
 	},
 	{
-		name:            "Test case: #5",
+		name:            "messageduration-05",
 		messageNumber:   1000,
 		details:         []interface{}{getDuration(555555)},
 		expectedDefault: int64(555),
@@ -72,28 +72,13 @@ func testError(test *testing.T, testObject MessageDurationInterface, err error) 
 }
 
 // ----------------------------------------------------------------------------
-// Test interface functions for MessageDurationNull
-// ----------------------------------------------------------------------------
-
-func TestMessageDurationNull(test *testing.T) {
-	for _, testCase := range testCases {
-		test.Run(testCase.name, func(test *testing.T) {
-			testObject := &MessageDurationNull{}
-			actual, err := testObject.MessageDuration(testCase.messageNumber, testCase.details...)
-			testError(test, testObject, err)
-			assert.Equal(test, int64(0), actual, testCase.name)
-		})
-	}
-}
-
-// ----------------------------------------------------------------------------
 // Test interface functions for MessageDurationDefault
 // ----------------------------------------------------------------------------
 
 func TestMessageDurationDefault(test *testing.T) {
 	for _, testCase := range testCases {
 		if testCase.expectedDefault > 0 {
-			test.Run(testCase.name, func(test *testing.T) {
+			test.Run(testCase.name+"-Default", func(test *testing.T) {
 				testObject := &MessageDurationDefault{}
 				actual, err := testObject.MessageDuration(testCase.messageNumber, testCase.details...)
 				testError(test, testObject, err)
@@ -104,13 +89,28 @@ func TestMessageDurationDefault(test *testing.T) {
 }
 
 // ----------------------------------------------------------------------------
+// Test interface functions for MessageDurationNull
+// ----------------------------------------------------------------------------
+
+func TestMessageDurationNull(test *testing.T) {
+	for _, testCase := range testCases {
+		test.Run(testCase.name+"-Null", func(test *testing.T) {
+			testObject := &MessageDurationNull{}
+			actual, err := testObject.MessageDuration(testCase.messageNumber, testCase.details...)
+			testError(test, testObject, err)
+			assert.Equal(test, int64(0), actual, testCase.name)
+		})
+	}
+}
+
+// ----------------------------------------------------------------------------
 // Test interface functions for MessageDurationSenzing
 // ----------------------------------------------------------------------------
 
 func TestMessageDurationSenzing(test *testing.T) {
 	for _, testCase := range testCases {
 		if testCase.expectedSenzing > 0 {
-			test.Run(testCase.name, func(test *testing.T) {
+			test.Run(testCase.name+"-Senzing", func(test *testing.T) {
 				testObject := &MessageDurationSenzing{}
 				actual, err := testObject.MessageDuration(testCase.messageNumber, testCase.details...)
 				testError(test, testObject, err)
