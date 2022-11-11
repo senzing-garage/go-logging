@@ -20,7 +20,7 @@ type MessageFormatDefault struct{}
 // ----------------------------------------------------------------------------
 
 // The Message method creates a terse, default formatted message.
-func (messageFormat *MessageFormatDefault) Message(date string, time string, level string, location string, id string, status string, text string, duration int64, details ...interface{}) (string, error) {
+func (messageFormat *MessageFormatDefault) Message(date string, time string, level string, location string, id string, status string, text string, duration int64, errors []interface{}, details []interface{}) (string, error) {
 	var err error = nil
 
 	result := ""

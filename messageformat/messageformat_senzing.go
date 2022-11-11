@@ -38,7 +38,7 @@ type messageFormatSenzing struct {
 // ----------------------------------------------------------------------------
 
 // The Message method creates a JSON formatted message.
-func (messageFormat *MessageFormatSenzing) Message(date string, time string, level string, location string, id string, status string, text string, duration int64, details ...interface{}) (string, error) {
+func (messageFormat *MessageFormatSenzing) Message(date string, time string, level string, location string, id string, status string, text string, duration int64, errors []interface{}, details []interface{}) (string, error) {
 	var err error = nil
 	messageBuilder := &messageFormatSenzing{}
 
@@ -91,17 +91,17 @@ func (messageFormat *MessageFormatSenzing) Message(date string, time string, lev
 			case nil:
 				detailMap[strconv.Itoa(index+1)] = "<nil>"
 
-			case error:
-				errorMessage := typedValue.Error()
-				var priorError interface{}
-				if isJson(errorMessage) {
-					priorError = jsonAsInterface(errorMessage)
-				} else {
-					priorError = &messageFormatSenzing{
-						Text: errorMessage,
-					}
-				}
-				errorsList = append(errorsList, priorError)
+			// case error:
+			// 	errorMessage := typedValue.Error()
+			// 	var priorError interface{}
+			// 	if isJson(errorMessage) {
+			// 		priorError = jsonAsInterface(errorMessage)
+			// 	} else {
+			// 		priorError = &messageFormatSenzing{
+			// 			Text: errorMessage,
+			// 		}
+			// 	}
+			// 	errorsList = append(errorsList, priorError)
 
 			case map[string]string:
 				for mapIndex, mapValue := range typedValue {

@@ -10,7 +10,9 @@ import (
 
 	"github.com/senzing/go-logging/logger"
 	"github.com/senzing/go-logging/messagedate"
+	"github.com/senzing/go-logging/messagedetails"
 	"github.com/senzing/go-logging/messageduration"
+	"github.com/senzing/go-logging/messageerrors"
 	"github.com/senzing/go-logging/messageformat"
 	"github.com/senzing/go-logging/messageid"
 	"github.com/senzing/go-logging/messagelevel"
@@ -28,11 +30,13 @@ import (
 type MessageLoggerDefault struct {
 	Logger          logger.LoggerInterface
 	MessageDate     messagedate.MessageDateInterface
+	MessageDetails  messagedetails.MessageDetailsInterface
 	MessageDuration messageduration.MessageDurationInterface
+	MessageErrors   messageerrors.MessageErrorsInterface
 	MessageFormat   messageformat.MessageFormatInterface
 	MessageId       messageid.MessageIdInterface
-	MessageLocation messagelocation.MessageLocationInterface
 	MessageLevel    messagelevel.MessageLevelInterface
+	MessageLocation messagelocation.MessageLocationInterface
 	MessageStatus   messagestatus.MessageStatusInterface
 	MessageText     messagetext.MessageTextInterface
 	MessageTime     messagetime.MessageTimeInterface
@@ -194,7 +198,17 @@ func (messagelogger *MessageLoggerDefault) Message(messageNumber int, details ..
 		duration, _ = messagelogger.MessageDuration.MessageDuration(messageNumber, details...)
 	}
 
-	result, err := messagelogger.MessageFormat.Message(date, time, level, location, id, status, text, duration, details...)
+	var errors []interface{}
+	if messagelogger.MessageErrors != nil {
+		errors, _ = messagelogger.MessageErrors.MessageErrors(messageNumber, details...)
+	}
+
+	var detailList []interface{}
+	if messagelogger.MessageDetails != nil {
+		detailList, _ = messagelogger.MessageDetails.MessageDetails(messageNumber, details...)
+	}
+
+	result, err := messagelogger.MessageFormat.Message(date, time, level, location, id, status, text, duration, errors, detailList)
 	if err != nil {
 		return "", err
 	}

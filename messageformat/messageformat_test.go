@@ -16,6 +16,7 @@ var testCases = []struct {
 	status          string
 	text            string
 	duration        int64
+	errors          []interface{}
 	details         []interface{}
 	expectedDefault string
 	expectedJson    string
@@ -122,7 +123,7 @@ func TestMessageFormatDefault(test *testing.T) {
 		if len(testCase.expectedDefault) > 0 {
 			test.Run(testCase.name+"-Default", func(test *testing.T) {
 				testObject := &MessageFormatDefault{}
-				actual, err := testObject.Message(testCase.date, testCase.time, testCase.level, testCase.location, testCase.id, testCase.status, testCase.text, testCase.duration, testCase.details...)
+				actual, err := testObject.Message(testCase.date, testCase.time, testCase.level, testCase.location, testCase.id, testCase.status, testCase.text, testCase.duration, testCase.errors, testCase.details)
 				testError(test, testObject, err)
 				assert.Equal(test, testCase.expectedDefault, actual, testCase.name)
 			})
@@ -139,7 +140,7 @@ func TestMessageFormatJson(test *testing.T) {
 		if len(testCase.expectedJson) > 0 {
 			test.Run(testCase.name+"-Json", func(test *testing.T) {
 				testObject := &MessageFormatJson{}
-				actual, err := testObject.Message(testCase.date, testCase.time, testCase.level, testCase.location, testCase.id, testCase.status, testCase.text, testCase.duration, testCase.details...)
+				actual, err := testObject.Message(testCase.date, testCase.time, testCase.level, testCase.location, testCase.id, testCase.status, testCase.text, testCase.duration, testCase.errors, testCase.details)
 				testError(test, testObject, err)
 				assert.Equal(test, testCase.expectedJson, actual, testCase.name)
 			})
@@ -156,7 +157,7 @@ func TestMessageFormatSenzing(test *testing.T) {
 		if len(testCase.expectedSenzing) > 0 {
 			test.Run(testCase.name+"-Senzing", func(test *testing.T) {
 				testObject := &MessageFormatSenzing{}
-				actual, err := testObject.Message(testCase.date, testCase.time, testCase.level, testCase.location, testCase.id, testCase.status, testCase.text, testCase.duration, testCase.details...)
+				actual, err := testObject.Message(testCase.date, testCase.time, testCase.level, testCase.location, testCase.id, testCase.status, testCase.text, testCase.duration, testCase.errors, testCase.details)
 				testError(test, testObject, err)
 				assert.Equal(test, testCase.expectedSenzing, actual, testCase.name)
 			})

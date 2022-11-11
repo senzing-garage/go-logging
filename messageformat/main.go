@@ -14,7 +14,7 @@ import (
 
 // The MessageFormatInterface type defines methods for producing formatting messages.
 type MessageFormatInterface interface {
-	Message(date string, time string, level string, location string, id string, status string, text string, duration int64, details ...interface{}) (string, error)
+	Message(date string, time string, level string, location string, id string, status string, text string, duration int64, errors []interface{}, details []interface{}) (string, error)
 }
 
 // ----------------------------------------------------------------------------
