@@ -36,7 +36,7 @@ var testCasesForMessage = []struct {
 	expectedSenzing   string
 }{
 	{
-		name:              "Test case: #1 - Info",
+		name:              "messagelogger-01-Info",
 		productIdentifier: 9999,
 		idMessages:        idMessages,
 		messageNumber:     0,
@@ -46,18 +46,18 @@ var testCasesForMessage = []struct {
 		expectedSenzing:   `{"level":"INFO","id":"senzing-99990000","status":"INFO","details":{"1":"A","2":1}}`,
 	},
 	{
-		name:              "Test case: #2 - Warn",
+		name:              "messagelogger-02-Change-message-format",
 		productIdentifier: 9999,
 		idMessages:        idMessages,
 		interfacesDefault: []interface{}{messageFormat},
 		messageNumber:     1000,
 		details:           []interface{}{"A", 1},
-		expectedDefault:   `{"id":"1000","details":{"1":"A","2":1}}`,
+		expectedDefault:   `{"level":"INFO","id":"1000","details":{"1":"A","2":1}}`,
 		expectedJson:      `{"id":"senzing-99991000","status":"WARN","details":{"1":"A","2":1}}`,
 		expectedSenzing:   `{"level":"WARN","id":"senzing-99991000","status":"WARN","details":{"1":"A","2":1}}`,
 	},
 	{
-		name:              "Test case: #3 - Warn",
+		name:              "messagelogger-03-Warn",
 		productIdentifier: 9999,
 		idMessages:        idMessages,
 		interfacesDefault: []interface{}{messageText},
@@ -68,13 +68,13 @@ var testCasesForMessage = []struct {
 		expectedSenzing:   `{"level":"INFO","id":"senzing-99990001","status":"INFO","text":"Bob knows Jane","details":{"1":"Bob","2":"Jane"}}`,
 	},
 	{
-		name:              "Test case: #4 - Warn",
+		name:              "messagelogger-04-Warn",
 		productIdentifier: 9999,
 		idMessages:        idMessages,
 		interfacesSenzing: []interface{}{messageLocation},
 		messageNumber:     1,
 		details:           []interface{}{"Bob", "Jane"},
-		expectedDefault:   `1: Bob knows Jane [map[1:Bob 2:Jane]]`,
+		expectedDefault:   `1: [map[1:Bob 2:Jane]]`,
 		expectedJson:      `{"id":"senzing-99990001","status":"INFO","text":"Bob knows Jane","details":{"1":"Bob","2":"Jane"}}`,
 		expectedSenzing:   `{"level":"INFO","id":"senzing-99990001","status":"INFO","text":"Bob knows Jane","details":{"1":"Bob","2":"Jane"}}`,
 	},
@@ -203,10 +203,10 @@ func testError(test *testing.T, testObject MessageLoggerInterface, err error) {
 
 // -- Test Message() method ---------------------------------------------------
 
-func TestDefault(test *testing.T) {
+func TestMessageLoggerNew(test *testing.T) {
 	for _, testCase := range testCasesForMessage {
 		if len(testCase.expectedDefault) > 0 {
-			test.Run(testCase.name, func(test *testing.T) {
+			test.Run(testCase.name+"-Default", func(test *testing.T) {
 				testObject, err := New(testCase.interfacesDefault...)
 				testError(test, testObject, err)
 				actual, err := testObject.Message(testCase.messageNumber, testCase.details...)
@@ -219,13 +219,13 @@ func TestDefault(test *testing.T) {
 
 // -- Test Log() method using New() -------------------------------------------
 
-func TestDefaultLogMessage(test *testing.T) {
+func TestMessageLoggerNewLogMessage(test *testing.T) {
 	testObject, err := New()
 	testError(test, testObject, err)
 	testObject.Log(1, "Bob was here.", "So was Jane.")
 }
 
-func TestDefaultErrorLevels(test *testing.T) {
+func TestMessageLoggerNewErrorLevels(test *testing.T) {
 	testObject, err := New()
 	testError(test, testObject, err)
 	testObject.Log(1, logger.LevelTrace)
@@ -237,13 +237,13 @@ func TestDefaultErrorLevels(test *testing.T) {
 	// testObject.Log(7, logger.LevelPanic)
 }
 
-func TestDefaultLogMessageWithMap(test *testing.T) {
+func TestMessageLoggerNewLogMessageWithMap(test *testing.T) {
 	testObject, err := New()
 	testError(test, testObject, err)
 	testObject.Log(1001, "A couple", idMessages)
 }
 
-func TestDefaultLogMessageWithObjects(test *testing.T) {
+func TestMessageLoggerNewLogMessageWithObjects(test *testing.T) {
 	testObject, err := New()
 	testError(test, testObject, err)
 	testObject.Log(2000, "An object", testObject, nil)
@@ -251,7 +251,7 @@ func TestDefaultLogMessageWithObjects(test *testing.T) {
 
 // -- Test Log() method using New(...) ----------------------------------------
 
-func TestNewLogMessageWithWarningLevel(test *testing.T) {
+func TestMessageLoggerNewLogMessageWithWarningLevel(test *testing.T) {
 	testObject, err := New(logger.LevelWarn)
 	testError(test, testObject, err)
 	testObject.Log(1, logger.LevelTrace)
@@ -263,14 +263,14 @@ func TestNewLogMessageWithWarningLevel(test *testing.T) {
 	// testObject.Log(7, logger.LevelPanic)
 }
 
-func TestNewJsonFormatting(test *testing.T) {
+func TestMessageLoggerNewJsonFormatting(test *testing.T) {
 	messageFormat := &messageformat.MessageFormatJson{}
 	testObject, err := New(messageFormat)
 	testError(test, testObject, err)
 	testObject.Log(1, "Bob was here.", "So was Jane.")
 }
 
-func TestNewMessageTemplates(test *testing.T) {
+func TestMessageLoggerNewMessageTemplates(test *testing.T) {
 	messageFormat := &messageformat.MessageFormatJson{}
 	messageText := &messagetext.MessageTextTemplated{
 		IdMessages: idMessages,
@@ -281,7 +281,7 @@ func TestNewMessageTemplates(test *testing.T) {
 	testObject.Log(2, "Bob", "Harry")
 }
 
-func TestNewBadInterfaces(test *testing.T) {
+func TestMessageLoggerNewBadInterfaces(test *testing.T) {
 	expectedErrContains := "unsupported interfaces"
 	messageFormat := &messageformat.MessageFormatJson{}
 	messageText := &messagetext.MessageTextTemplated{
@@ -296,7 +296,7 @@ func TestNewBadInterfaces(test *testing.T) {
 
 // -- Test IsXxxx method ------------------------------------------------------
 
-func TestNewIsMethods(test *testing.T) {
+func TestMessageLoggerNewIsMethods(test *testing.T) {
 	for _, testCase := range testCasesForIsMethods {
 		test.Run(testCase.name, func(test *testing.T) {
 			testObject, err := New(testCase.newLogLevel)
@@ -312,7 +312,7 @@ func TestNewIsMethods(test *testing.T) {
 	}
 }
 
-func TestNewIsMethodDefault(test *testing.T) {
+func TestMessageLoggerNewIsMethodDefault(test *testing.T) {
 	testObject, err := New()
 	testError(test, testObject, err)
 	assert.False(test, testObject.IsTrace(), "Trace")
@@ -333,7 +333,7 @@ func TestNewIsMethodDefault(test *testing.T) {
 func TestNewSenzingLogger(test *testing.T) {
 	for _, testCase := range testCasesForMessage {
 		if len(testCase.expectedSenzing) > 0 {
-			test.Run(testCase.name, func(test *testing.T) {
+			test.Run(testCase.name+"-Senzing", func(test *testing.T) {
 				testObject, err := NewSenzingLogger(testCase.productIdentifier, testCase.idMessages, testCase.interfacesSenzing...)
 				testError(test, testObject, err)
 				actual, err := testObject.Message(testCase.messageNumber, testCase.details...)
