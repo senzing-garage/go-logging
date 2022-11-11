@@ -19,12 +19,14 @@ var testCases = []struct {
 		name:             "Test case: #1",
 		messageNumber:    1001,
 		messageTimestamp: time.Date(2000, time.January, 1, 1, 1, 1, 1, time.UTC),
+		expectedDefault:  "2000-01-01",
 		expectedSenzing:  "2000-01-01",
 	},
 	{
 		name:             "Test case: #2",
 		messageNumber:    1002,
 		messageTimestamp: time.Date(2999, time.December, 31, 0, 0, 0, 0, time.UTC),
+		expectedDefault:  "2999-12-31",
 		expectedSenzing:  "2999-12-31",
 	},
 }
@@ -40,7 +42,7 @@ func testError(test *testing.T, testObject MessageDateInterface, err error) {
 }
 
 // ----------------------------------------------------------------------------
-// Test interface functions for MessageDateNull - names begin with "Test"
+// Test interface functions for MessageDateNull
 // ----------------------------------------------------------------------------
 
 func TestMessageDateNull(test *testing.T) {
@@ -55,7 +57,24 @@ func TestMessageDateNull(test *testing.T) {
 }
 
 // ----------------------------------------------------------------------------
-// Test interface functions for MessageDateSenzing - names begin with "Test"
+// Test interface functions for MessageDateDefault
+// ----------------------------------------------------------------------------
+
+func TestMessageDateDefault(test *testing.T) {
+	for _, testCase := range testCases {
+		if len(testCase.expectedDefault) > 0 {
+			test.Run(testCase.name, func(test *testing.T) {
+				testObject := &MessageDateDefault{}
+				actual, err := testObject.MessageDate(testCase.messageNumber, testCase.messageTimestamp, testCase.details...)
+				testError(test, testObject, err)
+				assert.Equal(test, testCase.expectedDefault, actual, testCase.name)
+			})
+		}
+	}
+}
+
+// ----------------------------------------------------------------------------
+// Test interface functions for MessageDateSenzing
 // ----------------------------------------------------------------------------
 
 func TestMessageDateSenzing(test *testing.T) {
