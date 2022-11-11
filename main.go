@@ -12,9 +12,9 @@ import (
 	"github.com/senzing/go-logging/logger"
 	"github.com/senzing/go-logging/messageformat"
 	"github.com/senzing/go-logging/messageid"
+	"github.com/senzing/go-logging/messagelevel"
 	"github.com/senzing/go-logging/messagelocation"
 	"github.com/senzing/go-logging/messagelogger"
-	"github.com/senzing/go-logging/messageloglevel"
 	"github.com/senzing/go-logging/messagestatus"
 	"github.com/senzing/go-logging/messagetext"
 )
@@ -113,7 +113,7 @@ func main() {
 
 	fmt.Printf("\n\n--- Test 7: - Log level -------------------------------------------------------\n\n")
 
-	messageLogLevel := &messageloglevel.MessageLogLevelByIdRange{
+	messageLogLevel := &messagelevel.MessageLevelByIdRange{
 		IdRanges: map[int]logger.Level{
 			0000: logger.LevelInfo,
 			1000: logger.LevelWarn,

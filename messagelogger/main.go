@@ -13,8 +13,8 @@ import (
 	"github.com/senzing/go-logging/messageduration"
 	"github.com/senzing/go-logging/messageformat"
 	"github.com/senzing/go-logging/messageid"
+	"github.com/senzing/go-logging/messagelevel"
 	"github.com/senzing/go-logging/messagelocation"
-	"github.com/senzing/go-logging/messageloglevel"
 	"github.com/senzing/go-logging/messagestatus"
 	"github.com/senzing/go-logging/messagetext"
 	"github.com/senzing/go-logging/messagetime"
@@ -89,7 +89,7 @@ The parameters can be of the following type and in any order:
   - logger.LoggerInterface
   - messageformat.MessageFormatInterface
   - messageid.MessageIdInterface
-  - messageloglevel.MessageLogLevelInterface
+  - messagelevel.MessageLevelInterface
   - messagestatus.MessageStatusInterface
   - messagetext.MessageTextInterface
   - logger.Level
@@ -110,7 +110,7 @@ func New(interfaces ...interface{}) (MessageLoggerInterface, error) {
 		MessageFormat:   &messageformat.MessageFormatDefault{},
 		MessageId:       &messageid.MessageIdDefault{},
 		MessageLocation: &messagelocation.MessageLocationNull{},
-		MessageLogLevel: &messageloglevel.MessageLogLevelDefault{
+		MessageLevel: &messagelevel.MessageLevelDefault{
 			DefaultLogLevel: logger.LevelInfo,
 		},
 		MessageStatus: &messagestatus.MessageStatusNull{},
@@ -136,8 +136,8 @@ func New(interfaces ...interface{}) (MessageLoggerInterface, error) {
 				result.MessageId = typedValue
 			case messagelocation.MessageLocationInterface:
 				result.MessageLocation = typedValue
-			case messageloglevel.MessageLogLevelInterface:
-				result.MessageLogLevel = typedValue
+			case messagelevel.MessageLevelInterface:
+				result.MessageLevel = typedValue
 			case messagestatus.MessageStatusInterface:
 				result.MessageStatus = typedValue
 			case messagetext.MessageTextInterface:
@@ -226,7 +226,7 @@ func NewSenzingLogger(productIdentifier int, idMessages map[int]string, interfac
 		MessageIdTemplate: fmt.Sprintf("senzing-%04d", productIdentifier) + "%04d",
 	}
 
-	messageLogLevel := &messageloglevel.MessageLogLevelSenzing{
+	messageLogLevel := &messagelevel.MessageLevelSenzing{
 		DefaultLogLevel: logger.LevelInfo,
 		IdRanges: map[int]logger.Level{
 			0000: logger.LevelInfo,

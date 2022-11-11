@@ -1,8 +1,8 @@
 /*
-The MessageLogLevelDefault implementation returns the logger.Level based on a logger.Level in details parameter,
+The MessageLevelDefault implementation returns the logger.Level based on a logger.Level in demessagelogleveltails parameter,
 a specific message id, or a message id in a range.
 */
-package messageloglevel
+package messagelevel
 
 import (
 	"sort"
@@ -14,8 +14,8 @@ import (
 // Types
 // ----------------------------------------------------------------------------
 
-// The MessageLogLevelDefault type returns the logger.Level based on a any logger.Level in details parameter.
-type MessageLogLevelSenzing struct {
+// The MessageLevelDefault type returns the logger.Level based on a any logger.Level in details parameter.
+type MessageLevelSenzing struct {
 	DefaultLogLevel        logger.Level
 	IdLevels               map[int]logger.Level // Specific message ids and the corresponding logger level.
 	IdRanges               map[int]logger.Level // The "low-bound" of a range and the corresponding logger level.
@@ -26,7 +26,7 @@ type MessageLogLevelSenzing struct {
 // Internal methods
 // ----------------------------------------------------------------------------
 
-func (messageLogLevel *MessageLogLevelSenzing) getSortedMessageLevelKeys() []int {
+func (messageLogLevel *MessageLevelSenzing) getSortedMessageLevelKeys() []int {
 	if messageLogLevel.sortedMessageLevelKeys == nil {
 		messageLogLevel.sortedMessageLevelKeys = make([]int, 0, len(messageLogLevel.IdRanges))
 		for key := range messageLogLevel.IdRanges {
@@ -41,8 +41,8 @@ func (messageLogLevel *MessageLogLevelSenzing) getSortedMessageLevelKeys() []int
 // Interface methods
 // ----------------------------------------------------------------------------
 
-// The MessageLogLevel method returns a logger.level based on one or more logger.level types in the details parameter.
-func (messageLogLevel *MessageLogLevelSenzing) MessageLogLevel(messageNumber int, details ...interface{}) (logger.Level, error) {
+// The MessageLevel method returns a logger.level based on one or more logger.level types in the details parameter.
+func (messageLogLevel *MessageLevelSenzing) MessageLevel(messageNumber int, details ...interface{}) (logger.Level, error) {
 	var err error = nil
 
 	// First priority:  Log level explicitly given in details parameter.

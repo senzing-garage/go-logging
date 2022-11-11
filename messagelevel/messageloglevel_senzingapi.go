@@ -1,7 +1,7 @@
 /*
-The MessageLogLevelSenzingApi implementation returns the logger.Level based on the "status" value.
+The MessageLevelSenzingApi implementation returns the logger.Level based on the "status" value.
 */
-package messageloglevel
+package messagelevel
 
 import (
 	"github.com/senzing/go-logging/logger"
@@ -12,8 +12,8 @@ import (
 // Types
 // ----------------------------------------------------------------------------
 
-// The MessageLogLevelSenzingApi type is for calculating the log level based on the status value.
-type MessageLogLevelSenzingApi struct {
+// The MessageLevelSenzingApi type is for calculating the log level based on the status value.
+type MessageLevelSenzingApi struct {
 	IdRanges   map[int]string
 	IdStatuses map[int]string
 }
@@ -22,8 +22,8 @@ type MessageLogLevelSenzingApi struct {
 // Interface methods
 // ----------------------------------------------------------------------------
 
-// The MessageLogLevel method returns a log level based on the status value.
-func (messageLogLevel *MessageLogLevelSenzingApi) MessageLogLevel(messageNumber int, details ...interface{}) (logger.Level, error) {
+// The MessageLevel method returns a log level based on the status value.
+func (messageLogLevel *MessageLevelSenzingApi) MessageLevel(messageNumber int, details ...interface{}) (logger.Level, error) {
 	var err error = nil
 	var result = logger.LevelError
 

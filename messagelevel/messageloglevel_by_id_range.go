@@ -1,7 +1,7 @@
 /*
-The MessageLogLevelByIdRange implementation returns the logger.Level based on the value of the message number.
+The MessageLevelByIdRange implementation returns the logger.Level based on the value of the message number.
 */
-package messageloglevel
+package messagelevel
 
 import (
 	"fmt"
@@ -14,8 +14,8 @@ import (
 // Types
 // ----------------------------------------------------------------------------
 
-// The MessageLogLevelByIdRange type is for determining log level base on which range a message number resides in.
-type MessageLogLevelByIdRange struct {
+// The MessageLevelByIdRange type is for determining log level base on which range a message number resides in.
+type MessageLevelByIdRange struct {
 	DefaultLogLevel logger.Level
 	IdRanges        map[int]logger.Level
 }
@@ -24,10 +24,10 @@ type MessageLogLevelByIdRange struct {
 // Interface methods
 // ----------------------------------------------------------------------------
 
-// The MessageLogLevel method returns a logger.level based on the message number.
-func (messageLogLevel *MessageLogLevelByIdRange) MessageLogLevel(messageNumber int, details ...interface{}) (logger.Level, error) {
+// The MessageLevel method returns a logger.level based on the message number.
+func (messageLevel *MessageLevelByIdRange) MessageLevel(messageNumber int, details ...interface{}) (logger.Level, error) {
 	var err error = nil
-	result := messageLogLevel.DefaultLogLevel
+	result := messageLevel.DefaultLogLevel
 
 	// First priority:  Log level explicitly given in details parameter.
 
@@ -40,12 +40,12 @@ func (messageLogLevel *MessageLogLevelByIdRange) MessageLogLevel(messageNumber i
 
 	// Second priority: Message in a range.
 
-	if messageLogLevel.IdRanges != nil {
+	if messageLevel.IdRanges != nil {
 
 		// Since maps aren't sorted, create a list of sorted keys.
 
-		messageLevelKeys := make([]int, 0, len(messageLogLevel.IdRanges))
-		for key := range messageLogLevel.IdRanges {
+		messageLevelKeys := make([]int, 0, len(messageLevel.IdRanges))
+		for key := range messageLevel.IdRanges {
 			messageLevelKeys = append(messageLevelKeys, key)
 		}
 		sort.Sort(sort.Reverse(sort.IntSlice(messageLevelKeys)))
@@ -54,7 +54,7 @@ func (messageLogLevel *MessageLogLevelByIdRange) MessageLogLevel(messageNumber i
 
 		for _, messageLevelKey := range messageLevelKeys {
 			if messageNumber >= messageLevelKey {
-				return messageLogLevel.IdRanges[messageLevelKey], err
+				return messageLevel.IdRanges[messageLevelKey], err
 			}
 		}
 	}

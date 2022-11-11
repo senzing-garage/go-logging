@@ -13,8 +13,8 @@ import (
 	"github.com/senzing/go-logging/messageduration"
 	"github.com/senzing/go-logging/messageformat"
 	"github.com/senzing/go-logging/messageid"
+	"github.com/senzing/go-logging/messagelevel"
 	"github.com/senzing/go-logging/messagelocation"
-	"github.com/senzing/go-logging/messageloglevel"
 	"github.com/senzing/go-logging/messagestatus"
 	"github.com/senzing/go-logging/messagetext"
 	"github.com/senzing/go-logging/messagetime"
@@ -32,7 +32,7 @@ type MessageLoggerDefault struct {
 	MessageFormat   messageformat.MessageFormatInterface
 	MessageId       messageid.MessageIdInterface
 	MessageLocation messagelocation.MessageLocationInterface
-	MessageLogLevel messageloglevel.MessageLogLevelInterface
+	MessageLevel    messagelevel.MessageLevelInterface
 	MessageStatus   messagestatus.MessageStatusInterface
 	MessageText     messagetext.MessageTextInterface
 	MessageTime     messagetime.MessageTimeInterface
@@ -131,8 +131,8 @@ func (messagelogger *MessageLoggerDefault) Log(messageNumber int, details ...int
 	}
 
 	messageLevel := logger.LevelInfo
-	if messagelogger.MessageLogLevel != nil {
-		messageLevel, err = messagelogger.MessageLogLevel.MessageLogLevel(messageNumber, details...)
+	if messagelogger.MessageLevel != nil {
+		messageLevel, err = messagelogger.MessageLevel.MessageLevel(messageNumber, details...)
 		if err != nil {
 			return err
 		}
@@ -170,8 +170,8 @@ func (messagelogger *MessageLoggerDefault) Message(messageNumber int, details ..
 	}
 
 	level := ""
-	if messagelogger.MessageLogLevel != nil {
-		levelAsLevel, _ := messagelogger.MessageLogLevel.MessageLogLevel(messageNumber, details...)
+	if messagelogger.MessageLevel != nil {
+		levelAsLevel, _ := messagelogger.MessageLevel.MessageLevel(messageNumber, details...)
 		var ok bool
 		level, ok = logger.LevelToTextMap[levelAsLevel]
 		if !ok {
