@@ -2,20 +2,31 @@ package messagelogger
 
 import (
 	"testing"
+	"time"
 
 	"github.com/senzing/go-logging/logger"
+	"github.com/senzing/go-logging/messagedate"
 	"github.com/senzing/go-logging/messageformat"
 	"github.com/senzing/go-logging/messagelocation"
 	"github.com/senzing/go-logging/messagetext"
+	"github.com/senzing/go-logging/messagetime"
 	"github.com/stretchr/testify/assert"
 )
+
+var messageFormat = &messageformat.MessageFormatJson{}
+
+var messageDate = &messagedate.MessageDateStatic{
+	Timestamp: getTimestamp(),
+}
+var messageTime = &messagetime.MessageTimeStatic{
+	Timestamp: getTimestamp(),
+}
 
 var idMessages = map[int]string{
 	1: "%s knows %s",
 	2: "%s does not know %s",
 }
 
-var messageFormat = &messageformat.MessageFormatJson{}
 var messageText = &messagetext.MessageTextTemplated{
 	IdMessages: idMessages,
 }
@@ -39,44 +50,47 @@ var testCasesForMessage = []struct {
 		name:              "messagelogger-01-Info",
 		productIdentifier: 9999,
 		idMessages:        idMessages,
+		interfacesSenzing: []interface{}{messageDate, messageTime, messageLocation},
 		messageNumber:     0,
 		details:           []interface{}{"A", 1},
 		expectedDefault:   `0: [map[1:A 2:1]]`,
 		expectedJson:      `{"id":"senzing-99990000","status":"INFO","details":{"1":"A","2":1}}`,
-		expectedSenzing:   `{"level":"INFO","id":"senzing-99990000","status":"INFO","details":{"1":"A","2":1}}`,
+		expectedSenzing:   `{"date":"2000-01-01","time":"00:00:00.000000000","level":"INFO","id":"senzing-99990000","status":"INFO","location":"In func1() at messagelogger_test.go:357","details":{"1":"A","2":1}}`,
 	},
 	{
 		name:              "messagelogger-02-Change-message-format",
 		productIdentifier: 9999,
 		idMessages:        idMessages,
 		interfacesDefault: []interface{}{messageFormat},
+		interfacesSenzing: []interface{}{messageDate, messageTime, messageLocation},
 		messageNumber:     1000,
 		details:           []interface{}{"A", 1},
 		expectedDefault:   `{"level":"INFO","id":"1000","details":{"1":"A","2":1}}`,
 		expectedJson:      `{"id":"senzing-99991000","status":"WARN","details":{"1":"A","2":1}}`,
-		expectedSenzing:   `{"level":"WARN","id":"senzing-99991000","status":"WARN","details":{"1":"A","2":1}}`,
+		expectedSenzing:   `{"date":"2000-01-01","time":"00:00:00.000000000","level":"WARN","id":"senzing-99991000","status":"WARN","location":"In func1() at messagelogger_test.go:357","details":{"1":"A","2":1}}`,
 	},
 	{
 		name:              "messagelogger-03-Warn",
 		productIdentifier: 9999,
 		idMessages:        idMessages,
 		interfacesDefault: []interface{}{messageText},
+		interfacesSenzing: []interface{}{messageDate, messageTime, messageLocation},
 		messageNumber:     1,
 		details:           []interface{}{"Bob", "Jane"},
 		expectedDefault:   `1: Bob knows Jane [map[1:Bob 2:Jane]]`,
 		expectedJson:      `{"id":"senzing-99990001","status":"INFO","text":"Bob knows Jane","details":{"1":"Bob","2":"Jane"}}`,
-		expectedSenzing:   `{"level":"INFO","id":"senzing-99990001","status":"INFO","text":"Bob knows Jane","details":{"1":"Bob","2":"Jane"}}`,
+		expectedSenzing:   `{"date":"2000-01-01","time":"00:00:00.000000000","level":"INFO","id":"senzing-99990001","status":"INFO","text":"Bob knows Jane","location":"In func1() at messagelogger_test.go:357","details":{"1":"Bob","2":"Jane"}}`,
 	},
 	{
 		name:              "messagelogger-04-Warn",
 		productIdentifier: 9999,
 		idMessages:        idMessages,
-		interfacesSenzing: []interface{}{messageLocation},
+		interfacesSenzing: []interface{}{messageLocation, messageDate, messageTime, messageLocation},
 		messageNumber:     1,
 		details:           []interface{}{"Bob", "Jane"},
 		expectedDefault:   `1: [map[1:Bob 2:Jane]]`,
 		expectedJson:      `{"id":"senzing-99990001","status":"INFO","text":"Bob knows Jane","details":{"1":"Bob","2":"Jane"}}`,
-		expectedSenzing:   `{"level":"INFO","id":"senzing-99990001","status":"INFO","text":"Bob knows Jane","details":{"1":"Bob","2":"Jane"}}`,
+		expectedSenzing:   `{"date":"2000-01-01","time":"00:00:00.000000000","level":"INFO","id":"senzing-99990001","status":"INFO","text":"Bob knows Jane","location":"In func1() at messagelogger_test.go:357","details":{"1":"Bob","2":"Jane"}}`,
 	},
 }
 
@@ -195,6 +209,10 @@ func testError(test *testing.T, testObject MessageLoggerInterface, err error) {
 	if err != nil {
 		assert.Fail(test, err.Error())
 	}
+}
+
+func getTimestamp() time.Time {
+	return time.Date(2000, time.January, 1, 0, 0, 0, 0, time.UTC)
 }
 
 // ----------------------------------------------------------------------------
