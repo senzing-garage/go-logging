@@ -12,21 +12,24 @@ var testCases = []struct {
 	messageNumber     int
 	details           []interface{}
 	expectedDefault   string
+	expectedSenzing   string
 	expectedTemplated string
 }{
 	{
-		name:              "Test case: #1",
+		name:              "messageid-01",
 		template:          "senzing-9999%04d",
 		messageNumber:     1,
 		expectedDefault:   `1`,
+		expectedSenzing:   `senzing-99990001`,
 		expectedTemplated: `senzing-99990001`,
 	},
 	{
-		name:              "Test case: #2",
+		name:              "messageid-02",
 		template:          "senzing-9999%04d",
 		messageNumber:     2,
 		details:           []interface{}{123, "bob"},
 		expectedDefault:   `2`,
+		expectedSenzing:   `senzing-99990002`,
 		expectedTemplated: `senzing-99990002`,
 	},
 }
@@ -48,7 +51,7 @@ func testError(test *testing.T, testObject MessageIdInterface, err error) {
 func TestMessageIdDefault(test *testing.T) {
 	for _, testCase := range testCases {
 		if len(testCase.expectedDefault) > 0 {
-			test.Run(testCase.name, func(test *testing.T) {
+			test.Run(testCase.name+"-Default", func(test *testing.T) {
 				testObject := &MessageIdDefault{}
 				actual, err := testObject.MessageId(testCase.messageNumber, testCase.details...)
 				testError(test, testObject, err)
@@ -64,14 +67,14 @@ func TestMessageIdDefault(test *testing.T) {
 
 func TestMessageIdSenzing(test *testing.T) {
 	for _, testCase := range testCases {
-		if len(testCase.expectedTemplated) > 0 {
-			test.Run(testCase.name, func(test *testing.T) {
+		if len(testCase.expectedSenzing) > 0 {
+			test.Run(testCase.name+"-Senzing", func(test *testing.T) {
 				testObject := &MessageIdSenzing{
 					MessageIdTemplate: testCase.template,
 				}
 				actual, err := testObject.MessageId(testCase.messageNumber, testCase.details...)
 				testError(test, testObject, err)
-				assert.Equal(test, testCase.expectedTemplated, actual, testCase.name)
+				assert.Equal(test, testCase.expectedSenzing, actual, testCase.name)
 			})
 		}
 	}
@@ -84,7 +87,7 @@ func TestMessageIdSenzing(test *testing.T) {
 func TestMessageIdTemplated(test *testing.T) {
 	for _, testCase := range testCases {
 		if len(testCase.expectedTemplated) > 0 {
-			test.Run(testCase.name, func(test *testing.T) {
+			test.Run(testCase.name+"-Templated", func(test *testing.T) {
 				testObject := &MessageIdTemplated{
 					MessageIdTemplate: testCase.template,
 				}

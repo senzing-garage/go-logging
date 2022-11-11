@@ -1,5 +1,5 @@
 /*
-The MessageIdTemplated implementation returns a message id based on a format template string.
+The MessageIdSenzing implementation returns a message id based on a format template string.
 */
 package messageid
 
@@ -9,7 +9,7 @@ import "fmt"
 // Types
 // ----------------------------------------------------------------------------
 
-// The MessageIdTemplated type is for creating message identifier based on a template.
+// The MessageIdSenzing type is for creating message identifier based on a template.
 type MessageIdSenzing struct {
 	MessageIdTemplate string
 }

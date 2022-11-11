@@ -12,11 +12,13 @@ var testCases = []struct {
 	messageNumber   int
 	details         []interface{}
 	expectedDefault string
+	expectedSenzing string
 }{
 	{
-		name:          "Test case: #1",
-		callerSkip:    1,
-		messageNumber: 1000,
+		name:            "messagelocation-01",
+		callerSkip:      0,
+		messageNumber:   1000,
+		expectedSenzing: "In MessageLocation() at messagelocation_senzing.go:31",
 	},
 }
 
@@ -34,13 +36,32 @@ func testError(test *testing.T, testObject MessageLocationInterface, err error) 
 // Test interface functions for MessageDateNull
 // ----------------------------------------------------------------------------
 
-func TestMessageDateNull(test *testing.T) {
+func TestMessageLocationNull(test *testing.T) {
 	for _, testCase := range testCases {
-		test.Run(testCase.name, func(test *testing.T) {
+		test.Run(testCase.name+"-Null", func(test *testing.T) {
 			testObject := &MessageLocationNull{}
 			actual, err := testObject.MessageLocation(testCase.messageNumber, testCase.details...)
 			testError(test, testObject, err)
 			assert.Equal(test, "", actual, testCase.name)
 		})
+	}
+}
+
+// ----------------------------------------------------------------------------
+// Test interface functions for MessageIdSenzing
+// ----------------------------------------------------------------------------
+
+func TestMessageLocationSenzing(test *testing.T) {
+	for _, testCase := range testCases {
+		if len(testCase.expectedSenzing) > 0 {
+			test.Run(testCase.name+"-Senzing", func(test *testing.T) {
+				testObject := &MessageLocationSenzing{
+					CallerSkip: testCase.callerSkip,
+				}
+				actual, err := testObject.MessageLocation(testCase.messageNumber, testCase.details...)
+				testError(test, testObject, err)
+				assert.Equal(test, testCase.expectedSenzing, actual, testCase.name)
+			})
+		}
 	}
 }
