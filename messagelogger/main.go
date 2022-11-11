@@ -197,8 +197,29 @@ func NewSenzingLogger(productIdentifier int, idMessages map[int]string, interfac
 		return nil, err
 	}
 
+	// Defaults
+
+	callerSkip := 1
+
+	// Look for specific flags in details.
+
+	if len(interfaces) > 0 {
+		for _, value := range interfaces {
+			switch typedValue := value.(type) {
+			case messagelocation.CallerSkip:
+				callerSkip = int(typedValue)
+			}
+		}
+	}
+
 	// Construct the components of the messagelogger.
 
+	messageDate := &messagedate.MessageDateSenzing{}
+	messageTime := &messagetime.MessageTimeSenzing{}
+	messageDuration := &messageduration.MessageDurationSenzing{}
+	messageLocation := &messagelocation.MessageLocationSenzing{
+		CallerSkip: callerSkip,
+	}
 	messageFormat := &messageformat.MessageFormatSenzing{}
 
 	messageId := &messageid.MessageIdSenzing{
@@ -235,11 +256,15 @@ func NewSenzingLogger(productIdentifier int, idMessages map[int]string, interfac
 	}
 
 	var newInterfaces = []interface{}{
+		messageDate,
+		messageTime,
+		messageLocation,
 		messageId,
 		messageFormat,
 		messageLogLevel,
 		messageStatus,
 		messageText,
+		messageDuration,
 	}
 
 	// Add other user-supplied interfaces to newInterfaces.

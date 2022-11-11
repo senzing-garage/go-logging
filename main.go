@@ -12,11 +12,18 @@ import (
 	"github.com/senzing/go-logging/logger"
 	"github.com/senzing/go-logging/messageformat"
 	"github.com/senzing/go-logging/messageid"
+	"github.com/senzing/go-logging/messagelocation"
 	"github.com/senzing/go-logging/messagelogger"
 	"github.com/senzing/go-logging/messageloglevel"
 	"github.com/senzing/go-logging/messagestatus"
 	"github.com/senzing/go-logging/messagetext"
 )
+
+// ----------------------------------------------------------------------------
+// Variables
+// ----------------------------------------------------------------------------
+
+var globalLogger messagelogger.MessageLoggerInterface
 
 // ----------------------------------------------------------------------------
 // Internal functions
@@ -25,6 +32,21 @@ import (
 func complexProcess() string {
 	time.Sleep(1000 * time.Second)
 	return "slept"
+}
+
+func complexProcess2() string {
+	defer logDuration(1, time.Now())
+	time.Sleep(2 * time.Second)
+	return "slept"
+}
+
+// func startTime() time.Time {
+// 	return time.Now()
+// }
+
+func logDuration(id int, start time.Time) {
+	globalLogger.Log(id, time.Since(start))
+
 }
 
 // ----------------------------------------------------------------------------
@@ -238,13 +260,22 @@ func main() {
 	_, err := time.LoadLocation("bob")
 	logger.Info("Should be error: ", err)
 
+	// ------------------------------------------------------------------------
+	// Senzing loggong.
+	// ------------------------------------------------------------------------
+
+	fmt.Printf("\n\n-------------------------------------------------------------------------------")
+	fmt.Printf("\n--- Senzing logger tests ------------------------------------------------------")
+	fmt.Printf("\n-------------------------------------------------------------------------------\n\n")
+
+	messageids := map[int]string{
+		1: "Example duration",
+	}
+	globalLogger, _ = messagelogger.NewSenzingLogger(9999, messageids, messagelocation.CallerSkip(4))
+	complexProcess2()
+
 	fmt.Printf("\n\n-------------------------------------------------------------------------------")
 	fmt.Printf("\n--- End -----------------------------------------------------------------------")
 	fmt.Printf("\n-------------------------------------------------------------------------------\n\n")
-
-	start := time.Now()
-	duration := time.Since(start)
-	fmt.Println(duration.Nanoseconds())
-	fmt.Printf("%f\n", duration.Seconds())
 
 }

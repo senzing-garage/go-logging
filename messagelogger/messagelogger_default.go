@@ -6,6 +6,7 @@ package messagelogger
 import (
 	"errors"
 	"fmt"
+	"time"
 
 	"github.com/senzing/go-logging/logger"
 	"github.com/senzing/go-logging/messagedate"
@@ -143,15 +144,16 @@ func (messagelogger *MessageLoggerDefault) Log(messageNumber int, details ...int
 // The Message method returns a string with the formatted message.
 func (messagelogger *MessageLoggerDefault) Message(messageNumber int, details ...interface{}) (string, error) {
 	var err error
+	now := time.Now()
 
 	date := ""
 	if messagelogger.MessageDate != nil {
-		date, _ = messagelogger.MessageDate.MessageDate(messageNumber, details...)
+		date, _ = messagelogger.MessageDate.MessageDate(messageNumber, now, details...)
 	}
 
 	time := ""
 	if messagelogger.MessageTime != nil {
-		time, _ = messagelogger.MessageTime.MessageTime(messageNumber, details...)
+		time, _ = messagelogger.MessageTime.MessageTime(messageNumber, now, details...)
 	}
 
 	id := fmt.Sprintf("%d", messageNumber)
@@ -163,7 +165,7 @@ func (messagelogger *MessageLoggerDefault) Message(messageNumber int, details ..
 	}
 
 	location := ""
-	if messagelogger.MessageDate != nil {
+	if messagelogger.MessageLocation != nil {
 		location, _ = messagelogger.MessageLocation.MessageLocation(messageNumber, details...)
 	}
 

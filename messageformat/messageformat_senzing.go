@@ -24,11 +24,11 @@ type messageFormatSenzing struct {
 	Date     string        `json:"date,omitempty"`
 	Time     string        `json:"time,omitempty"`
 	Level    string        `json:"level,omitempty"`
-	Location string        `json:"location,omitempty"`
 	Id       string        `json:"id,omitempty"`
 	Status   string        `json:"status,omitempty"`
 	Text     interface{}   `json:"text,omitempty"`
 	Duration int64         `json:"duration,omitempty"`
+	Location string        `json:"location,omitempty"`
 	Errors   []interface{} `json:"errors,omitempty"`
 	Details  interface{}   `json:"details,omitempty"`
 }

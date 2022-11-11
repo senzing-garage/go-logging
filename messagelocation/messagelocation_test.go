@@ -8,12 +8,14 @@ import (
 
 var testCases = []struct {
 	name            string
+	callerSkip      int
 	messageNumber   int
 	details         []interface{}
 	expectedDefault string
 }{
 	{
 		name:          "Test case: #1",
+		callerSkip:    1,
 		messageNumber: 1000,
 	},
 }

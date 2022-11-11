@@ -3,6 +3,8 @@ The MessageDateNull implementation returns an empty string for a date value.
 */
 package messagedate
 
+import "time"
+
 // ----------------------------------------------------------------------------
 // Types
 // ----------------------------------------------------------------------------
@@ -15,6 +17,6 @@ type MessageDateNull struct{}
 // ----------------------------------------------------------------------------
 
 // The MessageDate method returns an empty string for a date value.
-func (messageDate *MessageDateNull) MessageDate(messageNumber int, details ...interface{}) (string, error) {
+func (messageDate *MessageDateNull) MessageDate(messageNumber int, messageTimestamp time.Time, details ...interface{}) (string, error) {
 	return "", nil
 }

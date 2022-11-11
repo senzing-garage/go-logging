@@ -5,6 +5,7 @@ import (
 
 	"github.com/senzing/go-logging/logger"
 	"github.com/senzing/go-logging/messageformat"
+	"github.com/senzing/go-logging/messagelocation"
 	"github.com/senzing/go-logging/messagetext"
 	"github.com/stretchr/testify/assert"
 )
@@ -18,6 +19,9 @@ var messageFormat = &messageformat.MessageFormatJson{}
 var messageText = &messagetext.MessageTextTemplated{
 	IdMessages: idMessages,
 }
+var messageLocation = &messagelocation.MessageLocationSenzing{
+	CallerSkip: 2,
+}
 
 var testCasesForMessage = []struct {
 	name              string
@@ -29,6 +33,7 @@ var testCasesForMessage = []struct {
 	details           []interface{}
 	expectedDefault   string
 	expectedJson      string
+	expectedSenzing   string
 }{
 	{
 		name:              "Test case: #1 - Info",
@@ -38,6 +43,7 @@ var testCasesForMessage = []struct {
 		details:           []interface{}{"A", 1},
 		expectedDefault:   `0: [map[1:A 2:1]]`,
 		expectedJson:      `{"id":"senzing-99990000","status":"INFO","details":{"1":"A","2":1}}`,
+		expectedSenzing:   `{"level":"INFO","id":"senzing-99990000","status":"INFO","details":{"1":"A","2":1}}`,
 	},
 	{
 		name:              "Test case: #2 - Warn",
@@ -48,6 +54,7 @@ var testCasesForMessage = []struct {
 		details:           []interface{}{"A", 1},
 		expectedDefault:   `{"id":"1000","details":{"1":"A","2":1}}`,
 		expectedJson:      `{"id":"senzing-99991000","status":"WARN","details":{"1":"A","2":1}}`,
+		expectedSenzing:   `{"level":"WARN","id":"senzing-99991000","status":"WARN","details":{"1":"A","2":1}}`,
 	},
 	{
 		name:              "Test case: #3 - Warn",
@@ -58,6 +65,18 @@ var testCasesForMessage = []struct {
 		details:           []interface{}{"Bob", "Jane"},
 		expectedDefault:   `1: Bob knows Jane [map[1:Bob 2:Jane]]`,
 		expectedJson:      `{"id":"senzing-99990001","status":"INFO","text":"Bob knows Jane","details":{"1":"Bob","2":"Jane"}}`,
+		expectedSenzing:   `{"level":"INFO","id":"senzing-99990001","status":"INFO","text":"Bob knows Jane","details":{"1":"Bob","2":"Jane"}}`,
+	},
+	{
+		name:              "Test case: #4 - Warn",
+		productIdentifier: 9999,
+		idMessages:        idMessages,
+		interfacesSenzing: []interface{}{messageLocation},
+		messageNumber:     1,
+		details:           []interface{}{"Bob", "Jane"},
+		expectedDefault:   `1: Bob knows Jane [map[1:Bob 2:Jane]]`,
+		expectedJson:      `{"id":"senzing-99990001","status":"INFO","text":"Bob knows Jane","details":{"1":"Bob","2":"Jane"}}`,
+		expectedSenzing:   `{"level":"INFO","id":"senzing-99990001","status":"INFO","text":"Bob knows Jane","details":{"1":"Bob","2":"Jane"}}`,
 	},
 }
 
@@ -313,13 +332,13 @@ func TestNewIsMethodDefault(test *testing.T) {
 
 func TestNewSenzingLogger(test *testing.T) {
 	for _, testCase := range testCasesForMessage {
-		if len(testCase.expectedJson) > 0 {
+		if len(testCase.expectedSenzing) > 0 {
 			test.Run(testCase.name, func(test *testing.T) {
 				testObject, err := NewSenzingLogger(testCase.productIdentifier, testCase.idMessages, testCase.interfacesSenzing...)
 				testError(test, testObject, err)
 				actual, err := testObject.Message(testCase.messageNumber, testCase.details...)
 				testError(test, testObject, err)
-				assert.Equal(test, testCase.expectedJson, actual, testCase.name)
+				assert.Equal(test, testCase.expectedSenzing, actual, testCase.name)
 			})
 		}
 	}
