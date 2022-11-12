@@ -76,8 +76,10 @@ func (messageFormat *MessageFormatJson) Message(date string, time string, level 
 
 	messageBuilder.Duration = duration
 
-	if !reflect.ValueOf(errors).IsNil() {
-		messageBuilder.Errors = errors
+	if errors != nil {
+		if !reflect.ValueOf(errors).IsNil() {
+			messageBuilder.Errors = errors
+		}
 	}
 
 	if details != nil {

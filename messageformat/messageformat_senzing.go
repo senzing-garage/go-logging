@@ -76,8 +76,10 @@ func (messageFormat *MessageFormatSenzing) Message(date string, time string, lev
 
 	messageBuilder.Duration = duration
 
-	if !reflect.ValueOf(errors).IsNil() {
-		messageBuilder.Errors = errors
+	if errors != nil {
+		if !reflect.ValueOf(errors).IsNil() {
+			messageBuilder.Errors = errors
+		}
 	}
 
 	if details != nil {

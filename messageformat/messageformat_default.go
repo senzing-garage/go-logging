@@ -24,6 +24,11 @@ func (messageFormat *MessageFormatDefault) Message(date string, time string, lev
 	var err error = nil
 
 	result := ""
+
+	if len(level) > 0 {
+		result = result + fmt.Sprintf("%s ", level)
+	}
+
 	if len(id) > 0 {
 		result = result + fmt.Sprintf("%s: ", id)
 	}
