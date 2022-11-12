@@ -34,6 +34,10 @@ func (messageFormat *MessageFormatDefault) Message(date string, time string, lev
 		result = result + fmt.Sprintf("%s ", text)
 	}
 
+	// if !reflect.ValueOf(details).IsNil() {
+	// 	result = result + fmt.Sprintf("%v ", details)
+	// }
+
 	if details != nil {
 		result = result + fmt.Sprintf("%v ", details)
 	}

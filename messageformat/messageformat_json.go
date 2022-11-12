@@ -6,6 +6,7 @@ package messageformat
 import (
 	"bytes"
 	"encoding/json"
+	"reflect"
 	"strings"
 )
 
@@ -75,7 +76,7 @@ func (messageFormat *MessageFormatJson) Message(date string, time string, level 
 
 	messageBuilder.Duration = duration
 
-	if errors != nil {
+	if !reflect.ValueOf(errors).IsNil() {
 		messageBuilder.Errors = errors
 	}
 

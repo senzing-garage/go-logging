@@ -1,9 +1,10 @@
 /*
-The MessageDetailsNull implementation returns an empty value.
+The MessageDetailsSenzing implementation returns an empty value.
 */
 package messagedetails
 
 import (
+	"fmt"
 	"strconv"
 )
 
@@ -11,7 +12,7 @@ import (
 // Types
 // ----------------------------------------------------------------------------
 
-// The MessageErrorsNull type is for returning an empty value.
+// The MessageDetailsSenzing type is for returning an empty value.
 type MessageDetailsSenzing struct{}
 
 // ----------------------------------------------------------------------------
@@ -31,8 +32,14 @@ func (messageDetails *MessageDetailsSenzing) MessageDetails(messageNumber int, d
 		case nil:
 			result[strconv.Itoa(index+1)] = "<nil>"
 
+		case string, int, float64:
+			result[strconv.Itoa(index+1)] = typedValue
+
+		case bool:
+			result[strconv.Itoa(index+1)] = fmt.Sprintf("%t", typedValue)
+
 		case error:
-			// do nothing
+			// do nothing.
 
 		case map[string]string:
 			for mapIndex, mapValue := range typedValue {

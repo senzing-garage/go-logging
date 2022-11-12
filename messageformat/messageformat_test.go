@@ -17,7 +17,7 @@ var testCases = []struct {
 	text            string
 	duration        int64
 	errors          []interface{}
-	details         []interface{}
+	details         interface{}
 	expectedDefault string
 	expectedJson    string
 	expectedSenzing string
@@ -27,8 +27,8 @@ var testCases = []struct {
 		id:              "id-1",
 		status:          "status-1",
 		text:            "text-1",
-		details:         []interface{}{123, "bob"},
-		expectedDefault: `id-1: (status-1) text-1 [map[1:123 2:bob]]`,
+		details:         map[string]interface{}{"1": 123, "2": "bob"},
+		expectedDefault: `id-1: (status-1) text-1 map[1:123 2:bob]`,
 		expectedJson:    `{"id":"id-1","status":"status-1","text":"text-1","details":{"1":123,"2":"bob"}}`,
 		expectedSenzing: `{"id":"id-1","status":"status-1","text":"text-1","details":{"1":123,"2":"bob"}}`,
 	},
@@ -36,8 +36,8 @@ var testCases = []struct {
 		name:            "messageformat-02-no_id",
 		status:          "status-2",
 		text:            "text-2",
-		details:         []interface{}{123, "bob"},
-		expectedDefault: `(status-2) text-2 [map[1:123 2:bob]]`,
+		details:         map[string]interface{}{"1": 123, "2": "bob"},
+		expectedDefault: `(status-2) text-2 map[1:123 2:bob]`,
 		expectedJson:    `{"status":"status-2","text":"text-2","details":{"1":123,"2":"bob"}}`,
 		expectedSenzing: `{"status":"status-2","text":"text-2","details":{"1":123,"2":"bob"}}`,
 	},
@@ -45,8 +45,8 @@ var testCases = []struct {
 		name:            "messageformat-03-no_status",
 		id:              "id-3",
 		text:            "text-3",
-		details:         []interface{}{123, "bob"},
-		expectedDefault: `id-3: text-3 [map[1:123 2:bob]]`,
+		details:         map[string]interface{}{"1": 123, "2": "bob"},
+		expectedDefault: `id-3: text-3 map[1:123 2:bob]`,
 		expectedJson:    `{"id":"id-3","text":"text-3","details":{"1":123,"2":"bob"}}`,
 		expectedSenzing: `{"id":"id-3","text":"text-3","details":{"1":123,"2":"bob"}}`,
 	},
@@ -54,8 +54,8 @@ var testCases = []struct {
 		name:            "messageformat-04-no_text",
 		id:              "id-4",
 		status:          "status-4",
-		details:         []interface{}{123, "bob"},
-		expectedDefault: `id-4: (status-4) [map[1:123 2:bob]]`,
+		details:         map[string]interface{}{"1": 123, "2": "bob"},
+		expectedDefault: `id-4: (status-4) map[1:123 2:bob]`,
 		expectedJson:    `{"id":"id-4","status":"status-4","details":{"1":123,"2":"bob"}}`,
 		expectedSenzing: `{"id":"id-4","status":"status-4","details":{"1":123,"2":"bob"}}`,
 	},

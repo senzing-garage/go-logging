@@ -5,7 +5,6 @@ package messageformat
 
 import (
 	"encoding/json"
-	"fmt"
 )
 
 // ----------------------------------------------------------------------------
@@ -32,27 +31,27 @@ func jsonAsInterface(unknownString string) interface{} {
 	return jsonString
 }
 
-func stringify(unknown interface{}) string {
-	// See https://pkg.go.dev/fmt for format strings.
-	var result string
-	switch value := unknown.(type) {
-	case nil:
-		result = "<nil>"
-	case string:
-		result = value
-	case int:
-		result = fmt.Sprintf("%d", value)
-	case float64:
-		result = fmt.Sprintf("%g", value)
-	case bool:
-		result = fmt.Sprintf("%t", value)
-	case error:
-		result = value.Error()
-	default:
-		// xType := reflect.TypeOf(unknown)
-		// xValue := reflect.ValueOf(unknown)
-		// result = fmt.Sprintf("(%s)%#v", xType, xValue)
-		result = fmt.Sprintf("%#v", unknown)
-	}
-	return result
-}
+// func stringify(unknown interface{}) string {
+// 	// See https://pkg.go.dev/fmt for format strings.
+// 	var result string
+// 	switch value := unknown.(type) {
+// 	case nil:
+// 		result = "<nil>"
+// 	case string:
+// 		result = value
+// 	case int:
+// 		result = fmt.Sprintf("%d", value)
+// 	case float64:
+// 		result = fmt.Sprintf("%g", value)
+// 	case bool:
+// 		result = fmt.Sprintf("%t", value)
+// 	case error:
+// 		result = value.Error()
+// 	default:
+// 		// xType := reflect.TypeOf(unknown)
+// 		// xValue := reflect.ValueOf(unknown)
+// 		// result = fmt.Sprintf("(%s)%#v", xType, xValue)
+// 		result = fmt.Sprintf("%#v", unknown)
+// 	}
+// 	return result
+// }

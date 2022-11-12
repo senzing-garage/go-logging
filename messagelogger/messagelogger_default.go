@@ -208,6 +208,8 @@ func (messagelogger *MessageLoggerDefault) Message(messageNumber int, details ..
 		detailList, _ = messagelogger.MessageDetails.MessageDetails(messageNumber, details...)
 	}
 
+	fmt.Printf(">>>>>>>>>>>>>. messagelogger.MessageDetails: %#v\n", messagelogger.MessageDetails)
+
 	result, err := messagelogger.MessageFormat.Message(date, time, level, location, id, status, text, duration, errors, detailList)
 	if err != nil {
 		return "", err

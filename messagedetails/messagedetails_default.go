@@ -28,7 +28,6 @@ func (messageDetails *MessageDetailsDefault) MessageDetails(messageNumber int, d
 	// Process different types of details.
 
 	for index, value := range details {
-
 		switch typedValue := value.(type) {
 		case nil:
 			result[strconv.Itoa(index+1)] = "<nil>"
