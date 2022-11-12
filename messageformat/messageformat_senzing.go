@@ -83,7 +83,9 @@ func (messageFormat *MessageFormatSenzing) Message(date string, time string, lev
 	}
 
 	if details != nil {
-		messageBuilder.Details = details
+		if !reflect.ValueOf(details).IsNil() {
+			messageBuilder.Details = details
+		}
 	}
 
 	// Work with details.

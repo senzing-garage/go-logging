@@ -194,9 +194,11 @@ the last instance instance of the type specified wins.
 func New(interfaces ...interface{}) (MessageLoggerInterface, error) {
 
 	messageDetails := &messagedetails.MessageDetailsDefault{}
+	messageErrors := &messageerrors.MessageErrorsDefault{}
 
 	var newInterfaces = []interface{}{
 		messageDetails,
+		messageErrors,
 	}
 
 	// Add other user-supplied interfaces to newInterfaces.

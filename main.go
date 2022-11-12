@@ -95,88 +95,92 @@ func main() {
 
 	messageText := &messagetext.MessageTextTemplated{
 		IdMessages: map[int]string{
-			5:    "The favorite number for %s is %d.",
-			6:    "Person number #%[2]d is %[1]s.",
-			10:   "Example errors.",
-			11:   "%s has a score of %d.",
-			999:  "A test of INFO.",
-			1000: "A test of WARN.",
-			2000: "A test of ERROR.",
+			999:  "A test of TRACE.",
+			1000: "A test of DEBUG.",
+			2000: "A test of INFO.",
+			2005: "The favorite number for %s is %d.",
+			2006: "Person number #%[2]d is %[1]s.",
+			2010: "Example errors.",
+			2011: "%s has a score of %d.",
+			3000: "A test of WARN.",
+			4000: "A test of ERROR.",
+			5000: "A test of FATAL.",
+			6000: "A test of PANIC.",
 		},
 	}
 	messageLogger, _ = messagelogger.New(messageId, messageText)
-	messageLogger.Log(5, "Robert Smith", 12345, aMap)
+	messageLogger.Log(2005, "Robert Smith", 12345, aMap)
 
 	fmt.Printf("\n\n--- Test 6: - Log level -------------------------------------------------------\n\n")
 
-	messageLogger.Log(6, "Robert Smith", 12345, aMap, logger.LevelError)
+	messageLogger.Log(2006, "Robert Smith", 12345, aMap, logger.LevelError)
 
 	fmt.Printf("\n\n--- Test 7: - Log level -------------------------------------------------------\n\n")
 
 	messageLogLevel := &messagelevel.MessageLevelByIdRange{
 		IdRanges: map[int]logger.Level{
-			0000: logger.LevelInfo,
-			1000: logger.LevelWarn,
-			2000: logger.LevelError,
-			3000: logger.LevelDebug,
-			4000: logger.LevelTrace,
+			0000: logger.LevelTrace,
+			1000: logger.LevelDebug,
+			2000: logger.LevelInfo,
+			3000: logger.LevelWarn,
+			4000: logger.LevelError,
 			5000: logger.LevelFatal,
 			6000: logger.LevelPanic,
 		},
 	}
 	messageLogger, _ = messagelogger.New(messageLogLevel, messageId, messageText)
-	messageLogger.Log(999)
-	messageLogger.Log(1000)
 	messageLogger.Log(2000)
+	messageLogger.Log(3000)
+	messageLogger.Log(4000)
+
+	fmt.Printf("\n\n--- Test 8: - Logging errors --------------------------------------------------\n\n")
+
+	err1 := errors.New("error #1")
+	err2 := errors.New("error #2")
+	messageLogger.Log(2010, err1, err2)
+
+	fmt.Printf("\n\n--- Test 10: - Formatting -----------------------------------------------------\n\n")
+
+	messageFormat := &messageformat.MessageFormatJson{}
+	messageLogger, _ = messagelogger.New(messageLogLevel, messageFormat, messageId, messageText)
+	messageLogger.Log(3000)
+	messageLogger.Log(2011, "Robert Smith", 12345, aMap, err1, err2)
+
+	// ------------------------------------------------------------------------
+	// The following demonstrates the system-wide logger calls.
+	// ------------------------------------------------------------------------
 
 	fmt.Printf("\n\n--- Test 8: - Status ----------------------------------------------------------\n\n")
 
 	messageStatus := &messagestatus.MessageStatusByIdRange{
 		IdRanges: map[int]string{
-			0000: logger.LevelInfoName,
-			1000: logger.LevelWarnName,
-			2000: logger.LevelErrorName,
-			3000: logger.LevelDebugName,
-			4000: logger.LevelTraceName,
+			0000: logger.LevelTraceName,
+			1000: logger.LevelDebugName,
+			2000: logger.LevelInfoName,
+			3000: logger.LevelWarnName,
+			4000: logger.LevelErrorName,
 			5000: logger.LevelFatalName,
 			6000: logger.LevelPanicName,
 		},
 	}
 	messageLogger, _ = messagelogger.New(messageLogLevel, messageId, messageText, messageStatus)
-	messageLogger.Log(999)
-	messageLogger.Log(1000)
 	messageLogger.Log(2000)
+	messageLogger.Log(3000)
+	messageLogger.Log(4000)
 
-	fmt.Printf("\n\n--- Test 9: - Status ----------------------------------------------------------\n\n")
+	fmt.Printf("\n\n--- Test 8: - Status ----------------------------------------------------------\n\n")
 
 	messageStatus2 := &messagestatus.MessageStatusById{
 		IdStatuses: map[int]string{
-			999:  "Foo",
-			1000: "Bar",
-			2000: "Baz",
+			2000: "Foo",
+			3000: "Bar",
+			4000: "Baz",
 		},
 	}
 	messageLogger, _ = messagelogger.New(messageLogLevel, messageId, messageText, messageStatus2)
-	messageLogger.Log(999)
-	messageLogger.Log(1000)
 	messageLogger.Log(2000)
-
-	fmt.Printf("\n\n--- Test 10: - Logging errors -------------------------------------------------\n\n")
-
-	err1 := errors.New("error #1")
-	err2 := errors.New("error #2")
-	messageLogger.Log(10, err1, err2)
-
-	fmt.Printf("\n\n--- Test 11: - Formatting -----------------------------------------------------\n\n")
-
-	messageFormat := &messageformat.MessageFormatJson{}
-	messageLogger, _ = messagelogger.New(messageLogLevel, messageFormat, messageId, messageText, messageStatus)
-	messageLogger.Log(1000)
-	messageLogger.Log(11, "Robert Smith", 12345, aMap, err1, err2)
-
-	// ------------------------------------------------------------------------
-	// The following demonstrates the system-wide logger calls.
-	// ------------------------------------------------------------------------
+	messageLogger.Log(3000)
+	messageLogger.Log(4000)
 
 	fmt.Printf("\n\n--- Test 12: - System loggers -------------------------------------------------\n\n")
 

@@ -83,7 +83,9 @@ func (messageFormat *MessageFormatJson) Message(date string, time string, level 
 	}
 
 	if details != nil {
-		messageBuilder.Details = details
+		if !reflect.ValueOf(details).IsNil() {
+			messageBuilder.Details = details
+		}
 	}
 
 	// Work with details.

@@ -61,5 +61,9 @@ func (messageDetails *MessageDetailsDefault) MessageDetails(messageNumber int, d
 		}
 	}
 
+	if len(result) == 0 {
+		result = nil
+	}
+
 	return result, err
 }

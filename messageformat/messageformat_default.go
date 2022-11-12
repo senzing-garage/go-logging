@@ -5,6 +5,7 @@ package messageformat
 
 import (
 	"fmt"
+	"reflect"
 	"strings"
 )
 
@@ -43,8 +44,17 @@ func (messageFormat *MessageFormatDefault) Message(date string, time string, lev
 	// 	result = result + fmt.Sprintf("%v ", details)
 	// }
 
+	// FIXME:
+	if errors != nil {
+		if !reflect.ValueOf(errors).IsNil() {
+			result = result + fmt.Sprintf("%#v ", errors)
+		}
+	}
+
 	if details != nil {
-		result = result + fmt.Sprintf("%v ", details)
+		if !reflect.ValueOf(details).IsNil() {
+			result = result + fmt.Sprintf("%v ", details)
+		}
 	}
 
 	// detailMap := make(map[int]interface{})
