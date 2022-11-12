@@ -3,8 +3,6 @@ The MessageErrorsSenzing implementation returns an empty value.
 */
 package messageerrors
 
-import "fmt"
-
 // ----------------------------------------------------------------------------
 // Types
 // ----------------------------------------------------------------------------
@@ -23,7 +21,7 @@ type messageErrorsSenzing struct {
 // The MessageErrors method returns an empty value.
 func (messageErrors *MessageErrorsSenzing) MessageErrors(messageNumber int, details ...interface{}) (interface{}, error) {
 	var err error = nil
-	var result []interface{}
+	var result []interface{} = nil
 
 	// Work with details.
 
@@ -46,7 +44,9 @@ func (messageErrors *MessageErrorsSenzing) MessageErrors(messageNumber int, deta
 		}
 	}
 
-	fmt.Printf(">>>> << >>> result: %v\n", result)
+	if len(result) == 0 {
+		result = nil
+	}
 
 	return result, err
 }

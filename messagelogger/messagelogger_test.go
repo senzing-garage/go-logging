@@ -23,15 +23,17 @@ var messageTime = &messagetime.MessageTimeStatic{
 }
 
 var idMessages = map[int]string{
-	1: "%s knows %s",
-	2: "%s does not know %s",
+	2000: "%s knows %s",
+	3000: "%s knows %s",
+	4000: "%s knows %s",
+	2:    "%s does not know %s",
 }
 
 var messageText = &messagetext.MessageTextTemplated{
 	IdMessages: idMessages,
 }
-var messageLocation = &messagelocation.MessageLocationSenzing{
-	CallerSkip: 2,
+var messageLocation = &messagelocation.MessageLocationStatic{
+	Location: "In AFunction() at somewhere.go:1234",
 }
 
 var testCasesForMessage = []struct {
@@ -56,7 +58,7 @@ var testCasesForMessage = []struct {
 		details:           []interface{}{"A", 1},
 		expectedDefault:   `0: map[1:A 2:1]`,
 		expectedJson:      `{"id":"senzing-99990000","status":"TRACE","details":{"1":"A","2":1}}`,
-		expectedSenzing:   `{"date":"2000-01-01","time":"00:00:00.000000000","level":"TRACE","id":"senzing-99990000","status":"TRACE","location":"In func1() at messagelogger_test.go:357","details":{"1":"A","2":1}}`,
+		expectedSenzing:   `{"date":"2000-01-01","time":"00:00:00.000000000","level":"TRACE","id":"senzing-99990000","status":"TRACE","location":"In AFunction() at somewhere.go:1234","details":{"1":"A","2":1}}`,
 	},
 	{
 		name:              "messagelogger-02-Debug",
@@ -67,41 +69,41 @@ var testCasesForMessage = []struct {
 		details:           []interface{}{"A", 1},
 		expectedDefault:   `1000: map[1:A 2:1]`,
 		expectedJson:      `{"id":"senzing-99990000","status":"DEBUG","details":{"1":"A","2":1}}`,
-		expectedSenzing:   `{"date":"2000-01-01","time":"00:00:00.000000000","level":"DEBUG","id":"senzing-99990000","status":"DEBUG","location":"In func1() at messagelogger_test.go:357","details":{"1":"A","2":1}}`,
+		expectedSenzing:   `{"date":"2000-01-01","time":"00:00:00.000000000","level":"DEBUG","id":"senzing-99991000","status":"DEBUG","location":"In AFunction() at somewhere.go:1234","details":{"1":"A","2":1}}`,
 	},
 	{
 		name:              "messagelogger-03-Info",
-		productIdentifier: 2000,
+		productIdentifier: 9999,
 		idMessages:        idMessages,
 		interfacesDefault: []interface{}{messageText},
 		interfacesSenzing: []interface{}{messageDate, messageTime, messageLocation},
-		messageNumber:     1,
+		messageNumber:     2000,
 		details:           []interface{}{"Bob", "Jane"},
-		expectedDefault:   `1: Bob knows Jane map[1:Bob 2:Jane]`,
+		expectedDefault:   `2000: Bob knows Jane map[1:Bob 2:Jane]`,
 		expectedJson:      `{"id":"senzing-99990001","status":"INFO","text":"Bob knows Jane","details":{"1":"Bob","2":"Jane"}}`,
-		expectedSenzing:   `{"date":"2000-01-01","time":"00:00:00.000000000","level":"INFO","id":"senzing-99990001","status":"INFO","text":"Bob knows Jane","location":"In func1() at messagelogger_test.go:357","details":{"1":"Bob","2":"Jane"}}`,
+		expectedSenzing:   `{"date":"2000-01-01","time":"00:00:00.000000000","level":"INFO","id":"senzing-99992000","status":"INFO","text":"Bob knows Jane","location":"In AFunction() at somewhere.go:1234","details":{"1":"Bob","2":"Jane"}}`,
 	},
 	{
 		name:              "messagelogger-04-Warn",
-		productIdentifier: 3000,
+		productIdentifier: 9999,
 		idMessages:        idMessages,
 		interfacesSenzing: []interface{}{messageLocation, messageDate, messageTime, messageLocation},
-		messageNumber:     1,
+		messageNumber:     3000,
 		details:           []interface{}{"Bob", "Jane"},
-		expectedDefault:   `1: map[1:Bob 2:Jane]`,
+		expectedDefault:   `3000: map[1:Bob 2:Jane]`,
 		expectedJson:      `{"id":"senzing-99990001","status":"WARN","text":"Bob knows Jane","details":{"1":"Bob","2":"Jane"}}`,
-		expectedSenzing:   `{"date":"2000-01-01","time":"00:00:00.000000000","level":"WARN","id":"senzing-99990001","status":"WARN","text":"Bob knows Jane","location":"In func1() at messagelogger_test.go:357","details":{"1":"Bob","2":"Jane"}}`,
+		expectedSenzing:   `{"date":"2000-01-01","time":"00:00:00.000000000","level":"WARN","id":"senzing-99993000","status":"WARN","text":"Bob knows Jane","location":"In AFunction() at somewhere.go:1234","details":{"1":"Bob","2":"Jane"}}`,
 	},
 	{
 		name:              "messagelogger-05-Error",
-		productIdentifier: 4000,
+		productIdentifier: 9999,
 		idMessages:        idMessages,
 		interfacesSenzing: []interface{}{messageLocation, messageDate, messageTime, messageLocation},
-		messageNumber:     1,
+		messageNumber:     4000,
 		details:           []interface{}{"Bob", "Jane"},
-		expectedDefault:   `1: map[1:Bob 2:Jane]`,
+		expectedDefault:   `4000: map[1:Bob 2:Jane]`,
 		expectedJson:      `{"id":"senzing-99990001","status":"ERROR","text":"Bob knows Jane","details":{"1":"Bob","2":"Jane"}}`,
-		expectedSenzing:   `{"date":"2000-01-01","time":"00:00:00.000000000","level":"ERROR","id":"senzing-99990001","status":"ERROR","text":"Bob knows Jane","location":"In func1() at messagelogger_test.go:357","details":{"1":"Bob","2":"Jane"}}`,
+		expectedSenzing:   `{"date":"2000-01-01","time":"00:00:00.000000000","level":"ERROR","id":"senzing-99994000","status":"ERROR","text":"Bob knows Jane","location":"In AFunction() at somewhere.go:1234","details":{"1":"Bob","2":"Jane"}}`,
 	},
 	{
 		name:              "messagelogger-10-Change-message-format",
@@ -109,11 +111,11 @@ var testCasesForMessage = []struct {
 		idMessages:        idMessages,
 		interfacesDefault: []interface{}{messageFormat},
 		interfacesSenzing: []interface{}{messageDate, messageTime, messageLocation},
-		messageNumber:     2000,
+		messageNumber:     2001,
 		details:           []interface{}{"A", 1},
-		expectedDefault:   `{"level":"INFO","id":"2000","details":{"1":"A","2":1}}`,
-		expectedJson:      `{"id":"senzing-99991000","status":"WARN","details":{"1":"A","2":1}}`,
-		expectedSenzing:   `{"date":"2000-01-01","time":"00:00:00.000000000","level":"WARN","id":"senzing-99991000","status":"WARN","location":"In func1() at messagelogger_test.go:357","details":{"1":"A","2":1}}`,
+		expectedDefault:   `{"level":"INFO","id":"2001","details":{"1":"A","2":1}}`,
+		expectedJson:      `{"id":"senzing-99992001","status":"WARN","details":{"1":"A","2":1}}`,
+		expectedSenzing:   `{"date":"2000-01-01","time":"00:00:00.000000000","level":"INFO","id":"senzing-99992001","status":"INFO","location":"In AFunction() at somewhere.go:1234","details":{"1":"A","2":1}}`,
 	},
 }
 
