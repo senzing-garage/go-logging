@@ -27,7 +27,7 @@ var testCases = []struct {
 	expectedDefault string
 }{
 	{
-		name:            "Test case: #1 - Info",
+		name:            "messagestatus-01-Info",
 		messageNumber:   0,
 		idRanges:        IdRanges,
 		IdStatuses:      IdRanges,
@@ -35,7 +35,7 @@ var testCases = []struct {
 		expectedDefault: logger.LevelInfoName,
 	},
 	{
-		name:            "Test case: #2 - Warn",
+		name:            "messagestatus-02-Warn",
 		messageNumber:   1000,
 		idRanges:        IdRanges,
 		IdStatuses:      IdRanges,
@@ -43,7 +43,7 @@ var testCases = []struct {
 		expectedDefault: logger.LevelWarnName,
 	},
 	{
-		name:            "Test case: #3 - Error",
+		name:            "messagestatus-03-Error",
 		messageNumber:   2000,
 		idRanges:        IdRanges,
 		IdStatuses:      IdRanges,
@@ -51,7 +51,7 @@ var testCases = []struct {
 		expectedDefault: logger.LevelErrorName,
 	},
 	{
-		name:            "Test case: #4 - Debug",
+		name:            "messagestatus-04-Debug",
 		messageNumber:   3000,
 		idRanges:        IdRanges,
 		IdStatuses:      IdRanges,
@@ -59,7 +59,7 @@ var testCases = []struct {
 		expectedDefault: logger.LevelDebugName,
 	},
 	{
-		name:            "Test case: #5 - Trace",
+		name:            "messagestatus-05-Trace",
 		messageNumber:   4000,
 		idRanges:        IdRanges,
 		IdStatuses:      IdRanges,
@@ -67,7 +67,7 @@ var testCases = []struct {
 		expectedDefault: logger.LevelTraceName,
 	},
 	{
-		name:            "Test case: #6 - Fatal",
+		name:            "messagestatus-06-Fatal",
 		messageNumber:   5000,
 		idRanges:        IdRanges,
 		IdStatuses:      IdRanges,
@@ -75,7 +75,7 @@ var testCases = []struct {
 		expectedDefault: logger.LevelFatalName,
 	},
 	{
-		name:            "Test case: #7 - Panic",
+		name:            "messagestatus-07-Panic",
 		messageNumber:   6000,
 		idRanges:        IdRanges,
 		IdStatuses:      IdRanges,

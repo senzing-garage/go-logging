@@ -16,28 +16,28 @@ var testCases = []struct {
 	expectedSenzing  string
 }{
 	{
-		name:             "Test case: #1",
+		name:             "messagetime-01",
 		messageNumber:    1001,
 		messageTimestamp: time.Date(2000, time.January, 1, 0, 0, 0, 0, time.UTC),
 		expectedDefault:  "00:00:00.000000",
 		expectedSenzing:  "00:00:00.000000000",
 	},
 	{
-		name:             "Test case: #2",
+		name:             "messagetime-02",
 		messageNumber:    1002,
 		messageTimestamp: time.Date(2000, time.January, 1, 1, 1, 1, 1, time.UTC),
 		expectedDefault:  "01:01:01.000000",
 		expectedSenzing:  "01:01:01.000000001",
 	},
 	{
-		name:             "Test case: #3",
+		name:             "messagetime-03",
 		messageNumber:    1003,
 		messageTimestamp: time.Date(2000, time.January, 1, 0, 0, 0, 999999999, time.UTC),
 		expectedDefault:  "00:00:00.999999",
 		expectedSenzing:  "00:00:00.999999999",
 	},
 	{
-		name:             "Test case: #4",
+		name:             "messagetime-04",
 		messageNumber:    1004,
 		messageTimestamp: time.Date(2000, time.January, 1, 0, 0, 0, 2000, time.UTC),
 		expectedDefault:  "00:00:00.000002",
