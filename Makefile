@@ -72,7 +72,7 @@ test:
 #	@go test -v ./messagelocation
 #	@go test -v ./messagelogger
 #	@go test -v ./messageloglevel
-	@go test -v ./messagestatus
+#	@go test -v ./messagestatus
 #	@go test -v ./messagetext
 #	@go test -v ./messagetime
 

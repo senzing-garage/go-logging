@@ -19,68 +19,149 @@ var IdRanges = map[int]string{
 }
 
 var testCases = []struct {
-	name            string
-	idRanges        map[int]string
-	IdStatuses      map[int]string
-	messageNumber   int
-	details         []interface{}
-	expectedDefault string
+	name               string
+	idRanges           map[int]string
+	IdStatuses         map[int]string
+	messageNumber      int
+	details            []interface{}
+	expectedById       string
+	expectedByIdRange  string
+	expectedDefault    string
+	expectedSenzing    string
+	expectedSenzingApi string
 }{
 	{
-		name:            "messagestatus-01-Info",
-		messageNumber:   0,
-		idRanges:        IdRanges,
-		IdStatuses:      IdRanges,
-		details:         []interface{}{"A", 1},
-		expectedDefault: logger.LevelInfoName,
+		name:               "messagestatus-01-Trace",
+		messageNumber:      0,
+		idRanges:           IdRanges,
+		IdStatuses:         IdRanges,
+		details:            []interface{}{"A", 1},
+		expectedById:       logger.LevelTraceName,
+		expectedByIdRange:  logger.LevelTraceName,
+		expectedDefault:    logger.LevelTraceName,
+		expectedSenzingApi: logger.LevelTraceName,
 	},
 	{
-		name:            "messagestatus-02-Warn",
-		messageNumber:   1000,
-		idRanges:        IdRanges,
-		IdStatuses:      IdRanges,
-		details:         []interface{}{"A", 1},
-		expectedDefault: logger.LevelWarnName,
+		name:               "messagestatus-02-Debug",
+		messageNumber:      1000,
+		idRanges:           IdRanges,
+		IdStatuses:         IdRanges,
+		details:            []interface{}{"A", 1},
+		expectedById:       logger.LevelDebugName,
+		expectedByIdRange:  logger.LevelDebugName,
+		expectedDefault:    logger.LevelDebugName,
+		expectedSenzingApi: logger.LevelDebugName,
 	},
 	{
-		name:            "messagestatus-03-Error",
-		messageNumber:   2000,
-		idRanges:        IdRanges,
-		IdStatuses:      IdRanges,
-		details:         []interface{}{"A", 1},
-		expectedDefault: logger.LevelErrorName,
+		name:               "messagestatus-03-Info",
+		messageNumber:      2000,
+		idRanges:           IdRanges,
+		IdStatuses:         IdRanges,
+		details:            []interface{}{"A", 1},
+		expectedById:       logger.LevelInfoName,
+		expectedByIdRange:  logger.LevelInfoName,
+		expectedDefault:    logger.LevelInfoName,
+		expectedSenzingApi: logger.LevelInfoName,
 	},
 	{
-		name:            "messagestatus-04-Debug",
-		messageNumber:   3000,
-		idRanges:        IdRanges,
-		IdStatuses:      IdRanges,
-		details:         []interface{}{"A", 1},
-		expectedDefault: logger.LevelDebugName,
+		name:               "messagestatus-04-Warn",
+		messageNumber:      3000,
+		idRanges:           IdRanges,
+		IdStatuses:         IdRanges,
+		details:            []interface{}{"A", 1},
+		expectedById:       logger.LevelWarnName,
+		expectedByIdRange:  logger.LevelWarnName,
+		expectedDefault:    logger.LevelWarnName,
+		expectedSenzingApi: logger.LevelWarnName,
 	},
 	{
-		name:            "messagestatus-05-Trace",
-		messageNumber:   4000,
-		idRanges:        IdRanges,
-		IdStatuses:      IdRanges,
-		details:         []interface{}{"A", 1},
-		expectedDefault: logger.LevelTraceName,
+		name:               "messagestatus-05-Error",
+		messageNumber:      4000,
+		idRanges:           IdRanges,
+		IdStatuses:         IdRanges,
+		details:            []interface{}{"A", 1},
+		expectedById:       logger.LevelErrorName,
+		expectedByIdRange:  logger.LevelErrorName,
+		expectedDefault:    logger.LevelErrorName,
+		expectedSenzingApi: logger.LevelErrorName,
 	},
 	{
-		name:            "messagestatus-06-Fatal",
-		messageNumber:   5000,
-		idRanges:        IdRanges,
-		IdStatuses:      IdRanges,
-		details:         []interface{}{"A", 1},
-		expectedDefault: logger.LevelFatalName,
+		name:               "messagestatus-06-Fatal",
+		messageNumber:      5000,
+		idRanges:           IdRanges,
+		IdStatuses:         IdRanges,
+		details:            []interface{}{"A", 1},
+		expectedById:       logger.LevelFatalName,
+		expectedByIdRange:  logger.LevelFatalName,
+		expectedDefault:    logger.LevelFatalName,
+		expectedSenzingApi: logger.LevelFatalName,
 	},
 	{
-		name:            "messagestatus-07-Panic",
-		messageNumber:   6000,
-		idRanges:        IdRanges,
-		IdStatuses:      IdRanges,
-		details:         []interface{}{"A", 1},
-		expectedDefault: logger.LevelPanicName,
+		name:               "messagestatus-07-Panic",
+		messageNumber:      6000,
+		idRanges:           IdRanges,
+		IdStatuses:         IdRanges,
+		details:            []interface{}{"A", 1},
+		expectedById:       logger.LevelPanicName,
+		expectedByIdRange:  logger.LevelPanicName,
+		expectedDefault:    logger.LevelPanicName,
+		expectedSenzingApi: logger.LevelPanicName,
+	},
+	{
+		name:              "messagestatus-11-Trace",
+		messageNumber:     1,
+		idRanges:          IdRanges,
+		IdStatuses:        IdRanges,
+		details:           []interface{}{"A", 1},
+		expectedByIdRange: logger.LevelTraceName,
+	},
+	{
+		name:              "messagestatus-12-Debug",
+		messageNumber:     1001,
+		idRanges:          IdRanges,
+		IdStatuses:        IdRanges,
+		details:           []interface{}{"A", 1},
+		expectedByIdRange: logger.LevelDebugName,
+	},
+	{
+		name:              "messagestatus-13-Info",
+		messageNumber:     2001,
+		idRanges:          IdRanges,
+		IdStatuses:        IdRanges,
+		details:           []interface{}{"A", 1},
+		expectedByIdRange: logger.LevelInfoName,
+	},
+	{
+		name:              "messagestatus-14-Warn",
+		messageNumber:     3001,
+		idRanges:          IdRanges,
+		IdStatuses:        IdRanges,
+		details:           []interface{}{"A", 1},
+		expectedByIdRange: logger.LevelWarnName,
+	},
+	{
+		name:              "messagestatus-15-Error",
+		messageNumber:     4001,
+		idRanges:          IdRanges,
+		IdStatuses:        IdRanges,
+		details:           []interface{}{"A", 1},
+		expectedByIdRange: logger.LevelErrorName,
+	},
+	{
+		name:              "messagestatus-16-Fatal",
+		messageNumber:     5001,
+		idRanges:          IdRanges,
+		IdStatuses:        IdRanges,
+		details:           []interface{}{"A", 1},
+		expectedByIdRange: logger.LevelFatalName,
+	},
+	{
+		name:              "messagestatus-17-Panic",
+		messageNumber:     6001,
+		idRanges:          IdRanges,
+		IdStatuses:        IdRanges,
+		details:           []interface{}{"A", 1},
+		expectedByIdRange: logger.LevelPanicName,
 	},
 }
 
@@ -100,16 +181,13 @@ func testError(test *testing.T, testObject MessageStatusInterface, err error) {
 
 func TestMessageStatusById(test *testing.T) {
 	for _, testCase := range testCases {
-		if len(testCase.expectedDefault) > 0 {
-			test.Run(testCase.name, func(test *testing.T) {
-				testObject := &MessageStatusById{
-					IdStatuses: testCase.idRanges,
-				}
-				actual, err := testObject.MessageStatus(testCase.messageNumber, testCase.details...)
-				testError(test, testObject, err)
-				assert.Equal(test, testCase.expectedDefault, actual, testCase.name)
-			})
-		}
+		test.Run(testCase.name+"-ById", func(test *testing.T) {
+			testObject := &MessageStatusById{
+				IdStatuses: testCase.idRanges,
+			}
+			actual, _ := testObject.MessageStatus(testCase.messageNumber, testCase.details...)
+			assert.Equal(test, testCase.expectedById, actual, testCase.name)
+		})
 	}
 }
 
@@ -119,16 +197,13 @@ func TestMessageStatusById(test *testing.T) {
 
 func TestMessageStatusByIdRange(test *testing.T) {
 	for _, testCase := range testCases {
-		if len(testCase.expectedDefault) > 0 {
-			test.Run(testCase.name, func(test *testing.T) {
-				testObject := &MessageStatusByIdRange{
-					IdRanges: testCase.idRanges,
-				}
-				actual, err := testObject.MessageStatus(testCase.messageNumber, testCase.details...)
-				testError(test, testObject, err)
-				assert.Equal(test, testCase.expectedDefault, actual, testCase.name)
-			})
-		}
+		test.Run(testCase.name+"-ByIdRange", func(test *testing.T) {
+			testObject := &MessageStatusByIdRange{
+				IdRanges: testCase.idRanges,
+			}
+			actual, _ := testObject.MessageStatus(testCase.messageNumber, testCase.details...)
+			assert.Equal(test, testCase.expectedByIdRange, actual, testCase.name)
+		})
 	}
 }
 
@@ -138,16 +213,11 @@ func TestMessageStatusByIdRange(test *testing.T) {
 
 func TestMessageStatusSenzing(test *testing.T) {
 	for _, testCase := range testCases {
-		if len(testCase.expectedDefault) > 0 {
-			test.Run(testCase.name, func(test *testing.T) {
-				testObject := &MessageStatusSenzing{
-					IdRanges: testCase.idRanges,
-				}
-				actual, err := testObject.MessageStatus(testCase.messageNumber, testCase.details...)
-				testError(test, testObject, err)
-				assert.Equal(test, testCase.expectedDefault, actual, testCase.name)
-			})
-		}
+		test.Run(testCase.name+"-Senzing", func(test *testing.T) {
+			testObject := &MessageStatusSenzing{}
+			actual, _ := testObject.MessageStatus(testCase.messageNumber, testCase.details...)
+			assert.Equal(test, testCase.expectedSenzing, actual, testCase.name)
+		})
 	}
 }
 
@@ -157,17 +227,13 @@ func TestMessageStatusSenzing(test *testing.T) {
 
 func TestMessageStatusSenzingApi(test *testing.T) {
 	for _, testCase := range testCases {
-		if len(testCase.expectedDefault) > 0 {
-			test.Run(testCase.name, func(test *testing.T) {
-				testObject := &MessageStatusSenzingApi{
-					IdRanges:   testCase.idRanges,
-					IdStatuses: testCase.idRanges,
-				}
-				actual, err := testObject.MessageStatus(testCase.messageNumber, testCase.details...)
-				testError(test, testObject, err)
-				assert.Equal(test, testCase.expectedDefault, actual, testCase.name)
-			})
-		}
+		test.Run(testCase.name+"-SenzingApi", func(test *testing.T) {
+			testObject := &MessageStatusSenzingApi{
+				IdStatuses: testCase.idRanges,
+			}
+			actual, _ := testObject.MessageStatus(testCase.messageNumber, testCase.details...)
+			assert.Equal(test, testCase.expectedSenzingApi, actual, testCase.name)
+		})
 	}
 }
 
