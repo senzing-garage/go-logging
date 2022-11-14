@@ -6,6 +6,7 @@ package messagedetails
 import (
 	"encoding/json"
 	"fmt"
+	"strconv"
 )
 
 // ----------------------------------------------------------------------------
@@ -22,19 +23,28 @@ type MessageDetailsInterface interface {
 // ----------------------------------------------------------------------------
 
 func isJson(unknownString string) bool {
+	unknownStringUnescaped, err := strconv.Unquote(unknownString)
+	if err != nil {
+		unknownStringUnescaped = unknownString
+	}
 	var jsonString json.RawMessage
-	return json.Unmarshal([]byte(unknownString), &jsonString) == nil
+	return json.Unmarshal([]byte(unknownStringUnescaped), &jsonString) == nil
 }
 
 func jsonAsInterface(unknownString string) interface{} {
+	unknownStringUnescaped, err := strconv.Unquote(unknownString)
+	if err != nil {
+		unknownStringUnescaped = unknownString
+	}
 	var jsonString json.RawMessage
-	json.Unmarshal([]byte(unknownString), &jsonString)
+	json.Unmarshal([]byte(unknownStringUnescaped), &jsonString)
 	return jsonString
 }
 
 func stringify(unknown interface{}) string {
 	// See https://pkg.go.dev/fmt for format strings.
 	var result string
+
 	switch value := unknown.(type) {
 	case nil:
 		result = "<nil>"
@@ -48,6 +58,9 @@ func stringify(unknown interface{}) string {
 		result = fmt.Sprintf("%t", value)
 	case error:
 		result = value.Error()
+	case json.RawMessage:
+		jsonString, _ := value.MarshalJSON()
+		result = string(jsonString)
 	default:
 		// xType := reflect.TypeOf(unknown)
 		// xValue := reflect.ValueOf(unknown)

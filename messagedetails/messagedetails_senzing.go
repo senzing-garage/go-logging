@@ -32,8 +32,15 @@ func (messageDetails *MessageDetailsSenzing) MessageDetails(messageNumber int, d
 		case nil:
 			result[strconv.Itoa(index+1)] = "<nil>"
 
-		case string, int, float64:
+		case int, float64:
 			result[strconv.Itoa(index+1)] = typedValue
+
+		case string:
+			if isJson(typedValue) {
+				result[strconv.Itoa(index+1)] = stringify(jsonAsInterface(typedValue))
+			} else {
+				result[strconv.Itoa(index+1)] = typedValue
+			}
 
 		case bool:
 			result[strconv.Itoa(index+1)] = fmt.Sprintf("%t", typedValue)

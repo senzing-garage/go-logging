@@ -139,18 +139,19 @@ func main() {
 	err2 := errors.New("error #2")
 	messageLogger.Log(2010, err1, err2)
 
-	fmt.Printf("\n\n--- Test 10: - Formatting -----------------------------------------------------\n\n")
+	fmt.Printf("\n\n--- Test 9: - Formatting ------------------------------------------------------\n\n")
 
 	messageFormat := &messageformat.MessageFormatJson{}
 	messageLogger, _ = messagelogger.New(messageLogLevel, messageFormat, messageId, messageText)
 	messageLogger.Log(3000)
 	messageLogger.Log(2011, "Robert Smith", 12345, aMap, err1, err2)
+	messageLogger.Log(2012, `{"A": "A JSON example"}`, "{\"B\": \"A JSON example 2\"}", `{"C": {"D": "A JSON example"}}`)
 
 	// ------------------------------------------------------------------------
 	// The following demonstrates the system-wide logger calls.
 	// ------------------------------------------------------------------------
 
-	fmt.Printf("\n\n--- Test 8: - Status ----------------------------------------------------------\n\n")
+	fmt.Printf("\n\n--- Test 10: - Status ---------------------------------------------------------\n\n")
 
 	messageStatus := &messagestatus.MessageStatusByIdRange{
 		IdRanges: map[int]string{
@@ -168,7 +169,7 @@ func main() {
 	messageLogger.Log(3000)
 	messageLogger.Log(4000)
 
-	fmt.Printf("\n\n--- Test 8: - Status ----------------------------------------------------------\n\n")
+	fmt.Printf("\n\n--- Test 11: - Status ---------------------------------------------------------\n\n")
 
 	messageStatus2 := &messagestatus.MessageStatusById{
 		IdStatuses: map[int]string{
