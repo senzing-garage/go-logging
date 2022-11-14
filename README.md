@@ -83,8 +83,8 @@ These packages have a method signature similar to:
 ```
 
 They receive the message identification number and a series of details.
-From this information,s they construct the value of the field to be logged.
-If the returned string is empty, nothing is logged for that particular field.
+From this information, they construct the value of the field to be logged.
+If the returned string is empty, that field does not appear in the final message.
 
 ### Message format
 
