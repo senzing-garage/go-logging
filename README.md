@@ -76,14 +76,14 @@ Packages that manage message fields are:
 - `messagetext`
 - `messagetime`
 
-These packages have a similar method signature:
+These packages have a method signature similar to:
 
 ```go
  MessageXxxx(messageNumber int, details ...interface{}) (string, error)
 ```
 
 They receive the message identification number and a series of details.
-From this information they construct the value of the field to be logged.
+From this information,s they construct the value of the field to be logged.
 If the returned string is empty, nothing is logged for that particular field.
 
 ### Message format
@@ -95,7 +95,18 @@ Packages that manage message fields are:
 These packages have a similar method signature:
 
 ```go
- Message(date string, time string, level string, location string, id string, status string, text string, duration int64, errors interface{}, details interface{}) (string, error)
+ Message(
+    date string,
+    time string,
+    level string,
+    location string,
+    id string,
+    status string,
+    text string,
+    duration int64,
+    errors interface{},
+    details interface{}
+    ) (string, error)
 ```
 
 The method receives a value for each file,
@@ -109,16 +120,16 @@ Packages that use messages are:
 
 - `messagelogger`
 
-Message use includes: Logging, Error creation, and simple message generation.
+"Message use" includes: Logging, Error creation, and simple message generation.
 In the case of Logging, a logging level may be set to prevent "low-level" log message from being written to the log.
 
 ### Logging
 
-Packages write log messages are:
+Packages that write log messages are:
 
 - `logger`
 
-This packages sit on top of Go's
+This package sit on top of Go's
 [log](https://pkg.go.dev/log)
 package.
 The `logger` package does not replace Go's `log` package.
