@@ -40,11 +40,6 @@ func (messageFormat *MessageFormatDefault) Message(date string, time string, lev
 		result = result + fmt.Sprintf("%s ", text)
 	}
 
-	// if !reflect.ValueOf(details).IsNil() {
-	// 	result = result + fmt.Sprintf("%v ", details)
-	// }
-
-	// FIXME:
 	if errors != nil {
 		if !reflect.ValueOf(errors).IsNil() {
 			result = result + fmt.Sprintf("%#v ", errors)
@@ -57,25 +52,6 @@ func (messageFormat *MessageFormatDefault) Message(date string, time string, lev
 		}
 	}
 
-	// detailMap := make(map[int]interface{})
-	// for index, unknown := range details {
-	// 	switch value := unknown.(type) {
-	// 	case nil:
-	// 		detailMap[index+1] = "<nil>"
-	// 	case string, int, float64:
-	// 		detailMap[index+1] = value
-	// 	case bool:
-	// 		detailMap[index+1] = fmt.Sprintf("%t", value)
-	// 	case error:
-	// 		detailMap[index+1] = value.Error()
-	// 	default:
-	// 		// xType := reflect.TypeOf(unknown)
-	// 		// xValue := reflect.ValueOf(unknown)
-	// 		// detailMap[index+1] = fmt.Sprintf("(%s)%#v", xType, xValue)
-	// 		detailMap[index+1] = fmt.Sprintf("%#v", unknown)
-	// 	}
-	// }
-	// result = result + fmt.Sprintf("[%v] ", detailMap)
 	result = strings.TrimSpace(result)
 
 	return result, err

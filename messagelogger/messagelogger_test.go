@@ -345,8 +345,8 @@ func TestMessageLoggerNewMessageTemplates(test *testing.T) {
 	}
 	testObject, err := New(messageText, messageFormat)
 	testError(test, testObject, err)
-	testObject.Log(1, "Bob", "Jane", testObject, nil)
-	testObject.Log(2, "Bob", "Harry")
+	testObject.Log(1, "Bob", "Harry")
+	testObject.Log(2, "Bob", "Jane", testObject, nil)
 }
 
 func TestMessageLoggerNewBadInterfaces(test *testing.T) {

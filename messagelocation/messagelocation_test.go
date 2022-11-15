@@ -18,6 +18,7 @@ var testCases = []struct {
 		name:            "messagelocation-01",
 		callerSkip:      0,
 		messageNumber:   1000,
+		expectedDefault: "In MessageLocation() at messagelocation_default.go:31",
 		expectedSenzing: "In MessageLocation() at messagelocation_senzing.go:31",
 	},
 }
@@ -29,6 +30,25 @@ var testCases = []struct {
 func testError(test *testing.T, testObject MessageLocationInterface, err error) {
 	if err != nil {
 		assert.Fail(test, err.Error())
+	}
+}
+
+// ----------------------------------------------------------------------------
+// Test interface functions for MessageIdDefault
+// ----------------------------------------------------------------------------
+
+func TestMessageLocationDefault(test *testing.T) {
+	for _, testCase := range testCases {
+		if len(testCase.expectedDefault) > 0 {
+			test.Run(testCase.name+"-Default", func(test *testing.T) {
+				testObject := &MessageLocationDefault{
+					CallerSkip: testCase.callerSkip,
+				}
+				actual, err := testObject.MessageLocation(testCase.messageNumber, testCase.details...)
+				testError(test, testObject, err)
+				assert.Equal(test, testCase.expectedDefault, actual, testCase.name)
+			})
+		}
 	}
 }
 

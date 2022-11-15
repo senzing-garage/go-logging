@@ -1,7 +1,6 @@
 package messageerrors
 
 import (
-	"errors"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
@@ -19,13 +18,6 @@ var testCases = []struct {
 		messageNumber:   1,
 		expectedDefault: []interface{}([]interface{}(nil)),
 		expectedSenzing: []interface{}([]interface{}(nil)),
-	},
-	{
-		name:            "messageerrors-02",
-		messageNumber:   1,
-		details:         []interface{}{"A", errors.New("test error")},
-		expectedDefault: []interface{}{"bob"},
-		expectedSenzing: []interface{}{"bob"},
 	},
 }
 

@@ -81,6 +81,9 @@ var (
 // Constructors
 // ----------------------------------------------------------------------------
 
+/*
+The new() function creates a base logger using null and default components.
+*/
 func new(interfaces ...interface{}) (MessageLoggerInterface, error) {
 	var err error = nil
 
@@ -301,6 +304,10 @@ func NewXXX(interfaces ...interface{}) (MessageLoggerInterface, error) {
 	return result, err
 }
 
+/*
+The New function creates a new instance of MessageLoggerDefault
+that is tailored to Senzing applications.
+*/
 func NewSenzingLogger(productIdentifier int, idMessages map[int]string, interfaces ...interface{}) (MessageLoggerInterface, error) {
 	var err error = nil
 
@@ -404,6 +411,9 @@ func NewSenzingLogger(productIdentifier int, idMessages map[int]string, interfac
 // Functions
 // ----------------------------------------------------------------------------
 
+/*
+The GetLogLevel will return the current system setting for the log level.
+*/
 func GetLogLevel() (Level, error) {
 	var err error = nil
 	if !isSystemLogLevelSet {
@@ -412,6 +422,9 @@ func GetLogLevel() (Level, error) {
 	return systemLogLevel, err
 }
 
+/*
+The GetLogLevelAsString will return the current system setting for the log level as a string.
+*/
 func GetLogLevelAsString() (string, error) {
 	var err error = nil
 
@@ -428,6 +441,9 @@ func GetLogLevelAsString() (string, error) {
 	return levelName, err
 }
 
+/*
+The SetLogLevel will set the current system setting for the log level.
+*/
 func SetLogLevel(level Level) error {
 	var err error = nil
 
@@ -446,6 +462,9 @@ func SetLogLevel(level Level) error {
 	return err
 }
 
+/*
+The SetLogLevelFromString will set the current system setting for the log level.
+*/
 func SetLogLevelFromString(levelName string) error {
 
 	level, ok := logger.TextToLevelMap[levelName]

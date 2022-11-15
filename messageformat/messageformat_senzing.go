@@ -88,57 +88,6 @@ func (messageFormat *MessageFormatSenzing) Message(date string, time string, lev
 		}
 	}
 
-	// Work with details.
-
-	// if len(details) > 0 {
-	// 	var errorsList []interface{}
-	// 	detailMap := make(map[string]interface{})
-
-	// 	// Process different types of details.
-
-	// 	for index, value := range details {
-	// 		switch typedValue := value.(type) {
-	// 		case nil:
-	// 			detailMap[strconv.Itoa(index+1)] = "<nil>"
-
-	// 		case error:
-	// 			errorMessage := typedValue.Error()
-	// 			var priorError interface{}
-	// 			if isJson(errorMessage) {
-	// 				priorError = jsonAsInterface(errorMessage)
-	// 			} else {
-	// 				priorError = &messageFormatSenzing{
-	// 					Text: errorMessage,
-	// 				}
-	// 			}
-	// 			errorsList = append(errorsList, priorError)
-
-	// 		case map[string]string:
-	// 			for mapIndex, mapValue := range typedValue {
-	// 				mapValueAsString := stringify(mapValue)
-	// 				if isJson(mapValueAsString) {
-	// 					detailMap[mapIndex] = jsonAsInterface(mapValueAsString)
-	// 				} else {
-	// 					detailMap[mapIndex] = mapValueAsString
-	// 				}
-	// 			}
-
-	// 		default:
-	// 			valueAsString := stringify(typedValue)
-	// 			if isJson(valueAsString) {
-	// 				detailMap[strconv.Itoa(index+1)] = jsonAsInterface(valueAsString)
-	// 			} else {
-	// 				detailMap[strconv.Itoa(index+1)] = valueAsString
-	// 			}
-	// 		}
-	// 	}
-
-	// Set output Errors and Details fields.
-
-	// messageBuilder.Errors = errorsList
-	// messageBuilder.Details = detailMap
-	// }
-
 	// Convert to JSON.
 
 	// Would love to do it this way, but HTML escaping happens.
