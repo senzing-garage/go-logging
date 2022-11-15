@@ -43,12 +43,9 @@ func (logger *LoggerDefault) printf(debugLevelName string, format string, v ...i
 	var message string
 	calldepth := 3
 	if format == noFormat {
-		v := append(v, 0)
-		copy(v[1:], v[0:])
-		v[0] = debugLevelName + " "
 		message = fmt.Sprint(v...)
 	} else {
-		message = fmt.Sprintf(debugLevelName+" "+format, v...)
+		message = fmt.Sprintf(format, v...)
 	}
 	log.Output(calldepth, message)
 	return loggerInstance

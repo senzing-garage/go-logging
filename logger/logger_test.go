@@ -106,7 +106,7 @@ var testCases = []struct {
 }
 
 // ----------------------------------------------------------------------------
-// Test interface functions - names begin with "Test"
+// Test interface functions
 // ----------------------------------------------------------------------------
 
 func TestLevels(test *testing.T) {

@@ -19,7 +19,7 @@ var testCases = []struct {
 	expectedDefault string
 }{
 	{
-		name:          "Test case: #1",
+		name:          "messagetext-01",
 		messageNumber: 1,
 		idMessages: map[int]string{
 			1: `Bob's middle initial is "%s" and his favorite number is %d.`,
@@ -28,7 +28,7 @@ var testCases = []struct {
 		expectedDefault: `Bob's middle initial is "A" and his favorite number is 1.`,
 	},
 	{
-		name:          "Test case: #2 - Specific Message Number",
+		name:          "messagetext-02-Specific_Message_Number",
 		messageNumber: 1,
 		idMessages: map[int]string{
 			2: "Sally got an \"%s\" on the paper.",
@@ -37,7 +37,7 @@ var testCases = []struct {
 		expectedDefault: `Sally got an "A" on the paper.`,
 	},
 	{
-		name:          "Test case: #3 - GT/LT",
+		name:          "messagetext-03-GT/LT",
 		messageNumber: 1,
 		idMessages: map[int]string{
 			1: `>>>  Try this: "%s"  <<<`,
@@ -58,7 +58,7 @@ func testError(test *testing.T, testObject MessageTextInterface, err error) {
 }
 
 // ----------------------------------------------------------------------------
-// Test interface functions for MessageTextSenzing - names begin with "Test"
+// Test interface functions for MessageTextSenzing
 // ----------------------------------------------------------------------------
 
 func TestMessageTextSenzing(test *testing.T) {
@@ -77,7 +77,7 @@ func TestMessageTextSenzing(test *testing.T) {
 }
 
 // ----------------------------------------------------------------------------
-// Test interface functions for MessageTextTemplated - names begin with "Test"
+// Test interface functions for MessageTextTemplated
 // ----------------------------------------------------------------------------
 
 func TestMessageTextTemplated(test *testing.T) {

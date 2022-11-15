@@ -5,6 +5,7 @@ package messageformat
 
 import (
 	"fmt"
+	"reflect"
 	"strings"
 )
 
@@ -20,10 +21,15 @@ type MessageFormatDefault struct{}
 // ----------------------------------------------------------------------------
 
 // The Message method creates a terse, default formatted message.
-func (messageFormat *MessageFormatDefault) Message(id string, status string, text string, details ...interface{}) (string, error) {
+func (messageFormat *MessageFormatDefault) Message(date string, time string, level string, location string, id string, status string, text string, duration int64, errors interface{}, details interface{}) (string, error) {
 	var err error = nil
 
 	result := ""
+
+	if len(level) > 0 {
+		result = result + fmt.Sprintf("%s ", level)
+	}
+
 	if len(id) > 0 {
 		result = result + fmt.Sprintf("%s: ", id)
 	}
@@ -33,27 +39,19 @@ func (messageFormat *MessageFormatDefault) Message(id string, status string, tex
 	if len(text) > 0 {
 		result = result + fmt.Sprintf("%s ", text)
 	}
-	if len(details) > 0 {
-		detailMap := make(map[int]interface{})
-		for index, unknown := range details {
-			switch value := unknown.(type) {
-			case nil:
-				detailMap[index+1] = "<nil>"
-			case string, int, float64:
-				detailMap[index+1] = value
-			case bool:
-				detailMap[index+1] = fmt.Sprintf("%t", value)
-			case error:
-				detailMap[index+1] = value.Error()
-			default:
-				// xType := reflect.TypeOf(unknown)
-				// xValue := reflect.ValueOf(unknown)
-				// detailMap[index+1] = fmt.Sprintf("(%s)%#v", xType, xValue)
-				detailMap[index+1] = fmt.Sprintf("%#v", unknown)
-			}
+
+	if errors != nil {
+		if !reflect.ValueOf(errors).IsNil() {
+			result = result + fmt.Sprintf("%#v ", errors)
 		}
-		result = result + fmt.Sprintf("[%v] ", detailMap)
 	}
+
+	if details != nil {
+		if !reflect.ValueOf(details).IsNil() {
+			result = result + fmt.Sprintf("%v ", details)
+		}
+	}
+
 	result = strings.TrimSpace(result)
 
 	return result, err

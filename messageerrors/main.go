@@ -1,7 +1,7 @@
 /*
-The messageformat package renders messages.
+The messageerrors package produces a date string.
 */
-package messageformat
+package messageerrors
 
 import (
 	"encoding/json"
@@ -12,9 +12,9 @@ import (
 // Types
 // ----------------------------------------------------------------------------
 
-// The MessageFormatInterface type defines methods for producing formatting messages.
-type MessageFormatInterface interface {
-	Message(date string, time string, level string, location string, id string, status string, text string, duration int64, errors interface{}, details interface{}) (string, error)
+// The MessageErrorsInterface type defines methods for aggregating errors from details.
+type MessageErrorsInterface interface {
+	MessageErrors(messageNumber int, details ...interface{}) (interface{}, error)
 }
 
 // ----------------------------------------------------------------------------

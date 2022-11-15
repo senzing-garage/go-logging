@@ -6,13 +6,20 @@ package messagelogger
 import (
 	"errors"
 	"fmt"
+	"time"
 
 	"github.com/senzing/go-logging/logger"
+	"github.com/senzing/go-logging/messagedate"
+	"github.com/senzing/go-logging/messagedetails"
+	"github.com/senzing/go-logging/messageduration"
+	"github.com/senzing/go-logging/messageerrors"
 	"github.com/senzing/go-logging/messageformat"
 	"github.com/senzing/go-logging/messageid"
-	"github.com/senzing/go-logging/messageloglevel"
+	"github.com/senzing/go-logging/messagelevel"
+	"github.com/senzing/go-logging/messagelocation"
 	"github.com/senzing/go-logging/messagestatus"
 	"github.com/senzing/go-logging/messagetext"
+	"github.com/senzing/go-logging/messagetime"
 )
 
 // ----------------------------------------------------------------------------
@@ -22,11 +29,17 @@ import (
 // The MessageLoggerDefault type is for constructing and logging messages.
 type MessageLoggerDefault struct {
 	Logger          logger.LoggerInterface
+	MessageDate     messagedate.MessageDateInterface
+	MessageDetails  messagedetails.MessageDetailsInterface
+	MessageDuration messageduration.MessageDurationInterface
+	MessageErrors   messageerrors.MessageErrorsInterface
 	MessageFormat   messageformat.MessageFormatInterface
 	MessageId       messageid.MessageIdInterface
-	MessageLogLevel messageloglevel.MessageLogLevelInterface
+	MessageLevel    messagelevel.MessageLevelInterface
+	MessageLocation messagelocation.MessageLocationInterface
 	MessageStatus   messagestatus.MessageStatusInterface
 	MessageText     messagetext.MessageTextInterface
+	MessageTime     messagetime.MessageTimeInterface
 }
 
 // ----------------------------------------------------------------------------
@@ -122,8 +135,8 @@ func (messagelogger *MessageLoggerDefault) Log(messageNumber int, details ...int
 	}
 
 	messageLevel := logger.LevelInfo
-	if messagelogger.MessageLogLevel != nil {
-		messageLevel, err = messagelogger.MessageLogLevel.MessageLogLevel(messageNumber, details...)
+	if messagelogger.MessageLevel != nil {
+		messageLevel, err = messagelogger.MessageLevel.MessageLevel(messageNumber, details...)
 		if err != nil {
 			return err
 		}
@@ -135,6 +148,17 @@ func (messagelogger *MessageLoggerDefault) Log(messageNumber int, details ...int
 // The Message method returns a string with the formatted message.
 func (messagelogger *MessageLoggerDefault) Message(messageNumber int, details ...interface{}) (string, error) {
 	var err error
+	now := time.Now()
+
+	date := ""
+	if messagelogger.MessageDate != nil {
+		date, _ = messagelogger.MessageDate.MessageDate(messageNumber, now, details...)
+	}
+
+	time := ""
+	if messagelogger.MessageTime != nil {
+		time, _ = messagelogger.MessageTime.MessageTime(messageNumber, now, details...)
+	}
 
 	id := fmt.Sprintf("%d", messageNumber)
 	if messagelogger.MessageId != nil {
@@ -144,9 +168,19 @@ func (messagelogger *MessageLoggerDefault) Message(messageNumber int, details ..
 		}
 	}
 
-	text := ""
-	if messagelogger.MessageText != nil {
-		text, _ = messagelogger.MessageText.MessageText(messageNumber, details...)
+	location := ""
+	if messagelogger.MessageLocation != nil {
+		location, _ = messagelogger.MessageLocation.MessageLocation(messageNumber, details...)
+	}
+
+	level := ""
+	if messagelogger.MessageLevel != nil {
+		levelAsLevel, _ := messagelogger.MessageLevel.MessageLevel(messageNumber, details...)
+		var ok bool
+		level, ok = logger.LevelToTextMap[levelAsLevel]
+		if !ok {
+			level = ""
+		}
 	}
 
 	status := ""
@@ -154,7 +188,27 @@ func (messagelogger *MessageLoggerDefault) Message(messageNumber int, details ..
 		status, _ = messagelogger.MessageStatus.MessageStatus(messageNumber, details...)
 	}
 
-	result, err := messagelogger.MessageFormat.Message(id, status, text, details...)
+	text := ""
+	if messagelogger.MessageText != nil {
+		text, _ = messagelogger.MessageText.MessageText(messageNumber, details...)
+	}
+
+	duration := int64(0)
+	if messagelogger.MessageDuration != nil {
+		duration, _ = messagelogger.MessageDuration.MessageDuration(messageNumber, details...)
+	}
+
+	var errors interface{}
+	if messagelogger.MessageErrors != nil {
+		errors, _ = messagelogger.MessageErrors.MessageErrors(messageNumber, details...)
+	}
+
+	var detailList interface{}
+	if messagelogger.MessageDetails != nil {
+		detailList, _ = messagelogger.MessageDetails.MessageDetails(messageNumber, details...)
+	}
+
+	result, err := messagelogger.MessageFormat.Message(date, time, level, location, id, status, text, duration, errors, detailList)
 	if err != nil {
 		return "", err
 	}

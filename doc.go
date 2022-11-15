@@ -106,13 +106,17 @@ Example:
 
 	messageText := &messagetext.MessageTextTemplated{
 		IdMessage: map[int]string{
-			5:    "The favorite number for %s is %d.",
-			6:    "Person number #%[2]d is %[1]s.",
-			10:   "Example errors.",
-			11:   "%s has a score of %d.",
-			999:  "A test of INFO.",
-			1000: "A test of WARN.",
-			2000: "A test of ERROR.",
+			999:  "A test of TRACE.",
+			1000: "A test of DEBUG.",
+			2000: "A test of INFO.",
+			2005: "The favorite number for %s is %d.",
+			2006: "Person number #%[2]d is %[1]s.",
+			2010: "Example errors.",
+			2011: "%s has a score of %d.",
+			3000: "A test of WARN.",
+			4000: "A test of ERROR.",
+			5000: "A test of FATAL.",
+			6000: "A test of PANIC.",
 		},
 	}
 	messageLogger, _ = messagelogger.New(messageId, messageText)
@@ -120,7 +124,7 @@ Example:
 
 Output:
 
-	INFO senzing-99990005: The favorite number for Robert Smith is 12345. [map[1:Robert Smith 2:12345 3:map[int]string{10:"ten", 20:"twenty"}]]
+	INFO senzing-99992005: The favorite number for Robert Smith is 12345. map[1:Robert Smith 2:12345 3:map[int]string{10:"ten", 20:"twenty"}]
 
 Notice that the information used to build the formatted text still remains in the map.
 This is by design.
@@ -136,83 +140,32 @@ Example:
 
 Output:
 
-	ERROR senzing-99990006: Person number #12345 is Robert Smith. [map[1:Robert Smith 2:12345 3:map[int]string{10:"ten", 20:"twenty"} 4:4]]
+	ERROR senzing-99992006: Person number #12345 is Robert Smith. map[1:Robert Smith 2:12345 3:map[int]string{10:"ten", 20:"twenty"} 4:[52]]
 
 The logging level can be automated by identifying a MessageLogLevel of type MessageLogLevelInterface.
 Example:
 
 	messageLogLevel := &messageloglevel.MessageLogLevelByIdRange{
 		IdRanges: map[int]logger.Level{
-			0000: logger.LevelInfo,
-			1000: logger.LevelWarn,
-			2000: logger.LevelError,
-			3000: logger.LevelDebug,
-			4000: logger.LevelTrace,
+			0000: logger.LevelTrace,
+			1000: logger.LevelDebug,
+			2000: logger.LevelInfo,
+			3000: logger.LevelWarn,
+			4000: logger.LevelError,
 			5000: logger.LevelFatal,
 			6000: logger.LevelPanic,
 		},
 	}
 	messageLogger, _ = messagelogger.New(messageLogLevel, messageId, messageText)
-	messageLogger.Log(999)
-	messageLogger.Log(1000)
 	messageLogger.Log(2000)
+	messageLogger.Log(3000)
+	messageLogger.Log(4000)
 
 Output:
 
-	INFO senzing-99990999: A test of INFO.
-	WARN senzing-99991000: A test of WARN.
-	ERROR senzing-99992000: A test of ERROR.
-
--- Status ---------------------------------------------------------------------
-
-A status field can be added to the log message by
-identifying a MessageStatus of type MessageStatusInterface.
-One method is to identify ranges of messages ids and their
-corresponding statuses.
-Example:
-
-	messageStatus := &messagestatus.MessageStatusByIdRange{
-		IdRanges: map[int]string{
-			0000: logger.LevelInfoName,
-			1000: logger.LevelWarnName,
-			2000: logger.LevelErrorName,
-			3000: logger.LevelDebugName,
-			4000: logger.LevelTraceName,
-			5000: logger.LevelFatalName,
-			6000: logger.LevelPanicName,
-		},
-	}
-	messageLogger, _ = messagelogger.New(messageLogLevel, messageId, messageText, messageStatus)
-	messageLogger.Log(999)
-	messageLogger.Log(1000)
-	messageLogger.Log(2000)
-
-Output:
-
-	INFO senzing-99990999: (INFO) A test of INFO.
-	WARN senzing-99991000: (WARN) A test of WARN.
-	ERROR senzing-99992000: (ERROR) A test of ERROR.
-
-Status can also be individually assigned to message numbers.
-Example:
-
-	messageStatus2 := &messagestatus.MessageStatusById{
-		IdStatus: map[int]string{
-			999:  "Foo",
-			1000: "Bar",
-			2000: "Baz",
-		},
-	}
-	messageLogger, _ = messagelogger.New(messageLogLevel, messageId, messageText, messageStatus2)
-	messageLogger.Log(999)
-	messageLogger.Log(1000)
-	messageLogger.Log(2000)
-
-Output:
-
-	INFO senzing-99990999: (Foo) A test of INFO.
-	WARN senzing-99991000: (Bar) A test of WARN.
-	ERROR senzing-99992000: (Baz) A test of ERROR.
+	INFO senzing-99992000: A test of INFO.
+	WARN senzing-99993000: A test of WARN.
+	ERROR senzing-99994000: A test of ERROR.
 
 -- Logging errors -------------------------------------------------------------
 
@@ -221,7 +174,7 @@ Example:
 
 	err1 := errors.New("error #1")
 	err2 := errors.New("error #2")
-	messageLogger.Log(10, err1, err2)
+	messageLogger.Log(2010, err1, err2)
 
 Output:
 
@@ -233,13 +186,13 @@ The format of the log message can be modified by choosing a different message fo
 Example:
 
 	messageFormat := &messageformat.MessageFormatJson{}
-	messageLogger, _ = messagelogger.New(messageLogLevel, messageFormat, messageId, messageText, messageStatus)
-	messageLogger.Log(1000)
-	messageLogger.Log(11, "Robert Smith", 12345, aMap, err1, err2)
+	messageLogger, _ = messagelogger.New(messageLogLevel, messageFormat, messageId, messageText)
+	messageLogger.Log(3000)
+	messageLogger.Log(2011, "Robert Smith", 12345, aMap, err1, err2)
 
 Output:
 
-	WARN {"id":"senzing-99991000","status":"WARN","text":"A test of WARN."}
-	INFO {"id":"senzing-99990011","status":"INFO","text":"Robert Smith has a score of 12345.","errors":[{"text":"error #1"},{"text":"error #2"}],"details":{"1":"Robert Smith","2":12345,"3":"map[int]string{10:\"ten\", 20:\"twenty\"}"}}
+	{"level":"WARN","id":"senzing-99993000","text":"A test of WARN."}
+	{"level":"INFO","id":"senzing-99992011","text":"Robert Smith has a score of 12345.","details":{"1":"Robert Smith","2":12345,"3":"map[int]string{10:\"ten\", 20:\"twenty\"}"}}
 */
 package main
