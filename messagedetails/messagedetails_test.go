@@ -36,24 +36,31 @@ var testCases = []struct {
 	},
 	{
 		name:            "messagedetails-04",
-		messageNumber:   1003,
+		messageNumber:   1004,
 		details:         []interface{}{"A", map[string]string{"Name": "Bob"}},
 		expectedDefault: map[string]interface{}{"1": "A", "Name": "Bob"},
 		expectedSenzing: map[string]interface{}{"1": "A", "Name": "Bob"},
 	},
 	{
 		name:            "messagedetails-05",
-		messageNumber:   1003,
+		messageNumber:   1005,
 		details:         []interface{}{"{\"A\": \"A JSON example\"}"},
 		expectedDefault: map[string]interface{}{"1": `{"A": "A JSON example"}`},
 		expectedSenzing: map[string]interface{}{"1": `{"A": "A JSON example"}`},
 	},
 	{
 		name:            "messagedetails-06",
-		messageNumber:   1003,
+		messageNumber:   1006,
 		details:         []interface{}{`{"A": "A JSON example"}`},
 		expectedDefault: map[string]interface{}{"1": `{"A": "A JSON example"}`},
 		expectedSenzing: map[string]interface{}{"1": `{"A": "A JSON example"}`},
+	},
+	{
+		name:            "messagedetails-07",
+		messageNumber:   1007,
+		details:         []interface{}{`{"A": {"B": "A JSON example"}}`},
+		expectedDefault: map[string]interface{}{"1": `{"A": {"B": "A JSON example"}}`},
+		expectedSenzing: map[string]interface{}{"1": `{"A": {"B": "A JSON example"}}`},
 	},
 }
 

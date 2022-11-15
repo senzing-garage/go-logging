@@ -3,7 +3,10 @@ The messageerrors package produces a date string.
 */
 package messageerrors
 
-import "encoding/json"
+import (
+	"encoding/json"
+	"strconv"
+)
 
 // ----------------------------------------------------------------------------
 // Types
@@ -19,12 +22,20 @@ type MessageErrorsInterface interface {
 // ----------------------------------------------------------------------------
 
 func isJson(unknownString string) bool {
+	unknownStringUnescaped, err := strconv.Unquote(unknownString)
+	if err != nil {
+		unknownStringUnescaped = unknownString
+	}
 	var jsonString json.RawMessage
-	return json.Unmarshal([]byte(unknownString), &jsonString) == nil
+	return json.Unmarshal([]byte(unknownStringUnescaped), &jsonString) == nil
 }
 
 func jsonAsInterface(unknownString string) interface{} {
+	unknownStringUnescaped, err := strconv.Unquote(unknownString)
+	if err != nil {
+		unknownStringUnescaped = unknownString
+	}
 	var jsonString json.RawMessage
-	json.Unmarshal([]byte(unknownString), &jsonString)
+	json.Unmarshal([]byte(unknownStringUnescaped), &jsonString)
 	return jsonString
 }

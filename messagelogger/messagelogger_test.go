@@ -1,6 +1,7 @@
 package messagelogger
 
 import (
+	"errors"
 	"testing"
 	"time"
 
@@ -116,6 +117,30 @@ var testCasesForMessage = []struct {
 		expectedDefault:   `{"level":"INFO","id":"2001","details":{"1":"A","2":1}}`,
 		expectedJson:      `{"id":"senzing-99992001","status":"WARN","details":{"1":"A","2":1}}`,
 		expectedSenzing:   `{"date":"2000-01-01","time":"00:00:00.000000000","level":"INFO","id":"senzing-99992001","status":"INFO","location":"In AFunction() at somewhere.go:1234","details":{"1":"A","2":1}}`,
+	},
+	{
+		name:              "messagelogger-11-Include-error",
+		productIdentifier: 9999,
+		idMessages:        idMessages,
+		interfacesDefault: []interface{}{messageFormat},
+		interfacesSenzing: []interface{}{messageDate, messageTime, messageLocation},
+		messageNumber:     2001,
+		details:           []interface{}{"A", 1, errors.New("test error")},
+		expectedDefault:   `{"level":"INFO","id":"2001","errors":[{"text":"test error"}],"details":{"1":"A","2":1}}`,
+		expectedJson:      `{"id":"senzing-99992001","status":"WARN","details":{"1":"A","2":1}}`,
+		expectedSenzing:   `{"date":"2000-01-01","time":"00:00:00.000000000","level":"INFO","id":"senzing-99992001","status":"INFO","location":"In AFunction() at somewhere.go:1234","errors":[{"text":"test error"}],"details":{"1":"A","2":1}}`,
+	},
+	{
+		name:              "messagelogger-12-Include-error-JSON",
+		productIdentifier: 9999,
+		idMessages:        idMessages,
+		interfacesDefault: []interface{}{messageFormat},
+		interfacesSenzing: []interface{}{messageDate, messageTime, messageLocation},
+		messageNumber:     2001,
+		details:           []interface{}{"A", 1, errors.New(`{"error": "Bad error", "number": 1}`)},
+		expectedDefault:   `{"level":"INFO","id":"2001","errors":[{"text":{"error":"Bad error","number":1}}],"details":{"1":"A","2":1}}`,
+		expectedJson:      `{"id":"senzing-99992001","status":"WARN","details":{"1":"A","2":1}}`,
+		expectedSenzing:   `{"date":"2000-01-01","time":"00:00:00.000000000","level":"INFO","id":"senzing-99992001","status":"INFO","location":"In AFunction() at somewhere.go:1234","errors":[{"text":{"error":"Bad error","number":1}}],"details":{"1":"A","2":1}}`,
 	},
 }
 

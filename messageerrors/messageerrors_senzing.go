@@ -23,10 +23,6 @@ func (messageErrors *MessageErrorsSenzing) MessageErrors(messageNumber int, deta
 	var err error = nil
 	var result []interface{} = nil
 
-	// Work with details.
-
-	// Process different types of details.
-
 	for _, value := range details {
 		switch typedValue := value.(type) {
 
@@ -34,7 +30,9 @@ func (messageErrors *MessageErrorsSenzing) MessageErrors(messageNumber int, deta
 			errorMessage := typedValue.Error()
 			var priorError interface{}
 			if isJson(errorMessage) {
-				priorError = jsonAsInterface(errorMessage)
+				priorError = &messageErrorsSenzing{
+					Text: jsonAsInterface(errorMessage),
+				}
 			} else {
 				priorError = &messageErrorsSenzing{
 					Text: errorMessage,

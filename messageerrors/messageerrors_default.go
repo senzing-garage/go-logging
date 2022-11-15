@@ -30,7 +30,9 @@ func (messageErrors *MessageErrorsDefault) MessageErrors(messageNumber int, deta
 			errorMessage := typedValue.Error()
 			var priorError interface{}
 			if isJson(errorMessage) {
-				priorError = jsonAsInterface(errorMessage)
+				priorError = &messageErrorsDefault{
+					Text: jsonAsInterface(errorMessage),
+				}
 			} else {
 				priorError = &messageErrorsDefault{
 					Text: errorMessage,
