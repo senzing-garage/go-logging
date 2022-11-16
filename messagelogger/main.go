@@ -357,27 +357,11 @@ func NewSenzingLogger(productIdentifier int, idMessages map[int]string, interfac
 
 	messageLogLevel := &messagelevel.MessageLevelSenzing{
 		DefaultLogLevel: logger.LevelInfo,
-		IdRanges: map[int]logger.Level{
-			0000: logger.LevelTrace,
-			1000: logger.LevelDebug,
-			2000: logger.LevelInfo,
-			3000: logger.LevelWarn,
-			4000: logger.LevelError,
-			5000: logger.LevelFatal,
-			6000: logger.LevelPanic,
-		},
+		IdRanges:        messagelevel.IdRangesAsLevel,
 	}
 
 	messageStatus := &messagestatus.MessageStatusSenzing{
-		IdRanges: map[int]string{
-			0000: logger.LevelTraceName,
-			1000: logger.LevelDebugName,
-			2000: logger.LevelInfoName,
-			3000: logger.LevelWarnName,
-			4000: logger.LevelErrorName,
-			5000: logger.LevelFatalName,
-			6000: logger.LevelPanicName,
-		},
+		IdRanges: messagelevel.IdRangesAsString,
 	}
 
 	messageText := &messagetext.MessageTextSenzing{

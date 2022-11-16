@@ -28,12 +28,18 @@ func (messageLogLevel *MessageLevelSenzingApi) MessageLevel(messageNumber int, d
 	var result = logger.LevelError
 
 	// First priority:  Log level explicitly given in details parameter.
+	// Last occurance of logger.Level wins.
 
+	foundInDetails := false
 	for _, value := range details {
 		switch typedValue := value.(type) {
 		case logger.Level:
-			return typedValue, err
+			foundInDetails = true
+			result = typedValue
 		}
+	}
+	if foundInDetails {
+		return result, err
 	}
 
 	// Second priority: Calculate log level from the status.

@@ -30,12 +30,18 @@ func (messageLevel *MessageLevelByIdRange) MessageLevel(messageNumber int, detai
 	result := messageLevel.DefaultLogLevel
 
 	// First priority:  Log level explicitly given in details parameter.
+	// Last occurance of logger.Level wins.
 
+	foundInDetails := false
 	for _, value := range details {
 		switch typedValue := value.(type) {
 		case logger.Level:
-			return typedValue, err
+			foundInDetails = true
+			result = typedValue
 		}
+	}
+	if foundInDetails {
+		return result, err
 	}
 
 	// Second priority: Message in a range.

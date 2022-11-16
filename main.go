@@ -118,15 +118,7 @@ func main() {
 	fmt.Printf("\n\n--- Test 7: - Log level -------------------------------------------------------\n\n")
 
 	messageLogLevel := &messagelevel.MessageLevelByIdRange{
-		IdRanges: map[int]logger.Level{
-			0000: logger.LevelTrace,
-			1000: logger.LevelDebug,
-			2000: logger.LevelInfo,
-			3000: logger.LevelWarn,
-			4000: logger.LevelError,
-			5000: logger.LevelFatal,
-			6000: logger.LevelPanic,
-		},
+		IdRanges: messagelevel.IdRangesAsLevel,
 	}
 	messageLogger, _ = messagelogger.New(messageLogLevel, messageId, messageText)
 	messageLogger.Log(2000)
@@ -154,15 +146,7 @@ func main() {
 	fmt.Printf("\n\n--- Test 10: - Status ---------------------------------------------------------\n\n")
 
 	messageStatus := &messagestatus.MessageStatusByIdRange{
-		IdRanges: map[int]string{
-			0000: logger.LevelTraceName,
-			1000: logger.LevelDebugName,
-			2000: logger.LevelInfoName,
-			3000: logger.LevelWarnName,
-			4000: logger.LevelErrorName,
-			5000: logger.LevelFatalName,
-			6000: logger.LevelPanicName,
-		},
+		IdRanges: messagelevel.IdRangesAsString,
 	}
 	messageLogger, _ = messagelogger.New(messageLogLevel, messageId, messageText, messageStatus)
 	messageLogger.Log(2000)

@@ -146,15 +146,7 @@ The logging level can be automated by identifying a MessageLogLevel of type Mess
 Example:
 
 	messageLogLevel := &messageloglevel.MessageLogLevelByIdRange{
-		IdRanges: map[int]logger.Level{
-			0000: logger.LevelTrace,
-			1000: logger.LevelDebug,
-			2000: logger.LevelInfo,
-			3000: logger.LevelWarn,
-			4000: logger.LevelError,
-			5000: logger.LevelFatal,
-			6000: logger.LevelPanic,
-		},
+		IdRanges: messagelevel.IdRangesAsLevel,
 	}
 	messageLogger, _ = messagelogger.New(messageLogLevel, messageId, messageText)
 	messageLogger.Log(2000)
