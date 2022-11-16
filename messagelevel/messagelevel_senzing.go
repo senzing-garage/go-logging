@@ -44,14 +44,21 @@ func (messageLogLevel *MessageLevelSenzing) getSortedMessageLevelKeys() []int {
 // The MessageLevel method returns a logger.level based on one or more logger.level types in the details parameter.
 func (messageLogLevel *MessageLevelSenzing) MessageLevel(messageNumber int, details ...interface{}) (logger.Level, error) {
 	var err error = nil
+	var result logger.Level
 
 	// First priority:  Log level explicitly given in details parameter.
+	// Last occurance of logger.Level wins.
 
+	foundInDetails := false
 	for _, value := range details {
 		switch typedValue := value.(type) {
 		case logger.Level:
-			return typedValue, err
+			foundInDetails = true
+			result = typedValue
 		}
+	}
+	if foundInDetails {
+		return result, err
 	}
 
 	// Second priority: Message Id exact match to an entry in IdLevels.
