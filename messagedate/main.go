@@ -1,5 +1,5 @@
 /*
-The messagedate package produces a date string.
+The messagedate package produces a value for the "date" field.
 */
 package messagedate
 

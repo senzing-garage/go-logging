@@ -1,5 +1,5 @@
 /*
-The messagedetails package produces a date string.
+The messagedetails package produces a value for the "details" field.
 */
 package messagedetails
 
@@ -13,7 +13,7 @@ import (
 // Types
 // ----------------------------------------------------------------------------
 
-// The MessageDetailsInterface type defines methods for determining the date value.
+// The MessageDetailsInterface type defines methods for determining the details value.
 type MessageDetailsInterface interface {
 	MessageDetails(messageNumber int, details ...interface{}) (interface{}, error)
 }

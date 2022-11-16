@@ -1,5 +1,5 @@
 /*
-The messagetime package produces a time string.
+The messagetime package produces a value for the "time" field.
 */
 package messagetime
 

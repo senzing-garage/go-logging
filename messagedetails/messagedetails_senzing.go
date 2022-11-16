@@ -1,5 +1,5 @@
 /*
-The MessageDetailsSenzing implementation returns an empty value.
+The MessageDetailsSenzing implementation returns map[string]interface{}.
 */
 package messagedetails
 
@@ -12,14 +12,14 @@ import (
 // Types
 // ----------------------------------------------------------------------------
 
-// The MessageDetailsSenzing type is for returning an empty value.
+// The MessageDetailsSenzing type is for returning a map[string]interface{}.
 type MessageDetailsSenzing struct{}
 
 // ----------------------------------------------------------------------------
 // Interface methods
 // ----------------------------------------------------------------------------
 
-// The MessageDetails method returns an empty value.
+// The MessageDetails method returns a map[string]interface{} with un-indexed instances receiving an ordinal index.
 func (messageDetails *MessageDetailsSenzing) MessageDetails(messageNumber int, details ...interface{}) (interface{}, error) {
 	var err error = nil
 

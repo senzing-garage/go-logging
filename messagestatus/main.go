@@ -1,5 +1,5 @@
 /*
-The messagestatus package produces a string used in a "status" field of a log message.
+The messagestatus package produces a value for the "status" field.
 */
 package messagestatus
 

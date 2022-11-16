@@ -1,5 +1,5 @@
 /*
-The messagelocation package produces a value for the location string.
+The messagelocation package produces a value for the "location" field.
 */
 package messagelocation
 

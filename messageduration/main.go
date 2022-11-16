@@ -1,5 +1,5 @@
 /*
-The messageduration package produces an int64 time duration value.
+The messageduration package produces a value for the "duration" field.
 */
 package messageduration
 

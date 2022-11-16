@@ -1,5 +1,5 @@
 /*
-The messagelevel package produces a log level.
+The messagelevel package produces a value for the "level" field.
 */
 package messagelevel
 

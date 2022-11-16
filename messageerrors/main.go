@@ -1,5 +1,5 @@
 /*
-The messageerrors package produces a date string.
+The messageerrors package produces a value for the "errors" field.
 */
 package messageerrors
 

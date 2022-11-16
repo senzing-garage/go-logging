@@ -1,5 +1,5 @@
 /*
-The messageid package produces customized message identifiers.
+The messageid package produces a value for the "id" field.
 */
 package messageid
 
