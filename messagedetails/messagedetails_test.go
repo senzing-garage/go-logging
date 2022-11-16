@@ -1,6 +1,7 @@
 package messagedetails
 
 import (
+	"encoding/json"
 	"errors"
 	"testing"
 
@@ -45,22 +46,22 @@ var testCases = []struct {
 		name:            "messagedetails-05",
 		messageNumber:   1005,
 		details:         []interface{}{"{\"A\": \"A JSON example\"}"},
-		expectedDefault: map[string]interface{}{"1": `{"A": "A JSON example"}`},
-		expectedSenzing: map[string]interface{}{"1": `{"A": "A JSON example"}`},
+		expectedDefault: map[string]interface{}{"1": json.RawMessage(`{"A": "A JSON example"}`)},
+		expectedSenzing: map[string]interface{}{"1": json.RawMessage(`{"A": "A JSON example"}`)},
 	},
 	{
 		name:            "messagedetails-06",
 		messageNumber:   1006,
 		details:         []interface{}{`{"A": "A JSON example"}`},
-		expectedDefault: map[string]interface{}{"1": `{"A": "A JSON example"}`},
-		expectedSenzing: map[string]interface{}{"1": `{"A": "A JSON example"}`},
+		expectedDefault: map[string]interface{}{"1": json.RawMessage(`{"A": "A JSON example"}`)},
+		expectedSenzing: map[string]interface{}{"1": json.RawMessage(`{"A": "A JSON example"}`)},
 	},
 	{
 		name:            "messagedetails-07",
 		messageNumber:   1007,
 		details:         []interface{}{`{"A": {"B": "A JSON example"}}`},
-		expectedDefault: map[string]interface{}{"1": `{"A": {"B": "A JSON example"}}`},
-		expectedSenzing: map[string]interface{}{"1": `{"A": {"B": "A JSON example"}}`},
+		expectedDefault: map[string]interface{}{"1": json.RawMessage(`{"A": {"B": "A JSON example"}}`)},
+		expectedSenzing: map[string]interface{}{"1": json.RawMessage(`{"A": {"B": "A JSON example"}}`)},
 	},
 }
 

@@ -17,126 +17,183 @@ var testCases = []struct {
 }{
 	{
 		name:            "messagelevel-01",
-		idRanges:        IdRangesAsLevel,
+		idRanges:        IdLevelRanges,
 		messageNumber:   0,
 		details:         []interface{}{123, "bob"},
 		expectedDefault: logger.LevelTrace,
 	},
 	{
 		name:            "messagelevel-02",
-		idRanges:        IdRangesAsLevel,
+		idRanges:        IdLevelRanges,
 		messageNumber:   1000,
 		details:         []interface{}{123, "bob"},
 		expectedDefault: logger.LevelDebug,
 	},
 	{
 		name:            "messagelevel-03",
-		idRanges:        IdRangesAsLevel,
+		idRanges:        IdLevelRanges,
 		messageNumber:   2000,
 		details:         []interface{}{123, "bob"},
 		expectedDefault: logger.LevelInfo,
 	},
 	{
 		name:            "messagelevel-04",
-		idRanges:        IdRangesAsLevel,
+		idRanges:        IdLevelRanges,
 		messageNumber:   3000,
 		details:         []interface{}{123, "bob"},
 		expectedDefault: logger.LevelWarn,
 	},
 	{
 		name:            "messagelevel-05",
-		idRanges:        IdRangesAsLevel,
+		idRanges:        IdLevelRanges,
 		messageNumber:   4000,
 		details:         []interface{}{123, "bob"},
 		expectedDefault: logger.LevelError,
 	},
 	{
 		name:            "messagelevel-06",
-		idRanges:        IdRangesAsLevel,
+		idRanges:        IdLevelRanges,
 		messageNumber:   5000,
 		details:         []interface{}{123, "bob"},
 		expectedDefault: logger.LevelFatal,
 	},
 	{
 		name:            "messagelevel-07",
-		idRanges:        IdRangesAsLevel,
+		idRanges:        IdLevelRanges,
 		messageNumber:   6000,
 		details:         []interface{}{123, "bob"},
 		expectedDefault: logger.LevelPanic,
 	},
 	{
 		name:            "messagelevel-08",
-		idRanges:        IdRangesAsLevel,
+		idRanges:        IdLevelRanges,
 		messageNumber:   7000,
 		details:         []interface{}{123, "bob"},
 		expectedDefault: logger.LevelPanic,
 	},
 	{
 		name:            "messagelevel-09",
-		idRanges:        IdRangesAsLevel,
+		idRanges:        IdLevelRanges,
 		messageNumber:   9999,
 		details:         []interface{}{123, "bob"},
 		expectedDefault: logger.LevelPanic,
 	},
+
 	{
-		name:            "messagelevel-10",
-		idRanges:        IdRangesAsLevel,
+		name:            "messagelevel-11",
+		idRanges:        IdLevelRanges,
+		messageNumber:   1,
+		details:         []interface{}{123, "bob"},
+		expectedDefault: logger.LevelTrace,
+	},
+	{
+		name:            "messagelevel-12",
+		idRanges:        IdLevelRanges,
+		messageNumber:   1001,
+		details:         []interface{}{123, "bob"},
+		expectedDefault: logger.LevelDebug,
+	},
+	{
+		name:            "messagelevel-13",
+		idRanges:        IdLevelRanges,
+		messageNumber:   2001,
+		details:         []interface{}{123, "bob"},
+		expectedDefault: logger.LevelInfo,
+	},
+	{
+		name:            "messagelevel-14",
+		idRanges:        IdLevelRanges,
+		messageNumber:   3001,
+		details:         []interface{}{123, "bob"},
+		expectedDefault: logger.LevelWarn,
+	},
+	{
+		name:            "messagelevel-15",
+		idRanges:        IdLevelRanges,
+		messageNumber:   4001,
+		details:         []interface{}{123, "bob"},
+		expectedDefault: logger.LevelError,
+	},
+	{
+		name:            "messagelevel-16",
+		idRanges:        IdLevelRanges,
+		messageNumber:   5001,
+		details:         []interface{}{123, "bob"},
+		expectedDefault: logger.LevelFatal,
+	},
+	{
+		name:            "messagelevel-17",
+		idRanges:        IdLevelRanges,
+		messageNumber:   6001,
+		details:         []interface{}{123, "bob"},
+		expectedDefault: logger.LevelPanic,
+	},
+	{
+		name:            "messagelevel-18",
+		idRanges:        IdLevelRanges,
+		messageNumber:   7001,
+		details:         []interface{}{123, "bob"},
+		expectedDefault: logger.LevelPanic,
+	},
+	{
+		name:            "messagelevel-20",
+		idRanges:        IdLevelRanges,
 		messageNumber:   1001,
 		details:         []interface{}{123, "bob", logger.LevelTrace},
 		expectedDefault: logger.LevelTrace,
 	},
 	{
-		name:            "messagelevel-11",
-		idRanges:        IdRangesAsLevel,
+		name:            "messagelevel-21",
+		idRanges:        IdLevelRanges,
 		messageNumber:   1001,
 		details:         []interface{}{123, "bob", logger.LevelDebug},
 		expectedDefault: logger.LevelDebug,
 	},
 	{
-		name:            "messagelevel-12",
-		idRanges:        IdRangesAsLevel,
+		name:            "messagelevel-22",
+		idRanges:        IdLevelRanges,
 		messageNumber:   1001,
 		details:         []interface{}{123, "bob", logger.LevelInfo},
 		expectedDefault: logger.LevelInfo,
 	},
 	{
-		name:            "messagelevel-13",
-		idRanges:        IdRangesAsLevel,
+		name:            "messagelevel-23",
+		idRanges:        IdLevelRanges,
 		messageNumber:   1001,
 		details:         []interface{}{123, "bob", logger.LevelWarn},
 		expectedDefault: logger.LevelWarn,
 	},
 	{
-		name:            "messagelevel-14",
-		idRanges:        IdRangesAsLevel,
+		name:            "messagelevel-24",
+		idRanges:        IdLevelRanges,
 		messageNumber:   1001,
 		details:         []interface{}{123, "bob", logger.LevelError},
 		expectedDefault: logger.LevelError,
 	},
 	{
-		name:            "messagelevel-15",
-		idRanges:        IdRangesAsLevel,
+		name:            "messagelevel-25",
+		idRanges:        IdLevelRanges,
 		messageNumber:   1001,
 		details:         []interface{}{123, "bob", logger.LevelFatal},
 		expectedDefault: logger.LevelFatal,
 	},
 	{
-		name:            "messagelevel-16",
-		idRanges:        IdRangesAsLevel,
+		name:            "messagelevel-26",
+		idRanges:        IdLevelRanges,
 		messageNumber:   1001,
 		details:         []interface{}{123, "bob", logger.LevelPanic},
 		expectedDefault: logger.LevelPanic,
 	},
 	{
-		name:            "messagelevel-17",
-		idRanges:        IdRangesAsLevel,
+		name:            "messagelevel-27",
+		idRanges:        IdLevelRanges,
 		messageNumber:   1001,
 		details:         []interface{}{123, "bob", logger.LevelInfo, logger.LevelDebug},
 		expectedDefault: logger.LevelDebug,
 	},
 	{
-		name:            "messagelevel-18",
-		idRanges:        IdRangesAsLevel,
+		name:            "messagelevel-28",
+		idRanges:        IdLevelRanges,
 		messageNumber:   1001,
 		details:         []interface{}{123, "bob", logger.LevelDebug, logger.LevelInfo},
 		expectedDefault: logger.LevelInfo,
@@ -161,7 +218,7 @@ func TestMessageLevelByIdRange(test *testing.T) {
 	for _, testCase := range testCases {
 		test.Run(testCase.name+"-ByIdRange", func(test *testing.T) {
 			testObject := &MessageLevelByIdRange{
-				IdRanges: testCase.idRanges,
+				IdLevelRanges: testCase.idRanges,
 			}
 			actual, err := testObject.MessageLevel(testCase.messageNumber, testCase.details...)
 			testError(test, testObject, err)
@@ -178,7 +235,7 @@ func TestMessageLevelDefault(test *testing.T) {
 	for _, testCase := range testCases {
 		test.Run(testCase.name+"-Default", func(test *testing.T) {
 			testObject := &MessageLevelDefault{
-				IdRanges: testCase.idRanges,
+				IdLevelRanges: testCase.idRanges,
 			}
 			actual, err := testObject.MessageLevel(testCase.messageNumber, testCase.details...)
 			testError(test, testObject, err)
@@ -195,7 +252,7 @@ func TestMessageLevelSenzing(test *testing.T) {
 	for _, testCase := range testCases {
 		test.Run(testCase.name+"-Senzing", func(test *testing.T) {
 			testObject := &MessageLevelSenzing{
-				IdRanges: testCase.idRanges,
+				IdLevelRanges: testCase.idRanges,
 			}
 			actual, err := testObject.MessageLevel(testCase.messageNumber, testCase.details...)
 			testError(test, testObject, err)
@@ -211,15 +268,15 @@ func TestMessageLevelSenzing(test *testing.T) {
 func TestMessageLevelSenzingApi(test *testing.T) {
 
 	idRangesStrings := make(map[int]string)
-	for key, value := range IdRangesAsLevel {
+	for key, value := range IdLevelRanges {
 		idRangesStrings[key] = logger.LevelToTextMap[value]
 	}
 
 	for _, testCase := range testCases {
 		test.Run(testCase.name+"-SenzingApi", func(test *testing.T) {
 			testObject := &MessageLevelSenzingApi{
-				IdRanges:   idRangesStrings,
-				IdStatuses: idRangesStrings,
+				IdLevelRanges: IdLevelRanges,
+				IdStatuses:    idRangesStrings,
 			}
 			actual, err := testObject.MessageLevel(testCase.messageNumber, testCase.details...)
 			testError(test, testObject, err)
@@ -228,21 +285,34 @@ func TestMessageLevelSenzingApi(test *testing.T) {
 	}
 }
 
-func TestSenzingApiMessageLevelWithErrors(test *testing.T) {
+func TestMessageLevelSenzingApiWithoutErrors(test *testing.T) {
+	expected := logger.LevelDebug
+	idRangesStrings := make(map[int]string)
+	for key, value := range IdLevelRanges {
+		idRangesStrings[key] = logger.LevelToTextMap[value]
+	}
+	testObject := &MessageLevelSenzingApi{
+		IdLevelRanges: IdLevelRanges,
+		IdStatuses:    idRangesStrings,
+	}
+	actual, err := testObject.MessageLevel(1001, "A", 1, testObject)
+	testError(test, testObject, err)
+	assert.Equal(test, expected, actual)
+}
+
+func TestMessageLevelSenzingApiWithErrors(test *testing.T) {
 	expected := logger.LevelError
 	anError1 := errors.New("0019E|Configuration not found")
 	anError2 := errors.New("0099E|Made up error")
-
 	idRangesStrings := make(map[int]string)
-	for key, value := range IdRangesAsLevel {
+	for key, value := range IdLevelRanges {
 		idRangesStrings[key] = logger.LevelToTextMap[value]
 	}
-
 	testObject := &MessageLevelSenzingApi{
-		IdRanges:   idRangesStrings,
-		IdStatuses: idRangesStrings,
+		IdLevelRanges: IdLevelRanges,
+		IdStatuses:    idRangesStrings,
 	}
-	actual, err := testObject.MessageLevel(1, "A", 1, testObject, anError1, anError2)
+	actual, err := testObject.MessageLevel(1001, "A", 1, testObject, anError1, anError2)
 	testError(test, testObject, err)
 	assert.Equal(test, expected, actual)
 }

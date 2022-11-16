@@ -18,7 +18,7 @@ import (
 type MessageLevelSenzing struct {
 	DefaultLogLevel        logger.Level
 	IdLevels               map[int]logger.Level // Specific message ids and the corresponding logger level.
-	IdRanges               map[int]logger.Level // The "low-bound" of a range and the corresponding logger level.
+	IdLevelRanges          map[int]logger.Level // The "low-bound" of a range and the corresponding logger level.
 	sortedMessageLevelKeys []int                // The keys of IdRanges in sorted order.
 }
 
@@ -26,15 +26,15 @@ type MessageLevelSenzing struct {
 // Internal methods
 // ----------------------------------------------------------------------------
 
-func (messageLogLevel *MessageLevelSenzing) getSortedMessageLevelKeys() []int {
-	if messageLogLevel.sortedMessageLevelKeys == nil {
-		messageLogLevel.sortedMessageLevelKeys = make([]int, 0, len(messageLogLevel.IdRanges))
-		for key := range messageLogLevel.IdRanges {
-			messageLogLevel.sortedMessageLevelKeys = append(messageLogLevel.sortedMessageLevelKeys, key)
+func (messageLevel *MessageLevelSenzing) getSortedMessageLevelKeys() []int {
+	if messageLevel.sortedMessageLevelKeys == nil {
+		messageLevel.sortedMessageLevelKeys = make([]int, 0, len(messageLevel.IdLevelRanges))
+		for key := range messageLevel.IdLevelRanges {
+			messageLevel.sortedMessageLevelKeys = append(messageLevel.sortedMessageLevelKeys, key)
 		}
-		sort.Sort(sort.Reverse(sort.IntSlice(messageLogLevel.sortedMessageLevelKeys)))
+		sort.Sort(sort.Reverse(sort.IntSlice(messageLevel.sortedMessageLevelKeys)))
 	}
-	return messageLogLevel.sortedMessageLevelKeys
+	return messageLevel.sortedMessageLevelKeys
 }
 
 // ----------------------------------------------------------------------------
@@ -42,7 +42,7 @@ func (messageLogLevel *MessageLevelSenzing) getSortedMessageLevelKeys() []int {
 // ----------------------------------------------------------------------------
 
 // The MessageLevel method returns a logger.level based on one or more logger.level types in the details parameter.
-func (messageLogLevel *MessageLevelSenzing) MessageLevel(messageNumber int, details ...interface{}) (logger.Level, error) {
+func (messageLevel *MessageLevelSenzing) MessageLevel(messageNumber int, details ...interface{}) (logger.Level, error) {
 	var err error = nil
 	var result logger.Level
 
@@ -63,8 +63,8 @@ func (messageLogLevel *MessageLevelSenzing) MessageLevel(messageNumber int, deta
 
 	// Second priority: Message Id exact match to an entry in IdLevels.
 
-	if messageLogLevel.IdLevels != nil {
-		result, ok := messageLogLevel.IdLevels[messageNumber]
+	if messageLevel.IdLevels != nil {
+		result, ok := messageLevel.IdLevels[messageNumber]
 		if ok {
 			return result, err
 		}
@@ -72,16 +72,16 @@ func (messageLogLevel *MessageLevelSenzing) MessageLevel(messageNumber int, deta
 
 	// Third priority: Message in a range.
 
-	if messageLogLevel.IdRanges != nil {
-		sortedMessageLevelKeys := messageLogLevel.getSortedMessageLevelKeys()
+	if messageLevel.IdLevelRanges != nil {
+		sortedMessageLevelKeys := messageLevel.getSortedMessageLevelKeys()
 		for _, messageLevelKey := range sortedMessageLevelKeys {
 			if messageNumber >= messageLevelKey {
-				return messageLogLevel.IdRanges[messageLevelKey], err
+				return messageLevel.IdLevelRanges[messageLevelKey], err
 			}
 		}
 	}
 
 	// Last priority, the default value.
 
-	return messageLogLevel.DefaultLogLevel, err
+	return messageLevel.DefaultLogLevel, err
 }

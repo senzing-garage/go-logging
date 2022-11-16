@@ -4,8 +4,6 @@ The MessageStatusSenzingApi implementation calculates a status value based on me
 package messagestatus
 
 import (
-	"fmt"
-	"sort"
 	"strings"
 
 	"github.com/senzing/go-logging/logger"
@@ -16,12 +14,13 @@ import (
 // ----------------------------------------------------------------------------
 
 /*
-The MessageStatusSenzingApi type is for constructing status values by first
-looking at the Senzing error code.
-If it doesn't exist, use the messageNumber to calculate a status.
+The MessageStatusSenzingApi type is for constructing status values for the SenzingAPI.
+First, it looks in the details for an explicit messagestatus.Status value.
+Next, it sees if the message number is in a lookup table.
+Finally, it looks at the Senzing error code.
+If in none of those places, an empty string is returned.
 */
 type MessageStatusSenzingApi struct {
-	IdRanges   map[int]string
 	IdStatuses map[int]string
 }
 
@@ -110,25 +109,6 @@ func (messageStatus *MessageStatusSenzingApi) messageStatusBySenzingError(messag
 	return ""
 }
 
-func (messageStatus *MessageStatusSenzingApi) messageStatusByIdRanges(messageNumber int) string {
-	// Create a list of sorted keys.
-
-	messageLevelKeys := make([]int, 0, len(messageStatus.IdRanges))
-	for key := range messageStatus.IdRanges {
-		messageLevelKeys = append(messageLevelKeys, key)
-	}
-	sort.Sort(sort.Reverse(sort.IntSlice(messageLevelKeys)))
-
-	// Using the sorted message number, find the level.
-
-	for _, messageLevelKey := range messageLevelKeys {
-		if messageNumber >= messageLevelKey {
-			return messageStatus.IdRanges[messageLevelKey]
-		}
-	}
-	return ""
-}
-
 // ----------------------------------------------------------------------------
 // Interface methods
 // ----------------------------------------------------------------------------
@@ -136,15 +116,24 @@ func (messageStatus *MessageStatusSenzingApi) messageStatusByIdRanges(messageNum
 // The MessageStatus method returns a status based on a message number indexed into senzingApiErrorsMap.
 func (messageStatus *MessageStatusSenzingApi) MessageStatus(messageNumber int, details ...interface{}) (string, error) {
 	var err error = nil
+	var result = ""
 
-	// --- Status based on Senzing error passed in via details ----------------
+	// First priority:  Status explicitly given in details parameter.
+	// Last occurance of messagestatus.Status is used.
 
-	result := messageStatus.messageStatusBySenzingError(messageNumber, details...)
-	if len(result) > 0 {
+	foundInDetails := false
+	for _, value := range details {
+		switch typedValue := value.(type) {
+		case Status:
+			foundInDetails = true
+			result = string(typedValue)
+		}
+	}
+	if foundInDetails {
 		return result, err
 	}
 
-	// --- Status based on messageNumber ----------------------------------------
+	// Second priority: Status based on message number lookup.
 
 	if messageStatus.IdStatuses != nil {
 		result, ok := messageStatus.IdStatuses[messageNumber]
@@ -153,16 +142,14 @@ func (messageStatus *MessageStatusSenzingApi) MessageStatus(messageNumber int, d
 		}
 	}
 
-	// --- Status based on messageNumber range ----------------------------------
+	// Third priority: Status based on Senzing error passed in via details.
 
-	if messageStatus.IdRanges != nil {
-		result = messageStatus.messageStatusByIdRanges(messageNumber)
-		if len(result) > 0 {
-			return result, err
-		}
+	result = messageStatus.messageStatusBySenzingError(messageNumber, details...)
+	if len(result) > 0 {
+		return result, err
 	}
 
 	// --- At this point, failed to find status -------------------------------
 
-	return result, fmt.Errorf("could not determine status for message number %d", messageNumber)
+	return result, err
 }

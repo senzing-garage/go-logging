@@ -11,3 +11,6 @@ package messagestatus
 type MessageStatusInterface interface {
 	MessageStatus(messageNumber int, details ...interface{}) (string, error)
 }
+
+// The Status type is used to identify strings as being status strings in details parameter.
+type Status string

@@ -17,7 +17,7 @@ import (
 // The MessageLevelByIdRange type is for determining log level base on which range a message number resides in.
 type MessageLevelByIdRange struct {
 	DefaultLogLevel logger.Level
-	IdRanges        map[int]logger.Level
+	IdLevelRanges   map[int]logger.Level
 }
 
 // ----------------------------------------------------------------------------
@@ -46,12 +46,12 @@ func (messageLevel *MessageLevelByIdRange) MessageLevel(messageNumber int, detai
 
 	// Second priority: Message in a range.
 
-	if messageLevel.IdRanges != nil {
+	if messageLevel.IdLevelRanges != nil {
 
 		// Since maps aren't sorted, create a list of sorted keys.
 
-		messageLevelKeys := make([]int, 0, len(messageLevel.IdRanges))
-		for key := range messageLevel.IdRanges {
+		messageLevelKeys := make([]int, 0, len(messageLevel.IdLevelRanges))
+		for key := range messageLevel.IdLevelRanges {
 			messageLevelKeys = append(messageLevelKeys, key)
 		}
 		sort.Sort(sort.Reverse(sort.IntSlice(messageLevelKeys)))
@@ -60,7 +60,7 @@ func (messageLevel *MessageLevelByIdRange) MessageLevel(messageNumber int, detai
 
 		for _, messageLevelKey := range messageLevelKeys {
 			if messageNumber >= messageLevelKey {
-				return messageLevel.IdRanges[messageLevelKey], err
+				return messageLevel.IdLevelRanges[messageLevelKey], err
 			}
 		}
 	}

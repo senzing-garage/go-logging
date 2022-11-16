@@ -183,13 +183,19 @@ To use non-default subcomponents,
 adding parameters to New() can specify the subcomponent desired.
 The parameters can be of the following type and in any order:
 
+  - logger.Level
   - logger.LoggerInterface
+  - messagedate.MessageDateInterface
+  - messagedetails.MessageDetailsInterface
+  - messageduration.MessageDurationInterface
+  - messageerrors.MessageErrorsInterface
   - messageformat.MessageFormatInterface
   - messageid.MessageIdInterface
   - messagelevel.MessageLevelInterface
+  - messagelocation.MessageLocationInterface
   - messagestatus.MessageStatusInterface
   - messagetext.MessageTextInterface
-  - logger.Level
+  - messagetime.MessageTimeInterface
 
 If a type is specified multiple times,
 the last instance instance of the type specified wins.
@@ -213,100 +219,10 @@ func New(interfaces ...interface{}) (MessageLoggerInterface, error) {
 	return new(newInterfaces...)
 }
 
-func NewXXX(interfaces ...interface{}) (MessageLoggerInterface, error) {
-	var err error = nil
-
-	// Start with default values.
-
-	logLevel := LevelInfo
-	result := &MessageLoggerDefault{
-		Logger:          &logger.LoggerDefault{},
-		MessageDate:     &messagedate.MessageDateNull{},
-		MessageDetails:  &messagedetails.MessageDetailsNull{},
-		MessageDuration: &messageduration.MessageDurationNull{},
-		MessageErrors:   &messageerrors.MessageErrorsNull{},
-		MessageFormat:   &messageformat.MessageFormatDefault{},
-		MessageId:       &messageid.MessageIdDefault{},
-		MessageLocation: &messagelocation.MessageLocationNull{},
-		MessageLevel: &messagelevel.MessageLevelDefault{
-			DefaultLogLevel: logger.LevelInfo,
-		},
-		MessageStatus: &messagestatus.MessageStatusNull{},
-		MessageText:   &messagetext.MessageTextNull{},
-		MessageTime:   &messagetime.MessageTimeNull{},
-	}
-
-	// Incorporate parameters.
-
-	var errorsList []interface{}
-	if len(interfaces) > 0 {
-		for _, value := range interfaces {
-			switch typedValue := value.(type) {
-			case logger.LoggerInterface:
-				result.Logger = typedValue
-			case messagedate.MessageDateInterface:
-				result.MessageDate = typedValue
-			case messagedetails.MessageDetailsInterface:
-				result.MessageDetails = typedValue
-			case messageduration.MessageDurationInterface:
-				result.MessageDuration = typedValue
-			case messageerrors.MessageErrorsInterface:
-				result.MessageErrors = typedValue
-			case messageformat.MessageFormatInterface:
-				result.MessageFormat = typedValue
-			case messageid.MessageIdInterface:
-				result.MessageId = typedValue
-			case messagelevel.MessageLevelInterface:
-				result.MessageLevel = typedValue
-			case messagelocation.MessageLocationInterface:
-				result.MessageLocation = typedValue
-			case messagestatus.MessageStatusInterface:
-				result.MessageStatus = typedValue
-			case messagetext.MessageTextInterface:
-				result.MessageText = typedValue
-			case messagetime.MessageTimeInterface:
-				result.MessageTime = typedValue
-			case logger.Level:
-				logLevelCandidate, ok := value.(logger.Level)
-				if ok {
-					logLevel = Level(logLevelCandidate)
-				}
-			default:
-				errorsList = append(errorsList, typedValue)
-			}
-		}
-	}
-	result.SetLogLevel(logLevel)
-
-	// Report any unknown parameters.
-
-	if len(errorsList) > 0 {
-		err = fmt.Errorf("unsupported interfaces: %#v", errorsList)
-	}
-
-	// If system logging level set, set this logger to that level and
-	// add this messageLogger to the Observers list.
-	// Do this in a thread-safe way.
-
-	lock.Lock()
-	defer lock.Unlock()
-
-	if isSystemLogLevelSet {
-		result.SetLogLevel(systemLogLevel)
-	}
-
-	if messageLoggerObservers == nil {
-		messageLoggerObservers = make([]MessageLoggerInterface, 0)
-	}
-
-	messageLoggerObservers = append(messageLoggerObservers, result)
-
-	return result, err
-}
-
 /*
-The New function creates a new instance of MessageLoggerDefault
+The NewSenzingLogger function creates a new instance of MessageLoggerInterface
 that is tailored to Senzing applications.
+Like New(), adding parameters can be used to modify subcomponents.
 */
 func NewSenzingLogger(productIdentifier int, idMessages map[int]string, interfaces ...interface{}) (MessageLoggerInterface, error) {
 	var err error = nil
@@ -341,45 +257,40 @@ func NewSenzingLogger(productIdentifier int, idMessages map[int]string, interfac
 	// Construct the components of the messagelogger.
 
 	messageDate := &messagedate.MessageDateSenzing{}
-	messageTime := &messagetime.MessageTimeSenzing{}
-	messageDuration := &messageduration.MessageDurationSenzing{}
-	messageFormat := &messageformat.MessageFormatSenzing{}
-	messageErrors := &messageerrors.MessageErrorsSenzing{}
 	messageDetails := &messagedetails.MessageDetailsSenzing{}
-
-	messageLocation := &messagelocation.MessageLocationSenzing{
-		CallerSkip: callerSkip,
-	}
-
+	messageDuration := &messageduration.MessageDurationSenzing{}
+	messageErrors := &messageerrors.MessageErrorsSenzing{}
+	messageFormat := &messageformat.MessageFormatSenzing{}
 	messageId := &messageid.MessageIdSenzing{
 		MessageIdTemplate: fmt.Sprintf("senzing-%04d", productIdentifier) + "%04d",
 	}
-
-	messageLogLevel := &messagelevel.MessageLevelSenzing{
+	messageLevel := &messagelevel.MessageLevelSenzing{
 		DefaultLogLevel: logger.LevelInfo,
-		IdRanges:        messagelevel.IdRangesAsLevel,
+		IdLevelRanges:   messagelevel.IdLevelRanges,
 	}
-
+	messageLocation := &messagelocation.MessageLocationSenzing{
+		CallerSkip: callerSkip,
+	}
 	messageStatus := &messagestatus.MessageStatusSenzing{
-		IdRanges: messagelevel.IdRangesAsString,
+		IdStatuses: messagelevel.IdLevelRangesAsString,
 	}
-
 	messageText := &messagetext.MessageTextSenzing{
 		IdMessages: idMessages,
 	}
+	messageTime := &messagetime.MessageTimeSenzing{}
 
 	var newInterfaces = []interface{}{
 		messageDate,
-		messageTime,
-		messageLocation,
-		messageId,
-		messageFormat,
-		messageLogLevel,
-		messageStatus,
-		messageText,
+		messageDetails,
 		messageDuration,
 		messageErrors,
-		messageDetails,
+		messageFormat,
+		messageId,
+		messageLevel,
+		messageLocation,
+		messageStatus,
+		messageText,
+		messageTime,
 	}
 
 	// Add other user-supplied interfaces to newInterfaces.
@@ -389,6 +300,36 @@ func NewSenzingLogger(productIdentifier int, idMessages map[int]string, interfac
 	// Using a Factory Pattern, build the messagelogger.
 
 	return New(newInterfaces...)
+}
+
+/*
+The NewSenzingApiLogger function creates a new instance of MessageLoggerInterface
+that is tailored for the Senzing SDK implementation.
+*/
+func NewSenzingApiLogger(productIdentifier int, idMessages map[int]string, idStatuses map[int]string, interfaces ...interface{}) (MessageLoggerInterface, error) {
+	messageLevel := &messagelevel.MessageLevelSenzingApi{
+		IdLevelRanges: messagelevel.IdLevelRanges,
+		IdStatuses:    idStatuses,
+	}
+	messageStatus := &messagestatus.MessageStatusSenzingApi{
+		IdStatuses: idStatuses,
+	}
+	messageLocation := &messagelocation.MessageLocationSenzing{
+		CallerSkip: 4,
+	}
+	var newInterfaces = []interface{}{
+		messageLevel,
+		messageLocation,
+		messageStatus,
+	}
+
+	// Add other user-supplied interfaces to newInterfaces.
+
+	newInterfaces = append(newInterfaces, interfaces...)
+
+	// Using a Factory Pattern, build the messagelogger.
+
+	return NewSenzingLogger(productIdentifier, idMessages, newInterfaces...)
 }
 
 // ----------------------------------------------------------------------------

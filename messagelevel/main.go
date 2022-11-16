@@ -18,7 +18,7 @@ type MessageLevelInterface interface {
 // Variables
 // ----------------------------------------------------------------------------
 
-var IdRangesAsLevel = map[int]logger.Level{
+var IdLevelRanges = map[int]logger.Level{
 	0000: logger.LevelTrace,
 	1000: logger.LevelDebug,
 	2000: logger.LevelInfo,
@@ -28,7 +28,7 @@ var IdRangesAsLevel = map[int]logger.Level{
 	6000: logger.LevelPanic,
 }
 
-var IdRangesAsString = map[int]string{
+var IdLevelRangesAsString = map[int]string{
 	0000: logger.LevelTraceName,
 	1000: logger.LevelDebugName,
 	2000: logger.LevelInfoName,

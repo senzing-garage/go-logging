@@ -58,9 +58,6 @@ func stringify(unknown interface{}) string {
 		result = fmt.Sprintf("%t", value)
 	case error:
 		result = value.Error()
-	case json.RawMessage:
-		jsonString, _ := value.MarshalJSON()
-		result = string(jsonString)
 	default:
 		// xType := reflect.TypeOf(unknown)
 		// xValue := reflect.ValueOf(unknown)

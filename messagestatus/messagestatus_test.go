@@ -199,7 +199,7 @@ func TestMessageStatusByIdRange(test *testing.T) {
 	for _, testCase := range testCases {
 		test.Run(testCase.name+"-ByIdRange", func(test *testing.T) {
 			testObject := &MessageStatusByIdRange{
-				IdRanges: testCase.idRanges,
+				IdStatusRanges: testCase.idRanges,
 			}
 			actual, _ := testObject.MessageStatus(testCase.messageNumber, testCase.details...)
 			assert.Equal(test, testCase.expectedByIdRange, actual, testCase.name)
@@ -229,7 +229,7 @@ func TestMessageStatusSenzingApi(test *testing.T) {
 	for _, testCase := range testCases {
 		test.Run(testCase.name+"-SenzingApi", func(test *testing.T) {
 			testObject := &MessageStatusSenzingApi{
-				IdStatuses: testCase.idRanges,
+				IdStatuses: testCase.IdStatuses,
 			}
 			actual, _ := testObject.MessageStatus(testCase.messageNumber, testCase.details...)
 			assert.Equal(test, testCase.expectedSenzingApi, actual, testCase.name)
@@ -249,11 +249,7 @@ func TestMessageStatusSenzingApiWith0037E(test *testing.T) {
 func TestMessageStatusSenzingApiWithSenzingApiError(test *testing.T) {
 	expected := "ERROR_bad_user_input"
 	anError := errors.New("0037E|Unknown resolved entity value")
-	testObject := &MessageStatusSenzingApi{
-		IdRanges: map[int]string{
-			0: logger.LevelInfoName,
-		},
-	}
+	testObject := &MessageStatusSenzingApi{}
 	actual, err := testObject.MessageStatus(1, "A", 1, testObject, anError)
 	testError(test, testObject, err)
 	assert.Equal(test, expected, actual)
@@ -263,25 +259,16 @@ func TestMessageStatusSenzingApiWith2SenzingApiError2(test *testing.T) {
 	expected := "ERROR_unrecoverable"
 	anError1 := errors.New("0019E|Configuration not found")
 	anError2 := errors.New("0099E|Made up error")
-	testObject := &MessageStatusSenzingApi{
-		IdRanges: map[int]string{
-			0: logger.LevelInfoName,
-		},
-	}
+	testObject := &MessageStatusSenzingApi{}
 	actual, err := testObject.MessageStatus(1, "A", 1, testObject, anError1, anError2)
 	testError(test, testObject, err)
 	assert.Equal(test, expected, actual)
 }
 
 func TestMessageStatusSenzingApiWithUnknownError(test *testing.T) {
-	expected := logger.LevelWarnName
+	expected := ""
 	anError := errors.New("1234E|Made up error")
-	testObject := &MessageStatusSenzingApi{
-		IdRanges: map[int]string{
-			0:    logger.LevelInfoName,
-			1000: logger.LevelWarnName,
-		},
-	}
+	testObject := &MessageStatusSenzingApi{}
 	actual, err := testObject.MessageStatus(1000, "A", 1, testObject, anError)
 	testError(test, testObject, err)
 	assert.Equal(test, expected, actual)

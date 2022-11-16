@@ -37,7 +37,7 @@ func (messageDetails *MessageDetailsSenzing) MessageDetails(messageNumber int, d
 
 		case string:
 			if isJson(typedValue) {
-				result[strconv.Itoa(index+1)] = stringify(jsonAsInterface(typedValue))
+				result[strconv.Itoa(index+1)] = jsonAsInterface(typedValue)
 			} else {
 				result[strconv.Itoa(index+1)] = typedValue
 			}
