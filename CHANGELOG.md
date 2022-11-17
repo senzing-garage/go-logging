@@ -6,6 +6,20 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 [markdownlint](https://dlaa.me/markdownlint/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.1.1] - 2022-11-18
+
+### Added in 1.1.1
+
+- `NewSenzingApiLogger()`
+- Ability to choose `location` level using `CallerSkip`
+
+### Changed in 1.1.1
+
+- Improved `status` and `level` determination
+- Improved `details` representation
+- Improved godoc documentation
+- Improved testing
+
 ## [1.1.0] - 2022-11-15
 
 ### Added in 1.1.0
