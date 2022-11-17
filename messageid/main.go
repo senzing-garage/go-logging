@@ -1,5 +1,7 @@
 /*
-The messageid package produces customized message identifiers.
+The messageid package produces a value for the "id" field.
+
+For examples of use, see https://github.com/Senzing/go-logging/blob/main/messageid/messageid_test.go
 */
 package messageid
 
@@ -9,5 +11,5 @@ package messageid
 
 // The MessageIdInterface type defines methods for producing a message identifier.
 type MessageIdInterface interface {
-	MessageId(messageNumber int, details ...interface{}) (string, error)
+	MessageId(messageNumber int, details ...interface{}) (string, error) // Get the "id" value from the messageNumber and details.
 }

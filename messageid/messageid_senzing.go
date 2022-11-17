@@ -11,7 +11,7 @@ import "fmt"
 
 // The MessageIdSenzing type is for creating message identifier based on a template.
 type MessageIdSenzing struct {
-	MessageIdTemplate string
+	MessageIdTemplate string // Golang template string for formatting message identifier.
 }
 
 // ----------------------------------------------------------------------------

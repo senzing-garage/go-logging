@@ -15,8 +15,8 @@ import (
 
 // The MessageTimeStatic type is for returning a specific date.
 type MessageTimeStatic struct {
-	Format    string
-	Timestamp time.Time
+	Format    string    // A golang format string for formatting time. Default: "%02d:%02d:%02d.%09d"
+	Timestamp time.Time // User specified time.
 }
 
 // ----------------------------------------------------------------------------

@@ -18,8 +18,8 @@ var testCases = []struct {
 		name:            "messagelocation-01",
 		callerSkip:      0,
 		messageNumber:   1000,
-		expectedDefault: "In MessageLocation() at messagelocation_default.go:31",
-		expectedSenzing: "In MessageLocation() at messagelocation_senzing.go:31",
+		expectedDefault: "In MessageLocation() at messagelocation_default.go:43",
+		expectedSenzing: "In MessageLocation() at messagelocation_senzing.go:43",
 	},
 }
 

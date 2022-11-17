@@ -1,5 +1,7 @@
 /*
-The messagestatus package produces a string used in a "status" field of a log message.
+The messagestatus package produces a value for the "status" field.
+
+For examples of use, see https://github.com/Senzing/go-logging/blob/main/messagestatus/messagestatus_test.go
 */
 package messagestatus
 
@@ -9,5 +11,8 @@ package messagestatus
 
 // The MessageStatusInterface type defines methods for determining status.
 type MessageStatusInterface interface {
-	MessageStatus(messageNumber int, details ...interface{}) (string, error)
+	MessageStatus(messageNumber int, details ...interface{}) (string, error) // Get the "status" value from the messageNumber and details.
 }
+
+// The Status type is used to identify strings as being status strings in details parameter.
+type Status string

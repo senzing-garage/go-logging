@@ -118,7 +118,7 @@ func main() {
 	fmt.Printf("\n\n--- Test 7: - Log level -------------------------------------------------------\n\n")
 
 	messageLogLevel := &messagelevel.MessageLevelByIdRange{
-		IdRanges: messagelevel.IdRangesAsLevel,
+		IdLevelRanges: messagelevel.IdLevelRanges,
 	}
 	messageLogger, _ = messagelogger.New(messageLogLevel, messageId, messageText)
 	messageLogger.Log(2000)
@@ -146,7 +146,7 @@ func main() {
 	fmt.Printf("\n\n--- Test 10: - Status ---------------------------------------------------------\n\n")
 
 	messageStatus := &messagestatus.MessageStatusByIdRange{
-		IdRanges: messagelevel.IdRangesAsString,
+		IdStatusRanges: messagelevel.IdLevelRangesAsString,
 	}
 	messageLogger, _ = messagelogger.New(messageLogLevel, messageId, messageText, messageStatus)
 	messageLogger.Log(2000)

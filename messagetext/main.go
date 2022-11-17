@@ -1,5 +1,5 @@
 /*
-The messagetext package produces a string used in a "text" field of a log message.
+The messagetext package produces a value for the "text" field.
 
 For examples of use, see https://github.com/Senzing/go-logging/blob/main/messagetext/messagetext_test.go
 */
@@ -14,9 +14,7 @@ type MessageNumber int
 
 // The MessageTextInterface type defines methods for creating message text.
 type MessageTextInterface interface {
-
-	// Get the "text" value for a message id and its details.
-	MessageText(messageNumber int, details ...interface{}) (string, error)
+	MessageText(messageNumber int, details ...interface{}) (string, error) // Get the "text" value for a message id and its details.
 }
 
 // ----------------------------------------------------------------------------

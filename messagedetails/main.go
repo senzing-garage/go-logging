@@ -1,5 +1,7 @@
 /*
-The messagedetails package produces a date string.
+The messagedetails package produces a value for the "details" field.
+
+For examples of use, see https://github.com/Senzing/go-logging/blob/main/messagedetails/messagedetails_test.go
 */
 package messagedetails
 
@@ -13,9 +15,9 @@ import (
 // Types
 // ----------------------------------------------------------------------------
 
-// The MessageDetailsInterface type defines methods for determining the date value.
+// The MessageDetailsInterface type defines methods for determining the details value.
 type MessageDetailsInterface interface {
-	MessageDetails(messageNumber int, details ...interface{}) (interface{}, error)
+	MessageDetails(messageNumber int, details ...interface{}) (interface{}, error) // Get the "details" value from the messageNumber and details.
 }
 
 // ----------------------------------------------------------------------------
@@ -58,9 +60,6 @@ func stringify(unknown interface{}) string {
 		result = fmt.Sprintf("%t", value)
 	case error:
 		result = value.Error()
-	case json.RawMessage:
-		jsonString, _ := value.MarshalJSON()
-		result = string(jsonString)
 	default:
 		// xType := reflect.TypeOf(unknown)
 		// xValue := reflect.ValueOf(unknown)

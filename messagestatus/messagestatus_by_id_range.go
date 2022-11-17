@@ -5,7 +5,6 @@ which range the message id falls in.
 package messagestatus
 
 import (
-	"fmt"
 	"sort"
 )
 
@@ -15,7 +14,7 @@ import (
 
 // The MessageStatusByIdRange type is for determining a status based on what range a message number resides in.
 type MessageStatusByIdRange struct {
-	IdRanges map[int]string
+	IdStatusRanges map[int]string // A map of "low-bound" of a range and the corresponding status message.
 }
 
 // ----------------------------------------------------------------------------
@@ -27,24 +26,26 @@ func (messageStatus *MessageStatusByIdRange) MessageStatus(messageNumber int, de
 	var err error = nil
 	var result = ""
 
-	// Create a list of reverse-sorted keys.
+	if messageStatus.IdStatusRanges != nil {
+		// Create a list of reverse-sorted keys.
 
-	messageLevelKeys := make([]int, 0, len(messageStatus.IdRanges))
-	for key := range messageStatus.IdRanges {
-		messageLevelKeys = append(messageLevelKeys, key)
-	}
-	sort.Sort(sort.Reverse(sort.IntSlice(messageLevelKeys)))
+		messageLevelKeys := make([]int, 0, len(messageStatus.IdStatusRanges))
+		for key := range messageStatus.IdStatusRanges {
+			messageLevelKeys = append(messageLevelKeys, key)
+		}
+		sort.Sort(sort.Reverse(sort.IntSlice(messageLevelKeys)))
 
-	// Using the sorted message number, find the level.
+		// Using the sorted message number, find the level.
 
-	for _, messageLevelKey := range messageLevelKeys {
-		if messageNumber >= messageLevelKey {
-			return messageStatus.IdRanges[messageLevelKey], err
+		for _, messageLevelKey := range messageLevelKeys {
+			if messageNumber >= messageLevelKey {
+				return messageStatus.IdStatusRanges[messageLevelKey], err
+			}
 		}
 	}
 
 	// --- At this point, failed to find status -------------------------------
 
-	return result, fmt.Errorf("could not determine status for message number %d", messageNumber)
+	return result, err
 
 }

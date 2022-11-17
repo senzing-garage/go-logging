@@ -1,5 +1,5 @@
 /*
-The MessageTextTemplated implementation maps the message number to a format string.
+The MessageTextSenzing implementation maps the message number to a format string.
 The format string is populated with values submitted.
 */
 package messagetext
@@ -13,11 +13,9 @@ import (
 // Types
 // ----------------------------------------------------------------------------
 
-// The MessageTextTemplated type uses format string replacement to produce a "text" string.
+// The MessageTextSenzing type uses format string replacement to produce a "text" string.
 type MessageTextSenzing struct {
-
-	// A map from message numbers to format string.
-	IdMessages map[int]string
+	IdMessages map[int]string // A map from message numbers to format string.
 }
 
 // ----------------------------------------------------------------------------
@@ -27,7 +25,7 @@ type MessageTextSenzing struct {
 /*
 The MessageText method chooses a format string based on the message number and populates it from the details.
 To override the message number, submit a detail of type MessageNumber.
-The MessageNumber value will be used to choose the template from MessageTextTemplated.IdMessage.
+The messageNumber value will be used to choose the template from MessageTextSenzing.IdMessage.
 */
 func (messageText *MessageTextSenzing) MessageText(messageNumber int, details ...interface{}) (string, error) {
 	var err error = nil
