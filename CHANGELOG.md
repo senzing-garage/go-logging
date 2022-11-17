@@ -10,6 +10,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added in 1.1.1
 
+- `NewSenzingApiLogger()`
+- Ability to choose `location` level using `CallerSkip`
+
+### Changed in 1.1.1
+
+- Improved `status` and `level` determination
+- Improved `details` representation
 - Improved godoc documentation
 - Improved testing
 
