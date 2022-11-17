@@ -1,5 +1,7 @@
 /*
 The messageid package produces a value for the "id" field.
+
+For examples of use, see https://github.com/Senzing/go-logging/blob/main/messageid/messageid_test.go
 */
 package messageid
 

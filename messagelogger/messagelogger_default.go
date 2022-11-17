@@ -28,18 +28,18 @@ import (
 
 // The MessageLoggerDefault type is for constructing and logging messages.
 type MessageLoggerDefault struct {
-	Logger          logger.LoggerInterface
-	MessageDate     messagedate.MessageDateInterface
-	MessageDetails  messagedetails.MessageDetailsInterface
-	MessageDuration messageduration.MessageDurationInterface
-	MessageErrors   messageerrors.MessageErrorsInterface
-	MessageFormat   messageformat.MessageFormatInterface
-	MessageId       messageid.MessageIdInterface
-	MessageLevel    messagelevel.MessageLevelInterface
-	MessageLocation messagelocation.MessageLocationInterface
-	MessageStatus   messagestatus.MessageStatusInterface
-	MessageText     messagetext.MessageTextInterface
-	MessageTime     messagetime.MessageTimeInterface
+	Logger          logger.LoggerInterface                   // Decorator over golang log.
+	MessageDate     messagedate.MessageDateInterface         // For "date" field value.
+	MessageDetails  messagedetails.MessageDetailsInterface   // For "details" field value.
+	MessageDuration messageduration.MessageDurationInterface // For "duration" field value.
+	MessageErrors   messageerrors.MessageErrorsInterface     // For "errors" field value.
+	MessageFormat   messageformat.MessageFormatInterface     // For formatting message.
+	MessageId       messageid.MessageIdInterface             // For "id" field value.
+	MessageLevel    messagelevel.MessageLevelInterface       // For "level" field value.
+	MessageLocation messagelocation.MessageLocationInterface // For "location" field value.
+	MessageStatus   messagestatus.MessageStatusInterface     // For "status" field value.
+	MessageText     messagetext.MessageTextInterface         // For "text" field value.
+	MessageTime     messagetime.MessageTimeInterface         // For "time" field value.
 }
 
 // ----------------------------------------------------------------------------

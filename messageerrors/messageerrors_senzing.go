@@ -1,5 +1,5 @@
 /*
-The MessageErrorsSenzing implementation returns an empty value.
+The MessageErrorsSenzing implementation returns a []interface{} containing error representations.
 */
 package messageerrors
 
@@ -7,7 +7,7 @@ package messageerrors
 // Types
 // ----------------------------------------------------------------------------
 
-// The MessageErrorsSenzing type is for returning an empty value.
+// The MessageErrorsSenzing type is for returning a []interface{} containing error representations.
 type MessageErrorsSenzing struct{}
 
 type messageErrorsSenzing struct {
@@ -18,7 +18,7 @@ type messageErrorsSenzing struct {
 // Interface methods
 // ----------------------------------------------------------------------------
 
-// The MessageErrors method returns an empty value.
+// The MessageErrors method returns a []interface{} containing error representations.
 func (messageErrors *MessageErrorsSenzing) MessageErrors(messageNumber int, details ...interface{}) (interface{}, error) {
 	var err error = nil
 	var result []interface{} = nil

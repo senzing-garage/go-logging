@@ -10,7 +10,7 @@ package messagestatus
 
 // The MessageStatusSenzing type is for determining a status based on what range a message number resides in.
 type MessageStatusSenzing struct {
-	IdStatuses map[int]string
+	IdStatuses map[int]string // A map of message ids to the corresponding status message.
 }
 
 // ----------------------------------------------------------------------------

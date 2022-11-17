@@ -1,5 +1,5 @@
 /*
-The MessageLocationSenzing implementation returns an empty string for a location value.
+The MessageLocationSenzing implementation returns a string in the format "In Function() at filename.go:nnn".
 */
 package messagelocation
 
@@ -14,21 +14,33 @@ import (
 // Types
 // ----------------------------------------------------------------------------
 
-// The MessageLocationSenzing type is for returning an empty string for location value.
+// The MessageLocationSenzing type is for returning a string in the format "In Function() at filename.go:nnn".
 type MessageLocationSenzing struct {
-	CallerSkip int
+	CallerSkip int // Number of stacks to ascend. See https://pkg.go.dev/runtime#Caller
 }
 
 // ----------------------------------------------------------------------------
 // Interface methods
 // ----------------------------------------------------------------------------
 
-// The MessageLocation method returns an empty string for a location value.
+// The MessageLocation method returns a string in the format "In Function() at filename.go:nnn".
 func (messageLocation *MessageLocationSenzing) MessageLocation(messageNumber int, details ...interface{}) (string, error) {
 	var err error = nil
 	result := ""
-	// https://pkg.go.dev/runtime#Caller
-	pc, file, line, ok := runtime.Caller(messageLocation.CallerSkip)
+
+	// Determine number of stacks to ascend.
+
+	callerSkip := messageLocation.CallerSkip
+	for _, value := range details {
+		switch typedValue := value.(type) {
+		case CallerSkip:
+			callerSkip = int(typedValue)
+		}
+	}
+
+	// See https://pkg.go.dev/runtime#Caller
+
+	pc, file, line, ok := runtime.Caller(callerSkip)
 	if ok {
 		callingFunction := runtime.FuncForPC(pc)
 		runtimeFunc := regexp.MustCompile(`^.*\.(.*)$`)

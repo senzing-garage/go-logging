@@ -14,7 +14,7 @@ import (
 
 // The MessageStatusByIdRange type is for determining a status based on what range a message number resides in.
 type MessageStatusByIdRange struct {
-	IdStatusRanges map[int]string
+	IdStatusRanges map[int]string // A map of "low-bound" of a range and the corresponding status message.
 }
 
 // ----------------------------------------------------------------------------

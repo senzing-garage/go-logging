@@ -21,7 +21,7 @@ Finally, it looks at the Senzing error code.
 If in none of those places, an empty string is returned.
 */
 type MessageStatusSenzingApi struct {
-	IdStatuses map[int]string
+	IdStatuses map[int]string // A map of message ids to the corresponding status message.
 }
 
 // ----------------------------------------------------------------------------

@@ -1,5 +1,7 @@
 /*
 The messageformat package renders messages.
+
+For examples of use, see https://github.com/Senzing/go-logging/blob/main/messageformat/messageformat_test.go
 */
 package messageformat
 

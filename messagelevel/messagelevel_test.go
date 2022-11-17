@@ -189,7 +189,7 @@ var testCases = []struct {
 		idRanges:        IdLevelRanges,
 		messageNumber:   1001,
 		details:         []interface{}{123, "bob", logger.LevelInfo, logger.LevelDebug},
-		expectedDefault: logger.LevelDebug,
+		expectedDefault: logger.LevelInfo,
 	},
 	{
 		name:            "messagelevel-28",

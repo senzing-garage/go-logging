@@ -1,5 +1,6 @@
 /*
-The MessageLevelSenzingApi implementation returns the logger.Level based on the "status" value.
+The MessageLevelSenzingApi implementation returns the logger.Level based on a logger.Level in details parameter,
+a specific "status" value, or a message id in a range.
 */
 package messagelevel
 
@@ -14,11 +15,12 @@ import (
 // Types
 // ----------------------------------------------------------------------------
 
-// The MessageLevelSenzingApi type is for calculating the log level based on the status value.
+// The MessageLevelSenzingApi type calculates the logger.Level based on the status value.
 type MessageLevelSenzingApi struct {
-	IdLevelRanges       map[int]logger.Level
-	IdStatuses          map[int]string
-	sortedIdLevelRanges []int // The keys of IdLevelRanges in sorted order.
+	DefaultLogLevel     logger.Level         // User specified default.
+	IdLevelRanges       map[int]logger.Level // The "low-bound" of a range and the corresponding logger level.
+	IdStatuses          map[int]string       // Passed to MessageStatusSenzingApi for message number to specific status.
+	sortedIdLevelRanges []int                // The keys of IdLevelRanges in sorted order.
 }
 
 // statusToLevelMap maps the constants in messagestatus_senzingapi.go to log levels.
@@ -54,24 +56,28 @@ func (messageLevel *MessageLevelSenzingApi) getSortedIdLevelRanges() []int {
 // Interface methods
 // ----------------------------------------------------------------------------
 
-// The MessageLevel method returns a log level based on the status value.
+// The MessageLevel method returns a logger.Level based on: 1) the highest logger.Level types in the details parameter,
+// 2) the "status" value for the message id, 3) the range for the message id, or 4) the DefaultLogLevel.
 func (messageLevel *MessageLevelSenzingApi) MessageLevel(messageNumber int, details ...interface{}) (logger.Level, error) {
 	var err error = nil
-	var result = logger.LevelError
+	var result = messageLevel.DefaultLogLevel
 
 	// First priority:  Log level explicitly given in details parameter.
-	// Last occurance of logger.Level wins.
+	// Highest value of logger.Level is used.
 
+	var explicitResult logger.Level
 	foundInDetails := false
 	for _, value := range details {
 		switch typedValue := value.(type) {
 		case logger.Level:
 			foundInDetails = true
-			result = typedValue
+			if typedValue > explicitResult {
+				explicitResult = typedValue
+			}
 		}
 	}
 	if foundInDetails {
-		return result, err
+		return explicitResult, err
 	}
 
 	// Second priority: Calculate log level from the status.
@@ -102,7 +108,7 @@ func (messageLevel *MessageLevelSenzingApi) MessageLevel(messageNumber int, deta
 		}
 	}
 
-	// Anything else is an "ERROR"
+	// Last priority, the default value.
 
-	return logger.LevelError, err
+	return result, err
 }

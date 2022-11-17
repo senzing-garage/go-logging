@@ -1,5 +1,7 @@
 /*
 The messagedetails package produces a value for the "details" field.
+
+For examples of use, see https://github.com/Senzing/go-logging/blob/main/messagedetails/messagedetails_test.go
 */
 package messagedetails
 

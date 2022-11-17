@@ -15,9 +15,7 @@ import (
 
 // The MessageTextTemplated type uses format string replacement to produce a "text" string.
 type MessageTextTemplated struct {
-
-	// A map from message numbers to format string.
-	IdMessages map[int]string
+	IdMessages map[int]string // A map from message numbers to format string.
 }
 
 // ----------------------------------------------------------------------------
@@ -27,7 +25,7 @@ type MessageTextTemplated struct {
 /*
 The MessageText method chooses a format string based on the message number and populates it from the details.
 To override the message number, submit a detail of type MessageNumber.
-The MessageNumber value will be used to choose the template from MessageTextTemplated.IdMessage.
+The messageNumber value will be used to choose the template from MessageTextTemplated.IdMessage.
 */
 func (messageText *MessageTextTemplated) MessageText(messageNumber int, details ...interface{}) (string, error) {
 	var err error = nil

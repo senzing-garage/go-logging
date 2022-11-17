@@ -1,5 +1,7 @@
 /*
 The messagelogger package generates messages, logs messages, or creates errors from messages.
+
+For examples of use, see https://github.com/Senzing/go-logging/blob/main/messagelogger/messagelogger_test.go
 */
 package messagelogger
 
@@ -26,6 +28,7 @@ import (
 // Types
 // ----------------------------------------------------------------------------
 
+// The Level type is used to identify the integer is the detail parameters.
 // The Level type is used for logging levels. (e.g. LevelInfo, LevelWarn, etc.)
 type Level int
 
@@ -308,8 +311,9 @@ that is tailored for the Senzing SDK implementation.
 */
 func NewSenzingApiLogger(productIdentifier int, idMessages map[int]string, idStatuses map[int]string, interfaces ...interface{}) (MessageLoggerInterface, error) {
 	messageLevel := &messagelevel.MessageLevelSenzingApi{
-		IdLevelRanges: messagelevel.IdLevelRanges,
-		IdStatuses:    idStatuses,
+		DefaultLogLevel: logger.LevelInfo,
+		IdLevelRanges:   messagelevel.IdLevelRanges,
+		IdStatuses:      idStatuses,
 	}
 	messageStatus := &messagestatus.MessageStatusSenzingApi{
 		IdStatuses: idStatuses,

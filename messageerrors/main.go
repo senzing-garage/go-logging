@@ -1,5 +1,7 @@
 /*
 The messageerrors package produces a value for the "errors" field.
+
+For examples of use, see https://github.com/Senzing/go-logging/blob/main/messageerrors/messageerrors_test.go
 */
 package messageerrors
 

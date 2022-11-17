@@ -1,5 +1,7 @@
 /*
 The messagedate package produces a value for the "date" field.
+
+For examples of use, see https://github.com/Senzing/go-logging/blob/main/messagedate/messagedate_test.go
 */
 package messagedate
 

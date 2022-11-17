@@ -10,14 +10,14 @@ package messagelocation
 
 // The MessageLocationStatic type is for returning a fixed string for a location value.
 type MessageLocationStatic struct {
-	Location string
+	Location string // User specified default.
 }
 
 // ----------------------------------------------------------------------------
 // Interface methods
 // ----------------------------------------------------------------------------
 
-// The MessageLocation method returnsa fixed string for a location value.
+// The MessageLocation method returns a fixed string for a location value.
 func (messageLocation *MessageLocationStatic) MessageLocation(messageNumber int, details ...interface{}) (string, error) {
 	return messageLocation.Location, nil
 }

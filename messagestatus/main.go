@@ -1,5 +1,7 @@
 /*
 The messagestatus package produces a value for the "status" field.
+
+For examples of use, see https://github.com/Senzing/go-logging/blob/main/messagestatus/messagestatus_test.go
 */
 package messagestatus
 

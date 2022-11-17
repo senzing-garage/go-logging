@@ -1,5 +1,7 @@
 /*
 The logger package is a decorator over Go's log package.
+
+For examples of use, see https://github.com/Senzing/go-logging/blob/main/logger/logger_test.go
 */
 package logger
 
@@ -9,7 +11,8 @@ import "log"
 // Types
 // ----------------------------------------------------------------------------
 
-// The Level type is used in LevelXxxxx constants.
+// The Level type is used to identify the integer is the detail parameters
+// and is used in LevelXxxxx constants.
 type Level int
 
 // The LoggerInterface type defines guards, logging methods, and get/set of logging level.

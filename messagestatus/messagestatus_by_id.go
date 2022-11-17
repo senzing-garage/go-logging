@@ -9,7 +9,7 @@ package messagestatus
 
 // The MessageStatusById type is for returning a status based on the message number.
 type MessageStatusById struct {
-	IdStatuses map[int]string
+	IdStatuses map[int]string // A map of message ids to the corresponding status message.
 }
 
 // ----------------------------------------------------------------------------

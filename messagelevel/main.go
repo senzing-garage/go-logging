@@ -1,5 +1,7 @@
 /*
 The messagelevel package produces a value for the "level" field.
+
+For examples of use, see https://github.com/Senzing/go-logging/blob/main/messagelevel/messagelevel_test.go
 */
 package messagelevel
 
@@ -18,6 +20,7 @@ type MessageLevelInterface interface {
 // Variables
 // ----------------------------------------------------------------------------
 
+// IdLevelRanges is a map from message IDs to log level "lower-bound" used by Senzing applications.
 var IdLevelRanges = map[int]logger.Level{
 	0000: logger.LevelTrace,
 	1000: logger.LevelDebug,
@@ -28,6 +31,7 @@ var IdLevelRanges = map[int]logger.Level{
 	6000: logger.LevelPanic,
 }
 
+// IdLevelRangesAsString is a map from message IDs to log level (as string) "lower-bound" used by Senzing applications.
 var IdLevelRangesAsString = map[int]string{
 	0000: logger.LevelTraceName,
 	1000: logger.LevelDebugName,

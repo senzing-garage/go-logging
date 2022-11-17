@@ -14,9 +14,7 @@ type MessageNumber int
 
 // The MessageTextInterface type defines methods for creating message text.
 type MessageTextInterface interface {
-
-	// Get the "text" value for a message id and its details.
-	MessageText(messageNumber int, details ...interface{}) (string, error)
+	MessageText(messageNumber int, details ...interface{}) (string, error) // Get the "text" value for a message id and its details.
 }
 
 // ----------------------------------------------------------------------------

@@ -1,5 +1,7 @@
 /*
 The messagetime package produces a value for the "time" field.
+
+For examples of use, see https://github.com/Senzing/go-logging/blob/main/messagetime/messagetime_test.go
 */
 package messagetime
 

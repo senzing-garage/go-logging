@@ -1,5 +1,7 @@
 /*
 The messageduration package produces a value for the "duration" field.
+
+For examples of use, see https://github.com/Senzing/go-logging/blob/main/messageduration/messageduration_test.go
 */
 package messageduration
 

@@ -1,5 +1,5 @@
 /*
-The MessageErrorsDefault implementation returns an empty value.
+The MessageErrorsDefault implementation returns a []interface{} containing error representations.
 */
 package messageerrors
 
@@ -7,7 +7,7 @@ package messageerrors
 // Types
 // ----------------------------------------------------------------------------
 
-// The MessageErrorsDefault type is for returning an empty value.
+// The MessageErrorsDefault type is for returning a []interface{} containing error representations.
 type MessageErrorsDefault struct{}
 
 type messageErrorsDefault struct {
@@ -18,7 +18,7 @@ type messageErrorsDefault struct {
 // Interface methods
 // ----------------------------------------------------------------------------
 
-// The MessageErrors method returns an empty value.
+// The MessageErrors method returns a []interface{} containing error representations.
 func (messageErrors *MessageErrorsDefault) MessageErrors(messageNumber int, details ...interface{}) (interface{}, error) {
 	var err error = nil
 	var result []interface{} = nil
