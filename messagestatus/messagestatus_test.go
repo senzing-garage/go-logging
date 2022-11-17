@@ -4,24 +4,28 @@ import (
 	"errors"
 	"testing"
 
-	"github.com/senzing/go-logging/logger"
 	"github.com/stretchr/testify/assert"
 )
 
-var IdRanges = map[int]string{
-	0000: logger.LevelTraceName,
-	1000: logger.LevelDebugName,
-	2000: logger.LevelInfoName,
-	3000: logger.LevelWarnName,
-	4000: logger.LevelErrorName,
-	5000: logger.LevelFatalName,
-	6000: logger.LevelPanicName,
-}
+// Errors used in testing.
+var (
+	errorUnknown       = errors.New("0000E|Mock error: Unknown")
+	errorTrace         = errors.New("9990E|Mock error: TRACE")
+	errorDebug         = errors.New("9991E|Mock error: DEBUG")
+	errorInfo          = errors.New("9992E|Mock error: INFO")
+	errorWarn          = errors.New("9993E|Mock error: WARN")
+	errorError         = errors.New("9994E|Mock error: ERROR")
+	errorRetryable     = errors.New("9995E|Mock error: Retryable")
+	errorBadUserInput  = errors.New("9996E|Mock error: Bad user input")
+	errorUnrecoverable = errors.New("9997E|Mock error: Unrecoverable")
+	errorFatal         = errors.New("9998E|Mock error: FATAL")
+	errorPanic         = errors.New("9999E|Mock error: PANIC")
+)
 
 var testCases = []struct {
 	name               string
-	idRanges           map[int]string
 	IdStatuses         map[int]string
+	idStatusRanges     map[int]string
 	messageNumber      int
 	details            []interface{}
 	expectedById       string
@@ -33,146 +37,261 @@ var testCases = []struct {
 	{
 		name:               "messagestatus-01-Trace",
 		messageNumber:      0,
-		idRanges:           IdRanges,
-		IdStatuses:         IdRanges,
+		IdStatuses:         IdLevelRangesAsString,
+		idStatusRanges:     IdLevelRangesAsString,
 		details:            []interface{}{"A", 1},
-		expectedById:       logger.LevelTraceName,
-		expectedByIdRange:  logger.LevelTraceName,
-		expectedDefault:    logger.LevelTraceName,
-		expectedSenzingApi: logger.LevelTraceName,
+		expectedById:       Trace,
+		expectedByIdRange:  Trace,
+		expectedDefault:    Trace,
+		expectedSenzingApi: Trace,
 	},
 	{
 		name:               "messagestatus-02-Debug",
 		messageNumber:      1000,
-		idRanges:           IdRanges,
-		IdStatuses:         IdRanges,
+		IdStatuses:         IdLevelRangesAsString,
+		idStatusRanges:     IdLevelRangesAsString,
 		details:            []interface{}{"A", 1},
-		expectedById:       logger.LevelDebugName,
-		expectedByIdRange:  logger.LevelDebugName,
-		expectedDefault:    logger.LevelDebugName,
-		expectedSenzingApi: logger.LevelDebugName,
+		expectedById:       Debug,
+		expectedByIdRange:  Debug,
+		expectedDefault:    Debug,
+		expectedSenzingApi: Debug,
 	},
 	{
 		name:               "messagestatus-03-Info",
 		messageNumber:      2000,
-		idRanges:           IdRanges,
-		IdStatuses:         IdRanges,
+		IdStatuses:         IdLevelRangesAsString,
+		idStatusRanges:     IdLevelRangesAsString,
 		details:            []interface{}{"A", 1},
-		expectedById:       logger.LevelInfoName,
-		expectedByIdRange:  logger.LevelInfoName,
-		expectedDefault:    logger.LevelInfoName,
-		expectedSenzingApi: logger.LevelInfoName,
+		expectedById:       Info,
+		expectedByIdRange:  Info,
+		expectedDefault:    Info,
+		expectedSenzingApi: Info,
 	},
 	{
 		name:               "messagestatus-04-Warn",
 		messageNumber:      3000,
-		idRanges:           IdRanges,
-		IdStatuses:         IdRanges,
+		IdStatuses:         IdLevelRangesAsString,
+		idStatusRanges:     IdLevelRangesAsString,
 		details:            []interface{}{"A", 1},
-		expectedById:       logger.LevelWarnName,
-		expectedByIdRange:  logger.LevelWarnName,
-		expectedDefault:    logger.LevelWarnName,
-		expectedSenzingApi: logger.LevelWarnName,
+		expectedById:       Warn,
+		expectedByIdRange:  Warn,
+		expectedDefault:    Warn,
+		expectedSenzingApi: Warn,
 	},
 	{
 		name:               "messagestatus-05-Error",
 		messageNumber:      4000,
-		idRanges:           IdRanges,
-		IdStatuses:         IdRanges,
+		IdStatuses:         IdLevelRangesAsString,
+		idStatusRanges:     IdLevelRangesAsString,
 		details:            []interface{}{"A", 1},
-		expectedById:       logger.LevelErrorName,
-		expectedByIdRange:  logger.LevelErrorName,
-		expectedDefault:    logger.LevelErrorName,
-		expectedSenzingApi: logger.LevelErrorName,
+		expectedById:       Error,
+		expectedByIdRange:  Error,
+		expectedDefault:    Error,
+		expectedSenzingApi: Error,
 	},
 	{
 		name:               "messagestatus-06-Fatal",
 		messageNumber:      5000,
-		idRanges:           IdRanges,
-		IdStatuses:         IdRanges,
+		IdStatuses:         IdLevelRangesAsString,
+		idStatusRanges:     IdLevelRangesAsString,
 		details:            []interface{}{"A", 1},
-		expectedById:       logger.LevelFatalName,
-		expectedByIdRange:  logger.LevelFatalName,
-		expectedDefault:    logger.LevelFatalName,
-		expectedSenzingApi: logger.LevelFatalName,
+		expectedById:       Fatal,
+		expectedByIdRange:  Fatal,
+		expectedDefault:    Fatal,
+		expectedSenzingApi: Fatal,
 	},
 	{
 		name:               "messagestatus-07-Panic",
 		messageNumber:      6000,
-		idRanges:           IdRanges,
-		IdStatuses:         IdRanges,
+		IdStatuses:         IdLevelRangesAsString,
+		idStatusRanges:     IdLevelRangesAsString,
 		details:            []interface{}{"A", 1},
-		expectedById:       logger.LevelPanicName,
-		expectedByIdRange:  logger.LevelPanicName,
-		expectedDefault:    logger.LevelPanicName,
-		expectedSenzingApi: logger.LevelPanicName,
+		expectedById:       Panic,
+		expectedByIdRange:  Panic,
+		expectedDefault:    Panic,
+		expectedSenzingApi: Panic,
 	},
 	{
 		name:              "messagestatus-11-Trace",
 		messageNumber:     1,
-		idRanges:          IdRanges,
-		IdStatuses:        IdRanges,
+		IdStatuses:        IdLevelRangesAsString,
+		idStatusRanges:    IdLevelRangesAsString,
 		details:           []interface{}{"A", 1},
-		expectedByIdRange: logger.LevelTraceName,
+		expectedByIdRange: Trace,
 	},
 	{
 		name:              "messagestatus-12-Debug",
 		messageNumber:     1001,
-		idRanges:          IdRanges,
-		IdStatuses:        IdRanges,
+		IdStatuses:        IdLevelRangesAsString,
+		idStatusRanges:    IdLevelRangesAsString,
 		details:           []interface{}{"A", 1},
-		expectedByIdRange: logger.LevelDebugName,
+		expectedByIdRange: Debug,
 	},
 	{
 		name:              "messagestatus-13-Info",
 		messageNumber:     2001,
-		idRanges:          IdRanges,
-		IdStatuses:        IdRanges,
+		IdStatuses:        IdLevelRangesAsString,
+		idStatusRanges:    IdLevelRangesAsString,
 		details:           []interface{}{"A", 1},
-		expectedByIdRange: logger.LevelInfoName,
+		expectedByIdRange: Info,
 	},
 	{
 		name:              "messagestatus-14-Warn",
 		messageNumber:     3001,
-		idRanges:          IdRanges,
-		IdStatuses:        IdRanges,
+		IdStatuses:        IdLevelRangesAsString,
+		idStatusRanges:    IdLevelRangesAsString,
 		details:           []interface{}{"A", 1},
-		expectedByIdRange: logger.LevelWarnName,
+		expectedByIdRange: Warn,
 	},
 	{
 		name:              "messagestatus-15-Error",
 		messageNumber:     4001,
-		idRanges:          IdRanges,
-		IdStatuses:        IdRanges,
+		IdStatuses:        IdLevelRangesAsString,
+		idStatusRanges:    IdLevelRangesAsString,
 		details:           []interface{}{"A", 1},
-		expectedByIdRange: logger.LevelErrorName,
+		expectedByIdRange: Error,
 	},
 	{
 		name:              "messagestatus-16-Fatal",
 		messageNumber:     5001,
-		idRanges:          IdRanges,
-		IdStatuses:        IdRanges,
+		IdStatuses:        IdLevelRangesAsString,
+		idStatusRanges:    IdLevelRangesAsString,
 		details:           []interface{}{"A", 1},
-		expectedByIdRange: logger.LevelFatalName,
+		expectedByIdRange: Fatal,
 	},
 	{
 		name:              "messagestatus-17-Panic",
 		messageNumber:     6001,
-		idRanges:          IdRanges,
-		IdStatuses:        IdRanges,
+		IdStatuses:        IdLevelRangesAsString,
+		idStatusRanges:    IdLevelRangesAsString,
 		details:           []interface{}{"A", 1},
-		expectedByIdRange: logger.LevelPanicName,
+		expectedByIdRange: Panic,
 	},
-}
-
-// ----------------------------------------------------------------------------
-// Internal functions - names begin with lowercase letter
-// ----------------------------------------------------------------------------
-
-func testError(test *testing.T, testObject MessageStatusInterface, err error) {
-	if err != nil {
-		assert.Fail(test, err.Error())
-	}
+	{
+		name:              "messagestatus-20-Error-unknown",
+		messageNumber:     1001,
+		IdStatuses:        IdLevelRangesAsString,
+		idStatusRanges:    IdLevelRangesAsString,
+		details:           []interface{}{"A", 1, errorUnknown},
+		expectedByIdRange: Debug,
+	},
+	{
+		name:               "messagestatus-21-Error-Trace",
+		messageNumber:      1001,
+		IdStatuses:         IdLevelRangesAsString,
+		idStatusRanges:     IdLevelRangesAsString,
+		details:            []interface{}{"A", 1, errorTrace},
+		expectedByIdRange:  Debug,
+		expectedSenzingApi: Trace,
+	},
+	{
+		name:               "messagestatus-22-Error-Debug",
+		messageNumber:      1001,
+		IdStatuses:         IdLevelRangesAsString,
+		idStatusRanges:     IdLevelRangesAsString,
+		details:            []interface{}{"A", 1, errorDebug},
+		expectedByIdRange:  Debug,
+		expectedSenzingApi: Debug,
+	},
+	{
+		name:               "messagestatus-22-Error-Info",
+		messageNumber:      1001,
+		IdStatuses:         IdLevelRangesAsString,
+		idStatusRanges:     IdLevelRangesAsString,
+		details:            []interface{}{"A", 1, errorInfo},
+		expectedByIdRange:  Debug,
+		expectedSenzingApi: Info,
+	},
+	{
+		name:               "messagestatus-23-Error-Warn",
+		messageNumber:      1001,
+		IdStatuses:         IdLevelRangesAsString,
+		idStatusRanges:     IdLevelRangesAsString,
+		details:            []interface{}{"A", 1, errorWarn},
+		expectedByIdRange:  Debug,
+		expectedSenzingApi: Warn,
+	},
+	{
+		name:               "messagestatus-23-Error-Error",
+		messageNumber:      1001,
+		IdStatuses:         IdLevelRangesAsString,
+		idStatusRanges:     IdLevelRangesAsString,
+		details:            []interface{}{"A", 1, errorError},
+		expectedByIdRange:  Debug,
+		expectedSenzingApi: Error,
+	},
+	{
+		name:               "messagestatus-24-Error-Retryable",
+		messageNumber:      1001,
+		IdStatuses:         IdLevelRangesAsString,
+		idStatusRanges:     IdLevelRangesAsString,
+		details:            []interface{}{"A", 1, errorRetryable},
+		expectedByIdRange:  Debug,
+		expectedSenzingApi: ErrorRetryable,
+	},
+	{
+		name:               "messagestatus-25-Error-BadUserInput",
+		messageNumber:      1001,
+		IdStatuses:         IdLevelRangesAsString,
+		idStatusRanges:     IdLevelRangesAsString,
+		details:            []interface{}{"A", 1, errorBadUserInput},
+		expectedByIdRange:  Debug,
+		expectedSenzingApi: ErrorBadUserInput,
+	},
+	{
+		name:               "messagestatus-26-Error-Unrecoverable",
+		messageNumber:      1001,
+		IdStatuses:         IdLevelRangesAsString,
+		idStatusRanges:     IdLevelRangesAsString,
+		details:            []interface{}{"A", 1, errorUnrecoverable},
+		expectedByIdRange:  Debug,
+		expectedSenzingApi: ErrorUnrecoverable,
+	},
+	{
+		name:               "messagestatus-27-Error-Fatal",
+		messageNumber:      1001,
+		IdStatuses:         IdLevelRangesAsString,
+		idStatusRanges:     IdLevelRangesAsString,
+		details:            []interface{}{"A", 1, errorFatal},
+		expectedByIdRange:  Debug,
+		expectedSenzingApi: Fatal,
+	},
+	{
+		name:               "messagestatus-28-Error-Panic",
+		messageNumber:      1001,
+		IdStatuses:         IdLevelRangesAsString,
+		idStatusRanges:     IdLevelRangesAsString,
+		details:            []interface{}{"A", 1, errorPanic},
+		expectedByIdRange:  Debug,
+		expectedSenzingApi: Panic,
+	},
+	{
+		name:               "messagestatus-30-Error-Retryable-and-Unrecoverable",
+		messageNumber:      1001,
+		IdStatuses:         IdLevelRangesAsString,
+		idStatusRanges:     IdLevelRangesAsString,
+		details:            []interface{}{"A", 1, errorRetryable, errorUnrecoverable},
+		expectedByIdRange:  Debug,
+		expectedSenzingApi: ErrorUnrecoverable,
+	},
+	{
+		name:               "messagestatus-31-Error-Unrecoverable-and-Retryable",
+		messageNumber:      1001,
+		IdStatuses:         IdLevelRangesAsString,
+		idStatusRanges:     IdLevelRangesAsString,
+		details:            []interface{}{"A", 1, errorUnrecoverable, errorRetryable},
+		expectedByIdRange:  Debug,
+		expectedSenzingApi: ErrorUnrecoverable,
+	},
+	{
+		name:               "messagestatus-32-Error-Panic-Unrecoverable-and-Retryable",
+		messageNumber:      1001,
+		IdStatuses:         IdLevelRangesAsString,
+		idStatusRanges:     IdLevelRangesAsString,
+		details:            []interface{}{"A", 1, errorPanic, errorUnrecoverable, errorRetryable},
+		expectedByIdRange:  Debug,
+		expectedSenzingApi: Panic,
+	},
 }
 
 // ----------------------------------------------------------------------------
@@ -183,7 +302,7 @@ func TestMessageStatusById(test *testing.T) {
 	for _, testCase := range testCases {
 		test.Run(testCase.name+"-ById", func(test *testing.T) {
 			testObject := &MessageStatusById{
-				IdStatuses: testCase.idRanges,
+				IdStatuses: testCase.idStatusRanges,
 			}
 			actual, _ := testObject.MessageStatus(testCase.messageNumber, testCase.details...)
 			assert.Equal(test, testCase.expectedById, actual, testCase.name)
@@ -199,7 +318,7 @@ func TestMessageStatusByIdRange(test *testing.T) {
 	for _, testCase := range testCases {
 		test.Run(testCase.name+"-ByIdRange", func(test *testing.T) {
 			testObject := &MessageStatusByIdRange{
-				IdStatusRanges: testCase.idRanges,
+				IdStatusRanges: testCase.idStatusRanges,
 			}
 			actual, _ := testObject.MessageStatus(testCase.messageNumber, testCase.details...)
 			assert.Equal(test, testCase.expectedByIdRange, actual, testCase.name)
@@ -235,41 +354,4 @@ func TestMessageStatusSenzingApi(test *testing.T) {
 			assert.Equal(test, testCase.expectedSenzingApi, actual, testCase.name)
 		})
 	}
-}
-
-func TestMessageStatusSenzingApiWith0037E(test *testing.T) {
-	expected := "ERROR_bad_user_input"
-	anError := errors.New("0037E|Unknown resolved entity value '2'")
-	testObject := &MessageStatusSenzingApi{}
-	actual, err := testObject.MessageStatus(1, "A", 1, testObject, anError)
-	testError(test, testObject, err)
-	assert.Equal(test, expected, actual)
-}
-
-func TestMessageStatusSenzingApiWithSenzingApiError(test *testing.T) {
-	expected := "ERROR_bad_user_input"
-	anError := errors.New("0037E|Unknown resolved entity value")
-	testObject := &MessageStatusSenzingApi{}
-	actual, err := testObject.MessageStatus(1, "A", 1, testObject, anError)
-	testError(test, testObject, err)
-	assert.Equal(test, expected, actual)
-}
-
-func TestMessageStatusSenzingApiWith2SenzingApiError2(test *testing.T) {
-	expected := "ERROR_unrecoverable"
-	anError1 := errors.New("0019E|Configuration not found")
-	anError2 := errors.New("0099E|Made up error")
-	testObject := &MessageStatusSenzingApi{}
-	actual, err := testObject.MessageStatus(1, "A", 1, testObject, anError1, anError2)
-	testError(test, testObject, err)
-	assert.Equal(test, expected, actual)
-}
-
-func TestMessageStatusSenzingApiWithUnknownError(test *testing.T) {
-	expected := ""
-	anError := errors.New("1234E|Made up error")
-	testObject := &MessageStatusSenzingApi{}
-	actual, err := testObject.MessageStatus(1000, "A", 1, testObject, anError)
-	testError(test, testObject, err)
-	assert.Equal(test, expected, actual)
 }

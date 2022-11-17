@@ -6,6 +6,7 @@ package messagelevel
 
 import (
 	"sort"
+	"sync"
 
 	"github.com/senzing/go-logging/logger"
 )
@@ -14,11 +15,12 @@ import (
 // Types
 // ----------------------------------------------------------------------------
 
-// The MessageLevelByIdRange type is for determining log level base on which range a message number resides in.
+// The MessageLevelByIdRange type returns the logger.Level based on which range a message number resides in.
 type MessageLevelByIdRange struct {
 	DefaultLogLevel     logger.Level         // User specified default.
 	IdLevelRanges       map[int]logger.Level // The "low-bound" of a range and the corresponding logger level.
-	sortedIdLevelRanges []int                // The keys of IdRanges in sorted order.
+	sortedIdLevelRanges []int                // The keys of IdLevelRanges in sorted order.
+	lock                sync.Mutex           // Lock for serializing creation of sortedIdLevelRanges.
 }
 
 // ----------------------------------------------------------------------------
@@ -27,6 +29,8 @@ type MessageLevelByIdRange struct {
 
 func (messageLevel *MessageLevelByIdRange) getSortedIdLevelRanges() []int {
 	if messageLevel.sortedIdLevelRanges == nil {
+		messageLevel.lock.Lock()
+		defer messageLevel.lock.Unlock()
 		messageLevel.sortedIdLevelRanges = make([]int, 0, len(messageLevel.IdLevelRanges))
 		for key := range messageLevel.IdLevelRanges {
 			messageLevel.sortedIdLevelRanges = append(messageLevel.sortedIdLevelRanges, key)

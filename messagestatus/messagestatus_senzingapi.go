@@ -5,8 +5,6 @@ package messagestatus
 
 import (
 	"strings"
-
-	"github.com/senzing/go-logging/logger"
 )
 
 // ----------------------------------------------------------------------------
@@ -25,71 +23,22 @@ type MessageStatusSenzingApi struct {
 }
 
 // ----------------------------------------------------------------------------
-// Constants
+// Interface methods
 // ----------------------------------------------------------------------------
-
-/*
-Types of Senzing errors.
-These are the strings that may be returned from MessageStatus()
-*/
-const (
-	Debug              = logger.LevelDebugName
-	Error              = logger.LevelErrorName
-	ErrorBadUserInput  = logger.LevelErrorName + "_bad_user_input"
-	ErrorRetryable     = logger.LevelErrorName + "_retryable"
-	ErrorUnrecoverable = logger.LevelErrorName + "_unrecoverable"
-	Fatal              = logger.LevelFatalName
-	Info               = logger.LevelInfoName
-	Panic              = logger.LevelPanicName
-	Trace              = logger.LevelTraceName
-	Warn               = logger.LevelWarnName
-)
-
-// ----------------------------------------------------------------------------
-// Variables
-// ----------------------------------------------------------------------------
-
-// A map of Senzing errors to the corresponding error level.
-var senzingApiErrorsMap = map[string]string{
-	"0002E":  Info,
-	"0019E":  ErrorUnrecoverable,
-	"0037E":  ErrorBadUserInput,  // Unknown resolved entity value
-	"0052E":  ErrorBadUserInput,  // Unknown relationship ID value
-	"0063E":  ErrorUnrecoverable, // G2ConfigMgr is not initialized
-	"7221E":  ErrorUnrecoverable, // No engine configuration registered
-	"30121E": ErrorBadUserInput,  // JSON parsing Failure
-}
-
-// The order of severity/verbosity from most severe to most verbose.
-var messagePrecedence = []string{
-	Panic,
-	Fatal,
-	ErrorUnrecoverable,
-	ErrorBadUserInput,
-	ErrorRetryable,
-	Error,
-	Warn,
-	Info,
-	Debug,
-	Trace,
-}
 
 func (messageStatus *MessageStatusSenzingApi) messageStatusBySenzingError(messageNumber int, details ...interface{}) string {
 
-	// Create a list of Senzing errors by looking at details in reverse order.
+	// Create a list of Senzing errors by looking at details.
 
 	var senzingErrors []string
-	if len(details) > 0 {
-		for index := len(details) - 1; index >= 0; index-- {
-			detail := details[index]
-			switch typedDetail := detail.(type) {
-			case error:
-				errorMessage := typedDetail.Error()
-				messageSplits := strings.Split(errorMessage, "|")
-				for key, value := range senzingApiErrorsMap {
-					if messageSplits[0] == key {
-						senzingErrors = append(senzingErrors, value)
-					}
+	for _, detail := range details {
+		switch typedDetail := detail.(type) {
+		case error:
+			errorMessage := typedDetail.Error()
+			messageSplits := strings.Split(errorMessage, "|")
+			for key, value := range SenzingApiErrorsMap {
+				if messageSplits[0] == key {
+					senzingErrors = append(senzingErrors, value)
 				}
 			}
 		}
@@ -98,7 +47,7 @@ func (messageStatus *MessageStatusSenzingApi) messageStatusBySenzingError(messag
 	// In the list of Senzing errors, determine the highest priority error.
 
 	if len(senzingErrors) > 0 {
-		for _, messagePrecedenceLevel := range messagePrecedence {
+		for _, messagePrecedenceLevel := range MessagePrecedence {
 			for _, senzingError := range senzingErrors {
 				if senzingError == messagePrecedenceLevel {
 					return senzingError

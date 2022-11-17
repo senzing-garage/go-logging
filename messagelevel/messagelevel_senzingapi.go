@@ -6,6 +6,7 @@ package messagelevel
 
 import (
 	"sort"
+	"sync"
 
 	"github.com/senzing/go-logging/logger"
 	"github.com/senzing/go-logging/messagestatus"
@@ -17,10 +18,12 @@ import (
 
 // The MessageLevelSenzingApi type calculates the logger.Level based on the status value.
 type MessageLevelSenzingApi struct {
-	DefaultLogLevel     logger.Level         // User specified default.
-	IdLevelRanges       map[int]logger.Level // The "low-bound" of a range and the corresponding logger level.
-	IdStatuses          map[int]string       // Passed to MessageStatusSenzingApi for message number to specific status.
-	sortedIdLevelRanges []int                // The keys of IdLevelRanges in sorted order.
+	DefaultLogLevel     logger.Level                         // User specified default.
+	IdLevelRanges       map[int]logger.Level                 // The "low-bound" of a range and the corresponding logger level.
+	IdStatuses          map[int]string                       // Passed to MessageStatusSenzingApi for message number to specific status.
+	messageStatus       messagestatus.MessageStatusInterface // Local instance of MessageStatus
+	lock                sync.Mutex                           // Lock for serializing creation of sortedIdLevelRanges.
+	sortedIdLevelRanges []int                                // The keys of IdLevelRanges in sorted order.
 }
 
 // statusToLevelMap maps the constants in messagestatus_senzingapi.go to log levels.
@@ -43,6 +46,8 @@ var statusToLevelMap = map[string]logger.Level{
 
 func (messageLevel *MessageLevelSenzingApi) getSortedIdLevelRanges() []int {
 	if messageLevel.sortedIdLevelRanges == nil {
+		messageLevel.lock.Lock()
+		defer messageLevel.lock.Unlock()
 		messageLevel.sortedIdLevelRanges = make([]int, 0, len(messageLevel.IdLevelRanges))
 		for key := range messageLevel.IdLevelRanges {
 			messageLevel.sortedIdLevelRanges = append(messageLevel.sortedIdLevelRanges, key)
@@ -83,14 +88,15 @@ func (messageLevel *MessageLevelSenzingApi) MessageLevel(messageNumber int, deta
 	// Second priority: Calculate log level from the status.
 
 	if messageLevel.IdStatuses != nil {
-		messageStatus := &messagestatus.MessageStatusSenzingApi{
-			IdStatuses: messageLevel.IdStatuses,
+		if messageLevel.messageStatus == nil {
+			messageLevel.messageStatus = &messagestatus.MessageStatusSenzingApi{
+				IdStatuses: messageLevel.IdStatuses,
+			}
 		}
-		status, err := messageStatus.MessageStatus(messageNumber, details...)
+		status, err := messageLevel.messageStatus.MessageStatus(messageNumber, details...)
 		if err != nil {
 			return result, err
 		}
-
 		result, ok := statusToLevelMap[status]
 		if ok {
 			return result, err
