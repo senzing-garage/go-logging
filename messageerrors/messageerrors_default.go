@@ -11,7 +11,7 @@ package messageerrors
 type MessageErrorsDefault struct{}
 
 type messageErrorsDefault struct {
-	Text interface{} `json:"text,omitempty"`
+	Text interface{} `json:"text,omitempty"` // Text returned by error.Error().
 }
 
 // ----------------------------------------------------------------------------

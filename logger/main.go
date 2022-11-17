@@ -17,31 +17,31 @@ type Level int
 
 // The LoggerInterface type defines guards, logging methods, and get/set of logging level.
 type LoggerInterface interface {
-	Debug(v ...interface{}) LoggerInterface
-	Debugf(format string, v ...interface{}) LoggerInterface
-	Error(v ...interface{}) LoggerInterface
-	Errorf(format string, v ...interface{}) LoggerInterface
-	Fatal(v ...interface{}) LoggerInterface
-	Fatalf(format string, v ...interface{}) LoggerInterface
-	GetLogLevel() Level
-	GetLogLevelAsString() string
-	Info(v ...interface{}) LoggerInterface
-	Infof(format string, v ...interface{}) LoggerInterface
-	IsDebug() bool
-	IsError() bool
-	IsFatal() bool
-	IsInfo() bool
-	IsPanic() bool
-	IsTrace() bool
-	IsWarn() bool
-	Panic(v ...interface{}) LoggerInterface
-	Panicf(format string, v ...interface{}) LoggerInterface
-	SetLogLevel(level Level) LoggerInterface
-	SetLogLevelFromString(levelString string) LoggerInterface
-	Trace(v ...interface{}) LoggerInterface
-	Tracef(format string, v ...interface{}) LoggerInterface
-	Warn(v ...interface{}) LoggerInterface
-	Warnf(format string, v ...interface{}) LoggerInterface
+	Debug(v ...interface{}) LoggerInterface                   // Log a DEBUG message.
+	Debugf(format string, v ...interface{}) LoggerInterface   // Log a formatted DEBUG message.
+	Error(v ...interface{}) LoggerInterface                   // Log an ERROR message.
+	Errorf(format string, v ...interface{}) LoggerInterface   // Log a formatted ERROR message.
+	Fatal(v ...interface{}) LoggerInterface                   // Log a FATAL message.
+	Fatalf(format string, v ...interface{}) LoggerInterface   // Log a formatted FATAL message.
+	GetLogLevel() Level                                       // Gets the logger instance logging level.
+	GetLogLevelAsString() string                              // Gets the logger instance logging level in string representation.
+	Info(v ...interface{}) LoggerInterface                    // Log an INFO message.
+	Infof(format string, v ...interface{}) LoggerInterface    // Log a formatted INFO message.
+	IsDebug() bool                                            // Returns true if a DEBUG message will be logged.
+	IsError() bool                                            // Returns true if an ERROR message will be logged.
+	IsFatal() bool                                            // Returns true if a FATAL message will be logged.
+	IsInfo() bool                                             // Returns true if an INFO message will be logged.
+	IsPanic() bool                                            // Returns true if a PANIC message will be logged.
+	IsTrace() bool                                            // Returns true if a TRACE message will be logged.
+	IsWarn() bool                                             // Returns true if a WARN message will be logged.
+	Panic(v ...interface{}) LoggerInterface                   // Log a PANIC message.
+	Panicf(format string, v ...interface{}) LoggerInterface   // Log a formatted PANIC message.
+	SetLogLevel(level Level) LoggerInterface                  // Sets the logger instance logging level.
+	SetLogLevelFromString(levelString string) LoggerInterface // Sets the logger instance logging level using a string representation.
+	Trace(v ...interface{}) LoggerInterface                   // Log a TRACE message.
+	Tracef(format string, v ...interface{}) LoggerInterface   // Log a formatted TRACE message.
+	Warn(v ...interface{}) LoggerInterface                    // Log a WARN message.
+	Warnf(format string, v ...interface{}) LoggerInterface    // Log a formatted WARN message.
 }
 
 // ----------------------------------------------------------------------------

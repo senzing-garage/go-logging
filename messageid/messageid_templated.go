@@ -11,7 +11,7 @@ import "fmt"
 
 // The MessageIdTemplated type is for creating message identifier based on a template.
 type MessageIdTemplated struct {
-	MessageIdTemplate string
+	MessageIdTemplate string // Golang template string for formatting message identifier.
 }
 
 // ----------------------------------------------------------------------------

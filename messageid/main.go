@@ -11,5 +11,5 @@ package messageid
 
 // The MessageIdInterface type defines methods for producing a message identifier.
 type MessageIdInterface interface {
-	MessageId(messageNumber int, details ...interface{}) (string, error)
+	MessageId(messageNumber int, details ...interface{}) (string, error) // Get the "id" value from the messageNumber and details.
 }

@@ -13,7 +13,7 @@ import "github.com/senzing/go-logging/logger"
 
 // The MessageLevelInterface type defines methods for determining log level.
 type MessageLevelInterface interface {
-	MessageLevel(messageNumber int, details ...interface{}) (logger.Level, error)
+	MessageLevel(messageNumber int, details ...interface{}) (logger.Level, error) // Get the "level" value from the messageNumber and details.
 }
 
 // ----------------------------------------------------------------------------

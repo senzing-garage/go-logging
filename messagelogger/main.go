@@ -37,20 +37,20 @@ The MessageLoggerInterface type defines methods for creating messages, logging m
 It also has convenience methods for setting and getting the current log level.
 */
 type MessageLoggerInterface interface {
-	Error(messageNumber int, details ...interface{}) error
-	GetLogLevel() Level
-	GetLogLevelAsString() string
-	IsDebug() bool
-	IsError() bool
-	IsFatal() bool
-	IsInfo() bool
-	IsPanic() bool
-	IsTrace() bool
-	IsWarn() bool
-	Log(messageNumber int, details ...interface{}) error
-	Message(messageNumber int, details ...interface{}) (string, error)
-	SetLogLevel(level Level) MessageLoggerInterface
-	SetLogLevelFromString(levelString string) MessageLoggerInterface
+	Error(messageNumber int, details ...interface{}) error             // Returns an error type populated with the message.
+	GetLogLevel() Level                                                // Gets the logger instance logging level.
+	GetLogLevelAsString() string                                       // Gets the logger instance logging level in string representation.
+	IsDebug() bool                                                     // Returns true if a DEBUG message will be logged.
+	IsError() bool                                                     // Returns true if an ERROR message will be logged.
+	IsFatal() bool                                                     // Returns true if a FATAL message will be logged.
+	IsInfo() bool                                                      // Returns true if an INFO message will be logged.
+	IsPanic() bool                                                     // Returns true if a PANIC message will be logged.
+	IsTrace() bool                                                     // Returns true if a TRACE message will be logged.
+	IsWarn() bool                                                      // Returns true if a WARN message will be logged.
+	Log(messageNumber int, details ...interface{}) error               // Logs the message.
+	Message(messageNumber int, details ...interface{}) (string, error) // Returns the message.
+	SetLogLevel(level Level) MessageLoggerInterface                    // Sets the logger instance logging level.
+	SetLogLevelFromString(levelString string) MessageLoggerInterface   // Sets the logger instance logging level using a string representation.
 }
 
 // ----------------------------------------------------------------------------

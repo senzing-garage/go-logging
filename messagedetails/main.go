@@ -17,7 +17,7 @@ import (
 
 // The MessageDetailsInterface type defines methods for determining the details value.
 type MessageDetailsInterface interface {
-	MessageDetails(messageNumber int, details ...interface{}) (interface{}, error)
+	MessageDetails(messageNumber int, details ...interface{}) (interface{}, error) // Get the "details" value from the messageNumber and details.
 }
 
 // ----------------------------------------------------------------------------

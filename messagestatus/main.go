@@ -11,7 +11,7 @@ package messagestatus
 
 // The MessageStatusInterface type defines methods for determining status.
 type MessageStatusInterface interface {
-	MessageStatus(messageNumber int, details ...interface{}) (string, error)
+	MessageStatus(messageNumber int, details ...interface{}) (string, error) // Get the "status" value from the messageNumber and details.
 }
 
 // The Status type is used to identify strings as being status strings in details parameter.

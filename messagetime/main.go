@@ -13,5 +13,5 @@ import "time"
 
 // The MessageTimeInterface type defines methods for determining the time value.
 type MessageTimeInterface interface {
-	MessageTime(messageNumber int, messageTimestamp time.Time, details ...interface{}) (string, error)
+	MessageTime(messageNumber int, messageTimestamp time.Time, details ...interface{}) (string, error) // Get the "time" value from the id, messageTimestamp, and details.
 }

@@ -21,16 +21,16 @@ type MessageFormatJson struct{}
 // Order is important.
 // It should be date, time, level, id, status, text, duration, location, errors, details.
 type messageFormatJson struct {
-	Date     string      `json:"date,omitempty"`
-	Time     string      `json:"time,omitempty"`
-	Level    string      `json:"level,omitempty"`
-	Id       string      `json:"id,omitempty"`
-	Text     interface{} `json:"text,omitempty"`
-	Status   string      `json:"status,omitempty"`
-	Duration int64       `json:"duration,omitempty"`
-	Location string      `json:"location,omitempty"`
-	Errors   interface{} `json:"errors,omitempty"`
-	Details  interface{} `json:"details,omitempty"`
+	Date     string      `json:"date,omitempty"`     // Date of message in UTC.
+	Time     string      `json:"time,omitempty"`     // Time of message in UTC.
+	Level    string      `json:"level,omitempty"`    // Level:  TRACE, DEBUG, INFO, WARN, ERROR, FATAL, PANIC.
+	Id       string      `json:"id,omitempty"`       // Message identifier.
+	Text     interface{} `json:"text,omitempty"`     // Message text.
+	Status   string      `json:"status,omitempty"`   // Status information.
+	Duration int64       `json:"duration,omitempty"` // Duration in nanoseconds
+	Location string      `json:"location,omitempty"` // Location in the code issuing message.
+	Errors   interface{} `json:"errors,omitempty"`   // List of errors.
+	Details  interface{} `json:"details,omitempty"`  // All instances passed into the message.
 }
 
 // ----------------------------------------------------------------------------
