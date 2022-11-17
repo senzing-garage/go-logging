@@ -15,11 +15,32 @@ var testCases = []struct {
 	expectedSenzing string
 }{
 	{
-		name:            "messagelocation-01",
+		name:            "messagelocation-01-skip-0",
 		callerSkip:      0,
 		messageNumber:   1000,
-		expectedDefault: "In MessageLocation() at messagelocation_default.go:43",
-		expectedSenzing: "In MessageLocation() at messagelocation_senzing.go:43",
+		expectedDefault: "In MessageLocation() at messagelocation_default.go:",
+		expectedSenzing: "In MessageLocation() at messagelocation_senzing.go:",
+	},
+	{
+		name:            "messagelocation-02-skip-1",
+		callerSkip:      1,
+		messageNumber:   1000,
+		expectedDefault: "In func1() at messagelocation_test.go:",
+		expectedSenzing: "In func1() at messagelocation_test.go:",
+	},
+	{
+		name:            "messagelocation-03-skip-2",
+		callerSkip:      2,
+		messageNumber:   1000,
+		expectedDefault: "In tRunner() at testing.go:",
+		expectedSenzing: "In tRunner() at testing.go:",
+	},
+	{
+		name:            "messagelocation-04-skip-3",
+		callerSkip:      3,
+		messageNumber:   1000,
+		expectedDefault: "In goexit() at asm_amd64.s:",
+		expectedSenzing: "In goexit() at asm_amd64.s:",
 	},
 }
 
@@ -46,7 +67,7 @@ func TestMessageLocationDefault(test *testing.T) {
 				}
 				actual, err := testObject.MessageLocation(testCase.messageNumber, testCase.details...)
 				testError(test, testObject, err)
-				assert.Equal(test, testCase.expectedDefault, actual, testCase.name)
+				assert.Contains(test, actual, testCase.expectedDefault, testCase.name)
 			})
 		}
 	}
@@ -80,7 +101,7 @@ func TestMessageLocationSenzing(test *testing.T) {
 				}
 				actual, err := testObject.MessageLocation(testCase.messageNumber, testCase.details...)
 				testError(test, testObject, err)
-				assert.Equal(test, testCase.expectedSenzing, actual, testCase.name)
+				assert.Contains(test, actual, testCase.expectedSenzing, testCase.name)
 			})
 		}
 	}
