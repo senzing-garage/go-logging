@@ -115,7 +115,6 @@ func new(interfaces ...interface{}) (MessageLoggerInterface, error) {
 	var errorsList []interface{}
 	if len(interfaces) > 0 {
 		for _, value := range interfaces {
-
 			switch typedValue := value.(type) {
 			case logger.LoggerInterface:
 				result.Logger = typedValue
@@ -233,17 +232,16 @@ that is tailored to Senzing applications.
 Like New(), adding parameters can be used to modify subcomponents.
 */
 func NewSenzingLogger(productIdentifier int, idMessages map[int]string, interfaces ...interface{}) (MessageLoggerInterface, error) {
-	var err error = nil
 
 	// Detect incorrect parameter values.
 
 	if productIdentifier <= 0 || productIdentifier >= 10000 {
-		err = errors.New("productIdentifier must be in range 1..9999. See https://github.com/Senzing/knowledge-base/blob/main/lists/senzing-product-ids.md")
+		err := errors.New("productIdentifier must be in range 1..9999. See https://github.com/Senzing/knowledge-base/blob/main/lists/senzing-product-ids.md")
 		return nil, err
 	}
 
 	if idMessages == nil {
-		err = errors.New("messages must be a map[int]string")
+		err := errors.New("messages must be a map[int]string")
 		return nil, err
 	}
 
@@ -360,8 +358,6 @@ func GetLogLevel() (Level, error) {
 The GetLogLevelAsString will return the current system setting for the log level as a string.
 */
 func GetLogLevelAsString() (string, error) {
-	var err error = nil
-
 	logLevel, err := GetLogLevel()
 	if err != nil {
 		return "", err
