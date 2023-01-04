@@ -39,7 +39,6 @@ type messageFormatSenzing struct {
 
 // The Message method creates a JSON formatted message.
 func (messageFormat *MessageFormatSenzing) Message(date string, time string, level string, location string, id string, status string, text string, duration int64, errors interface{}, details interface{}) (string, error) {
-	var err error = nil
 	messageBuilder := &messageFormatSenzing{}
 
 	if len(date) > 0 {
@@ -100,7 +99,7 @@ func (messageFormat *MessageFormatSenzing) Message(date string, time string, lev
 	var resultBytes bytes.Buffer
 	enc := json.NewEncoder(&resultBytes)
 	enc.SetEscapeHTML(false)
-	err = enc.Encode(messageBuilder)
+	err := enc.Encode(messageBuilder)
 	result := strings.TrimSpace(resultBytes.String())
 
 	return result, err

@@ -68,7 +68,7 @@ func (messageStatus *MessageStatusSenzingApi) MessageStatus(messageNumber int, d
 	var result = ""
 
 	// First priority:  Status explicitly given in details parameter.
-	// Last occurance of messagestatus.Status is used.
+	// Last occurrence of messagestatus.Status is used.
 
 	foundInDetails := false
 	for _, value := range details {
