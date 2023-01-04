@@ -146,6 +146,11 @@ func new(interfaces ...interface{}) (MessageLoggerInterface, error) {
 				if ok {
 					logLevel = Level(logLevelCandidate)
 				}
+			case Level:
+				logLevelCandidate, ok := value.(Level)
+				if ok {
+					logLevel = Level(logLevelCandidate)
+				}
 			default:
 				errorsList = append(errorsList, typedValue)
 			}
