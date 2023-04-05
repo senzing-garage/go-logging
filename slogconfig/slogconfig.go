@@ -35,11 +35,11 @@ func SenzingJsonHandler(writer io.Writer) *slog.JSONHandler {
 					slogAttribute.Value = slog.StringValue("DEBUG")
 				case level < LevelWarn:
 					slogAttribute.Value = slog.StringValue("INFO")
-				case level < LevelError:
+				case level < LevelErrorSlog:
 					slogAttribute.Value = slog.StringValue("WARN")
-				case level < LevelFatal:
+				case level < LevelFatalSlog:
 					slogAttribute.Value = slog.StringValue("ERROR")
-				case level < LevelPanic:
+				case level < LevelPanicSlog:
 					slogAttribute.Value = slog.StringValue("FATAL")
 				default:
 					slogAttribute.Value = slog.StringValue("PANIC")
