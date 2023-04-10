@@ -29,11 +29,11 @@ func SenzingJsonHandler(writer io.Writer) *slog.JSONHandler {
 				// This could also look up the name from a map or other structure, but
 				// TODO: For maximum performance, the string values should be constants.
 				switch {
-				case level < LevelDebug:
+				case level < LevelDebugSlog:
 					slogAttribute.Value = slog.StringValue("TRACE")
-				case level < LevelInfo:
+				case level < LevelInfoSlog:
 					slogAttribute.Value = slog.StringValue("DEBUG")
-				case level < LevelWarn:
+				case level < LevelWarnSlog:
 					slogAttribute.Value = slog.StringValue("INFO")
 				case level < LevelErrorSlog:
 					slogAttribute.Value = slog.StringValue("WARN")
