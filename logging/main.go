@@ -19,6 +19,8 @@ import (
 // representations of a message.
 type LoggingInterface interface {
 	Log(messageNumber int, details ...interface{})
+	GetLogLevel() string
+	SetLogLevel(logLevelName string) error
 }
 
 // --- Override values when creating messages ---------------------------------
@@ -178,6 +180,7 @@ Input
 
 Output
   - A logger
+  - error
 */
 func New(options ...interface{}) (LoggingInterface, error) {
 	var err error = nil
@@ -189,7 +192,7 @@ func New(options ...interface{}) (LoggingInterface, error) {
 		callerSkip          int            = 0
 		idMessages          map[int]string = map[int]string{}
 		idStatuses          map[int]string = map[int]string{}
-		logLevel            string         = "INFO"
+		logLevel            string         = LevelInfoName
 		messageIdTemplate   string         = "%d"
 		componentIdentifier int            = 9999
 		output              io.Writer      = os.Stderr
@@ -239,6 +242,8 @@ func New(options ...interface{}) (LoggingInterface, error) {
 		err := fmt.Errorf("unknown error level: %s", logLevel)
 		return result, err
 	}
+	var slogLeveler = new(slog.LevelVar)
+	slogLeveler.Set(slogLevel)
 
 	// Create messenger.
 
@@ -256,13 +261,14 @@ func New(options ...interface{}) (LoggingInterface, error) {
 
 	// Create logger.
 
-	logger := slog.New(SlogHandlerOptions(slogLevel, options...).NewJSONHandler(output))
+	logger := slog.New(SlogHandlerOptions(slogLeveler, options...).NewJSONHandler(output))
 
 	// Create LoggingInterface.
 
 	loggingImpl := &LoggingImpl{
 		logger:    logger,
 		messenger: messenger,
+		leveler:   slogLeveler,
 	}
 
 	err = loggingImpl.initialize()
@@ -285,6 +291,7 @@ Input
 
 Output
   - A logger
+  - error
 */
 func NewSenzingSdkLogger(componentId int, idMessages map[int]string, options ...interface{}) (LoggingInterface, error) {
 	loggerOptions := []interface{}{
@@ -306,6 +313,7 @@ Input
 
 Output
   - A logger
+  - error
 */
 func NewSenzingToolsLogger(componentId int, idMessages map[int]string, options ...interface{}) (LoggingInterface, error) {
 	loggerOptions := []interface{}{
@@ -354,11 +362,11 @@ func SlogHandlerOptions(leveler slog.Leveler, options ...interface{}) *slog.Hand
 				}
 				switch level {
 				case "DEBUG-4":
-					a.Value = slog.StringValue("TRACE")
+					a.Value = slog.StringValue(LevelTraceName)
 				case "ERROR+4":
-					a.Value = slog.StringValue("FATAL")
+					a.Value = slog.StringValue(LevelFatalName)
 				case "ERROR+8":
-					a.Value = slog.StringValue("PANIC")
+					a.Value = slog.StringValue(LevelPanicName)
 				}
 			}
 			if a.Key == slog.MessageKey {
@@ -371,9 +379,6 @@ func SlogHandlerOptions(leveler slog.Leveler, options ...interface{}) *slog.Hand
 				if timeHidden {
 					return slog.Attr{}
 				}
-				// if a.Value.Any().(string) == "" {
-				// 	return slog.Attr{}
-				// }
 			}
 			return a
 		},

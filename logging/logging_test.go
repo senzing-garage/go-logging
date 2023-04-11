@@ -51,45 +51,63 @@ var testCasesForMessage = []struct {
 		messageNumber:                 2001,
 		options:                       []interface{}{getOptionIdMessages(), getOptionCallerSkip(), getOptionOutput(), getOptionTimeHidden()},
 		details:                       []interface{}{"Bob", "Jane"},
-		expectedNew:                   `{"level":"INFO","text":"INFO: Bob works with Jane","id":"2001","location":"In func1() at logging_test.go:175","details":{"1":"Bob","2":"Jane"}}` + "\n",
-		expectedNewSenzingSdkLogger:   `{"level":"INFO","text":"INFO: Bob works with Jane","id":"senzing-99972001","location":"In func1() at logging_test.go:201","details":{"1":"Bob","2":"Jane"}}` + "\n",
-		expectedNewSenzingToolsLogger: `{"level":"INFO","text":"INFO: Bob works with Jane","id":"senzing-99972001","location":"In func1() at logging_test.go:188","details":{"1":"Bob","2":"Jane"}}` + "\n",
+		expectedNew:                   `{"level":"INFO","text":"INFO: Bob works with Jane","id":"2001","details":{"1":"Bob","2":"Jane"}}` + "\n",
+		expectedNewSenzingSdkLogger:   `{"level":"INFO","text":"INFO: Bob works with Jane","id":"senzing-99972001","details":{"1":"Bob","2":"Jane"}}` + "\n",
+		expectedNewSenzingToolsLogger: `{"level":"INFO","text":"INFO: Bob works with Jane","id":"senzing-99972001","details":{"1":"Bob","2":"Jane"}}` + "\n",
+	},
+	{
+		name:                          "logging-2002",
+		messageNumber:                 2002,
+		options:                       []interface{}{getOptionIdMessages(), getOptionCallerSkip(), getOptionOutput(), getOptionTimeHidden(), getOptionLogLevel("WARN")},
+		details:                       []interface{}{"Bob", "Jane"},
+		expectedNew:                   ``,
+		expectedNewSenzingSdkLogger:   ``,
+		expectedNewSenzingToolsLogger: ``,
 	},
 	{
 		name:                          "logging-3001",
 		messageNumber:                 3001,
 		options:                       []interface{}{getOptionIdMessages(), getOptionCallerSkip(), getOptionOutput(), getOptionTimeHidden()},
 		details:                       []interface{}{"Bob", "Jane"},
-		expectedNew:                   `{"level":"WARN","text":"WARN: Bob works with Jane","id":"3001","location":"In func1() at logging_test.go:175","details":{"1":"Bob","2":"Jane"}}` + "\n",
-		expectedNewSenzingSdkLogger:   `{"level":"WARN","text":"WARN: Bob works with Jane","id":"senzing-99973001","location":"In func1() at logging_test.go:201","details":{"1":"Bob","2":"Jane"}}` + "\n",
-		expectedNewSenzingToolsLogger: `{"level":"WARN","text":"WARN: Bob works with Jane","id":"senzing-99973001","location":"In func1() at logging_test.go:188","details":{"1":"Bob","2":"Jane"}}` + "\n",
+		expectedNew:                   `{"level":"WARN","text":"WARN: Bob works with Jane","id":"3001","details":{"1":"Bob","2":"Jane"}}` + "\n",
+		expectedNewSenzingSdkLogger:   `{"level":"WARN","text":"WARN: Bob works with Jane","id":"senzing-99973001","details":{"1":"Bob","2":"Jane"}}` + "\n",
+		expectedNewSenzingToolsLogger: `{"level":"WARN","text":"WARN: Bob works with Jane","id":"senzing-99973001","details":{"1":"Bob","2":"Jane"}}` + "\n",
+	},
+	{
+		name:                          "logging-3002",
+		messageNumber:                 3002,
+		options:                       []interface{}{getOptionIdMessages(), getOptionCallerSkip(), getOptionOutput(), getOptionTimeHidden(), getOptionLogLevel("ERROR")},
+		details:                       []interface{}{"Bob", "Jane"},
+		expectedNew:                   ``,
+		expectedNewSenzingSdkLogger:   ``,
+		expectedNewSenzingToolsLogger: ``,
 	},
 	{
 		name:                          "logging-4001",
 		messageNumber:                 4001,
 		options:                       []interface{}{getOptionIdMessages(), getOptionCallerSkip(), getOptionOutput(), getOptionTimeHidden()},
 		details:                       []interface{}{"Bob", "Jane"},
-		expectedNew:                   `{"level":"ERROR","text":"ERROR: Bob works with Jane","id":"4001","location":"In func1() at logging_test.go:175","details":{"1":"Bob","2":"Jane"}}` + "\n",
-		expectedNewSenzingSdkLogger:   `{"level":"ERROR","text":"ERROR: Bob works with Jane","id":"senzing-99974001","location":"In func1() at logging_test.go:201","details":{"1":"Bob","2":"Jane"}}` + "\n",
-		expectedNewSenzingToolsLogger: `{"level":"ERROR","text":"ERROR: Bob works with Jane","id":"senzing-99974001","location":"In func1() at logging_test.go:188","details":{"1":"Bob","2":"Jane"}}` + "\n",
+		expectedNew:                   `{"level":"ERROR","text":"ERROR: Bob works with Jane","id":"4001","details":{"1":"Bob","2":"Jane"}}` + "\n",
+		expectedNewSenzingSdkLogger:   `{"level":"ERROR","text":"ERROR: Bob works with Jane","id":"senzing-99974001","details":{"1":"Bob","2":"Jane"}}` + "\n",
+		expectedNewSenzingToolsLogger: `{"level":"ERROR","text":"ERROR: Bob works with Jane","id":"senzing-99974001","details":{"1":"Bob","2":"Jane"}}` + "\n",
 	},
 	{
 		name:                          "logging-5001",
 		messageNumber:                 5001,
 		options:                       []interface{}{getOptionIdMessages(), getOptionCallerSkip(), getOptionOutput(), getOptionTimeHidden()},
 		details:                       []interface{}{"Bob", "Jane"},
-		expectedNew:                   `{"level":"FATAL","text":"FATAL: Bob works with Jane","id":"5001","location":"In func1() at logging_test.go:175","details":{"1":"Bob","2":"Jane"}}` + "\n",
-		expectedNewSenzingSdkLogger:   `{"level":"FATAL","text":"FATAL: Bob works with Jane","id":"senzing-99975001","location":"In func1() at logging_test.go:201","details":{"1":"Bob","2":"Jane"}}` + "\n",
-		expectedNewSenzingToolsLogger: `{"level":"FATAL","text":"FATAL: Bob works with Jane","id":"senzing-99975001","location":"In func1() at logging_test.go:188","details":{"1":"Bob","2":"Jane"}}` + "\n",
+		expectedNew:                   `{"level":"FATAL","text":"FATAL: Bob works with Jane","id":"5001","details":{"1":"Bob","2":"Jane"}}` + "\n",
+		expectedNewSenzingSdkLogger:   `{"level":"FATAL","text":"FATAL: Bob works with Jane","id":"senzing-99975001","details":{"1":"Bob","2":"Jane"}}` + "\n",
+		expectedNewSenzingToolsLogger: `{"level":"FATAL","text":"FATAL: Bob works with Jane","id":"senzing-99975001","details":{"1":"Bob","2":"Jane"}}` + "\n",
 	},
 	{
 		name:                          "logging-6001",
 		messageNumber:                 6001,
 		options:                       []interface{}{getOptionIdMessages(), getOptionCallerSkip(), getOptionOutput(), getOptionTimeHidden()},
 		details:                       []interface{}{"Bob", "Jane"},
-		expectedNew:                   `{"level":"PANIC","text":"PANIC: Bob works with Jane","id":"6001","location":"In func1() at logging_test.go:175","details":{"1":"Bob","2":"Jane"}}` + "\n",
-		expectedNewSenzingSdkLogger:   `{"level":"PANIC","text":"PANIC: Bob works with Jane","id":"senzing-99976001","location":"In func1() at logging_test.go:201","details":{"1":"Bob","2":"Jane"}}` + "\n",
-		expectedNewSenzingToolsLogger: `{"level":"PANIC","text":"PANIC: Bob works with Jane","id":"senzing-99976001","location":"In func1() at logging_test.go:188","details":{"1":"Bob","2":"Jane"}}` + "\n",
+		expectedNew:                   `{"level":"PANIC","text":"PANIC: Bob works with Jane","id":"6001","details":{"1":"Bob","2":"Jane"}}` + "\n",
+		expectedNewSenzingSdkLogger:   `{"level":"PANIC","text":"PANIC: Bob works with Jane","id":"senzing-99976001","details":{"1":"Bob","2":"Jane"}}` + "\n",
+		expectedNewSenzingToolsLogger: `{"level":"PANIC","text":"PANIC: Bob works with Jane","id":"senzing-99976001","details":{"1":"Bob","2":"Jane"}}` + "\n",
 	},
 }
 
@@ -132,13 +150,19 @@ func teardown() error {
 
 func getOptionCallerSkip() *OptionCallerSkip {
 	return &OptionCallerSkip{
-		Value: 3,
+		Value: 0,
 	}
 }
 
 func getOptionIdMessages() *OptionIdMessages {
 	return &OptionIdMessages{
 		Value: idMessagesTest,
+	}
+}
+
+func getOptionLogLevel(logLevelName string) *OptionLogLevel {
+	return &OptionLogLevel{
+		Value: logLevelName,
 	}
 }
 
