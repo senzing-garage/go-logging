@@ -1,13 +1,12 @@
 package logging
 
 import (
+	"bytes"
 	"fmt"
 	"os"
 	"testing"
-	"time"
 
 	"github.com/stretchr/testify/assert"
-	"golang.org/x/exp/slog"
 )
 
 var idMessagesTest = map[int]string{
@@ -21,86 +20,75 @@ var idMessagesTest = map[int]string{
 }
 
 var testCasesForMessage = []struct {
-	name                string
-	messageNumber       int
-	options             []interface{}
-	details             []interface{}
-	expectedMessageJson string
-	expectedMessageSlog []interface{}
-	expectedText        string
-	expectedSlogLevel   slog.Level
+	name                          string
+	messageNumber                 int
+	options                       []interface{}
+	details                       []interface{}
+	expectedNew                   string
+	expectedNewSenzingToolsLogger string
 }{
 	{
-		name:                "logging-0001",
-		messageNumber:       1,
-		options:             []interface{}{getOptionIdMessages(), getOptionCallerSkip()},
-		details:             []interface{}{"Bob", "Jane", getTimestamp()},
-		expectedMessageJson: `{"time":"2000-01-01 00:00:00 +0000 UTC","level":"TRACE","id":"senzing-99990001","text":"TRACE: Bob works with Jane","location":"In func1() at logging_test.go:173","details":{"1":"Bob","2":"Jane"}}`,
-		expectedMessageSlog: []interface{}{"id", "senzing-99990001", "location", "In func1() at logging_test.go:186", "details", map[string]interface{}{"1": "Bob", "2": "Jane"}},
-		expectedText:        "TRACE: Bob works with Jane",
-		expectedSlogLevel:   LevelTraceSlog,
+		name:                          "logging-0001",
+		messageNumber:                 1,
+		options:                       []interface{}{getOptionIdMessages(), getOptionCallerSkip(), getOptionOutput(), getOptionTimeHidden()},
+		details:                       []interface{}{"Bob", "Jane"},
+		expectedNew:                   ``,
+		expectedNewSenzingToolsLogger: ``,
 	},
 	{
-		name:                "logging-1001",
-		messageNumber:       1001,
-		options:             []interface{}{getOptionIdMessages(), getOptionCallerSkip()},
-		details:             []interface{}{"Bob", "Jane", getTimestamp()},
-		expectedMessageJson: `{"time":"2000-01-01 00:00:00 +0000 UTC","level":"DEBUG","id":"senzing-99991001","text":"DEBUG: Bob works with Jane","location":"In func1() at logging_test.go:173","details":{"1":"Bob","2":"Jane"}}`,
-		expectedMessageSlog: []interface{}{"id", "senzing-99991001", "location", "In func1() at logging_test.go:186", "details", map[string]interface{}{"1": "Bob", "2": "Jane"}},
-		expectedText:        "DEBUG: Bob works with Jane",
-		expectedSlogLevel:   LevelDebugSlog,
+		name:                          "logging-1001",
+		messageNumber:                 1001,
+		options:                       []interface{}{getOptionIdMessages(), getOptionCallerSkip(), getOptionOutput(), getOptionTimeHidden()},
+		details:                       []interface{}{"Bob", "Jane"},
+		expectedNew:                   ``,
+		expectedNewSenzingToolsLogger: ``,
 	},
 	{
-		name:                "logging-2001",
-		messageNumber:       2001,
-		options:             []interface{}{getOptionIdMessages(), getOptionCallerSkip()},
-		details:             []interface{}{"Bob", "Jane", getTimestamp()},
-		expectedMessageJson: `{"time":"2000-01-01 00:00:00 +0000 UTC","level":"INFO","id":"senzing-99992001","text":"INFO: Bob works with Jane","location":"In func1() at logging_test.go:173","details":{"1":"Bob","2":"Jane"}}`,
-		expectedMessageSlog: []interface{}{"id", "senzing-99992001", "location", "In func1() at logging_test.go:186", "details", map[string]interface{}{"1": "Bob", "2": "Jane"}},
-		expectedText:        "INFO: Bob works with Jane",
-		expectedSlogLevel:   LevelInfoSlog,
+		name:                          "logging-2001",
+		messageNumber:                 2001,
+		options:                       []interface{}{getOptionIdMessages(), getOptionCallerSkip(), getOptionOutput(), getOptionTimeHidden()},
+		details:                       []interface{}{"Bob", "Jane"},
+		expectedNew:                   `{"level":"INFO","text":"INFO: Bob works with Jane","id":"2001","location":"In func1() at logging_test.go:167","details":{"1":"Bob","2":"Jane"}}` + "\n",
+		expectedNewSenzingToolsLogger: `{"level":"INFO","text":"INFO: Bob works with Jane","id":"senzing-99972001","location":"In func1() at logging_test.go:180","details":{"1":"Bob","2":"Jane"}}` + "\n",
 	},
 	{
-		name:                "logging-3001",
-		messageNumber:       3001,
-		options:             []interface{}{getOptionIdMessages(), getOptionCallerSkip()},
-		details:             []interface{}{"Bob", "Jane", getTimestamp()},
-		expectedMessageJson: `{"time":"2000-01-01 00:00:00 +0000 UTC","level":"WARN","id":"senzing-99993001","text":"WARN: Bob works with Jane","location":"In func1() at logging_test.go:173","details":{"1":"Bob","2":"Jane"}}`,
-		expectedMessageSlog: []interface{}{"id", "senzing-99993001", "location", "In func1() at logging_test.go:186", "details", map[string]interface{}{"1": "Bob", "2": "Jane"}},
-		expectedText:        "WARN: Bob works with Jane",
-		expectedSlogLevel:   LevelWarnSlog,
+		name:                          "logging-3001",
+		messageNumber:                 3001,
+		options:                       []interface{}{getOptionIdMessages(), getOptionCallerSkip(), getOptionOutput(), getOptionTimeHidden()},
+		details:                       []interface{}{"Bob", "Jane"},
+		expectedNew:                   `{"level":"WARN","text":"WARN: Bob works with Jane","id":"3001","location":"In func1() at logging_test.go:167","details":{"1":"Bob","2":"Jane"}}` + "\n",
+		expectedNewSenzingToolsLogger: `{"level":"WARN","text":"WARN: Bob works with Jane","id":"senzing-99973001","location":"In func1() at logging_test.go:180","details":{"1":"Bob","2":"Jane"}}` + "\n",
 	},
 	{
-		name:                "logging-4001",
-		messageNumber:       4001,
-		options:             []interface{}{getOptionIdMessages(), getOptionCallerSkip()},
-		details:             []interface{}{"Bob", "Jane", getTimestamp()},
-		expectedMessageJson: `{"time":"2000-01-01 00:00:00 +0000 UTC","level":"ERROR","id":"senzing-99994001","text":"ERROR: Bob works with Jane","location":"In func1() at logging_test.go:173","details":{"1":"Bob","2":"Jane"}}`,
-		expectedMessageSlog: []interface{}{"id", "senzing-99994001", "location", "In func1() at logging_test.go:186", "details", map[string]interface{}{"1": "Bob", "2": "Jane"}},
-		expectedText:        "ERROR: Bob works with Jane",
-		expectedSlogLevel:   LevelErrorSlog,
+		name:                          "logging-4001",
+		messageNumber:                 4001,
+		options:                       []interface{}{getOptionIdMessages(), getOptionCallerSkip(), getOptionOutput(), getOptionTimeHidden()},
+		details:                       []interface{}{"Bob", "Jane"},
+		expectedNew:                   `{"level":"ERROR","text":"ERROR: Bob works with Jane","id":"4001","location":"In func1() at logging_test.go:167","details":{"1":"Bob","2":"Jane"}}` + "\n",
+		expectedNewSenzingToolsLogger: `{"level":"ERROR","text":"ERROR: Bob works with Jane","id":"senzing-99974001","location":"In func1() at logging_test.go:180","details":{"1":"Bob","2":"Jane"}}` + "\n",
 	},
 	{
-		name:                "logging-5001",
-		messageNumber:       5001,
-		options:             []interface{}{getOptionIdMessages(), getOptionCallerSkip()},
-		details:             []interface{}{"Bob", "Jane", getTimestamp()},
-		expectedMessageJson: `{"time":"2000-01-01 00:00:00 +0000 UTC","level":"FATAL","id":"senzing-99995001","text":"FATAL: Bob works with Jane","location":"In func1() at logging_test.go:173","details":{"1":"Bob","2":"Jane"}}`,
-		expectedMessageSlog: []interface{}{"id", "senzing-99995001", "location", "In func1() at logging_test.go:186", "details", map[string]interface{}{"1": "Bob", "2": "Jane"}},
-		expectedText:        "FATAL: Bob works with Jane",
-		expectedSlogLevel:   LevelFatalSlog,
+		name:                          "logging-5001",
+		messageNumber:                 5001,
+		options:                       []interface{}{getOptionIdMessages(), getOptionCallerSkip(), getOptionOutput(), getOptionTimeHidden()},
+		details:                       []interface{}{"Bob", "Jane"},
+		expectedNew:                   `{"level":"FATAL","text":"FATAL: Bob works with Jane","id":"5001","location":"In func1() at logging_test.go:167","details":{"1":"Bob","2":"Jane"}}` + "\n",
+		expectedNewSenzingToolsLogger: `{"level":"FATAL","text":"FATAL: Bob works with Jane","id":"senzing-99975001","location":"In func1() at logging_test.go:180","details":{"1":"Bob","2":"Jane"}}` + "\n",
 	},
 	{
-		name:                "logging-6001",
-		messageNumber:       6001,
-		options:             []interface{}{getOptionIdMessages(), getOptionCallerSkip()},
-		details:             []interface{}{"Bob", "Jane", getTimestamp()},
-		expectedMessageJson: `{"time":"2000-01-01 00:00:00 +0000 UTC","level":"PANIC","id":"senzing-99996001","text":"PANIC: Bob works with Jane","location":"In func1() at logging_test.go:173","details":{"1":"Bob","2":"Jane"}}`,
-		expectedMessageSlog: []interface{}{"id", "senzing-99996001", "location", "In func1() at logging_test.go:186", "details", map[string]interface{}{"1": "Bob", "2": "Jane"}},
-		expectedText:        "PANIC: Bob works with Jane",
-		expectedSlogLevel:   LevelPanicSlog,
+		name:                          "logging-6001",
+		messageNumber:                 6001,
+		options:                       []interface{}{getOptionIdMessages(), getOptionCallerSkip(), getOptionOutput(), getOptionTimeHidden()},
+		details:                       []interface{}{"Bob", "Jane"},
+		expectedNew:                   `{"level":"PANIC","text":"PANIC: Bob works with Jane","id":"6001","location":"In func1() at logging_test.go:167","details":{"1":"Bob","2":"Jane"}}` + "\n",
+		expectedNewSenzingToolsLogger: `{"level":"PANIC","text":"PANIC: Bob works with Jane","id":"senzing-99976001","location":"In func1() at logging_test.go:180","details":{"1":"Bob","2":"Jane"}}` + "\n",
 	},
 }
+
+var (
+	componentId  int           = 9997
+	outputString *bytes.Buffer = new(bytes.Buffer)
+)
 
 // ----------------------------------------------------------------------------
 // Test harness
@@ -134,9 +122,9 @@ func teardown() error {
 // Internal functions - names begin with lowercase letter
 // ----------------------------------------------------------------------------
 
-func testError(test *testing.T, testObject LoggingInterface, err error) {
-	if err != nil {
-		assert.Fail(test, err.Error())
+func getOptionCallerSkip() *OptionCallerSkip {
+	return &OptionCallerSkip{
+		Value: 3,
 	}
 }
 
@@ -146,15 +134,21 @@ func getOptionIdMessages() *OptionIdMessages {
 	}
 }
 
-func getOptionCallerSkip() *OptionCallerSkip {
-	return &OptionCallerSkip{
-		Value: 2,
+func getOptionOutput() *OptionOutput {
+	return &OptionOutput{
+		Value: outputString,
 	}
 }
 
-func getTimestamp() *MessageTime {
-	return &MessageTime{
-		Value: time.Date(2000, time.January, 1, 0, 0, 0, 0, time.UTC),
+func getOptionTimeHidden() *OptionTimeHidden {
+	return &OptionTimeHidden{
+		Value: true,
+	}
+}
+
+func testError(test *testing.T, testObject LoggingInterface, err error) {
+	if err != nil {
+		assert.Fail(test, err.Error())
 	}
 }
 
@@ -164,31 +158,29 @@ func getTimestamp() *MessageTime {
 
 // -- Test New() method ---------------------------------------------------------
 
-func TestLoggingImpl_NewJson(test *testing.T) {
+func TestLoggingImpl_New(test *testing.T) {
+	outputString.Reset()
 	for _, testCase := range testCasesForMessage {
-		if len(testCase.expectedMessageJson) > 0 {
-			test.Run(testCase.name+"-NewJson", func(test *testing.T) {
-				testObject, err := New(testCase.options...)
-				testError(test, testObject, err)
-				actual := testObject.NewJson(testCase.messageNumber, testCase.details...)
-				assert.Equal(test, testCase.expectedMessageJson, actual, testCase.name)
-			})
-		}
+		test.Run(testCase.name+"-New", func(test *testing.T) {
+			testObject, err := New(testCase.options...)
+			testError(test, testObject, err)
+			testObject.Log(testCase.messageNumber, testCase.details...)
+			assert.Equal(test, testCase.expectedNew, outputString.String(), testCase.name)
+			outputString.Reset()
+		})
 	}
 }
 
-func TestLoggingImpl_NewSlogLevel(test *testing.T) {
+func TestLoggingImpl_NewSenzingToolsLogger(test *testing.T) {
+	outputString.Reset()
 	for _, testCase := range testCasesForMessage {
-		if len(testCase.expectedMessageSlog) > 0 {
-			test.Run(testCase.name+"-NewSlog", func(test *testing.T) {
-				testObject, err := New(testCase.options...)
-				testError(test, testObject, err)
-				message, slogLevel, actual := testObject.NewSlogLevel(testCase.messageNumber, testCase.details...)
-				assert.Equal(test, testCase.expectedText, message, testCase.name)
-				assert.Equal(test, testCase.expectedSlogLevel, slogLevel, testCase.name)
-				assert.Equal(test, testCase.expectedMessageSlog, actual, testCase.name)
-			})
-		}
+		test.Run(testCase.name+"-NewSenzingToolsLogger", func(test *testing.T) {
+			testObject, err := NewSenzingToolsLogger(componentId, idMessagesTest, testCase.options...)
+			testError(test, testObject, err)
+			testObject.Log(testCase.messageNumber, testCase.details...)
+			assert.Equal(test, testCase.expectedNewSenzingToolsLogger, outputString.String(), testCase.name)
+			outputString.Reset()
+		})
 	}
 }
 
@@ -196,12 +188,12 @@ func TestLoggingImpl_NewSlogLevel(test *testing.T) {
 // Examples for godoc documentation
 // ----------------------------------------------------------------------------
 
-func ExampleLoggingImpl_NewJson() {
+func ExampleLoggingImpl_Log() {
 	// For more information, visit https://github.com/Senzing/go-messaging/blob/main/logging/logging_test.go
-	example, err := New()
-	if err != nil {
-		fmt.Println(err)
-	}
-	fmt.Print(example.NewJson(2001, "Bob", "Jane", getTimestamp(), getOptionCallerSkip()))
+	// example, err := New()
+	// if err != nil {
+	// 	fmt.Println(err)
+	// }
+	// fmt.Print(example.NewJson(2001, "Bob", "Jane", getTimestamp(), getOptionCallerSkip()))
 	//Output: {"time":"2000-01-01 00:00:00 +0000 UTC","level":"INFO","id":"senzing-99992001","location":"In ExampleloggingImpl_NewJson() at logging_test.go:205","details":{"1":"Bob","2":"Jane"}}
 }

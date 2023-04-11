@@ -3,6 +3,7 @@ package logging
 import (
 	"errors"
 	"fmt"
+	"io"
 	"os"
 	"time"
 
@@ -80,8 +81,12 @@ type OptionSenzingComponentId struct {
 	Value int
 }
 
+type OptionTimeHidden struct {
+	Value bool
+}
+
 type OptionOutput struct {
-	Value *os.File
+	Value io.Writer
 }
 
 // ----------------------------------------------------------------------------
@@ -187,7 +192,7 @@ func New(options ...interface{}) (LoggingInterface, error) {
 		logLevel            string         = "INFO"
 		messageIdTemplate   string         = "%d"
 		componentIdentifier int            = 9999
-		output              *os.File       = os.Stderr
+		output              io.Writer      = os.Stderr
 	)
 
 	// Process options.
@@ -202,13 +207,13 @@ func New(options ...interface{}) (LoggingInterface, error) {
 			idStatuses = typedValue.Value
 		case *OptionLogLevel:
 			logLevel = typedValue.Value
-		case *OptionSenzingComponentId:
-			componentIdentifier = typedValue.Value
-			messageIdTemplate = fmt.Sprintf("senzing-%04d", componentIdentifier) + "%04d"
 		case *OptionMessageIdTemplate:
 			messageIdTemplate = typedValue.Value
 		case *OptionOutput:
 			output = typedValue.Value
+		case *OptionSenzingComponentId:
+			componentIdentifier = typedValue.Value
+			messageIdTemplate = fmt.Sprintf("senzing-%04d", componentIdentifier) + "%04d"
 		}
 	}
 
@@ -220,12 +225,12 @@ func New(options ...interface{}) (LoggingInterface, error) {
 	}
 
 	if idMessages == nil {
-		err := errors.New("messages must be a map[int]string")
+		err := errors.New("messages must be a map[int]string, not nil")
 		return result, err
 	}
 
 	if idStatuses == nil {
-		err := errors.New("statuses must be a map[int]string")
+		err := errors.New("statuses must be a map[int]string, not nil")
 		return result, err
 	}
 
@@ -249,10 +254,14 @@ func New(options ...interface{}) (LoggingInterface, error) {
 		return result, err
 	}
 
-	// Create loggingInterface.
+	// Create logger.
+
+	logger := slog.New(SlogHandlerOptions(slogLevel, options...).NewJSONHandler(output))
+
+	// Create LoggingInterface.
 
 	loggingImpl := &LoggingImpl{
-		logger:    slog.New(SlogHandlerOptions(slogLevel).NewJSONHandler(output)),
+		logger:    logger,
 		messenger: messenger,
 	}
 
@@ -291,19 +300,29 @@ The SlogHandlerOptions function returns a slog handler that includes TRACE, FATA
 TODO: Move to Senzing/go-logging.
 See: https://go.googlesource.com/exp/+/refs/heads/master/slog/example_custom_levels_test.go
 */
-func SlogHandlerOptions(leveler slog.Leveler) *slog.HandlerOptions {
+func SlogHandlerOptions(leveler slog.Leveler, options ...interface{}) *slog.HandlerOptions {
 	if leveler == nil {
 		leveler = LevelInfoSlog
 	}
+
+	// Default values.
+
+	var (
+		timeHidden bool = false
+	)
+
+	// Process options.
+
+	for _, value := range options {
+		switch typedValue := value.(type) {
+		case *OptionTimeHidden:
+			timeHidden = typedValue.Value
+		}
+	}
+
 	handlerOptions := &slog.HandlerOptions{
 		Level: leveler,
 		ReplaceAttr: func(groups []string, a slog.Attr) slog.Attr {
-			if a.Key == slog.MessageKey {
-				a.Key = "text"
-				if a.Value.Any().(string) == "" {
-					return slog.Attr{}
-				}
-			}
 			if a.Key == slog.LevelKey {
 				level := ""
 				switch typedValue := a.Value.Any().(type) {
@@ -312,13 +331,27 @@ func SlogHandlerOptions(leveler slog.Leveler) *slog.HandlerOptions {
 				case slog.Level:
 					level = typedValue.String()
 				}
-				switch {
-				case level == "DEBUG-4":
+				switch level {
+				case "DEBUG-4":
 					a.Value = slog.StringValue("TRACE")
-				case level == "ERROR+4":
+				case "ERROR+4":
 					a.Value = slog.StringValue("FATAL")
-				case level == "ERROR+8":
+				case "ERROR+8":
 					a.Value = slog.StringValue("PANIC")
+				}
+			}
+			if a.Key == slog.MessageKey {
+				a.Key = "text"
+				if a.Value.Any().(string) == "" {
+					return slog.Attr{}
+				}
+			}
+			if a.Key == slog.TimeKey {
+				if timeHidden {
+					return slog.Attr{}
+				}
+				if a.Value.Any().(string) == "" {
+					return slog.Attr{}
 				}
 			}
 			return a
