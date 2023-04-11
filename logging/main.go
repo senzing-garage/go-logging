@@ -275,6 +275,27 @@ func New(options ...interface{}) (LoggingInterface, error) {
 }
 
 /*
+The NewSenzingSdkLogger function creates a new instance of loggingInterface
+specifically for use with g2-sdk-go-* packages.
+
+Input
+  - componentId: See list at https://github.com/Senzing/knowledge-base/blob/main/lists/senzing-product-ids.md
+  - idMessage: A map of integer to string message templates.
+  - options: Variadic arguments listing the options (usually having type OptionXxxxx) used to configure the logger.
+
+Output
+  - A logger
+*/
+func NewSenzingSdkLogger(componentId int, idMessages map[int]string, options ...interface{}) (LoggingInterface, error) {
+	loggerOptions := []interface{}{
+		&OptionIdMessages{Value: idMessages},
+		&OptionSenzingComponentId{Value: componentId},
+	}
+	loggerOptions = append(loggerOptions, options...)
+	return New(loggerOptions...)
+}
+
+/*
 The NewSenzingToolsLogger function creates a new instance of loggingInterface
 specifically for use with senzing-tools.
 
@@ -350,9 +371,9 @@ func SlogHandlerOptions(leveler slog.Leveler, options ...interface{}) *slog.Hand
 				if timeHidden {
 					return slog.Attr{}
 				}
-				if a.Value.Any().(string) == "" {
-					return slog.Attr{}
-				}
+				// if a.Value.Any().(string) == "" {
+				// 	return slog.Attr{}
+				// }
 			}
 			return a
 		},

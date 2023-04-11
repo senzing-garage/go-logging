@@ -53,6 +53,5 @@ Output
 */
 func (logging *LoggingImpl) Log(messageNumber int, details ...interface{}) {
 	message, logLevel, details := logging.messenger.NewSlogLevel(messageNumber, details...)
-	// slog.Log(logging.Ctx, logLevel, message, details...)
 	logging.logger.Log(logging.Ctx, logLevel, message, details...)
 }
