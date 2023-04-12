@@ -7,6 +7,7 @@ that sits on top of Go's log package (<https://pkg.go.dev/log>).
 
 [![GoReportCard example](https://goreportcard.com/badge/github.com/senzing/go-logging)](https://goreportcard.com/report/github.com/senzing/go-logging)
 [![Go Reference](https://pkg.go.dev/badge/github.com/senzing/go-logging.svg)](https://pkg.go.dev/github.com/senzing/go-logging)
+[![License](https://img.shields.io/badge/License-Apache2-brightgreen.svg)](https://github.com/Senzing/go-logging/blob/main/LICENSE)
 
 ## Overview
 
@@ -16,7 +17,7 @@ message identification, message text, status, and logging level.
 go-logging also allows different formatting options such as JSON or simply terse messages.
 
 go-logging extends the levels of logging to include:
-Trace, Debug, Info, Warn, Error, Fatal, and Panic.
+TRACE, DEBUG, INFO, WARN, ERROR, FATAL, and PANIC.
 
 go-logging supports "guards",
 e.g. IsXxxxx() methods,
