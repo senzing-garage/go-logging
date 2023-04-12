@@ -206,7 +206,7 @@ The New function creates a new instance of loggingInterface.
 Adding options can be used to modify subcomponents.
 
 Input
-  - options: A list of options (usually having type OptionXxxxx) used to configur the logger.
+  - options: A list of options (usually having type OptionXxxxx) used to configure the logger.
 
 Output
   - A logger
