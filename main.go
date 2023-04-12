@@ -57,6 +57,8 @@ func testLogger(logger logging.LoggingInterface) {
 
 func main() {
 
+	//
+
 	// ------------------------------------------------------------------------
 	// Simple logger
 	// Message ids translate into log levels:
@@ -76,6 +78,9 @@ func main() {
 	if err != nil {
 		fmt.Println(err)
 	}
+
+	logger1.Log(2001, "Hello World!")
+
 	testLogger(logger1)
 
 	// ------------------------------------------------------------------------

@@ -2,24 +2,40 @@
 
 ## Synopsis
 
-The Senzing go-logging packages build a composable logging system
-that sits on top of Go's log package (<https://pkg.go.dev/log>).
+The `go-logging` packages build a logging system
+upon Go's experimental `slog` package (<https://pkg.go.dev/golang.org/x/exp/slog>).
 
-[![GoReportCard example](https://goreportcard.com/badge/github.com/senzing/go-logging)](https://goreportcard.com/report/github.com/senzing/go-logging)
 [![Go Reference](https://pkg.go.dev/badge/github.com/senzing/go-logging.svg)](https://pkg.go.dev/github.com/senzing/go-logging)
+[![GoReportCard example](https://goreportcard.com/badge/github.com/senzing/go-logging)](https://goreportcard.com/report/github.com/senzing/go-logging)
+[![go-test.yaml](https://github.com/Senzing/go-logging/actions/workflows/go-test.yaml/badge.svg)](https://github.com/Senzing/go-logging/actions/workflows/go-test.yaml)
 [![License](https://img.shields.io/badge/License-Apache2-brightgreen.svg)](https://github.com/Senzing/go-logging/blob/main/LICENSE)
 
 ## Overview
 
-The Senzing go-logging packages use the message number to coordinate aspects of the log message such as
-message identification, message text, status, and logging level.
+The Senzing `go-logging` packages use the message number to coordinate aspects of the log message such as
+message identification, message text, and logging level.
 
-go-logging also allows different formatting options such as JSON or simply terse messages.
+### Logging levels
 
-go-logging extends the levels of logging to include:
+`go-logging` extends the levels of logging to include:
 TRACE, DEBUG, INFO, WARN, ERROR, FATAL, and PANIC.
 
-go-logging supports "guards",
+The message number determines the log record level.
+The ranges are
+
+| Level     | Range     | Use                                                   |
+|-----------|-----------|-------------------------------------------------------|
+| **TRACE** | 0000-0999 | Entry/Exit tracing                                    |
+| **DEBUG** | 1000-1999 | Values seen during processing                         |
+| **INFO**  | 2000-2999 | Process steps achieved                                |
+| **WARN**  | 3000-3999 | Unexpected situations, but processing was successful  |
+| **ERROR** | 4000-4999 | Unexpected situations, processing was not successful  |
+| **FATAL** | 5000-5999 | The process needs to shutdown                         |
+| **PANIC** | 6000-6999 | The underlying system is at issue                     |
+
+### Guards
+
+`go-logging` supports "guards",
 e.g. IsXxxxx() methods,
 to avoid calling a `Log()` method that
 wouldn't print anyway because of the logging level.
@@ -29,115 +45,54 @@ Example:
 
 ```go
  if logger.IsDebug() {
-  logger.Debugf("%s", complexProcess())
+  logger.Log(1001, complexProcess())
  }
 ```
+
+## Use
 
 The basic use of senzing/go-logging looks like this:
 
 ```go
- import "log"
- import "github.com/senzing/go-logging/messagelogger"
+ import "github.com/senzing/go-logging/logging"
 
- log.SetFlags(0)
- messageLogger, _ := messagelogger.New()
- messageLogger.Log(1)
+ logger, _ := logging.New()
+ logger.Log(2001, "Hello world!")
 ```
 
 Output:
 
 ```console
- INFO 1:
+{"time":"YYYY-MM-DDThh:mm:ss.nnnnnnnnn-00:00","level":"INFO","id":"2001","details":{"1":"Hello World!"}}
 ```
 
 The API documentation and more examples are available at
 [pkg.go.dev/github.com/senzing/go-logging](https://pkg.go.dev/github.com/senzing/go-logging)
 
-## Details
-
-The packages of `go-logging` can be though of as belonging to one of the following four groups:
-
-1. **message fields:** `messagedate`, `messagedetails`, `messageduration`, `messageerrors`, `messagid`, `messagelevel`, `messagelocation`, `messagestatus`, `messagetext`, `messagetime`
-1. **message format:** `messageformat`
-1. **message use:** `messagelogger`
-1. **logging:**  `logger`
-
-### Message fields
-
-Packages that manage message fields are:
-
-- `messagedate`
-- `messagedetails`
-- `messageduration`
-- `messageerrors`
-- `messagid`
-- `messagelevel`
-- `messagelocation`
-- `messagestatus`
-- `messagetext`
-- `messagetime`
-
-These packages have a method signature similar to:
-
-```go
- MessageXxxx(messageNumber int, details ...interface{}) (string, error)
-```
-
-They receive the message identification number and a series of details.
-From this information, they construct the value of the field to be logged.
-If the returned string is empty, that field does not appear in the final message.
-
 ### Message format
 
-Packages that manage message fields are:
+Although not all fields may be present for an individual message,
+a complete message has these fields:
 
-- `messageformat`
-
-These packages have a similar method signature:
-
-```go
- Message(
-    date string,
-    time string,
-    level string,
-    location string,
-    id string,
-    status string,
-    text string,
-    duration int64,
-    errors interface{},
-    details interface{}
-    ) (string, error)
+```json
+{
+    "time": "YYYY-MM-DDThh:mm:ss.nnnnnnnnn-00:00",
+    "level": "INFO",
+    "text": "Sent SQL in /var/tmp/tmpfile.sql to database sqlite3://na:xxxxx@/tmp/sqlite/G2C.db",
+    "id": "senzing-65032002",
+    "status":  "status_message",
+    "duration":  "",
+    "location": "In processDatabase() at senzingschema.go:129",
+    "errors": ["unknown value in foo",  "bar has no value"],
+    "details": {
+        "1": "/var/tmp/tmpfile.sql",
+        "2": "sqlite3://na:xxxxx@/tmp/sqlite/G2C.db"
+    }
+}
 ```
 
-The method receives a value for each field,
-which was probably generated by a "Message field" method,
-and aggregates them into a string representation.
-A message formatter chooses which fields to include and the format of the final message.
-The string representation may be JSON, a terse format, or a user-defined format.
+## References
 
-### Message use
-
-Packages that use messages are:
-
-- `messagelogger`
-
-"Message use" includes: Logging, Error creation, and simple message generation.
-In the case of Logging, a logging level may be set to prevent "low-level" log message from being written to the log.
-
-### Logging
-
-Packages that write log messages are:
-
-- `logger`
-
-This package sit on top of Go's
-[log](https://pkg.go.dev/log)
-package.
-The `logger` package does not replace Go's `log` package.
-Rather it puts a
-[Decorator pattern](https://en.wikipedia.org/wiki/Decorator_pattern)
-on top of Go's `log` package to support concepts such as:
-
-- Log levels of TRACE, DEBUG, INFO, WARN, ERROR, FATAL, PANIC
-- Guards.  Examples: IsTrace(), IsDebug(), etc.
+- [Development](docs/development.md)
+- [Errors](docs/errors.md)
+- [Examples](docs/examples.md)
