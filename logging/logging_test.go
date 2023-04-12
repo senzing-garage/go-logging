@@ -111,6 +111,53 @@ var testCasesForMessage = []struct {
 	},
 }
 
+var testCasesForIsValidLogLevelName = []struct {
+	name         string
+	logLevelName string
+	expected     bool
+}{
+	{
+		name:         "is-TRACE",
+		logLevelName: "TRACE",
+		expected:     true,
+	},
+	{
+		name:         "is-DEBUG",
+		logLevelName: "DEBUG",
+		expected:     true,
+	},
+	{
+		name:         "is-INFO",
+		logLevelName: "INFO",
+		expected:     true,
+	},
+	{
+		name:         "is-WARN",
+		logLevelName: "WARN",
+		expected:     true,
+	},
+	{
+		name:         "is-ERROR",
+		logLevelName: "ERROR",
+		expected:     true,
+	},
+	{
+		name:         "is-FATAL",
+		logLevelName: "FATAL",
+		expected:     true,
+	},
+	{
+		name:         "is-PANIC",
+		logLevelName: "PANIC",
+		expected:     true,
+	},
+	{
+		name:         "is-bad-XYZZY",
+		logLevelName: "XYZZY",
+		expected:     false,
+	},
+}
+
 var (
 	componentId  int           = 9997
 	outputString *bytes.Buffer = new(bytes.Buffer)
@@ -188,7 +235,15 @@ func testError(test *testing.T, testObject LoggingInterface, err error) {
 // Test interface functions
 // ----------------------------------------------------------------------------
 
-// -- Test New() method ---------------------------------------------------------
+func TestLoggingImpl_IsValidLogLevelName(test *testing.T) {
+	outputString.Reset()
+	for _, testCase := range testCasesForIsValidLogLevelName {
+		test.Run(testCase.name, func(test *testing.T) {
+			actual := IsValidLogLevelName(testCase.logLevelName)
+			assert.Equal(test, testCase.expected, actual, testCase.name)
+		})
+	}
+}
 
 func TestLoggingImpl_New(test *testing.T) {
 	outputString.Reset()

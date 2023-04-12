@@ -172,6 +172,21 @@ var TextToLevelMap = map[string]slog.Level{
 // ----------------------------------------------------------------------------
 
 /*
+The IsValidLogLevelName function checks the logLevelName to verify it is one of
+"TRACE", "DEBUG", "INFO", "WARN", "ERROR", "FATAL", or "PANIC".
+
+Input
+  - logLevelName: A name to be tested.
+
+Output
+  - boolean: True if name in "TRACE", "DEBUG", "INFO", "WARN", "ERROR", "FATAL", or "PANIC".
+*/
+func IsValidLogLevelName(logLevelName string) bool {
+	_, ok := TextToLevelMap[logLevelName]
+	return ok
+}
+
+/*
 The New function creates a new instance of loggingInterface.
 Adding options can be used to modify subcomponents.
 
