@@ -7,6 +7,7 @@ import (
 	"os"
 	"time"
 
+	"github.com/senzing/go-logging/logger"
 	"github.com/senzing/go-messaging/messenger"
 	"golang.org/x/exp/slog"
 )
@@ -18,8 +19,10 @@ import (
 // The loggingInterface interface has methods for creating different
 // representations of a message.
 type LoggingInterface interface {
-	Log(messageNumber int, details ...interface{})
+	Error(messageNumber int, details ...interface{}) error
+	Json(messageNumber int, details ...interface{}) string
 	GetLogLevel() string
+	Log(messageNumber int, details ...interface{})
 	SetLogLevel(logLevelName string) error
 }
 
@@ -165,6 +168,18 @@ var TextToLevelMap = map[string]slog.Level{
 	LevelPanicName: LevelPanicSlog,
 	LevelTraceName: LevelTraceSlog,
 	LevelWarnName:  LevelWarnSlog,
+}
+
+// Map from string representation to Log level as typed integer.
+// FIXME: Deprecated:  Only needed until g2-sdk-go-* SetLevel() methods have been updated
+var TextToLoggerLevelMap = map[string]logger.Level{
+	LevelTraceName: logger.LevelTrace,
+	LevelDebugName: logger.LevelDebug,
+	LevelInfoName:  logger.LevelInfo,
+	LevelWarnName:  logger.LevelWarn,
+	LevelErrorName: logger.LevelError,
+	LevelFatalName: logger.LevelFatal,
+	LevelPanicName: logger.LevelPanic,
 }
 
 // ----------------------------------------------------------------------------

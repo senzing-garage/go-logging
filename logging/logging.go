@@ -2,6 +2,7 @@ package logging
 
 import (
 	"context"
+	"errors"
 	"fmt"
 
 	"github.com/senzing/go-messaging/messenger"
@@ -56,7 +57,7 @@ func (loggingImpl *LoggingImpl) initialize() error {
 // ----------------------------------------------------------------------------
 
 /*
-The Log method ...
+The Error method returns an error with a JSON message based on the messageNumber and details.
 
 Input
   - messageNumber: A message identifier which indexes into "idMessages".
@@ -65,9 +66,8 @@ Input
 Output
   - error
 */
-func (loggingImpl *LoggingImpl) Log(messageNumber int, details ...interface{}) {
-	message, logLevel, details := loggingImpl.messenger.NewSlogLevel(messageNumber, details...)
-	loggingImpl.logger.Log(loggingImpl.Ctx, logLevel, message, details...)
+func (loggingImpl *LoggingImpl) Error(messageNumber int, details ...interface{}) error {
+	return errors.New(loggingImpl.Json(messageNumber, details...))
 }
 
 /*
@@ -78,6 +78,32 @@ Output
 */
 func (loggingImpl *LoggingImpl) GetLogLevel() string {
 	return loggingImpl.logLevelName
+}
+
+/*
+The Json method returns a JSON string based on the messageNumber and details.
+
+Input
+  - messageNumber: A message identifier which indexes into "idMessages".
+  - details: Variadic arguments of any type to be added to the message.
+
+Output
+  - JSON string with message key/value pairs.
+*/
+func (loggingImpl *LoggingImpl) Json(messageNumber int, details ...interface{}) string {
+	return loggingImpl.messenger.NewJson(messageNumber, details...)
+}
+
+/*
+The Log method writes a log record to the output specified at LoggingImpl creation
+
+Input
+  - messageNumber: A message identifier which indexes into "idMessages".
+  - details: Variadic arguments of any type to be added to the message.
+*/
+func (loggingImpl *LoggingImpl) Log(messageNumber int, details ...interface{}) {
+	message, logLevel, details := loggingImpl.messenger.NewSlogLevel(messageNumber, details...)
+	loggingImpl.logger.Log(loggingImpl.Ctx, logLevel, message, details...)
 }
 
 /*
