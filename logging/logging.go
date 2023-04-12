@@ -80,6 +80,34 @@ func (loggingImpl *LoggingImpl) GetLogLevel() string {
 	return loggingImpl.logLevelName
 }
 
+func (loggingImpl *LoggingImpl) IsDebug() bool {
+	return loggingImpl.logger.Enabled(loggingImpl.Ctx, TextToLevelMap[LevelDebugName])
+}
+
+func (loggingImpl *LoggingImpl) IsError() bool {
+	return loggingImpl.logger.Enabled(loggingImpl.Ctx, TextToLevelMap[LevelErrorName])
+}
+
+func (loggingImpl *LoggingImpl) IsFatal() bool {
+	return loggingImpl.logger.Enabled(loggingImpl.Ctx, TextToLevelMap[LevelFatalName])
+}
+
+func (loggingImpl *LoggingImpl) IsInfo() bool {
+	return loggingImpl.logger.Enabled(loggingImpl.Ctx, TextToLevelMap[LevelInfoName])
+}
+
+func (loggingImpl *LoggingImpl) IsPanic() bool {
+	return loggingImpl.logger.Enabled(loggingImpl.Ctx, TextToLevelMap[LevelPanicName])
+}
+
+func (loggingImpl *LoggingImpl) IsTrace() bool {
+	return loggingImpl.logger.Enabled(loggingImpl.Ctx, TextToLevelMap[LevelTraceName])
+}
+
+func (loggingImpl *LoggingImpl) IsWarn() bool {
+	return loggingImpl.logger.Enabled(loggingImpl.Ctx, TextToLevelMap[LevelWarnName])
+}
+
 /*
 The Json method returns a JSON string based on the messageNumber and details.
 
