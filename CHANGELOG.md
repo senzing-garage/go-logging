@@ -11,7 +11,23 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added in 1.2.0
 
 - `go-logging/logging`
-- **Note:** `logger`, `messagedate`, `messagedetails`, `messageduration`, `messageerrors`, `messageformat`, `messageid`, `messagelevel`, `messagelocation`, `messagelogger`, `messagestatus`, `messagetext`, and  `messagetime` will probably be deprecated in version 2.0.0.
+
+### Deprecated in 1.2.0
+
+- The following packages will probably be removed in version 2.0.0:
+  - `logger`
+  - `messagedate`
+  - `messagedetails`
+  - `messageduration`
+  - `messageerrors`
+  - `messageformat`
+  - `messageid`
+  - `messagelevel`
+  - `messagelocation`
+  - `messagelogger`
+  - `messagestatus`
+  - `messagetext`
+  - `messagetime`
 
 ## [1.1.3] - 2023-01-04
 

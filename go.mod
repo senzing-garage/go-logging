@@ -3,10 +3,9 @@ module github.com/senzing/go-logging
 go 1.20
 
 require (
-	github.com/senzing/go-messaging v0.0.0
+	github.com/senzing/go-messaging v0.1.0
 	github.com/stretchr/testify v1.8.2
 	golang.org/x/exp v0.0.0-20230321023759-10a507213a29
-
 )
 
 require (
@@ -17,5 +16,3 @@ require (
 	github.com/rogpeppe/go-internal v1.10.0 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
 )
-
-replace github.com/senzing/go-messaging v0.0.0 => /home/senzing/senzing.git/go-messaging
