@@ -21,7 +21,7 @@ message identification, message text, and logging level.
 TRACE, DEBUG, INFO, WARN, ERROR, FATAL, and PANIC.
 
 The message number determines the log record level.
-The ranges are
+The ranges are:
 
 | Level     | Range     | Use                                                   |
 |-----------|-----------|-------------------------------------------------------|
@@ -66,9 +66,6 @@ Output:
 {"time":"YYYY-MM-DDThh:mm:ss.nnnnnnnnn-00:00","level":"INFO","id":"2001","details":{"1":"Hello World!"}}
 ```
 
-The API documentation and more examples are available at
-[pkg.go.dev/github.com/senzing/go-logging](https://pkg.go.dev/github.com/senzing/go-logging)
-
 ### Message format
 
 Although not all fields may be present for an individual message,
@@ -93,6 +90,7 @@ a complete message has these fields:
 
 ## References
 
+- [API documentation](https://pkg.go.dev/github.com/senzing/go-logging)
 - [Development](docs/development.md)
 - [Errors](docs/errors.md)
 - [Examples](docs/examples.md)

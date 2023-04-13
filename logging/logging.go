@@ -80,32 +80,89 @@ func (loggingImpl *LoggingImpl) GetLogLevel() string {
 	return loggingImpl.logLevelName
 }
 
-func (loggingImpl *LoggingImpl) IsDebug() bool {
-	return loggingImpl.logger.Enabled(loggingImpl.Ctx, TextToLevelMap[LevelDebugName])
+/*
+The Is method is used to determine if a log message will be printed.
+
+Output
+  - True, if message would be logged at the logLevelName level.
+*/
+func (loggingImpl *LoggingImpl) Is(logLevelName string) bool {
+	result := false
+	logLevel, ok := TextToLevelMap[logLevelName]
+	if ok {
+		result = loggingImpl.logger.Enabled(loggingImpl.Ctx, logLevel)
+	}
+	return result
 }
 
+/*
+The IsDebug method is used to determine if DEBUG messages will be logged.
+
+Output
+  - If true, DEBUG, INFO, WARN, ERROR, FATAL, and PANIC messages will be logged.
+*/
+func (loggingImpl *LoggingImpl) IsDebug() bool {
+	return loggingImpl.Is(LevelDebugName)
+}
+
+/*
+The IsError method is used to determine if ERROR messages will be logged.
+
+Output
+  - If true, ERROR, FATAL, and PANIC messages will be logged.
+*/
 func (loggingImpl *LoggingImpl) IsError() bool {
 	return loggingImpl.logger.Enabled(loggingImpl.Ctx, TextToLevelMap[LevelErrorName])
 }
 
+/*
+The IsFatal method is used to determine if FATAL messages will be logged.
+
+Output
+  - If true, FATAL and PANIC messages will be logged.
+*/
 func (loggingImpl *LoggingImpl) IsFatal() bool {
-	return loggingImpl.logger.Enabled(loggingImpl.Ctx, TextToLevelMap[LevelFatalName])
+	return loggingImpl.Is(LevelFatalName)
 }
 
+/*
+The IsInfo method is used to determine if INFO messages will be logged.
+
+Output
+  - If true, INFO, WARN, ERROR, FATAL, and PANIC messages will be logged.
+*/
 func (loggingImpl *LoggingImpl) IsInfo() bool {
-	return loggingImpl.logger.Enabled(loggingImpl.Ctx, TextToLevelMap[LevelInfoName])
+	return loggingImpl.Is(LevelInfoName)
 }
 
+/*
+The IsPanic method is used to determine if PANIC messages will be logged.
+
+Output
+  - If true, PANIC messages will be logged.
+*/
 func (loggingImpl *LoggingImpl) IsPanic() bool {
-	return loggingImpl.logger.Enabled(loggingImpl.Ctx, TextToLevelMap[LevelPanicName])
+	return loggingImpl.Is(LevelPanicName)
 }
 
+/*
+The IsTrace method is used to determine if TRACE messages will be logged.
+
+Output
+  - If true, TRACE, DEBUG, INFO, WARN, ERROR, FATAL, and PANIC messages will be logged.
+*/
 func (loggingImpl *LoggingImpl) IsTrace() bool {
-	return loggingImpl.logger.Enabled(loggingImpl.Ctx, TextToLevelMap[LevelTraceName])
+	return loggingImpl.Is(LevelTraceName)
 }
 
+/*
+The IsWarn method is used to determine if WARN messages will be logged.
+
+Output
+  - If true, WARN, ERROR, FATAL, and PANIC messages will be logged.
+*/
 func (loggingImpl *LoggingImpl) IsWarn() bool {
-	return loggingImpl.logger.Enabled(loggingImpl.Ctx, TextToLevelMap[LevelWarnName])
+	return loggingImpl.Is(LevelWarnName)
 }
 
 /*

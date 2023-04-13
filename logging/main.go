@@ -21,6 +21,7 @@ import (
 type LoggingInterface interface {
 	Error(messageNumber int, details ...interface{}) error // Return an error object with the message.
 	GetLogLevel() string                                   // Get the current level of logging.
+	Is(logLevelName string) bool                           // Returns true if logLevelName message will be logged.
 	IsDebug() bool                                         // Returns true if a DEBUG message will be logged.
 	IsError() bool                                         // Returns true if an ERROR message will be logged.
 	IsFatal() bool                                         // Returns true if a FATAL message will be logged.
