@@ -231,12 +231,12 @@ The NewSenzingLogger function creates a new instance of MessageLoggerInterface
 that is tailored to Senzing applications.
 Like New(), adding parameters can be used to modify subcomponents.
 */
-func NewSenzingLogger(productIdentifier int, idMessages map[int]string, interfaces ...interface{}) (MessageLoggerInterface, error) {
+func NewSenzingLogger(componentIdentifier int, idMessages map[int]string, interfaces ...interface{}) (MessageLoggerInterface, error) {
 
 	// Detect incorrect parameter values.
 
-	if productIdentifier <= 0 || productIdentifier >= 10000 {
-		err := errors.New("productIdentifier must be in range 1..9999. See https://github.com/Senzing/knowledge-base/blob/main/lists/senzing-product-ids.md")
+	if componentIdentifier <= 0 || componentIdentifier >= 10000 {
+		err := errors.New("componentIdentifier must be in range 1..9999. See https://github.com/Senzing/knowledge-base/blob/main/lists/senzing-product-ids.md")
 		return nil, err
 	}
 
@@ -268,7 +268,7 @@ func NewSenzingLogger(productIdentifier int, idMessages map[int]string, interfac
 	messageErrors := &messageerrors.MessageErrorsSenzing{}
 	messageFormat := &messageformat.MessageFormatSenzing{}
 	messageId := &messageid.MessageIdSenzing{
-		MessageIdTemplate: fmt.Sprintf("senzing-%04d", productIdentifier) + "%04d",
+		MessageIdTemplate: fmt.Sprintf("senzing-%04d", componentIdentifier) + "%04d",
 	}
 	messageLevel := &messagelevel.MessageLevelSenzing{
 		DefaultLogLevel: logger.LevelInfo,
@@ -312,7 +312,7 @@ func NewSenzingLogger(productIdentifier int, idMessages map[int]string, interfac
 The NewSenzingApiLogger function creates a new instance of MessageLoggerInterface
 that is tailored for the Senzing SDK implementation.
 */
-func NewSenzingApiLogger(productIdentifier int, idMessages map[int]string, idStatuses map[int]string, interfaces ...interface{}) (MessageLoggerInterface, error) {
+func NewSenzingApiLogger(componentIdentifier int, idMessages map[int]string, idStatuses map[int]string, interfaces ...interface{}) (MessageLoggerInterface, error) {
 	messageLevel := &messagelevel.MessageLevelSenzingApi{
 		DefaultLogLevel: logger.LevelInfo,
 		IdLevelRanges:   messagelevel.IdLevelRanges,
@@ -336,7 +336,7 @@ func NewSenzingApiLogger(productIdentifier int, idMessages map[int]string, idSta
 
 	// Using a Factory Pattern, build the messagelogger.
 
-	return NewSenzingLogger(productIdentifier, idMessages, newInterfaces...)
+	return NewSenzingLogger(componentIdentifier, idMessages, newInterfaces...)
 }
 
 // ----------------------------------------------------------------------------

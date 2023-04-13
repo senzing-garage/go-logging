@@ -1,13 +1,18 @@
 module github.com/senzing/go-logging
 
-go 1.19
-
-require github.com/stretchr/testify v1.8.2
+go 1.20
 
 require (
-	// github.com/aquilax/truncate v1.0.0
+	github.com/senzing/go-messaging v0.1.0
+	github.com/stretchr/testify v1.8.2
+	golang.org/x/exp v0.0.0-20230321023759-10a507213a29
+)
+
+require (
 	github.com/davecgh/go-spew v1.1.1 // indirect
-	// github.com/docktermj/go-xyzzy-helpers v0.2.2
+	github.com/jstemmer/go-junit-report v1.0.0 // indirect
+	github.com/kr/text v0.2.0 // indirect
 	github.com/pmezard/go-difflib v1.0.0 // indirect
+	github.com/rogpeppe/go-internal v1.10.0 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
 )

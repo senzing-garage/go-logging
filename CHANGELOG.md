@@ -6,6 +6,29 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 [markdownlint](https://dlaa.me/markdownlint/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.2.0] - 2023-04-23
+
+### Added in 1.2.0
+
+- `go-logging/logging`
+
+### Deprecated in 1.2.0
+
+- The following packages will probably be removed in version 2.0.0:
+  - `logger`
+  - `messagedate`
+  - `messagedetails`
+  - `messageduration`
+  - `messageerrors`
+  - `messageformat`
+  - `messageid`
+  - `messagelevel`
+  - `messagelocation`
+  - `messagelogger`
+  - `messagestatus`
+  - `messagetext`
+  - `messagetime`
+
 ## [1.1.3] - 2023-01-04
 
 ### Added in 1.1.3

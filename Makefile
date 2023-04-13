@@ -55,7 +55,6 @@ dependencies:
 build: dependencies \
 	target/linux/$(PROGRAM_NAME)
 
-
 # -----------------------------------------------------------------------------
 # Test
 # -----------------------------------------------------------------------------
@@ -65,6 +64,7 @@ test:
 	@go test -v ./...
 #	@go test -v ./.
 #	@go test -v ./logger
+#	@go test -v ./logging
 #	@go test -v ./messagedate
 #	@go test -v ./messagedetails
 #	@go test -v ./messageduration
