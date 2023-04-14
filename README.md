@@ -32,6 +32,7 @@ The ranges are:
 | **ERROR** | 4000-4999 | Unexpected situations, processing was not successful  |
 | **FATAL** | 5000-5999 | The process needs to shutdown                         |
 | **PANIC** | 6000-6999 | The underlying system is at issue                     |
+|           | 8000-8999 | Reserved for observer messages                        |
 
 ### Guards
 
