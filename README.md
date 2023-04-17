@@ -35,7 +35,7 @@ The ranges are:
 |           | 8000-8999 | Reserved for observer messages                        |                             |
 
 **WARNING:** `TRACE` and `DEBUG` are meant for problem determination and should not be used in normal processing
-as the log records may contain sensitive data.
+as the log records, by convention, may contain sensitive data.
 
 ### Guards
 
