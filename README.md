@@ -23,16 +23,16 @@ TRACE, DEBUG, INFO, WARN, ERROR, FATAL, and PANIC.
 The message number determines the log record level.
 The ranges are:
 
-| Level     | Range     | Use                                                   |
-|-----------|-----------|-------------------------------------------------------|
-| **TRACE** | 0000-0999 | Entry/Exit tracing                                    |
-| **DEBUG** | 1000-1999 | Values seen during processing                         |
-| **INFO**  | 2000-2999 | Process steps achieved                                |
-| **WARN**  | 3000-3999 | Unexpected situations, but processing was successful  |
-| **ERROR** | 4000-4999 | Unexpected situations, processing was not successful  |
-| **FATAL** | 5000-5999 | The process needs to shutdown                         |
-| **PANIC** | 6000-6999 | The underlying system is at issue                     |
-|           | 8000-8999 | Reserved for observer messages                        |
+| Level     | Range     | Use                                                   | Comments                    |
+|-----------|-----------|-------------------------------------------------------|-----------------------------|
+| **TRACE** | 0000-0999 | Entry/Exit tracing                                    | May contain sensitive data. |
+| **DEBUG** | 1000-1999 | Values seen during processing                         | May contain sensitive data. |
+| **INFO**  | 2000-2999 | Process steps achieved                                |                             |
+| **WARN**  | 3000-3999 | Unexpected situations, but processing was successful  |                             |
+| **ERROR** | 4000-4999 | Unexpected situations, processing was not successful  |                             |
+| **FATAL** | 5000-5999 | The process needs to shutdown                         |                             |
+| **PANIC** | 6000-6999 | The underlying system is at issue                     |                             |
+|           | 8000-8999 | Reserved for observer messages                        |                             |
 
 ### Guards
 
