@@ -34,6 +34,9 @@ The ranges are:
 | **PANIC** | 6000-6999 | The underlying system is at issue                     |                             |
 |           | 8000-8999 | Reserved for observer messages                        |                             |
 
+**WARNING:** `TRACE` and `DEBUG` are meant for problem determination and should not be used in normal processing
+as the log records may contain sensitive data.
+
 ### Guards
 
 `go-logging` supports "guards",
