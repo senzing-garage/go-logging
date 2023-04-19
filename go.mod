@@ -3,9 +3,9 @@ module github.com/senzing/go-logging
 go 1.20
 
 require (
-	github.com/senzing/go-messaging v0.1.0
+	github.com/senzing/go-messaging v0.1.1
 	github.com/stretchr/testify v1.8.2
-	golang.org/x/exp v0.0.0-20230418202329-0354be287a23
+	golang.org/x/exp v0.0.0-20230419192730-864b3d6c5c2c
 )
 
 require (
