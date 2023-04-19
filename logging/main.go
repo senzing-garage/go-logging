@@ -417,6 +417,7 @@ func SlogHandlerOptions(leveler slog.Leveler, options ...interface{}) *slog.Hand
 				if timeHidden {
 					return slog.Attr{}
 				}
+				a.Value = slog.TimeValue(a.Value.Time().UTC())
 			}
 			return a
 		},
