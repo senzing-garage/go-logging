@@ -5,7 +5,7 @@ go 1.20
 require (
 	github.com/senzing/go-messaging v0.2.0
 	github.com/stretchr/testify v1.8.2
-	golang.org/x/exp v0.0.0-20230419192730-864b3d6c5c2c
+	golang.org/x/exp v0.0.0-20230510235704-dd950f8aeaea
 )
 
 require (

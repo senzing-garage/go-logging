@@ -299,7 +299,7 @@ func New(options ...interface{}) (LoggingInterface, error) {
 
 	// Create logger.
 
-	logger := slog.New(SlogHandlerOptions(slogLeveler, options...).NewJSONHandler(output))
+	logger := slog.New(slog.NewJSONHandler(output, SlogHandlerOptions(slogLeveler, options...)))
 
 	// Create LoggingInterface.
 
