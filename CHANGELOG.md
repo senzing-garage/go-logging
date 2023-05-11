@@ -11,7 +11,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed in 1.2.3
 
 - Update dependencies
-  - golang.org/x/exp v0.0.0-20230510235704-dd950f8aeaea
+  - github.com/senzing/go-messaging v0.2.1
 
 ## [1.2.2] - 2023-05-11
 
