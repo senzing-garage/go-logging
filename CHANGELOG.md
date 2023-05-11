@@ -10,7 +10,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed in 1.2.2
 
--
+- Changed use of `slog.New(...)`
+- Update dependencies
+  - golang.org/x/exp v0.0.0-20230510235704-dd950f8aeaea
 
 ## [1.2.1] - 2023-04-19
 
