@@ -129,6 +129,41 @@ Examples:
     log.SetOutput(io.MultiWriter(os.Stderr, aFile))
     ```
 
+### Senzing tools
+
+In the suite of
+[senzing-tools](https://github.com/Senzing/senzing-tools),
+logging is created by:
+
+```go
+import (
+    "fmt"
+    "github.com/senzing/go-logging/logging"
+)
+
+var (
+    ComponentId = 9999            // See https://github.com/Senzing/knowledge-base/blob/main/lists/senzing-component-ids.md
+    IdMessages  = map[int]string{ // Message templates. Example: https://github.com/Senzing/init-database/blob/main/senzingconfig/main.go
+        2000: "The time is %s",
+    }
+    callerSkip = 3                // Used to determine "location" information. See https://pkg.go.dev/runtime#Caller
+)
+
+// Logging options. See https://github.com/Senzing/go-logging/blob/main/logging/main.go
+loggerOptions := []interface{}{
+    &logging.OptionCallerSkip{Value: callerSkip},
+}
+
+// Create a logger from a factory.
+logger, err := logging.NewSenzingToolsLogger(ComponentId, IdMessages, loggerOptions...)
+if err != nil {
+    fmt.Println(err)
+}
+
+// Write log record.
+logger.Log(2000, time.Now())
+```
+
 ## References
 
 - [API documentation](https://pkg.go.dev/github.com/senzing/go-logging)
