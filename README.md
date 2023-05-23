@@ -164,7 +164,7 @@ if err != nil {
 logger.Log(2000, time.Now())
 ```
 
-When run produces something like:
+Example output:
 
 ```console
 {"time":"YYYY-MM-DDThh:mm:ss.nn","level":"INFO","text":"The time is YYYY-MM-DD hh:mm:ss.nn -0400 EDT" ,"id":"senzing-99992000","location":"In main() at main.go:140","details":{"1":"time.Date(YYYY, time.Month, DD, hh, mm, ss, nn, time.Local)"}}
