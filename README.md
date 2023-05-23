@@ -129,7 +129,7 @@ Examples:
     log.SetOutput(io.MultiWriter(os.Stderr, aFile))
     ```
 
-### Senzing tools
+### Use with senzing-tools
 
 In the suite of
 [senzing-tools](https://github.com/Senzing/senzing-tools),
