@@ -66,7 +66,7 @@ Input
 Output
   - error
 */
-func (loggingImpl *LoggingImpl) Error(messageNumber int, details ...interface{}) error {
+func (loggingImpl *LoggingImpl) NewError(messageNumber int, details ...interface{}) error {
 	return errors.New(loggingImpl.messenger.NewJson(messageNumber, details...))
 }
 

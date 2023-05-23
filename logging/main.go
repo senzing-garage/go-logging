@@ -19,19 +19,19 @@ import (
 // The loggingInterface interface has methods for creating different
 // representations of a message.
 type LoggingInterface interface {
-	Error(messageNumber int, details ...interface{}) error // Return an error object with the message.
-	GetLogLevel() string                                   // Get the current level of logging.
-	Is(logLevelName string) bool                           // Returns true if logLevelName message will be logged.
-	IsDebug() bool                                         // Returns true if a DEBUG message will be logged.
-	IsError() bool                                         // Returns true if an ERROR message will be logged.
-	IsFatal() bool                                         // Returns true if a FATAL message will be logged.
-	IsInfo() bool                                          // Returns true if an INFO message will be logged.
-	IsPanic() bool                                         // Returns true if a PANIC message will be logged.
-	IsTrace() bool                                         // Returns true if a TRACE message will be logged.
-	IsWarn() bool                                          // Returns true if a WARN message will be logged.
-	Json(messageNumber int, details ...interface{}) string // Return a JSON string with the message.
-	Log(messageNumber int, details ...interface{})         // Log the message.
-	SetLogLevel(logLevelName string) error                 // Set the level of logging.
+	GetLogLevel() string                                      // Get the current level of logging.
+	Is(logLevelName string) bool                              // Returns true if logLevelName message will be logged.
+	IsDebug() bool                                            // Returns true if a DEBUG message will be logged.
+	IsError() bool                                            // Returns true if an ERROR message will be logged.
+	IsFatal() bool                                            // Returns true if a FATAL message will be logged.
+	IsInfo() bool                                             // Returns true if an INFO message will be logged.
+	IsPanic() bool                                            // Returns true if a PANIC message will be logged.
+	IsTrace() bool                                            // Returns true if a TRACE message will be logged.
+	IsWarn() bool                                             // Returns true if a WARN message will be logged.
+	Json(messageNumber int, details ...interface{}) string    // Return a JSON string with the message.
+	Log(messageNumber int, details ...interface{})            // Log the message.
+	NewError(messageNumber int, details ...interface{}) error // Return an error object with the message.
+	SetLogLevel(logLevelName string) error                    // Set the level of logging.
 }
 
 // --- Override values when creating messages ---------------------------------
