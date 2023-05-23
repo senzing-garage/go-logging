@@ -92,6 +92,31 @@ a complete message has these fields:
 }
 ```
 
+### Logging output
+
+By default, logging goes to `STDERR`.
+Since `go-logging` is built upon the
+[log](https://pkg.go.dev/log)
+package,
+this can be modified using
+[log.SetOutput()](https://pkg.go.dev/log#SetOutput)
+
+Examples:
+
+1. To have the output go a file, it would be something like this:
+
+    ```go
+    aFile, err := os.Open("/path/to/a/logfile")
+    log.SetOutput(io.Writer(aFile))
+    ```
+
+1. To have the output go to STDERR and a file, it would be something like this:
+
+    ```go
+    aFile, err := os.Open("/path/to/a/logfile")
+    log.SetOutput(io.MultiWriter(os.Stderr, aFile))
+    ```
+
 ## References
 
 - [API documentation](https://pkg.go.dev/github.com/senzing/go-logging)
