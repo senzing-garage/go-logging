@@ -144,7 +144,7 @@ import (
 var (
     ComponentId = 9999            // See https://github.com/Senzing/knowledge-base/blob/main/lists/senzing-component-ids.md
     IdMessages  = map[int]string{ // Message templates. Example: https://github.com/Senzing/init-database/blob/main/senzingconfig/main.go
-        2000: "The time is %s",
+        2000: "Today's greeting:  %s",
     }
     callerSkip = 3                // Used to determine "location" information. See https://pkg.go.dev/runtime#Caller
 )
@@ -161,13 +161,13 @@ if err != nil {
 }
 
 // Write log record.
-logger.Log(2000, time.Now())
+logger.Log(2000, "Hello, world!")
 ```
 
 Example output:
 
 ```console
-{"time":"YYYY-MM-DDThh:mm:ss.nn","level":"INFO","text":"The time is YYYY-MM-DD hh:mm:ss.nn -0400 EDT" ,"id":"senzing-99992000","location":"In main() at main.go:140","details":{"1":"time.Date(YYYY, time.Month, DD, hh, mm, ss, nn, time.Local)"}}
+{"time":"YYYY-MM-DDThh:mm:ss.nnZ","level":"INFO","text":"Today's greeting:  Hello, world!","id":"senzing-99992000","location":"In main() at main.go:137","details":{"1":"Hello, world!"}}
 ```
 
 ## References

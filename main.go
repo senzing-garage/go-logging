@@ -6,7 +6,6 @@ package main
 import (
 	"errors"
 	"fmt"
-	"time"
 
 	"github.com/senzing/go-logging/logging"
 )
@@ -120,7 +119,7 @@ func main() {
 	var (
 		ComponentId = 9999            // See https://github.com/Senzing/knowledge-base/blob/main/lists/senzing-component-ids.md
 		IdMessages  = map[int]string{ // Message templates. Example: https://github.com/Senzing/init-database/blob/main/senzingconfig/main.go
-			2000: "The time is %s",
+			2000: "Today's greeting:  %s",
 		}
 		callerSkip = 3 // Used to determine "location" information. See https://pkg.go.dev/runtime#Caller
 	)
@@ -135,6 +134,6 @@ func main() {
 		fmt.Println(err)
 	}
 
-	logger.Log(2000, time.Now())
+	logger.Log(2000, "Hello, world!")
 
 }
