@@ -137,6 +137,6 @@ func main() {
 
 	logger.Log(2000, "Hello, world!")
 
-	err = logger.Error(4000, "A bad thing")
+	err = logger.NewError(4000, "A bad thing")
 	fmt.Printf("The error: %v\n", err)
 }
