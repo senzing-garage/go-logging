@@ -99,13 +99,19 @@ Since `go-logging` is built upon the
 [log](https://pkg.go.dev/log)
 package,
 this can be modified using
-[log.SetOutput()](https://pkg.go.dev/log#SetOutput)
+[log.SetOutput()](https://pkg.go.dev/log#SetOutput).
 
 Examples:
 
 1. To have the output go a file, it would be something like this:
 
     ```go
+    import (
+        "log"
+        "os"
+        "io"
+    )
+
     aFile, err := os.Open("/path/to/a/logfile")
     log.SetOutput(io.Writer(aFile))
     ```
@@ -113,6 +119,12 @@ Examples:
 1. To have the output go to STDERR and a file, it would be something like this:
 
     ```go
+    import (
+        "log"
+        "os"
+        "io"
+    )
+
     aFile, err := os.Open("/path/to/a/logfile")
     log.SetOutput(io.MultiWriter(os.Stderr, aFile))
     ```
