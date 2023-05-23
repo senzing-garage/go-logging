@@ -92,6 +92,90 @@ a complete message has these fields:
 }
 ```
 
+### Logging output
+
+By default, logging goes to `STDERR`.
+Since `go-logging` is built upon the
+[log](https://pkg.go.dev/log)
+package,
+this can be modified using
+[log.SetOutput()](https://pkg.go.dev/log#SetOutput).
+
+Examples:
+
+1. To have the output go a file, it would be something like this:
+
+    ```go
+    import (
+        "log"
+        "os"
+        "io"
+    )
+
+    aFile, err := os.Open("/path/to/a/logfile")
+    log.SetOutput(io.Writer(aFile))
+    ```
+
+1. To have the output go to STDERR and a file, it would be something like this:
+
+    ```go
+    import (
+        "log"
+        "os"
+        "io"
+    )
+
+    aFile, err := os.Open("/path/to/a/logfile")
+    log.SetOutput(io.MultiWriter(os.Stderr, aFile))
+    ```
+
+### Use with senzing-tools
+
+In the suite of
+[senzing-tools](https://github.com/Senzing/senzing-tools),
+logging is created by:
+
+```go
+import (
+    "fmt"
+    "github.com/senzing/go-logging/logging"
+)
+
+var (
+    ComponentId = 9999            // See https://github.com/Senzing/knowledge-base/blob/main/lists/senzing-component-ids.md
+    IdMessages  = map[int]string{ // Message templates. Example: https://github.com/Senzing/init-database/blob/main/senzingconfig/main.go
+        2000: "Today's greeting:  %s",
+        4000: "Here's what happened: %s",
+    }
+    callerSkip = 3                // Used to determine "location" information. See https://pkg.go.dev/runtime#Caller
+)
+
+// Logging options. See https://github.com/Senzing/go-logging/blob/main/logging/main.go
+loggerOptions := []interface{}{
+    &logging.OptionCallerSkip{Value: callerSkip},
+}
+
+// Create a logger from a factory.
+logger, err := logging.NewSenzingToolsLogger(ComponentId, IdMessages, loggerOptions...)
+if err != nil {
+    fmt.Println(err)
+}
+
+// Write log record.
+logger.Log(2000, "Hello, world!")
+
+// Create an error
+err = logger.Error(4000, "A bad thing")
+fmt.Printf("The error: %v\n", err)
+```
+
+Example output:
+
+```console
+{"time":"YYYY-MM-DDThh:mm:ss.nnZ","level":"INFO","text":"Today's greeting:  Hello, world!","id":"senzing-99992000","location":"In main() at main.go:137","details":{"1":"Hello, world!"}}
+The error: {"time":"YYYY-MM-DDThh:mm:ss.nnZ","level":"ERROR","id":"senzing-99994000","text":"Here's what happened: A bad thing","location":"In main() at main.go:140","details":{"1":"A bad thing"}}
+```
+
 ## References
 
 - [API documentation](https://pkg.go.dev/github.com/senzing/go-logging)

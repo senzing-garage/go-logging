@@ -67,7 +67,7 @@ Output
   - error
 */
 func (loggingImpl *LoggingImpl) Error(messageNumber int, details ...interface{}) error {
-	return errors.New(loggingImpl.Json(messageNumber, details...))
+	return errors.New(loggingImpl.messenger.NewJson(messageNumber, details...))
 }
 
 /*
