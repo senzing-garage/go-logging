@@ -10,7 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed in 1.2.4
 
-- Added documentation on `Log()` and `Error()`
+- Added documentation on `Log()`, `Error()`, and logging output.
 - Removed a layer of "caller depth" in `logging.Error()`
 
 ## [1.2.3] - 2023-05-11
