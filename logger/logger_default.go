@@ -47,7 +47,10 @@ func (logger *LoggerDefault) printf(debugLevelName string, format string, v ...i
 	} else {
 		message = fmt.Sprintf(format, v...)
 	}
-	log.Output(calldepth, message)
+	err := log.Output(calldepth, message)
+	if err != nil {
+		panic(err)
+	}
 	return loggerInstance
 }
 
