@@ -4,21 +4,24 @@ import (
 	"testing"
 
 	"github.com/senzing/go-logging/logger"
-	"github.com/senzing/go-logging/messagelogger"
+	"github.com/senzing/go-logging/logging"
 )
 
-var componentIdentifier = 9999
+var (
+	componentIdentifier   = 9999
+	testMessageIdTemplate = "test-%04d"
 
-var idMessagesTest = map[int]string{
-	0001: "Info for %s",
-	1000: "Warning for %s",
-	2000: "Error for %s",
-}
+	idMessagesTest = map[int]string{
+		0001: "Info for %s",
+		1000: "Warning for %s",
+		2000: "Error for %s",
+	}
 
-var idStatusesTest = map[int]string{
-	0001: "Status for 0001",
-	1000: "Status for 1000",
-}
+	idStatusesTest = map[int]string{
+		0001: "Status for 0001",
+		1000: "Status for 1000",
+	}
+)
 
 /*
  * The unit tests in this file simulate command line invocation.
@@ -29,47 +32,80 @@ func TestMain(testing *testing.T) {
 }
 
 // ----------------------------------------------------------------------------
-// Test interface functions for New - names begin with "Test"
+// Test interface functions for New
 // ----------------------------------------------------------------------------
 
 func TestNew(t *testing.T) {
-	logger, _ := messagelogger.New()
+	logger, _ := logging.New()
 	logger.Log(1, "Mary")
 	logger.Log(1000, "Jane")
 	logger.Log(2000, "Bob")
 }
 
 // ----------------------------------------------------------------------------
-// Test interface functions for NewSenzingLogger - names begin with "Test"
+// Test interface functions for NewSenzingLogger
 // ----------------------------------------------------------------------------
 
 func TestNewSenzingLogger(t *testing.T) {
-	logger, _ := messagelogger.NewSenzingLogger(componentIdentifier, idMessagesTest)
+	logger, _ := logging.NewSenzingLogger(testMessageIdTemplate, idMessagesTest)
 	logger.Log(1, "Mary")
 	logger.Log(1000, "Jane")
 	logger.Log(2000, "Bob")
 }
 
 func TestNewSenzingLoggerAtErrorLevel(t *testing.T) {
-	logger, _ := messagelogger.NewSenzingLogger(componentIdentifier, idMessagesTest, logger.LevelError)
+
+	loggerOptions := []interface{}{
+		&logging.OptionLogLevel{Value: logger.LevelErrorName},
+	}
+
+	logger, _ := logging.NewSenzingLogger(testMessageIdTemplate, idMessagesTest, loggerOptions...)
 	logger.Log(1, "Mary")
 	logger.Log(1000, "Jane")
 	logger.Log(2000, "Bob")
 }
 
 // ----------------------------------------------------------------------------
-// Test interface functions for NewSenzingApiLogger - names begin with "Test"
+// Test interface functions for NewSenzingSdkLogger
 // ----------------------------------------------------------------------------
 
-func TestNewSenzingApiLogger(t *testing.T) {
-	logger, _ := messagelogger.NewSenzingApiLogger(componentIdentifier, idMessagesTest, idStatusesTest)
+func TestNewSenzingSdkLogger(t *testing.T) {
+	logger, _ := logging.NewSenzingSdkLogger(componentIdentifier, idMessagesTest)
 	logger.Log(1, "Mary")
 	logger.Log(1000, "Jane")
 	logger.Log(2000, "Bob")
 }
 
-func TestNewSenzingApiLoggerAtErrorLevel(t *testing.T) {
-	logger, _ := messagelogger.NewSenzingApiLogger(componentIdentifier, idMessagesTest, idStatusesTest, logger.LevelError)
+func TestNewSenzingSdkLoggerAtErrorLevel(t *testing.T) {
+
+	loggerOptions := []interface{}{
+		&logging.OptionLogLevel{Value: logger.LevelErrorName},
+	}
+
+	logger, _ := logging.NewSenzingSdkLogger(componentIdentifier, idMessagesTest, loggerOptions...)
+	logger.Log(1, "Mary")
+	logger.Log(1000, "Jane")
+	logger.Log(2000, "Bob")
+}
+
+// ----------------------------------------------------------------------------
+// Test interface functions for NewSenzingToolsLogger
+// ----------------------------------------------------------------------------
+
+func TestNewSenzingToolsLogger(t *testing.T) {
+	logger, _ := logging.NewSenzingToolsLogger(componentIdentifier, idMessagesTest)
+	logger.Log(1, "Mary")
+	logger.Log(1000, "Jane")
+	logger.Log(2000, "Bob")
+}
+
+func TestNewSenzingToolsLoggerAtErrorLevel(t *testing.T) {
+
+	loggerOptions := []interface{}{
+		&logging.OptionLogLevel{Value: logger.LevelErrorName},
+	}
+
+	logger, _ := logging.NewSenzingToolsLogger(componentIdentifier, idMessagesTest, loggerOptions...)
 	logger.Log(1, "Mary")
 	logger.Log(1000, "Jane")
 	logger.Log(2000, "Bob")

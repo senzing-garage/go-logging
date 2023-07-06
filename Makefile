@@ -65,19 +65,6 @@ test:
 #	@go test -v ./.
 #	@go test -v ./logger
 #	@go test -v ./logging
-#	@go test -v ./messagedate
-#	@go test -v ./messagedetails
-#	@go test -v ./messageduration
-#	@go test -v ./messageerrors
-#	@go test -v ./messageformat
-#	@go test -v ./messageid
-#	@go test -v ./messagelevel
-#	@go test -v ./messagelocation
-#	@go test -v ./messagelogger
-#	@go test -v ./messagestatus
-#	@go test -v ./messagetext
-#	@go test -v ./messagetime
-
 
 # -----------------------------------------------------------------------------
 # Run
