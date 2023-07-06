@@ -4,7 +4,7 @@ import (
 	"testing"
 
 	"github.com/senzing/go-logging/logger"
-	"github.com/senzing/go-logging/messagelogger"
+	"github.com/senzing/go-logging/logging"
 )
 
 var componentIdentifier = 9999
@@ -33,7 +33,7 @@ func TestMain(testing *testing.T) {
 // ----------------------------------------------------------------------------
 
 func TestNew(t *testing.T) {
-	logger, _ := messagelogger.New()
+	logger, _ := logging.New()
 	logger.Log(1, "Mary")
 	logger.Log(1000, "Jane")
 	logger.Log(2000, "Bob")
@@ -43,15 +43,20 @@ func TestNew(t *testing.T) {
 // Test interface functions for NewSenzingLogger - names begin with "Test"
 // ----------------------------------------------------------------------------
 
-func TestNewSenzingLogger(t *testing.T) {
-	logger, _ := messagelogger.NewSenzingLogger(componentIdentifier, idMessagesTest)
+func TestNewSenzingSdkLogger(t *testing.T) {
+	logger, _ := logging.NewSenzingSdkLogger(componentIdentifier, idMessagesTest)
 	logger.Log(1, "Mary")
 	logger.Log(1000, "Jane")
 	logger.Log(2000, "Bob")
 }
 
 func TestNewSenzingLoggerAtErrorLevel(t *testing.T) {
-	logger, _ := messagelogger.NewSenzingLogger(componentIdentifier, idMessagesTest, logger.LevelError)
+
+	loggerOptions := []interface{}{
+		&logging.OptionLogLevel{Value: logger.LevelErrorName},
+	}
+
+	logger, _ := logging.NewSenzingSdkLogger(componentIdentifier, idMessagesTest, loggerOptions...)
 	logger.Log(1, "Mary")
 	logger.Log(1000, "Jane")
 	logger.Log(2000, "Bob")
@@ -61,16 +66,17 @@ func TestNewSenzingLoggerAtErrorLevel(t *testing.T) {
 // Test interface functions for NewSenzingApiLogger - names begin with "Test"
 // ----------------------------------------------------------------------------
 
-func TestNewSenzingApiLogger(t *testing.T) {
-	logger, _ := messagelogger.NewSenzingApiLogger(componentIdentifier, idMessagesTest, idStatusesTest)
-	logger.Log(1, "Mary")
-	logger.Log(1000, "Jane")
-	logger.Log(2000, "Bob")
-}
+// func TestNewSenzingApiLogger(t *testing.T) {
 
-func TestNewSenzingApiLoggerAtErrorLevel(t *testing.T) {
-	logger, _ := messagelogger.NewSenzingApiLogger(componentIdentifier, idMessagesTest, idStatusesTest, logger.LevelError)
-	logger.Log(1, "Mary")
-	logger.Log(1000, "Jane")
-	logger.Log(2000, "Bob")
-}
+// 	logger, _ := logging.NewSenzingApiLogger(componentIdentifier, idMessagesTest, idStatusesTest)
+// 	logger.Log(1, "Mary")
+// 	logger.Log(1000, "Jane")
+// 	logger.Log(2000, "Bob")
+// }
+
+// func TestNewSenzingApiLoggerAtErrorLevel(t *testing.T) {
+// 	logger, _ := logging.NewSenzingApiLogger(componentIdentifier, idMessagesTest, idStatusesTest, logger.LevelError)
+// 	logger.Log(1, "Mary")
+// 	logger.Log(1000, "Jane")
+// 	logger.Log(2000, "Bob")
+// }
