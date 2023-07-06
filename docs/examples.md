@@ -85,7 +85,7 @@ Output:
 To create a unique identifier, not just an integer,
 a [go format string](https://pkg.go.dev/fmt)
 can be used as an ID template.
-**NOTE:** the identifier string should include `%04d` so that the message number is included in the message ID.
+**NOTE:** The identifier string should include `%04d` so that the message number is included in the message ID.
 Example:
 
 ```go
@@ -129,6 +129,22 @@ Output:
 ```json
 {"time":"YYYY-MM-DDThh:mm:ss.nnnnnnZ","level":"INFO","id":"my-message-2003","details":{"1":"Robert Smith","2":12345,"3":"map[int]string{10:\"ten\", 20:\"twenty\"}","4":"struct { Name string; ID int }{Name:\"Robert Smith\", ID:123145}"}}
  ```
+
+Output pretty printed:
+
+```json
+{
+    "time": "YYYY-MM-DDThh:mm:ss.nnnnnnZ",
+    "level": "INFO",
+    "id": "my-message-2003",
+    "details": {
+        "1": "Robert Smith",
+        "2": 12345,
+        "3": "map[int]string{10:\"ten\", 20:\"twenty\"}",
+        "4": "struct { Name string; ID int }{Name:\"Robert Smith\", ID:123145}"
+    }
+}
+```
 
 The fields submitted in the Log() call are seen in the "details" of the log message.
 They will be listed in the order specified in the Log() call.
