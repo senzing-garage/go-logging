@@ -1,35 +1,19 @@
 # go-logging examples
 
-The Senzing go-logging packages build a composable logging system
-that sits on top of Go's log package (<https://pkg.go.dev/log>).
+The following examples can be seen in actual code at
+[main.go](../main.go).
 
-## Overview
-
-The Senzing go-logging packages use the message number to coordinate aspects of the log message such as
-message identification, message text, status, and logging level.
-
-go-logging extends the levels of logging to include:
-Trace, Debug, Info, Warn, Error, Fatal, and Panic.
-
-go-logging implements "guards",
-e.g. IsXxxxx() methods,
-to avoid calling a Log() method that
-wouldn't print anyway because of the logging level.
-For instance, there's no reason to call a DEBUG Log() method when the
-logging level is set to INFO.  Guards prevent this.
-Example:
+In each of the following examples, the following imports are assumed:
 
 ```go
-if logger.IsDebug() {
-    logger.Log(1, "Log only in DEBUG mode", complexProcess())
-}
+import "github.com/senzing/go-logging/logging"
 ```
+
+## Basic
 
 The basic use of senzing/go-logging looks like this:
 
 ```go
-import "github.com/senzing/go-logging/logging"
-
 logger, _ := logging.New()
 logger.Log(2001, "A message")
 ```
@@ -40,18 +24,7 @@ Output:
 {"time":"YYYY-MM-DDThh:mm:ss.nnnnnnZ","level":"INFO","id":"2001","details":{"1":"A message"}}
 ```
 
-## Examples
-
-The following examples can be seen in actual code at
-[main.go](../main.go).
-
-In each of the following examples, the following imports are assumed:
-
-```go
-import "github.com/senzing/go-logging/logging"
-```
-
-### Log level
+## Log level
 
 The log level is determined by the message ID number.  Visit
 [Logging levels](../README.md#logging-levels)
@@ -107,7 +80,7 @@ Output:
  {"time":"YYYY-MM-DDThh:mm:ss.nnnnnnZ","level":"INFO","id":"2000","details":{"1":"INFO  level"}}
 ```
 
-### Customize the id field
+## Customize the id field
 
 To create a unique identifier, not just an integer,
 a [go format string](https://pkg.go.dev/fmt)
@@ -129,7 +102,7 @@ Output:
  {"time":"YYYY-MM-DDThh:mm:ss.nnnnnnZ","level":"INFO","id":"my-message-2002","details":{"1":"A message"}}
 ```
 
-### Log additional information
+## Log additional information
 
 In addition to a message identification integer ("id"), other types can be logged.
 Example:
@@ -160,7 +133,7 @@ Output:
 The fields submitted in the Log() call are seen in the "details" of the log message.
 They will be listed in the order specified in the Log() call.
 
-### Adding a text field
+## Adding a text field
 
 The additional information that is submitted in a Log() call can be used to create a text message.
 By mapping message numbers to format strings, the Log() call will create formatted text output.
@@ -194,7 +167,7 @@ Output:
 Notice that the information used to build the formatted text still remains in the "details" map.
 This is by design.
 
-### Logging errors
+## Logging errors
 
 Go errors can also be logged.
 Example:
@@ -209,4 +182,20 @@ Output:
 
 ```json
 {"time":"YYYY-MM-DDThh:mm:ss.nnnnnnZ","level":"INFO","id":"2005","errors":["error #1","error #2"]}
+```
+
+## Guards
+
+go-logging implements "guards",
+e.g. IsXxxxx() methods,
+to avoid calling a Log() method that
+wouldn't print anyway because of the logging level.
+For instance, there's no reason to call a DEBUG Log() method when the
+logging level is set to INFO.  Guards prevent this.
+Example:
+
+```go
+if logger.IsDebug() {
+    logger.Log(1, "Log only in DEBUG mode", complexProcess())
+}
 ```
