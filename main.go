@@ -6,6 +6,7 @@ package main
 import (
 	"errors"
 	"fmt"
+	"strings"
 
 	"github.com/senzing/go-logging/logging"
 )
@@ -38,9 +39,22 @@ var (
 // Internal functions
 // ----------------------------------------------------------------------------
 
-func testLogger(logger logging.LoggingInterface) {
+func printBanner(banner string) {
+	fmt.Printf("\n%s\n", strings.Repeat("-", 80))
+	fmt.Printf("-- %s\n", banner)
+	fmt.Printf("%s\n\n", strings.Repeat("-", 80))
+
+}
+
+func testLogger(banner string, logger logging.LoggingInterface) {
+	printBanner(banner)
+
+	// Create faux errors.
+
 	err1 := errors.New("example error #1")
 	err2 := errors.New("example error #2")
+
+	// Test logging.
 
 	logger.Log(0000, "TRACE level", err1, err2)
 	logger.Log(1000, "DEBUG level", err1, err2)
@@ -79,7 +93,7 @@ func main() {
 
 	logger1.Log(2001, "Hello World!")
 
-	testLogger(logger1)
+	testLogger("Simple logger", logger1)
 
 	// ------------------------------------------------------------------------
 	// Configured logger
@@ -95,30 +109,30 @@ func main() {
 	if err != nil {
 		fmt.Println(err)
 	}
-	testLogger(logger2)
-
-	// ------------------------------------------------------------------------
-	// NewSenzingToolsLogger - for use with senzing-tools commands.
-	// ------------------------------------------------------------------------
-
-	loggerOptions3 := []interface{}{
-		&logging.OptionCallerSkip{Value: callerSkip},
-	}
-	logger3, err := logging.NewSenzingToolsLogger(9998, idMessages, loggerOptions3...)
-	if err != nil {
-		fmt.Println(err)
-	}
-	testLogger(logger3)
+	testLogger("Configured logger", logger2)
 
 	// ------------------------------------------------------------------------
 	// NewSenzingLogger - for use generally.
 	// ------------------------------------------------------------------------
 
-	logger4, err := logging.NewSenzingLogger("my-unique-%04d", idMessages)
+	logger3, err := logging.NewSenzingLogger("my-unique-%04d", idMessages)
 	if err != nil {
 		fmt.Println(err)
 	}
-	testLogger(logger4)
+	testLogger("NewSenzingLogger", logger3)
+
+	// ------------------------------------------------------------------------
+	// NewSenzingToolsLogger - for use with senzing-tools commands.
+	// ------------------------------------------------------------------------
+
+	loggerOptions4 := []interface{}{
+		&logging.OptionCallerSkip{Value: callerSkip},
+	}
+	logger4, err := logging.NewSenzingToolsLogger(9998, idMessages, loggerOptions4...)
+	if err != nil {
+		fmt.Println(err)
+	}
+	testLogger("NewSenzingToolsLogger", logger4)
 
 	// ------------------------------------------------------------------------
 	// README.md examples
@@ -132,6 +146,8 @@ func main() {
 		}
 		callerSkip = 3 // Used to determine "location" information. See https://pkg.go.dev/runtime#Caller
 	)
+
+	printBanner("README.md examples")
 
 	// Logging options. See https://github.com/Senzing/go-logging/blob/main/logging/main.go
 	loggerOptions := []interface{}{
@@ -149,8 +165,10 @@ func main() {
 	fmt.Printf("The error: %v\n", err)
 
 	// ------------------------------------------------------------------------
-	// doc.go examples
+	// docs/examples.md examples
 	// ------------------------------------------------------------------------
+
+	printBanner("docs/examples.md examples")
 
 	// logger5
 
