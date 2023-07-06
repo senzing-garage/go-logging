@@ -31,13 +31,13 @@ The basic use of senzing/go-logging looks like this:
 import "github.com/senzing/go-logging/logging"
 
 logger, _ := logging.New()
-logger.Log(2000, "A message")
+logger.Log(2001, "A message")
 ```
 
 Output:
 
 ```json
-{"time":"YYYY-MM-DDThh:mm:ss.nnnnnnZ","level":"INFO","id":"2000","details":{"1":"A message"}}
+{"time":"YYYY-MM-DDThh:mm:ss.nnnnnnZ","level":"INFO","id":"2001","details":{"1":"A message"}}
 ```
 
 ## Examples
@@ -120,13 +120,13 @@ loggerOptions := []interface{}{
     &logging.OptionMessageIdTemplate{Value: "my-message-%04d"},
 }
 logger, _ = logging.New(loggerOptions...)
-logger.Log(2001, "A message")
+logger.Log(2002, "A message")
 ```
 
 Output:
 
 ```json
- {"time":"YYYY-MM-DDThh:mm:ss.nnnnnnZ","level":"INFO","id":"my-message-2001","details":{"1":"A message"}}
+ {"time":"YYYY-MM-DDThh:mm:ss.nnnnnnZ","level":"INFO","id":"my-message-2002","details":{"1":"A message"}}
 ```
 
 ### Log additional information
@@ -148,13 +148,13 @@ aStruct := struct {
     ID:   123145,
 }
 
-logger.Log(2002, "Robert Smith", 12345, aMap, aStruct)
+logger.Log(2003, "Robert Smith", 12345, aMap, aStruct)
 ```
 
 Output:
 
 ```json
- {"time":"YYYY-MM-DDThh:mm:ss.nnnnnnZ","level":"INFO","text":"The favorite number for Robert Smith is 12345.","id":"2003","details":{"1":"Robert Smith","2":12345,"3":"map[int]string{10:\"ten\", 20:\"twenty\"}","4":"struct { Name string; ID int }{Name:\"Robert Smith\", ID:123145}"}}
+{"time":"YYYY-MM-DDThh:mm:ss.nnnnnnZ","level":"INFO","id":"my-message-2003","details":{"1":"Robert Smith","2":12345,"3":"map[int]string{10:\"ten\", 20:\"twenty\"}","4":"struct { Name string; ID int }{Name:\"Robert Smith\", ID:123145}"}}
  ```
 
 The fields submitted in the Log() call are seen in the "details" of the log message.
@@ -171,7 +171,7 @@ idMessages := map[int]string{
      999:  "A test of TRACE.",
     1000: "A test of DEBUG.",
     2000: "A test of INFO.",
-    2003: "The favorite number for %s is %d.",
+    2004: "The favorite number for %s is %d.",
     3000: "A test of WARN.",
     4000: "A test of ERROR.",
     5000: "A test of FATAL.",
@@ -182,13 +182,13 @@ loggerOptions := []interface{}{
     &logging.OptionIdMessages{Value: idMessages},
 }
 logger, _ = logging.New(loggerOptions...)
-logger.Log(2003, "Robert Smith", 12345)
+logger.Log(2004, "Robert Smith", 12345)
 ```
 
 Output:
 
 ```json
- {"time":"YYYY-MM-DDThh:mm:ss.nnnnnnZ","level":"INFO","text":"The favorite number for Robert Smith is 12345.","id":"2003","details":{"1":"Robert Smith","2":12345,"3":"map[int]string{10:\"ten\", 20:\"twenty\"}"}}
+{"time":"2023-07-06T19:38:32.350977388Z","level":"INFO","text":"The favorite number for Robert Smith is 12345.","id":"2004","details":{"1":"Robert Smith","2":12345}}
 ```
 
 Notice that the information used to build the formatted text still remains in the "details" map.
@@ -202,11 +202,11 @@ Example:
 ```go
  err1 := errors.New("error #1")
  err2 := errors.New("error #2")
- logger.Log(2010, err1, err2)
+ logger.Log(2005, err1, err2)
 ```
 
 Output:
 
 ```json
- {"time":"YYYY-MM-DDThh:mm:ss.nnnnnnZ","level":"INFO","id":"2010","errors":["error #1","error #2"]}
+{"time":"YYYY-MM-DDThh:mm:ss.nnnnnnZ","level":"INFO","id":"2005","errors":["error #1","error #2"]}
 ```

@@ -155,7 +155,7 @@ func main() {
 	// logger5
 
 	logger5, _ := logging.New()
-	logger5.Log(2000, "A message")
+	logger5.Log(2001, "A message")
 
 	// logger6
 
@@ -192,7 +192,7 @@ func main() {
 		&logging.OptionMessageIdTemplate{Value: "my-message-%04d"},
 	}
 	logger8, _ := logging.New(loggerOptions8...)
-	logger8.Log(2001, "A message")
+	logger8.Log(2002, "A message")
 
 	aMap := map[int]string{
 		10: "ten",
@@ -207,7 +207,7 @@ func main() {
 		ID:   123145,
 	}
 
-	logger8.Log(2002, "Robert Smith", 12345, aMap, aStruct)
+	logger8.Log(2003, "Robert Smith", 12345, aMap, aStruct)
 
 	// logger9
 
@@ -215,7 +215,7 @@ func main() {
 		999:  "A test of TRACE.",
 		1000: "A test of DEBUG.",
 		2000: "A test of INFO.",
-		2003: "The favorite number for %s is %d.",
+		2004: "The favorite number for %s is %d.",
 		3000: "A test of WARN.",
 		4000: "A test of ERROR.",
 		5000: "A test of FATAL.",
@@ -225,10 +225,10 @@ func main() {
 		&logging.OptionIdMessages{Value: idMessages},
 	}
 	logger9, _ := logging.New(loggerOptions9...)
-	logger9.Log(2003, "Robert Smith", 12345)
+	logger9.Log(2004, "Robert Smith", 12345)
 
 	err1 := errors.New("error #1")
 	err2 := errors.New("error #2")
-	logger9.Log(2010, err1, err2)
+	logger9.Log(2005, err1, err2)
 
 }
