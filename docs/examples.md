@@ -43,7 +43,7 @@ Output:
 ## Examples
 
 The following examples can be seen in actual code at
-[main.go](https://github.com/Senzing/go-logging/blob/main/main.go).
+[main.go](../main.go).
 
 In each of the following examples, the following imports are assumed:
 
@@ -54,7 +54,7 @@ import "github.com/senzing/go-logging/logging"
 ### Log level
 
 The log level is determined by the message ID number.  Visit
-[Logging levels](https://github.com/Senzing/go-logging#logging-levels)
+[Logging levels](../README.md#logging-levels)
 to see the different ranges for log levels.
 Example:
 
