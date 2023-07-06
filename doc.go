@@ -7,8 +7,6 @@ that sits on top of Go's log package (https://pkg.go.dev/log).
 The Senzing go-logging packages use the message number to coordinate aspects of the log message such as
 message identification, message text, status, and logging level.
 
-go-logging also allows different formatting options such as JSON or simply terse messages.
-
 go-logging extends the levels of logging to include:
 Trace, Debug, Info, Warn, Error, Fatal, and Panic.
 
@@ -20,22 +18,20 @@ For instance, there's no reason to call a DEBUG Log() method when the
 logging level is set to INFO.  Guards prevent this.
 Example:
 
-	if messageLogger.IsDebug() {
-		messageLogger.Log(1, "Log only in DEBUG mode", complexProcess())
+	if logger.IsDebug() {
+		logger.Log(1, "Log only in DEBUG mode", complexProcess())
 	}
 
 The basic use of senzing/go-logging looks like this:
 
-	import "log"
-	import "github.com/senzing/go-logging/messagelogger"
+	import "github.com/senzing/go-logging/logging"
 
-	log.SetFlags(0)
-	messageLogger, _ := messagelogger.New()
-	messageLogger.Log(1)
+	logger, _ := logging.New()
+	logger.Log(2000, "A message")
 
 Output:
 
-	INFO 1:
+	{"time":"YYYY-MM-DDThh:mm:ss.nnnnnnZ","level":"INFO","id":"2000","details":{"1":"A message"}}
 
 # Examples
 
@@ -44,20 +40,54 @@ https://github.com/Senzing/go-logging/blob/main/main.go
 
 In each of the following examples, the following imports are assumed:
 
-	import "log"
-	import "github.com/senzing/go-logging/messagelogger"
+	import "github.com/senzing/go-logging/logging"
 
--- Configure log --------------------------------------------------------------
+-- Log level ------------------------------------------------------------------
 
-The Go "log" package can be independently configured.
+The log level is determined by the message ID number.  Visit
+https://github.com/Senzing/go-logging#logging-levels
+to see the different ranges for log levels.
+
 Example:
 
-	log.SetFlags(log.LstdFlags)
-	messageLogger.Log(2)
+	logger, _ := logging.New()
+	logger.Log(0999, "TRACE level")
+	logger.Log(1000, "DEBUG level")
+	logger.Log(2000, "INFO  level")
+	logger.Log(3000, "WARN  level")
+	logger.Log(4000, "ERROR level")
+	logger.Log(5000, "FATAL level")
+	logger.Log(6000, "PANIC level")
+	logger.Log(7000, "undefined level")
+	logger.Log(8000, "undefined level")
 
 Output:
 
-	YYYY/MM/DD HH:MM:SS INFO 2:
+	{"time":"YYYY-MM-DDThh:mm:ss.nnnnnnZ","level":"INFO","id":"2000","details":{"1":"INFO  level"}}
+	{"time":"YYYY-MM-DDThh:mm:ss.nnnnnnZ","level":"WARN","id":"3000","details":{"1":"WARN  level"}}
+	{"time":"YYYY-MM-DDThh:mm:ss.nnnnnnZ","level":"ERROR","id":"4000","details":{"1":"ERROR level"}}
+	{"time":"YYYY-MM-DDThh:mm:ss.nnnnnnZ","level":"FATAL","id":"5000","details":{"1":"FATAL level"}}
+	{"time":"YYYY-MM-DDThh:mm:ss.nnnnnnZ","level":"PANIC","id":"6000","details":{"1":"PANIC level"}}
+	{"time":"YYYY-MM-DDThh:mm:ss.nnnnnnZ","level":"PANIC","id":"7000","details":{"1":"undefined level"}}
+	{"time":"YYYY-MM-DDThh:mm:ss.nnnnnnZ","level":"PANIC","id":"8000","details":{"1":"undefined level"}}
+
+Notice that the TRACE and DEBUG messages were not logged.
+That is because the log level was set to INFO.
+To set the log level to include TRACE and DEBUG
+
+	loggerOptions := []interface{}{
+		&logging.OptionLogLevel{Value: "TRACE"},
+	}
+	logger, _ := logging.New(loggerOptions...)
+	logger.Log(0999, "TRACE level")
+	logger.Log(1000, "DEBUG level")
+	logger.Log(2000, "INFO  level")
+
+Output:
+
+	{"time":"YYYY-MM-DDThh:mm:ss.nnnnnnZ","level":"TRACE","id":"999","details":{"1":"TRACE level"}}
+	{"time":"YYYY-MM-DDThh:mm:ss.nnnnnnZ","level":"DEBUG","id":"1000","details":{"1":"DEBUG level"}}
+	{"time":"YYYY-MM-DDThh:mm:ss.nnnnnnZ","level":"INFO","id":"2000","details":{"1":"INFO  level"}}
 
 -- Customize the id field -----------------------------------------------------
 
@@ -67,16 +97,15 @@ a go format string
 can be used as an ID template.
 Example:
 
-	log.SetFlags(0)
-	messageId := &messageid.MessageIdTemplated{
-		IdTemplate: "senzing-9999%04d",
+	loggerOptions := []interface{}{
+		&logging.OptionMessageIdTemplate{Value: "my-message-%04d"},
 	}
-	messageLogger, _ = messagelogger.New(messageId)
-	messagelogger.Log(3)
+	logger, _ = logging.New(loggerOptions...)
+	logger.Log(2001, "A message")
 
 Output:
 
-	INFO senzing-99990003:
+	{"time":"YYYY-MM-DDThh:mm:ss.nnnnnnZ","level":"INFO","id":"my-message-2001","details":{"1":"A message"}}
 
 -- Log additional information -------------------------------------------------
 
@@ -87,13 +116,13 @@ Example:
 		10: "ten",
 		20: "twenty",
 	}
-	messageLogger.Log(4, "Robert Smith", 12345, aMap)
+	logger.Log(2002, "Robert Smith", 12345, aMap)
 
 Output:
 
-	INFO senzing-99990004: [map[1:Robert Smith 2:12345 3:map[int]string{10:"ten", 20:"twenty"}]]
+	{"time":"YYYY-MM-DDThh:mm:ss.nnnnnnZ","level":"INFO","id":"my-message-2002","details":{"1":"Robert Smith","2":12345,"3":"map[int]string{10:\"ten\", 20:\"twenty\"}"}}
 
-The fields submitted in the Log() call are seen in a map in the log message.
+The fields submitted in the Log() call are seen in the "details" of the log message.
 They will be listed in the order specified in the Log() call.
 
 -- Adding a text field --------------------------------------------------------
@@ -102,60 +131,29 @@ The additional information that is submitted in a Log() call can be used to crea
 By mapping message numbers to format strings, the Log() call will create formatted text output.
 Example:
 
-	messageText := &messagetext.MessageTextTemplated{
-		IdMessage: map[int]string{
-			999:  "A test of TRACE.",
-			1000: "A test of DEBUG.",
-			2000: "A test of INFO.",
-			2005: "The favorite number for %s is %d.",
-			2006: "Person number #%[2]d is %[1]s.",
-			2010: "Example errors.",
-			2011: "%s has a score of %d.",
-			3000: "A test of WARN.",
-			4000: "A test of ERROR.",
-			5000: "A test of FATAL.",
-			6000: "A test of PANIC.",
-		},
+	idMessages := map[int]string{
+		999:  "A test of TRACE.",
+		1000: "A test of DEBUG.",
+		2000: "A test of INFO.",
+		2003: "The favorite number for %s is %d.",
+		3000: "A test of WARN.",
+		4000: "A test of ERROR.",
+		5000: "A test of FATAL.",
+		6000: "A test of PANIC.",
 	}
-	messageLogger, _ = messagelogger.New(messageId, messageText)
-	messageLogger.Log(5, "Robert Smith", 12345, aMap)
+
+	loggerOptions := []interface{}{
+		&logging.OptionIdMessages{Value: idMessages},
+	}
+	logger, _ = logging.New(loggerOptions...)
+	logger.Log(2003, "Robert Smith", 12345, aMap)
 
 Output:
 
-	INFO senzing-99992005: The favorite number for Robert Smith is 12345. map[1:Robert Smith 2:12345 3:map[int]string{10:"ten", 20:"twenty"}]
+	{"time":"YYYY-MM-DDThh:mm:ss.nnnnnnZ","level":"INFO","text":"The favorite number for Robert Smith is 12345.","id":"2003","details":{"1":"Robert Smith","2":12345,"3":"map[int]string{10:\"ten\", 20:\"twenty\"}"}}
 
-Notice that the information used to build the formatted text still remains in the map.
+Notice that the information used to build the formatted text still remains in the "details" map.
 This is by design.
-
--- Log level ------------------------------------------------------------------
-
-A log level can be specified anywhere after the first parameter (the message number parameter).
-Example:
-
-	import "github.com/senzing/go-logging/logger"
-
-	messageLogger.Log(6, "Robert Smith", 12345, aMap, logger.LevelError)
-
-Output:
-
-	ERROR senzing-99992006: Person number #12345 is Robert Smith. map[1:Robert Smith 2:12345 3:map[int]string{10:"ten", 20:"twenty"} 4:[52]]
-
-The logging level can be automated by identifying a MessageLogLevel of type MessageLogLevelInterface.
-Example:
-
-	messageLogLevel := &messageloglevel.MessageLogLevelByIdRange{
-		IdRanges: messagelevel.IdRangesAsLevel,
-	}
-	messageLogger, _ = messagelogger.New(messageLogLevel, messageId, messageText)
-	messageLogger.Log(2000)
-	messageLogger.Log(3000)
-	messageLogger.Log(4000)
-
-Output:
-
-	INFO senzing-99992000: A test of INFO.
-	WARN senzing-99993000: A test of WARN.
-	ERROR senzing-99994000: A test of ERROR.
 
 -- Logging errors -------------------------------------------------------------
 
@@ -164,25 +162,10 @@ Example:
 
 	err1 := errors.New("error #1")
 	err2 := errors.New("error #2")
-	messageLogger.Log(2010, err1, err2)
+	logger.Log(2010, err1, err2)
 
 Output:
 
-	INFO senzing-99990010: Example errors. [map[1:error #1 2:error #2]]
-
--- Formatting -----------------------------------------------------------------
-
-The format of the log message can be modified by choosing a different message format.
-Example:
-
-	messageFormat := &messageformat.MessageFormatJson{}
-	messageLogger, _ = messagelogger.New(messageLogLevel, messageFormat, messageId, messageText)
-	messageLogger.Log(3000)
-	messageLogger.Log(2011, "Robert Smith", 12345, aMap, err1, err2)
-
-Output:
-
-	{"level":"WARN","id":"senzing-99993000","text":"A test of WARN."}
-	{"level":"INFO","id":"senzing-99992011","text":"Robert Smith has a score of 12345.","details":{"1":"Robert Smith","2":12345,"3":"map[int]string{10:\"ten\", 20:\"twenty\"}"}}
+	{"time":"YYYY-MM-DDThh:mm:ss.nnnnnnZ","level":"INFO","id":"2010","errors":["error #1","error #2"]}
 */
 package main

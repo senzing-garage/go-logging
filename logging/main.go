@@ -319,6 +319,28 @@ func New(options ...interface{}) (LoggingInterface, error) {
 }
 
 /*
+The NewSenzingLogger function creates a new instance of loggingInterface
+for the general use.
+
+Input
+  - idTemplate: A string with a "%04d" in it. Used to generate unique messages.  Example: "my-id-%04d"
+  - idMessage: A map of integer to string message templates.
+  - options: Variadic arguments listing the options (usually having type OptionXxxxx) used to configure the logger.
+
+Output
+  - A logger
+  - error
+*/
+func NewSenzingLogger(messageIdTemplate string, idMessages map[int]string, options ...interface{}) (LoggingInterface, error) {
+	loggerOptions := []interface{}{
+		&OptionIdMessages{Value: idMessages},
+		&OptionMessageIdTemplate{Value: messageIdTemplate},
+	}
+	loggerOptions = append(loggerOptions, options...)
+	return New(loggerOptions...)
+}
+
+/*
 The NewSenzingSdkLogger function creates a new instance of loggingInterface
 specifically for use with g2-sdk-go-* packages.
 
@@ -364,7 +386,6 @@ func NewSenzingToolsLogger(componentId int, idMessages map[int]string, options .
 
 /*
 The SlogHandlerOptions function returns a slog handler that includes TRACE, FATAL, and PANIC.
-TODO: Move to Senzing/go-logging.
 See: https://go.googlesource.com/exp/+/refs/heads/master/slog/example_custom_levels_test.go
 */
 func SlogHandlerOptions(leveler slog.Leveler, options ...interface{}) *slog.HandlerOptions {
