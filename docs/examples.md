@@ -21,7 +21,7 @@ Example:
 
 ```go
 if logger.IsDebug() {
- logger.Log(1, "Log only in DEBUG mode", complexProcess())
+    logger.Log(1, "Log only in DEBUG mode", complexProcess())
 }
 ```
 
@@ -43,7 +43,7 @@ Output:
 ## Examples
 
 The following examples can be seen in actual code at
-<https://github.com/Senzing/go-logging/blob/main/main.go>
+[main.go](https://github.com/Senzing/go-logging/blob/main/main.go).
 
 In each of the following examples, the following imports are assumed:
 
@@ -85,7 +85,9 @@ Output:
 
 Notice that the TRACE and DEBUG messages were not logged.
 That is because the log level was set to INFO.
-To set the log level to include TRACE and DEBUG
+To set the log level to include TRACE and DEBUG,
+add a "logger option" to set the log level.
+Example:
 
 ```go
 loggerOptions := []interface{}{
@@ -110,6 +112,7 @@ Output:
 To create a unique identifier, not just an integer,
 a [go format string](https://pkg.go.dev/fmt)
 can be used as an ID template.
+**NOTE:** the identifier string should include `%04d` so that the message number is included in the message ID.
 Example:
 
 ```go
@@ -128,21 +131,30 @@ Output:
 
 ### Log additional information
 
-In addition to a message identification integer, other types can be logged.
+In addition to a message identification integer ("id"), other types can be logged.
 Example:
 
 ```go
- aMap := map[int]string{
-  10: "ten",
-  20: "twenty",
- }
- logger.Log(2002, "Robert Smith", 12345, aMap)
+aMap := map[int]string{
+    10: "ten",
+    20: "twenty",
+}
+
+aStruct := struct {
+    Name string
+    ID   int
+}{
+    Name: "Robert Smith",
+    ID:   123145,
+}
+
+logger.Log(2002, "Robert Smith", 12345, aMap, aStruct)
 ```
 
 Output:
 
 ```json
- {"time":"YYYY-MM-DDThh:mm:ss.nnnnnnZ","level":"INFO","id":"my-message-2002","details":{"1":"Robert Smith","2":12345,"3":"map[int]string{10:\"ten\", 20:\"twenty\"}"}}
+ {"time":"YYYY-MM-DDThh:mm:ss.nnnnnnZ","level":"INFO","text":"The favorite number for Robert Smith is 12345.","id":"2003","details":{"1":"Robert Smith","2":12345,"3":"map[int]string{10:\"ten\", 20:\"twenty\"}","4":"struct { Name string; ID int }{Name:\"Robert Smith\", ID:123145}"}}
  ```
 
 The fields submitted in the Log() call are seen in the "details" of the log message.
@@ -170,7 +182,7 @@ loggerOptions := []interface{}{
     &logging.OptionIdMessages{Value: idMessages},
 }
 logger, _ = logging.New(loggerOptions...)
-logger.Log(2003, "Robert Smith", 12345, aMap)
+logger.Log(2003, "Robert Smith", 12345)
 ```
 
 Output:

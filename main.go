@@ -152,8 +152,12 @@ func main() {
 	// doc.go examples
 	// ------------------------------------------------------------------------
 
+	// logger5
+
 	logger5, _ := logging.New()
 	logger5.Log(2000, "A message")
+
+	// logger6
 
 	logger6, _ := logging.New()
 	logger6.Log(999, "TRACE level")
@@ -165,6 +169,8 @@ func main() {
 	logger6.Log(6000, "PANIC level")
 	logger6.Log(7000, "undefined level")
 	logger6.Log(8000, "undefined level")
+
+	// logger7
 
 	loggerOptions7 := []interface{}{
 		&logging.OptionLogLevel{Value: "TRACE"},
@@ -180,16 +186,30 @@ func main() {
 	logger7.Log(7000, "undefined level")
 	logger7.Log(8000, "undefined level")
 
+	// logger8
+
 	loggerOptions8 := []interface{}{
 		&logging.OptionMessageIdTemplate{Value: "my-message-%04d"},
 	}
 	logger8, _ := logging.New(loggerOptions8...)
 	logger8.Log(2001, "A message")
+
 	aMap := map[int]string{
 		10: "ten",
 		20: "twenty",
 	}
-	logger8.Log(2002, "Robert Smith", 12345, aMap)
+
+	aStruct := struct {
+		Name string
+		ID   int
+	}{
+		Name: "Robert Smith",
+		ID:   123145,
+	}
+
+	logger8.Log(2002, "Robert Smith", 12345, aMap, aStruct)
+
+	// logger9
 
 	idMessages := map[int]string{
 		999:  "A test of TRACE.",
@@ -205,7 +225,7 @@ func main() {
 		&logging.OptionIdMessages{Value: idMessages},
 	}
 	logger9, _ := logging.New(loggerOptions9...)
-	logger9.Log(2003, "Robert Smith", 12345, aMap)
+	logger9.Log(2003, "Robert Smith", 12345)
 
 	err1 := errors.New("error #1")
 	err2 := errors.New("error #2")
