@@ -3,7 +3,7 @@
 The following examples can be seen in actual code at
 [main.go](../main.go).
 
-In each of the following examples, the following imports are assumed:
+In each of the following examples, the following import is assumed:
 
 ```go
 import "github.com/senzing/go-logging/logging"
