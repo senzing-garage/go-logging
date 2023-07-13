@@ -6,6 +6,13 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 [markdownlint](https://dlaa.me/markdownlint/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.3.1] - 2023-07-13
+
+### Changed in 1.3.1
+
+- Update dependencies
+  - github.com/senzing/go-messaging v0.3.1
+
 ## [1.3.0] - 2023-07-06
 
 ### Changed in 1.3.0
