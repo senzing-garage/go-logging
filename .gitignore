@@ -15,4 +15,5 @@
 # vendor/
 
 .history/
+target/
 .vscode
