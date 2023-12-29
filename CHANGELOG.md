@@ -6,6 +6,16 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 [markdownlint](https://dlaa.me/markdownlint/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.4.0] - 2023-12-29
+
+### Changed in 1.4.0
+
+- Renamed module to `github.com/senzing-garage/go-logging`
+- Refactor to [template-go](https://github.com/senzing-garage/template-go)
+- Update dependencies
+  - github.com/senzing-garage/go-messaging v1.4.0
+  - golang.org/x/exp v0.0.0-20231226003508-02704c960a9b
+
 ## [1.3.3] - 2023-10-16
 
 ### Changed in 1.3.3
