@@ -6,7 +6,7 @@ The following examples can be seen in actual code at
 In each of the following examples, the following import is assumed:
 
 ```go
-import "github.com/senzing/go-logging/logging"
+import "github.com/senzing-garage/go-logging/logging"
 ```
 
 ## Basic

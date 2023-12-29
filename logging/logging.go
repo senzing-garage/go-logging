@@ -5,7 +5,7 @@ import (
 	"errors"
 	"fmt"
 
-	"github.com/senzing/go-messaging/messenger"
+	"github.com/senzing-garage/go-messaging/messenger"
 	"golang.org/x/exp/slog"
 )
 

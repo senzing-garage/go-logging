@@ -10,18 +10,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed in 1.3.3
 
-- Refactor to [template-go](https://github.com/Senzing/template-go)
+- Refactor to [template-go](https://github.com/senzing-garage/template-go)
 - Update dependencies
-  - github.com/senzing/go-messaging v0.3.3
+  - github.com/senzing-garage/go-messaging v0.3.3
   - golang.org/x/exp v0.0.0-20230817173708-d852ddb80c63
 
 ## [1.3.2] - 2023-08-04
 
 ### Changed in 1.3.2
 
-- Refactor to [template-go](https://github.com/Senzing/template-go)
+- Refactor to [template-go](https://github.com/senzing-garage/template-go)
 - Update dependencies
-  - github.com/senzing/go-messaging v0.3.2
+  - github.com/senzing-garage/go-messaging v0.3.2
   - golang.org/x/exp v0.0.0-20230801115018-d63ba01acd4b
 
 ## [1.3.1] - 2023-07-13
@@ -29,13 +29,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed in 1.3.1
 
 - Update dependencies
-  - github.com/senzing/go-messaging v0.3.1
+  - github.com/senzing-garage/go-messaging v0.3.1
 
 ## [1.3.0] - 2023-07-06
 
 ### Changed in 1.3.0
 
-- Using "github.com/senzing/go-messaging/messenger" to manage message format.
+- Using "github.com/senzing-garage/go-messaging/messenger" to manage message format.
 
 ### Deleted in 1.3.0
 
@@ -58,7 +58,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed in 1.2.6
 
 - Update dependencies
-  - github.com/senzing/go-messaging v0.2.2
+  - github.com/senzing-garage/go-messaging v0.2.2
   - github.com/stretchr/testify v1.8.4
   - golang.org/x/exp v0.0.0-20230522175609-2e198f4a06a1
 
@@ -80,7 +80,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed in 1.2.3
 
 - Update dependencies
-  - github.com/senzing/go-messaging v0.2.1
+  - github.com/senzing-garage/go-messaging v0.2.1
 
 ## [1.2.2] - 2023-05-11
 

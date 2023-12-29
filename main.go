@@ -8,7 +8,7 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/senzing/go-logging/logging"
+	"github.com/senzing-garage/go-logging/logging"
 )
 
 // ----------------------------------------------------------------------------
@@ -139,8 +139,8 @@ func main() {
 	// ------------------------------------------------------------------------
 
 	var (
-		ComponentId = 9999            // See https://github.com/Senzing/knowledge-base/blob/main/lists/senzing-component-ids.md
-		IdMessages  = map[int]string{ // Message templates. Example: https://github.com/Senzing/init-database/blob/main/senzingconfig/main.go
+		ComponentId = 9999            // See https://github.com/senzing-garage/knowledge-base/blob/main/lists/senzing-component-ids.md
+		IdMessages  = map[int]string{ // Message templates. Example: https://github.com/senzing-garage/init-database/blob/main/senzingconfig/main.go
 			2000: "Today's greeting:  %s",
 			4000: "Here's what happened: %s",
 		}
@@ -149,7 +149,7 @@ func main() {
 
 	printBanner("README.md examples")
 
-	// Logging options. See https://github.com/Senzing/go-logging/blob/main/logging/main.go
+	// Logging options. See https://github.com/senzing-garage/go-logging/blob/main/logging/main.go
 	loggerOptions := []interface{}{
 		&logging.OptionCallerSkip{Value: callerSkip},
 	}

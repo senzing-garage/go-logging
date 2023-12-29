@@ -7,8 +7,8 @@ import (
 	"os"
 	"time"
 
-	"github.com/senzing/go-logging/logger"
-	"github.com/senzing/go-messaging/messenger"
+	"github.com/senzing-garage/go-logging/logger"
+	"github.com/senzing-garage/go-messaging/messenger"
 	"golang.org/x/exp/slog"
 )
 
@@ -261,7 +261,7 @@ func New(options ...interface{}) (LoggingInterface, error) {
 	// Detect incorrect option values.
 
 	if componentIdentifier <= 0 || componentIdentifier >= 10000 {
-		err := errors.New("componentIdentifier must be in range 1..9999. See https://github.com/Senzing/knowledge-base/blob/main/lists/senzing-product-ids.md")
+		err := errors.New("componentIdentifier must be in range 1..9999. See https://github.com/senzing-garage/knowledge-base/blob/main/lists/senzing-product-ids.md")
 		return result, err
 	}
 
@@ -345,7 +345,7 @@ The NewSenzingSdkLogger function creates a new instance of loggingInterface
 specifically for use with g2-sdk-go-* packages.
 
 Input
-  - componentId: See list at https://github.com/Senzing/knowledge-base/blob/main/lists/senzing-product-ids.md
+  - componentId: See list at https://github.com/senzing-garage/knowledge-base/blob/main/lists/senzing-product-ids.md
   - idMessage: A map of integer to string message templates.
   - options: Variadic arguments listing the options (usually having type OptionXxxxx) used to configure the logger.
 
@@ -367,7 +367,7 @@ The NewSenzingToolsLogger function creates a new instance of loggingInterface
 specifically for use with senzing-tools.
 
 Input
-  - componentId: See list at https://github.com/Senzing/knowledge-base/blob/main/lists/senzing-product-ids.md
+  - componentId: See list at https://github.com/senzing-garage/knowledge-base/blob/main/lists/senzing-product-ids.md
   - idMessage: A map of integer to string message templates.
   - options: Variadic arguments listing the options (usually having type OptionXxxxx) used to configure the logger.
 
