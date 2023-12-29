@@ -394,7 +394,7 @@ func TestLoggingImpl_NewSenzingSdkLogger(test *testing.T) {
 // ----------------------------------------------------------------------------
 
 func ExampleNew() {
-	// For more information, visit https://github.com/Senzing/go-logging/blob/main/logging/logging_test.go
+	// For more information, visit https://github.com/senzing-garage/go-logging/blob/main/logging/logging_test.go
 	logger, err := New()
 	if err != nil {
 		fmt.Println(err)
@@ -404,7 +404,7 @@ func ExampleNew() {
 }
 
 func ExampleNewSenzingToolsLogger() {
-	// For more information, visit https://github.com/Senzing/go-logging/blob/main/logging/logging_test.go
+	// For more information, visit https://github.com/senzing-garage/go-logging/blob/main/logging/logging_test.go
 	componentId := 9999
 	idMessages := map[int]string{
 		2001: "My message",
@@ -418,7 +418,7 @@ func ExampleNewSenzingToolsLogger() {
 }
 
 func ExampleLoggingImpl_IsTrace() {
-	// For more information, visit https://github.com/Senzing/go-logging/blob/main/logging/logging_test.go
+	// For more information, visit https://github.com/senzing-garage/go-logging/blob/main/logging/logging_test.go
 	logger, err := New()
 	if err != nil {
 		fmt.Println(err)
@@ -436,7 +436,7 @@ func ExampleLoggingImpl_IsTrace() {
 }
 
 func ExampleLoggingImpl_IsDebug() {
-	// For more information, visit https://github.com/Senzing/go-logging/blob/main/logging/logging_test.go
+	// For more information, visit https://github.com/senzing-garage/go-logging/blob/main/logging/logging_test.go
 	logger, err := New()
 	if err != nil {
 		fmt.Println(err)
@@ -457,7 +457,7 @@ func ExampleLoggingImpl_IsDebug() {
 }
 
 func ExampleLoggingImpl_IsInfo() {
-	// For more information, visit https://github.com/Senzing/go-logging/blob/main/logging/logging_test.go
+	// For more information, visit https://github.com/senzing-garage/go-logging/blob/main/logging/logging_test.go
 	logger, err := New()
 	if err != nil {
 		fmt.Println(err)
@@ -478,7 +478,7 @@ func ExampleLoggingImpl_IsInfo() {
 }
 
 func ExampleLoggingImpl_IsWarn() {
-	// For more information, visit https://github.com/Senzing/go-logging/blob/main/logging/logging_test.go
+	// For more information, visit https://github.com/senzing-garage/go-logging/blob/main/logging/logging_test.go
 	logger, err := New()
 	if err != nil {
 		fmt.Println(err)
@@ -499,7 +499,7 @@ func ExampleLoggingImpl_IsWarn() {
 }
 
 func ExampleLoggingImpl_IsError() {
-	// For more information, visit https://github.com/Senzing/go-logging/blob/main/logging/logging_test.go
+	// For more information, visit https://github.com/senzing-garage/go-logging/blob/main/logging/logging_test.go
 	logger, err := New()
 	if err != nil {
 		fmt.Println(err)
@@ -520,7 +520,7 @@ func ExampleLoggingImpl_IsError() {
 }
 
 func ExampleLoggingImpl_IsFatal() {
-	// For more information, visit https://github.com/Senzing/go-logging/blob/main/logging/logging_test.go
+	// For more information, visit https://github.com/senzing-garage/go-logging/blob/main/logging/logging_test.go
 	logger, err := New()
 	if err != nil {
 		fmt.Println(err)
@@ -541,7 +541,7 @@ func ExampleLoggingImpl_IsFatal() {
 }
 
 func ExampleLoggingImpl_IsPanic() {
-	// For more information, visit https://github.com/Senzing/go-logging/blob/main/logging/logging_test.go
+	// For more information, visit https://github.com/senzing-garage/go-logging/blob/main/logging/logging_test.go
 	logger, err := New()
 	if err != nil {
 		fmt.Println(err)
@@ -558,7 +558,7 @@ func ExampleLoggingImpl_IsPanic() {
 }
 
 func ExampleLoggingImpl_Log_new() {
-	// For more information, visit https://github.com/Senzing/go-logging/blob/main/logging/logging_test.go
+	// For more information, visit https://github.com/senzing-garage/go-logging/blob/main/logging/logging_test.go
 	logger, err := New()
 	if err != nil {
 		fmt.Println(err)
@@ -568,7 +568,7 @@ func ExampleLoggingImpl_Log_new() {
 }
 
 func ExampleLoggingImpl_Log_newSenzingToolsLogger() {
-	// For more information, visit https://github.com/Senzing/go-logging/blob/main/logging/logging_test.go
+	// For more information, visit https://github.com/senzing-garage/go-logging/blob/main/logging/logging_test.go
 	componentId := 9999
 	idMessages := map[int]string{
 		2001: "%s works with %s",

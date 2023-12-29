@@ -3,8 +3,8 @@ package main
 import (
 	"testing"
 
-	"github.com/senzing/go-logging/logger"
-	"github.com/senzing/go-logging/logging"
+	"github.com/senzing-garage/go-logging/logger"
+	"github.com/senzing-garage/go-logging/logging"
 )
 
 var (

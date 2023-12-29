@@ -24,7 +24,7 @@ Example:
 
 The basic use of senzing/go-logging looks like this:
 
-	import "github.com/senzing/go-logging/logging"
+	import "github.com/senzing-garage/go-logging/logging"
 
 	logger, _ := logging.New()
 	logger.Log(2000, "A message")
@@ -37,7 +37,7 @@ Output:
 
 For examples, visit:
 
-- [Examples](https://github.com/Senzing/go-logging/blob/main/docs/examples.md)
-- [main.go](https://github.com/Senzing/go-logging/blob/main/main.go)
+- [Examples](https://github.com/senzing-garage/go-logging/blob/main/docs/examples.md)
+- [main.go](https://github.com/senzing-garage/go-logging/blob/main/main.go)
 */
 package main

@@ -1,7 +1,7 @@
 /*
 The logger package is a decorator over Go's log package.
 
-For examples of use, see https://github.com/Senzing/go-logging/blob/main/logger/logger_test.go
+For examples of use, see https://github.com/senzing-garage/go-logging/blob/main/logger/logger_test.go
 */
 package logger
 

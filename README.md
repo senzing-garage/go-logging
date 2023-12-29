@@ -1,14 +1,30 @@
 # go-logging
 
+If you are beginning your journey with
+[Senzing](https://senzing.com/),
+please start with
+[Senzing Quick Start guides](https://docs.senzing.com/quickstart/).
+
+You are in the
+[Senzing Garage](https://github.com/senzing-garage)
+where projects are "tinkered" on.
+Although this GitHub repository may help you understand an approach to using Senzing,
+it's not considered to be "production ready" and is not considered to be part of the Senzing product.
+Heck, it may not even be appropriate for your application of Senzing!
+
 ## Synopsis
 
 The `go-logging` packages build a logging system
 upon Go's experimental `slog` package (<https://pkg.go.dev/golang.org/x/exp/slog>).
 
-[![Go Reference](https://pkg.go.dev/badge/github.com/senzing/go-logging.svg)](https://pkg.go.dev/github.com/senzing/go-logging)
-[![GoReportCard example](https://goreportcard.com/badge/github.com/senzing/go-logging)](https://goreportcard.com/report/github.com/senzing/go-logging)
-[![go-test.yaml](https://github.com/Senzing/go-logging/actions/workflows/go-test.yaml/badge.svg)](https://github.com/Senzing/go-logging/actions/workflows/go-test.yaml)
-[![License](https://img.shields.io/badge/License-Apache2-brightgreen.svg)](https://github.com/Senzing/go-logging/blob/main/LICENSE)
+[![Go Reference](https://pkg.go.dev/badge/github.com/senzing-garage/go-logging.svg)](https://pkg.go.dev/github.com/senzing-garage/go-logging)
+[![Go Report Card](https://goreportcard.com/badge/github.com/senzing-garage/go-logging)](https://goreportcard.com/report/github.com/senzing-garage/go-logging)
+[![License](https://img.shields.io/badge/License-Apache2-brightgreen.svg)](https://github.com/senzing-garage/go-logging/blob/main/LICENSE)
+
+[![gosec.yaml](https://github.com/senzing-garage/go-logging/actions/workflows/gosec.yaml/badge.svg)](https://github.com/senzing-garage/go-logging/actions/workflows/gosec.yaml)
+[![go-test-linux.yaml](https://github.com/senzing-garage/go-logging/actions/workflows/go-test-linux.yaml/badge.svg)](https://github.com/senzing-garage/go-logging/actions/workflows/go-test-linux.yaml)
+[![go-test-darwin.yaml](https://github.com/senzing-garage/go-logging/actions/workflows/go-test-darwin.yaml/badge.svg)](https://github.com/senzing-garage/go-logging/actions/workflows/go-test-darwin.yaml)
+[![go-test-windows.yaml](https://github.com/senzing-garage/go-logging/actions/workflows/go-test-windows.yaml/badge.svg)](https://github.com/senzing-garage/go-logging/actions/workflows/go-test-windows.yaml)
 
 ## Overview
 
@@ -58,7 +74,7 @@ Example:
 The basic use of senzing/go-logging looks like this:
 
 ```go
- import "github.com/senzing/go-logging/logging"
+ import "github.com/senzing-garage/go-logging/logging"
 
  logger, _ := logging.New()
  logger.Log(2001, "Hello world!")
@@ -132,25 +148,25 @@ Examples:
 ### Use with senzing-tools
 
 In the suite of
-[senzing-tools](https://github.com/Senzing/senzing-tools),
+[senzing-tools](https://github.com/senzing-garage/senzing-tools),
 logging is created by:
 
 ```go
 import (
     "fmt"
-    "github.com/senzing/go-logging/logging"
+    "github.com/senzing-garage/go-logging/logging"
 )
 
 var (
-    ComponentId = 9999            // See https://github.com/Senzing/knowledge-base/blob/main/lists/senzing-component-ids.md
-    IdMessages  = map[int]string{ // Message templates. Example: https://github.com/Senzing/init-database/blob/main/senzingconfig/main.go
+    ComponentId = 9999            // See https://github.com/senzing-garage/knowledge-base/blob/main/lists/senzing-component-ids.md
+    IdMessages  = map[int]string{ // Message templates. Example: https://github.com/senzing-garage/init-database/blob/main/senzingconfig/main.go
         2000: "Today's greeting:  %s",
         4000: "Here's what happened: %s",
     }
     callerSkip = 3                // Used to determine "location" information. See https://pkg.go.dev/runtime#Caller
 )
 
-// Logging options. See https://github.com/Senzing/go-logging/blob/main/logging/main.go
+// Logging options. See https://github.com/senzing-garage/go-logging/blob/main/logging/main.go
 loggerOptions := []interface{}{
     &logging.OptionCallerSkip{Value: callerSkip},
 }
@@ -178,7 +194,7 @@ The error: {"time":"YYYY-MM-DDThh:mm:ss.nnZ","level":"ERROR","id":"senzing-99994
 
 ## References
 
-- [API documentation](https://pkg.go.dev/github.com/senzing/go-logging)
+- [API documentation](https://pkg.go.dev/github.com/senzing-garage/go-logging)
 - [Development](docs/development.md)
 - [Errors](docs/errors.md)
 - [Examples](docs/examples.md)
