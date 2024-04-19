@@ -5,7 +5,7 @@ go 1.21
 require (
 	github.com/senzing-garage/go-messaging v1.4.0
 	github.com/stretchr/testify v1.9.0
-	golang.org/x/exp v0.0.0-20231226003508-02704c960a9b
+	golang.org/x/exp v0.0.0-20240416160154-fe59bbe5cc7f
 )
 
 require (
