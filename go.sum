@@ -9,8 +9,8 @@ github.com/pmezard/go-difflib v1.0.0 h1:4DBwDE0NGyQoBHbLQYPwSUPoCMWR5BEzIk/f1lZb
 github.com/pmezard/go-difflib v1.0.0/go.mod h1:iKH77koFhYxTK1pcRnkKkqfTogsbg7gZNVY4sRDYZ/4=
 github.com/rogpeppe/go-internal v1.10.0 h1:TMyTOH3F/DB16zRVcYyreMH6GnZZrwQVAoYjRBZyWFQ=
 github.com/rogpeppe/go-internal v1.10.0/go.mod h1:UQnix2H7Ngw/k4C5ijL5+65zddjncjaFoBhdsK/akog=
-github.com/senzing-garage/go-messaging v1.4.0 h1:XNnOsx4yHslhggNJkZD+p3/Fv/zwhbxjCiwTU+nDFXY=
-github.com/senzing-garage/go-messaging v1.4.0/go.mod h1:V/B3SZSZY7cw2Nc7rZQkLaJu/PRyDA4AbviccDRjW1I=
+github.com/senzing-garage/go-messaging v1.4.1 h1:ZdFcemh1iACP+HJWGS5/QLaUSD7PUYVXhzW7Zbju9f0=
+github.com/senzing-garage/go-messaging v1.4.1/go.mod h1:7tEicOa0baYz0lh0w1BJEiQ6ry1FIQl/67JAWwFpcRY=
 github.com/stretchr/testify v1.9.0 h1:HtqpIVDClZ4nwg75+f6Lvsy/wHu+3BoSGCbBAcpTsTg=
 github.com/stretchr/testify v1.9.0/go.mod h1:r2ic/lqez/lEtzL7wO/rwa5dbSLXVDPFyf8C91i36aY=
 golang.org/x/exp v0.0.0-20240416160154-fe59bbe5cc7f h1:99ci1mjWVBWwJiEKYY6jWa4d2nTQVIEhZIptnrVb1XY=
