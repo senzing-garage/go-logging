@@ -31,7 +31,7 @@ var (
 		4000: "FAILURE",
 		6000: "DISASTER",
 	}
-	messageIdTemplate = "my-id-%04d"
+	messageIDTemplate = "my-id-%04d"
 	callerSkip        = 3
 )
 
@@ -46,7 +46,7 @@ func printBanner(banner string) {
 
 }
 
-func testLogger(banner string, logger logging.LoggingInterface) {
+func testLogger(banner string, logger logging.Logging) {
 	printBanner(banner)
 
 	// Create faux errors.
@@ -100,9 +100,9 @@ func main() {
 	// ------------------------------------------------------------------------
 
 	loggerOptions2 := []interface{}{
-		&logging.OptionIdMessages{Value: idMessages},
-		&logging.OptionIdStatuses{Value: idStatuses},
-		&logging.OptionMessageIdTemplate{Value: messageIdTemplate},
+		&logging.OptionIDMessages{Value: idMessages},
+		&logging.OptionIDStatuses{Value: idStatuses},
+		&logging.OptionMessageIDTemplate{Value: messageIDTemplate},
 		&logging.OptionCallerSkip{Value: callerSkip},
 	}
 	logger2, err := logging.New(loggerOptions2...)
@@ -139,8 +139,8 @@ func main() {
 	// ------------------------------------------------------------------------
 
 	var (
-		ComponentId = 9999            // See https://github.com/senzing-garage/knowledge-base/blob/main/lists/senzing-component-ids.md
-		IdMessages  = map[int]string{ // Message templates. Example: https://github.com/senzing-garage/init-database/blob/main/senzingconfig/main.go
+		ComponentID = 9999            // See https://github.com/senzing-garage/knowledge-base/blob/main/lists/senzing-component-ids.md
+		IDMessages  = map[int]string{ // Message templates. Example: https://github.com/senzing-garage/init-database/blob/main/senzingconfig/main.go
 			2000: "Today's greeting:  %s",
 			4000: "Here's what happened: %s",
 		}
@@ -154,7 +154,7 @@ func main() {
 		&logging.OptionCallerSkip{Value: callerSkip},
 	}
 
-	logger, err := logging.NewSenzingToolsLogger(ComponentId, IdMessages, loggerOptions...)
+	logger, err := logging.NewSenzingToolsLogger(ComponentID, IDMessages, loggerOptions...)
 	if err != nil {
 		fmt.Println(err)
 	}
@@ -207,7 +207,7 @@ func main() {
 	// logger8
 
 	loggerOptions8 := []interface{}{
-		&logging.OptionMessageIdTemplate{Value: "my-message-%04d"},
+		&logging.OptionMessageIDTemplate{Value: "my-message-%04d"},
 	}
 	logger8, _ := logging.New(loggerOptions8...)
 	logger8.Log(2002, "A message")
@@ -240,7 +240,7 @@ func main() {
 		6000: "A test of PANIC.",
 	}
 	loggerOptions9 := []interface{}{
-		&logging.OptionIdMessages{Value: idMessages},
+		&logging.OptionIDMessages{Value: idMessages},
 	}
 	logger9, _ := logging.New(loggerOptions9...)
 	logger9.Log(2004, "Robert Smith", 12345)

@@ -9,17 +9,11 @@ import (
 
 var (
 	componentIdentifier   = 9999
-	testMessageIdTemplate = "test-%04d"
-
-	idMessagesTest = map[int]string{
+	testMessageIDTemplate = "test-%04d"
+	idMessagesTest        = map[int]string{
 		0001: "Info for %s",
 		1000: "Warning for %s",
 		2000: "Error for %s",
-	}
-
-	idStatusesTest = map[int]string{
-		0001: "Status for 0001",
-		1000: "Status for 1000",
 	}
 )
 
@@ -27,7 +21,8 @@ var (
  * The unit tests in this file simulate command line invocation.
  */
 
-func TestMain(testing *testing.T) {
+func TestMain(test *testing.T) {
+	_ = test
 	main()
 }
 
@@ -35,7 +30,8 @@ func TestMain(testing *testing.T) {
 // Test interface functions for New
 // ----------------------------------------------------------------------------
 
-func TestNew(t *testing.T) {
+func TestNew(test *testing.T) {
+	_ = test
 	logger, _ := logging.New()
 	logger.Log(1, "Mary")
 	logger.Log(1000, "Jane")
@@ -46,20 +42,20 @@ func TestNew(t *testing.T) {
 // Test interface functions for NewSenzingLogger
 // ----------------------------------------------------------------------------
 
-func TestNewSenzingLogger(t *testing.T) {
-	logger, _ := logging.NewSenzingLogger(testMessageIdTemplate, idMessagesTest)
+func TestNewSenzingLogger(test *testing.T) {
+	_ = test
+	logger, _ := logging.NewSenzingLogger(testMessageIDTemplate, idMessagesTest)
 	logger.Log(1, "Mary")
 	logger.Log(1000, "Jane")
 	logger.Log(2000, "Bob")
 }
 
-func TestNewSenzingLoggerAtErrorLevel(t *testing.T) {
-
+func TestNewSenzingLoggerAtErrorLevel(test *testing.T) {
+	_ = test
 	loggerOptions := []interface{}{
 		&logging.OptionLogLevel{Value: logger.LevelErrorName},
 	}
-
-	logger, _ := logging.NewSenzingLogger(testMessageIdTemplate, idMessagesTest, loggerOptions...)
+	logger, _ := logging.NewSenzingLogger(testMessageIDTemplate, idMessagesTest, loggerOptions...)
 	logger.Log(1, "Mary")
 	logger.Log(1000, "Jane")
 	logger.Log(2000, "Bob")
@@ -69,19 +65,19 @@ func TestNewSenzingLoggerAtErrorLevel(t *testing.T) {
 // Test interface functions for NewSenzingSdkLogger
 // ----------------------------------------------------------------------------
 
-func TestNewSenzingSdkLogger(t *testing.T) {
+func TestNewSenzingSdkLogger(test *testing.T) {
+	_ = test
 	logger, _ := logging.NewSenzingSdkLogger(componentIdentifier, idMessagesTest)
 	logger.Log(1, "Mary")
 	logger.Log(1000, "Jane")
 	logger.Log(2000, "Bob")
 }
 
-func TestNewSenzingSdkLoggerAtErrorLevel(t *testing.T) {
-
+func TestNewSenzingSdkLoggerAtErrorLevel(test *testing.T) {
+	_ = test
 	loggerOptions := []interface{}{
 		&logging.OptionLogLevel{Value: logger.LevelErrorName},
 	}
-
 	logger, _ := logging.NewSenzingSdkLogger(componentIdentifier, idMessagesTest, loggerOptions...)
 	logger.Log(1, "Mary")
 	logger.Log(1000, "Jane")
@@ -92,19 +88,19 @@ func TestNewSenzingSdkLoggerAtErrorLevel(t *testing.T) {
 // Test interface functions for NewSenzingToolsLogger
 // ----------------------------------------------------------------------------
 
-func TestNewSenzingToolsLogger(t *testing.T) {
+func TestNewSenzingToolsLogger(test *testing.T) {
+	_ = test
 	logger, _ := logging.NewSenzingToolsLogger(componentIdentifier, idMessagesTest)
 	logger.Log(1, "Mary")
 	logger.Log(1000, "Jane")
 	logger.Log(2000, "Bob")
 }
 
-func TestNewSenzingToolsLoggerAtErrorLevel(t *testing.T) {
-
+func TestNewSenzingToolsLoggerAtErrorLevel(test *testing.T) {
+	_ = test
 	loggerOptions := []interface{}{
 		&logging.OptionLogLevel{Value: logger.LevelErrorName},
 	}
-
 	logger, _ := logging.NewSenzingToolsLogger(componentIdentifier, idMessagesTest, loggerOptions...)
 	logger.Log(1, "Mary")
 	logger.Log(1000, "Jane")
