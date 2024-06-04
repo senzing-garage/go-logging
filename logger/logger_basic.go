@@ -21,10 +21,10 @@ import (
 // ----------------------------------------------------------------------------
 
 /*
-The LoggerDefault type is for logging messages based on the following levels:
+The BasicLogger type is for logging messages based on the following levels:
 TRACE, DEBUG, INFO, WARN, ERROR, FATAL, and PANIC.
 */
-type LoggerDefault struct {
+type BasicLogger struct {
 	level   Level
 	isDebug bool
 	isError bool
@@ -39,7 +39,8 @@ type LoggerDefault struct {
 // Internal methods
 // ----------------------------------------------------------------------------
 
-func (logger *LoggerDefault) printf(debugLevelName string, format string, v ...interface{}) LoggerInterface {
+func (logger *BasicLogger) printf(debugLevelName string, format string, v ...interface{}) Logger {
+	_ = debugLevelName
 	var message string
 	calldepth := 3
 	if format == noFormat {
@@ -59,7 +60,7 @@ func (logger *LoggerDefault) printf(debugLevelName string, format string, v ...i
 // ----------------------------------------------------------------------------
 
 // Debug() logs a DEBUG message.
-func (logger *LoggerDefault) Debug(v ...interface{}) LoggerInterface {
+func (logger *BasicLogger) Debug(v ...interface{}) Logger {
 	if logger.isDebug {
 		logger.printf(LevelDebugName, noFormat, v...)
 	}
@@ -67,7 +68,7 @@ func (logger *LoggerDefault) Debug(v ...interface{}) LoggerInterface {
 }
 
 // Debugf() logs a formatted DEBUG message.
-func (logger *LoggerDefault) Debugf(format string, v ...interface{}) LoggerInterface {
+func (logger *BasicLogger) Debugf(format string, v ...interface{}) Logger {
 	if logger.isDebug {
 		logger.printf(LevelDebugName, format, v...)
 	}
@@ -75,7 +76,7 @@ func (logger *LoggerDefault) Debugf(format string, v ...interface{}) LoggerInter
 }
 
 // Error() logs a ERROR message.
-func (logger *LoggerDefault) Error(v ...interface{}) LoggerInterface {
+func (logger *BasicLogger) Error(v ...interface{}) Logger {
 	if logger.isError {
 		logger.printf(LevelErrorName, noFormat, v...)
 	}
@@ -83,7 +84,7 @@ func (logger *LoggerDefault) Error(v ...interface{}) LoggerInterface {
 }
 
 // Errorf() logs a formatted ERROR message.
-func (logger *LoggerDefault) Errorf(format string, v ...interface{}) LoggerInterface {
+func (logger *BasicLogger) Errorf(format string, v ...interface{}) Logger {
 	if logger.isError {
 		logger.printf(LevelErrorName, format, v...)
 	}
@@ -91,7 +92,7 @@ func (logger *LoggerDefault) Errorf(format string, v ...interface{}) LoggerInter
 }
 
 // Fatal() logs a FATAL message.
-func (logger *LoggerDefault) Fatal(v ...interface{}) LoggerInterface {
+func (logger *BasicLogger) Fatal(v ...interface{}) Logger {
 	if logger.isFatal {
 		logger.printf(LevelFatalName, noFormat, v...)
 		log.Fatal("")
@@ -100,7 +101,7 @@ func (logger *LoggerDefault) Fatal(v ...interface{}) LoggerInterface {
 }
 
 // Fatalf() logs a formatted FATAL message.
-func (logger *LoggerDefault) Fatalf(format string, v ...interface{}) LoggerInterface {
+func (logger *BasicLogger) Fatalf(format string, v ...interface{}) Logger {
 	if logger.isFatal {
 		logger.printf(LevelFatalName, format, v...)
 		log.Fatal("")
@@ -109,17 +110,17 @@ func (logger *LoggerDefault) Fatalf(format string, v ...interface{}) LoggerInter
 }
 
 // GetLogLevel() gets the logger instance logging level.
-func (logger *LoggerDefault) GetLogLevel() Level {
+func (logger *BasicLogger) GetLogLevel() Level {
 	return logger.level
 }
 
 // GetLogLevelAsString() gets the logger instance logging level in string representation.
-func (logger *LoggerDefault) GetLogLevelAsString() string {
+func (logger *BasicLogger) GetLogLevelAsString() string {
 	return LevelToTextMap[logger.level]
 }
 
 // Info() logs a INFO message.
-func (logger *LoggerDefault) Info(v ...interface{}) LoggerInterface {
+func (logger *BasicLogger) Info(v ...interface{}) Logger {
 	if logger.isInfo {
 		logger.printf(LevelInfoName, noFormat, v...)
 	}
@@ -127,7 +128,7 @@ func (logger *LoggerDefault) Info(v ...interface{}) LoggerInterface {
 }
 
 // Infof() logs a formatted INFO message.
-func (logger *LoggerDefault) Infof(format string, v ...interface{}) LoggerInterface {
+func (logger *BasicLogger) Infof(format string, v ...interface{}) Logger {
 	if logger.isInfo {
 		logger.printf(LevelInfoName, format, v...)
 	}
@@ -135,42 +136,42 @@ func (logger *LoggerDefault) Infof(format string, v ...interface{}) LoggerInterf
 }
 
 // IsDebug() returns true if the logger instance will log a DEBUG message.
-func (logger *LoggerDefault) IsDebug() bool {
+func (logger *BasicLogger) IsDebug() bool {
 	return logger.isDebug
 }
 
 // IsError() returns true if the logger instance will log a ERROR message.
-func (logger *LoggerDefault) IsError() bool {
+func (logger *BasicLogger) IsError() bool {
 	return logger.isError
 }
 
 // IsFatal() returns true if the logger instance will log a FATAL message.
-func (logger *LoggerDefault) IsFatal() bool {
+func (logger *BasicLogger) IsFatal() bool {
 	return logger.isFatal
 }
 
 // IsInfo() returns true if the logger instance will log a INFO message.
-func (logger *LoggerDefault) IsInfo() bool {
+func (logger *BasicLogger) IsInfo() bool {
 	return logger.isInfo
 }
 
 // IsPanic() returns true if the logger instance will log a PANIC message.
-func (logger *LoggerDefault) IsPanic() bool {
+func (logger *BasicLogger) IsPanic() bool {
 	return logger.isPanic
 }
 
 // IsTrace() returns true if the logger instance will log a TRACE message.
-func (logger *LoggerDefault) IsTrace() bool {
+func (logger *BasicLogger) IsTrace() bool {
 	return logger.isTrace
 }
 
 // IsWarn() returns true if the logger instance will log a WARN message.
-func (logger *LoggerDefault) IsWarn() bool {
+func (logger *BasicLogger) IsWarn() bool {
 	return logger.isWarn
 }
 
 // Panic() logs a PANIC message.
-func (logger *LoggerDefault) Panic(v ...interface{}) LoggerInterface {
+func (logger *BasicLogger) Panic(v ...interface{}) Logger {
 	if logger.isPanic {
 		logger.printf(LevelPanicName, noFormat, v...)
 		log.Panic("")
@@ -179,7 +180,7 @@ func (logger *LoggerDefault) Panic(v ...interface{}) LoggerInterface {
 }
 
 // Panicf() logs a formatted PANIC message.
-func (logger *LoggerDefault) Panicf(format string, v ...interface{}) LoggerInterface {
+func (logger *BasicLogger) Panicf(format string, v ...interface{}) Logger {
 	if logger.isPanic {
 		logger.printf(LevelPanicName, format, v...)
 		log.Panic("")
@@ -188,7 +189,7 @@ func (logger *LoggerDefault) Panicf(format string, v ...interface{}) LoggerInter
 }
 
 // SetLogLevel() sets the logger instance logging level.
-func (logger *LoggerDefault) SetLogLevel(level Level) LoggerInterface {
+func (logger *BasicLogger) SetLogLevel(level Level) Logger {
 	logger.level = level
 	logger.isPanic = level <= LevelPanic
 	logger.isFatal = level <= LevelFatal
@@ -201,7 +202,7 @@ func (logger *LoggerDefault) SetLogLevel(level Level) LoggerInterface {
 }
 
 // SetLogLevelFromString() sets the logger instance logging level using a string representation.
-func (logger *LoggerDefault) SetLogLevelFromString(levelString string) LoggerInterface {
+func (logger *BasicLogger) SetLogLevelFromString(levelString string) Logger {
 	upperLevelString := strings.ToUpper(levelString)
 	level, ok := TextToLevelMap[upperLevelString]
 	if !ok {
@@ -212,7 +213,7 @@ func (logger *LoggerDefault) SetLogLevelFromString(levelString string) LoggerInt
 }
 
 // Trace() logs a TRACE message.
-func (logger *LoggerDefault) Trace(v ...interface{}) LoggerInterface {
+func (logger *BasicLogger) Trace(v ...interface{}) Logger {
 	if logger.isTrace {
 		logger.printf(LevelTraceName, noFormat, v...)
 	}
@@ -220,7 +221,7 @@ func (logger *LoggerDefault) Trace(v ...interface{}) LoggerInterface {
 }
 
 // Tracef() logs a formatted TRACE message.
-func (logger *LoggerDefault) Tracef(format string, v ...interface{}) LoggerInterface {
+func (logger *BasicLogger) Tracef(format string, v ...interface{}) Logger {
 	if logger.isTrace {
 		logger.printf(LevelTraceName, format, v...)
 	}
@@ -228,7 +229,7 @@ func (logger *LoggerDefault) Tracef(format string, v ...interface{}) LoggerInter
 }
 
 // Warn() logs a WARN message.
-func (logger *LoggerDefault) Warn(v ...interface{}) LoggerInterface {
+func (logger *BasicLogger) Warn(v ...interface{}) Logger {
 	if logger.isWarn {
 		logger.printf(LevelWarnName, noFormat, v...)
 	}
@@ -236,7 +237,7 @@ func (logger *LoggerDefault) Warn(v ...interface{}) LoggerInterface {
 }
 
 // Warnf() logs a formatted WARN message.
-func (logger *LoggerDefault) Warnf(format string, v ...interface{}) LoggerInterface {
+func (logger *BasicLogger) Warnf(format string, v ...interface{}) Logger {
 	if logger.isWarn {
 		logger.printf(LevelWarnName, format, v...)
 	}

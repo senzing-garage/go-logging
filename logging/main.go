@@ -7,7 +7,6 @@ import (
 	"os"
 	"time"
 
-	"github.com/senzing-garage/go-logging/logger"
 	"github.com/senzing-garage/go-messaging/messenger"
 	"golang.org/x/exp/slog"
 )
@@ -16,7 +15,7 @@ import (
 // Types - interface
 // ----------------------------------------------------------------------------
 
-// The loggingInterface interface has methods for creating different
+// The Logging interface has methods for creating different
 // representations of a message.
 type Logging interface {
 	GetLogLevel() string                                      // Get the current level of logging.
@@ -28,7 +27,7 @@ type Logging interface {
 	IsPanic() bool                                            // Returns true if a PANIC message will be logged.
 	IsTrace() bool                                            // Returns true if a TRACE message will be logged.
 	IsWarn() bool                                             // Returns true if a WARN message will be logged.
-	Json(messageNumber int, details ...interface{}) string    // Return a JSON string with the message.
+	JSON(messageNumber int, details ...interface{}) string    // Return a JSON string with the message.
 	Log(messageNumber int, details ...interface{})            // Log the message.
 	NewError(messageNumber int, details ...interface{}) error // Return an error object with the message.
 	SetLogLevel(logLevelName string) error                    // Set the level of logging.
@@ -178,18 +177,6 @@ var TextToLevelMap = map[string]slog.Level{
 	LevelWarnName:  LevelWarnSlog,
 }
 
-// Map from string representation to Log level as typed integer.
-// FIXME: Deprecated:  Only needed until g2-sdk-go-* SetLevel() methods have been updated
-var TextToLoggerLevelMap = map[string]logger.Level{
-	LevelTraceName: logger.LevelTrace,
-	LevelDebugName: logger.LevelDebug,
-	LevelInfoName:  logger.LevelInfo,
-	LevelWarnName:  logger.LevelWarn,
-	LevelErrorName: logger.LevelError,
-	LevelFatalName: logger.LevelFatal,
-	LevelPanicName: logger.LevelPanic,
-}
-
 // ----------------------------------------------------------------------------
 // Public functions
 // ----------------------------------------------------------------------------
@@ -303,7 +290,7 @@ func New(options ...interface{}) (Logging, error) {
 
 	// Create LoggingInterface.
 
-	loggingImpl := &LoggingImpl{
+	loggingImpl := &BasicLogging{
 		logger:    logger,
 		messenger: messenger,
 		leveler:   slogLeveler,
@@ -405,6 +392,7 @@ func SlogHandlerOptions(leveler slog.Leveler, options ...interface{}) *slog.Hand
 		switch typedValue := value.(type) {
 		case *OptionTimeHidden:
 			timeHidden = typedValue.Value
+		default:
 		}
 	}
 

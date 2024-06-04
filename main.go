@@ -43,7 +43,12 @@ func printBanner(banner string) {
 	fmt.Printf("\n%s\n", strings.Repeat("-", 80))
 	fmt.Printf("-- %s\n", banner)
 	fmt.Printf("%s\n\n", strings.Repeat("-", 80))
+}
 
+func testError(err error) {
+	if err != nil {
+		fmt.Println(err)
+	}
 }
 
 func testLogger(banner string, logger logging.Logging) {
@@ -87,12 +92,8 @@ func main() {
 	// ------------------------------------------------------------------------
 
 	logger1, err := logging.New()
-	if err != nil {
-		fmt.Println(err)
-	}
-
+	testError(err)
 	logger1.Log(2001, "Hello World!")
-
 	testLogger("Simple logger", logger1)
 
 	// ------------------------------------------------------------------------
@@ -106,9 +107,7 @@ func main() {
 		&logging.OptionCallerSkip{Value: callerSkip},
 	}
 	logger2, err := logging.New(loggerOptions2...)
-	if err != nil {
-		fmt.Println(err)
-	}
+	testError(err)
 	testLogger("Configured logger", logger2)
 
 	// ------------------------------------------------------------------------
@@ -116,9 +115,7 @@ func main() {
 	// ------------------------------------------------------------------------
 
 	logger3, err := logging.NewSenzingLogger("my-unique-%04d", idMessages)
-	if err != nil {
-		fmt.Println(err)
-	}
+	testError(err)
 	testLogger("NewSenzingLogger", logger3)
 
 	// ------------------------------------------------------------------------
@@ -129,9 +126,7 @@ func main() {
 		&logging.OptionCallerSkip{Value: callerSkip},
 	}
 	logger4, err := logging.NewSenzingToolsLogger(9998, idMessages, loggerOptions4...)
-	if err != nil {
-		fmt.Println(err)
-	}
+	testError(err)
 	testLogger("NewSenzingToolsLogger", logger4)
 
 	// ------------------------------------------------------------------------
@@ -150,17 +145,13 @@ func main() {
 	printBanner("README.md examples")
 
 	// Logging options. See https://github.com/senzing-garage/go-logging/blob/main/logging/main.go
+
 	loggerOptions := []interface{}{
 		&logging.OptionCallerSkip{Value: callerSkip},
 	}
-
 	logger, err := logging.NewSenzingToolsLogger(ComponentID, IDMessages, loggerOptions...)
-	if err != nil {
-		fmt.Println(err)
-	}
-
+	testError(err)
 	logger.Log(2000, "Hello, world!")
-
 	err = logger.NewError(4000, "A bad thing")
 	fmt.Printf("The error: %v\n", err)
 

@@ -5,8 +5,6 @@ For examples of use, see https://github.com/senzing-garage/go-logging/blob/main/
 */
 package logger
 
-import "log"
-
 // ----------------------------------------------------------------------------
 // Types
 // ----------------------------------------------------------------------------
@@ -15,33 +13,33 @@ import "log"
 // and is used in LevelXxxxx constants.
 type Level int
 
-// The LoggerInterface type defines guards, logging methods, and get/set of logging level.
-type LoggerInterface interface {
-	Debug(v ...interface{}) LoggerInterface                   // Log a DEBUG message.
-	Debugf(format string, v ...interface{}) LoggerInterface   // Log a formatted DEBUG message.
-	Error(v ...interface{}) LoggerInterface                   // Log an ERROR message.
-	Errorf(format string, v ...interface{}) LoggerInterface   // Log a formatted ERROR message.
-	Fatal(v ...interface{}) LoggerInterface                   // Log a FATAL message.
-	Fatalf(format string, v ...interface{}) LoggerInterface   // Log a formatted FATAL message.
-	GetLogLevel() Level                                       // Gets the logger instance logging level.
-	GetLogLevelAsString() string                              // Gets the logger instance logging level in string representation.
-	Info(v ...interface{}) LoggerInterface                    // Log an INFO message.
-	Infof(format string, v ...interface{}) LoggerInterface    // Log a formatted INFO message.
-	IsDebug() bool                                            // Returns true if a DEBUG message will be logged.
-	IsError() bool                                            // Returns true if an ERROR message will be logged.
-	IsFatal() bool                                            // Returns true if a FATAL message will be logged.
-	IsInfo() bool                                             // Returns true if an INFO message will be logged.
-	IsPanic() bool                                            // Returns true if a PANIC message will be logged.
-	IsTrace() bool                                            // Returns true if a TRACE message will be logged.
-	IsWarn() bool                                             // Returns true if a WARN message will be logged.
-	Panic(v ...interface{}) LoggerInterface                   // Log a PANIC message.
-	Panicf(format string, v ...interface{}) LoggerInterface   // Log a formatted PANIC message.
-	SetLogLevel(level Level) LoggerInterface                  // Sets the logger instance logging level.
-	SetLogLevelFromString(levelString string) LoggerInterface // Sets the logger instance logging level using a string representation.
-	Trace(v ...interface{}) LoggerInterface                   // Log a TRACE message.
-	Tracef(format string, v ...interface{}) LoggerInterface   // Log a formatted TRACE message.
-	Warn(v ...interface{}) LoggerInterface                    // Log a WARN message.
-	Warnf(format string, v ...interface{}) LoggerInterface    // Log a formatted WARN message.
+// The Logger type defines guards, logging methods, and get/set of logging level.
+type Logger interface {
+	Debug(v ...interface{}) Logger                   // Log a DEBUG message.
+	Debugf(format string, v ...interface{}) Logger   // Log a formatted DEBUG message.
+	Error(v ...interface{}) Logger                   // Log an ERROR message.
+	Errorf(format string, v ...interface{}) Logger   // Log a formatted ERROR message.
+	Fatal(v ...interface{}) Logger                   // Log a FATAL message.
+	Fatalf(format string, v ...interface{}) Logger   // Log a formatted FATAL message.
+	GetLogLevel() Level                              // Gets the logger instance logging level.
+	GetLogLevelAsString() string                     // Gets the logger instance logging level in string representation.
+	Info(v ...interface{}) Logger                    // Log an INFO message.
+	Infof(format string, v ...interface{}) Logger    // Log a formatted INFO message.
+	IsDebug() bool                                   // Returns true if a DEBUG message will be logged.
+	IsError() bool                                   // Returns true if an ERROR message will be logged.
+	IsFatal() bool                                   // Returns true if a FATAL message will be logged.
+	IsInfo() bool                                    // Returns true if an INFO message will be logged.
+	IsPanic() bool                                   // Returns true if a PANIC message will be logged.
+	IsTrace() bool                                   // Returns true if a TRACE message will be logged.
+	IsWarn() bool                                    // Returns true if a WARN message will be logged.
+	Panic(v ...interface{}) Logger                   // Log a PANIC message.
+	Panicf(format string, v ...interface{}) Logger   // Log a formatted PANIC message.
+	SetLogLevel(level Level) Logger                  // Sets the logger instance logging level.
+	SetLogLevelFromString(levelString string) Logger // Sets the logger instance logging level using a string representation.
+	Trace(v ...interface{}) Logger                   // Log a TRACE message.
+	Tracef(format string, v ...interface{}) Logger   // Log a formatted TRACE message.
+	Warn(v ...interface{}) Logger                    // Log a WARN message.
+	Warnf(format string, v ...interface{}) Logger    // Log a formatted WARN message.
 }
 
 // ----------------------------------------------------------------------------
@@ -91,7 +89,7 @@ var LevelToTextMap = map[Level]string{
 }
 
 // Default logger instance.
-var loggerInstance *LoggerDefault
+var loggerInstance *BasicLogger
 
 // Map from string representation to Log level as typed integer.
 var TextToLevelMap = map[string]Level{
@@ -109,8 +107,8 @@ var TextToLevelMap = map[string]Level{
 // ----------------------------------------------------------------------------
 
 // Create a new default instance of the logger.
-func New() *LoggerDefault {
-	result := &LoggerDefault{}
+func New() *BasicLogger {
+	result := &BasicLogger{}
 	result.SetLogLevel(LevelInfo)
 	return result
 }
@@ -129,52 +127,38 @@ func init() {
 // ----------------------------------------------------------------------------
 
 // Debug() logs a DEBUG message.
-func Debug(v ...interface{}) LoggerInterface {
-	if loggerInstance.IsDebug() {
-		loggerInstance.printf(LevelDebugName, noFormat, v...)
-	}
+func Debug(v ...interface{}) Logger {
+	loggerInstance.Debug(v...)
 	return loggerInstance
 }
 
 // Debugf() logs a formatted DEBUG message.
-func Debugf(format string, v ...interface{}) LoggerInterface {
-	if loggerInstance.IsDebug() {
-		loggerInstance.printf(LevelDebugName, format, v...)
-	}
+func Debugf(format string, v ...interface{}) Logger {
+	loggerInstance.Debugf(format, v...)
 	return loggerInstance
 }
 
 // Error() logs a ERROR message.
-func Error(v ...interface{}) LoggerInterface {
-	if loggerInstance.IsError() {
-		loggerInstance.printf(LevelErrorName, noFormat, v...)
-	}
+func Error(v ...interface{}) Logger {
+	loggerInstance.Error(v...)
 	return loggerInstance
 }
 
 // Errorf() logs a formatted ERROR message.
-func Errorf(format string, v ...interface{}) LoggerInterface {
-	if loggerInstance.IsError() {
-		loggerInstance.printf(LevelErrorName, format, v...)
-	}
+func Errorf(format string, v ...interface{}) Logger {
+	loggerInstance.Errorf(format, v...)
 	return loggerInstance
 }
 
 // Fatal() logs a FATAL message.
-func Fatal(v ...interface{}) LoggerInterface {
-	if loggerInstance.IsFatal() {
-		loggerInstance.printf(LevelFatalName, noFormat, v...)
-		log.Fatal("")
-	}
+func Fatal(v ...interface{}) Logger {
+	loggerInstance.Fatal(v...)
 	return loggerInstance
 }
 
 // Fatalf() logs a formatted FATAL message.
-func Fatalf(format string, v ...interface{}) LoggerInterface {
-	if loggerInstance.IsFatal() {
-		loggerInstance.printf(LevelFatalName, format, v...)
-		log.Fatal("")
-	}
+func Fatalf(format string, v ...interface{}) Logger {
+	loggerInstance.Fatalf(format, v...)
 	return loggerInstance
 }
 
@@ -189,18 +173,14 @@ func GetLogLevelAsString() string {
 }
 
 // Info() logs a INFO message.
-func Info(v ...interface{}) LoggerInterface {
-	if loggerInstance.IsInfo() {
-		loggerInstance.printf(LevelInfoName, noFormat, v...)
-	}
+func Info(v ...interface{}) Logger {
+	loggerInstance.Info(v...)
 	return loggerInstance
 }
 
 // Infof() logs a formatted INFO message.
-func Infof(format string, v ...interface{}) LoggerInterface {
-	if loggerInstance.IsInfo() {
-		loggerInstance.printf(LevelInfoName, format, v...)
-	}
+func Infof(format string, v ...interface{}) Logger {
+	loggerInstance.Infof(format, v...)
 	return loggerInstance
 }
 
@@ -240,61 +220,47 @@ func IsWarn() bool {
 }
 
 // Panic() logs a PANIC message.
-func Panic(v ...interface{}) LoggerInterface {
-	if loggerInstance.IsPanic() {
-		loggerInstance.printf(LevelPanicName, noFormat, v...)
-		log.Panic("")
-	}
+func Panic(v ...interface{}) Logger {
+	loggerInstance.Panic(v...)
 	return loggerInstance
 }
 
 // Panicf() logs a formatted PANIC message.
-func Panicf(format string, v ...interface{}) LoggerInterface {
-	if loggerInstance.IsPanic() {
-		loggerInstance.printf(LevelPanicName, format, v...)
-		log.Panic("")
-	}
+func Panicf(format string, v ...interface{}) Logger {
+	loggerInstance.Panicf(format, v...)
 	return loggerInstance
 }
 
 // SetLogLevel() sets the logger instance logging level.
-func SetLogLevel(level Level) LoggerInterface {
+func SetLogLevel(level Level) Logger {
 	return loggerInstance.SetLogLevel(level)
 }
 
 // SetLogLevelFromString() sets the logger instance logging level using a string representation.
-func SetLogLevelFromString(levelString string) LoggerInterface {
+func SetLogLevelFromString(levelString string) Logger {
 	return loggerInstance.SetLogLevelFromString(levelString)
 }
 
 // Trace() logs a TRACE message.
-func Trace(v ...interface{}) LoggerInterface {
-	if loggerInstance.IsTrace() {
-		loggerInstance.printf(LevelTraceName, noFormat, v...)
-	}
+func Trace(v ...interface{}) Logger {
+	loggerInstance.Trace(v...)
 	return loggerInstance
 }
 
 // Tracef() logs a formatted TRACE message.
-func Tracef(format string, v ...interface{}) LoggerInterface {
-	if loggerInstance.IsTrace() {
-		loggerInstance.printf(LevelTraceName, format, v...)
-	}
+func Tracef(format string, v ...interface{}) Logger {
+	loggerInstance.Tracef(format, v...)
 	return loggerInstance
 }
 
 // Warn() logs a WARN message.
-func Warn(v ...interface{}) LoggerInterface {
-	if loggerInstance.IsWarn() {
-		loggerInstance.printf(LevelWarnName, noFormat, v...)
-	}
+func Warn(v ...interface{}) Logger {
+	loggerInstance.Warn(v...)
 	return loggerInstance
 }
 
 // Warnf() logs a formatted WARN message.
-func Warnf(format string, v ...interface{}) LoggerInterface {
-	if loggerInstance.IsWarn() {
-		loggerInstance.printf(LevelWarnName, format, v...)
-	}
+func Warnf(format string, v ...interface{}) Logger {
+	loggerInstance.Warnf(format, v...)
 	return loggerInstance
 }

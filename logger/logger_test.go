@@ -110,19 +110,21 @@ var testCases = []struct {
 // ----------------------------------------------------------------------------
 
 func TestLevels(test *testing.T) {
-	assert.True(test, LevelTrace < LevelDebug, "Trace")
-	assert.True(test, LevelDebug < LevelInfo, "Debug")
-	assert.True(test, LevelInfo < LevelWarn, "Info")
-	assert.True(test, LevelWarn < LevelError, "Warn")
-	assert.True(test, LevelError < LevelFatal, "Error")
-	assert.True(test, LevelFatal < LevelPanic, "Fatal")
+	assert.Less(test, LevelTrace, LevelDebug, "Trace")
+	assert.Less(test, LevelDebug, LevelInfo, "Debug")
+	assert.Less(test, LevelInfo, LevelWarn, "Info")
+	assert.Less(test, LevelWarn, LevelError, "Warn")
+	assert.Less(test, LevelError, LevelFatal, "Error")
+	assert.Less(test, LevelFatal, LevelPanic, "Fatal")
 }
 
 // -- SetLogLevel -------------------------------------------------------------
 
 func TestSetLevel(test *testing.T) {
+	_ = test
 	for _, testCase := range testCases {
 		test.Run(testCase.name, func(test *testing.T) {
+			_ = test
 			SetLogLevel(testCase.logLevel)
 		})
 	}
@@ -142,7 +144,7 @@ func TestSetLogLevelFromString(test *testing.T) {
 func TestSetLogLevelFromStringBadString(test *testing.T) {
 	levelString := "Bad-Level-String"
 	SetLogLevelFromString(levelString)
-	assert.True(test, LevelPanic == GetLogLevel(), "Unknown string returns Panic")
+	assert.Equal(test, LevelPanic, GetLogLevel(), "Unknown string returns Panic")
 }
 
 // -- GetLogLevel -------------------------------------------------------------
@@ -193,20 +195,12 @@ func TestError(test *testing.T) {
 	assert.NotZero(test, Errorf("test %s", "something"), "format")
 }
 
-// -- Warn --------------------------------------------------------------------
+// -- Trace -------------------------------------------------------------------
 
-func TestWarn(test *testing.T) {
-	SetLogLevel(LevelWarn)
-	assert.NotZero(test, Warn("test"), "string")
-	assert.NotZero(test, Warnf("test %s", "something"), "format")
-}
-
-// -- Info --------------------------------------------------------------------
-
-func TestInfo(test *testing.T) {
-	SetLogLevel(LevelInfo)
-	assert.NotZero(test, Info("test"), "string")
-	assert.NotZero(test, Infof("test %s", "something"), "format")
+func TestTrace(test *testing.T) {
+	SetLogLevel(LevelTrace)
+	assert.NotZero(test, Trace("test"), "string")
+	assert.NotZero(test, Tracef("test %s", "something"), "format")
 }
 
 // -- Debug -------------------------------------------------------------------
@@ -217,22 +211,43 @@ func TestDebug(test *testing.T) {
 	assert.NotZero(test, Debugf("test %s", "something"), "format")
 }
 
-// -- Trace -------------------------------------------------------------------
+// -- Info --------------------------------------------------------------------
 
-func TestTrace(test *testing.T) {
-	SetLogLevel(LevelTrace)
-	assert.NotZero(test, Trace("test"), "string")
-	assert.NotZero(test, Tracef("test %s", "something"), "format")
+func TestInfo(test *testing.T) {
+	SetLogLevel(LevelInfo)
+	assert.NotZero(test, Info("test"), "string")
+	assert.NotZero(test, Infof("test %s", "something"), "format")
+}
+
+// -- Warn --------------------------------------------------------------------
+
+func TestWarn(test *testing.T) {
+	SetLogLevel(LevelWarn)
+	assert.NotZero(test, Warn("test"), "string")
+	assert.NotZero(test, Warnf("test %s", "something"), "format")
+}
+
+// -- Fatal -------------------------------------------------------------------
+// TODO: Figure out how to test Fatal and Fatalf
+
+// -- Panic -------------------------------------------------------------------
+
+func TestPanic(test *testing.T) {
+	SetLogLevel(LevelPanic)
+	assert.Panics(test, func() { Panic("test") })
+	assert.Panics(test, func() { Panicf("test %s", "something") })
 }
 
 // -- Miscellaneous -----------------------------------------------------------
 
 func TestFluentInterface(test *testing.T) {
+	_ = test
 	SetLogLevel(LevelTrace)
 	Trace("trace").Debug("debug").Info("info").Warn("warn").Error("error")
 }
 
 func TestVaradic(test *testing.T) {
+	_ = test
 	SetLogLevel(LevelDebug)
 	_, err := time.LoadLocation("bob")
 	Info("Should be error: ", err)

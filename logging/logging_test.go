@@ -2,11 +2,16 @@ package logging
 
 import (
 	"bytes"
+	"context"
 	"fmt"
+	"io"
 	"os"
 	"testing"
 
+	"github.com/senzing-garage/go-messaging/messenger"
 	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
+	"golang.org/x/exp/slog"
 )
 
 var idMessagesTest = map[int]string{
@@ -31,7 +36,7 @@ var testCasesForMessage = []struct {
 	{
 		name:                          "logging-0001",
 		messageNumber:                 1,
-		options:                       []interface{}{getOptionIdMessages(), getOptionCallerSkip(), getOptionOutput(), getOptionTimeHidden()},
+		options:                       []interface{}{getOptionIDMessages(), getOptionCallerSkip(), getOptionOutput(), getOptionTimeHidden()},
 		details:                       []interface{}{"Bob", "Jane"},
 		expectedNew:                   ``,
 		expectedNewSenzingSdkLogger:   ``,
@@ -40,7 +45,7 @@ var testCasesForMessage = []struct {
 	{
 		name:                          "logging-1001",
 		messageNumber:                 1001,
-		options:                       []interface{}{getOptionIdMessages(), getOptionCallerSkip(), getOptionOutput(), getOptionTimeHidden()},
+		options:                       []interface{}{getOptionIDMessages(), getOptionCallerSkip(), getOptionOutput(), getOptionTimeHidden()},
 		details:                       []interface{}{"Bob", "Jane"},
 		expectedNew:                   ``,
 		expectedNewSenzingSdkLogger:   ``,
@@ -49,7 +54,7 @@ var testCasesForMessage = []struct {
 	{
 		name:                          "logging-2001",
 		messageNumber:                 2001,
-		options:                       []interface{}{getOptionIdMessages(), getOptionCallerSkip(), getOptionOutput(), getOptionTimeHidden()},
+		options:                       []interface{}{getOptionIDMessages(), getOptionCallerSkip(), getOptionOutput(), getOptionTimeHidden()},
 		details:                       []interface{}{"Bob", "Jane"},
 		expectedNew:                   `{"level":"INFO","text":"INFO: Bob works with Jane","id":"2001","details":[{"position":1,"type":"string","value":"Bob"},{"position":2,"type":"string","value":"Jane"}]}` + "\n",
 		expectedNewSenzingSdkLogger:   `{"level":"INFO","text":"INFO: Bob works with Jane","id":"senzing-99972001","details":[{"position":1,"type":"string","value":"Bob"},{"position":2,"type":"string","value":"Jane"}]}` + "\n",
@@ -58,7 +63,7 @@ var testCasesForMessage = []struct {
 	{
 		name:                          "logging-2002",
 		messageNumber:                 2002,
-		options:                       []interface{}{getOptionIdMessages(), getOptionCallerSkip(), getOptionOutput(), getOptionTimeHidden(), getOptionLogLevel("WARN")},
+		options:                       []interface{}{getOptionIDMessages(), getOptionCallerSkip(), getOptionOutput(), getOptionTimeHidden(), getOptionLogLevel("WARN")},
 		details:                       []interface{}{"Bob", "Jane"},
 		expectedNew:                   ``,
 		expectedNewSenzingSdkLogger:   ``,
@@ -67,7 +72,7 @@ var testCasesForMessage = []struct {
 	{
 		name:                          "logging-3001",
 		messageNumber:                 3001,
-		options:                       []interface{}{getOptionIdMessages(), getOptionCallerSkip(), getOptionOutput(), getOptionTimeHidden()},
+		options:                       []interface{}{getOptionIDMessages(), getOptionCallerSkip(), getOptionOutput(), getOptionTimeHidden()},
 		details:                       []interface{}{"Bob", "Jane"},
 		expectedNew:                   `{"level":"WARN","text":"WARN: Bob works with Jane","id":"3001","details":[{"position":1,"type":"string","value":"Bob"},{"position":2,"type":"string","value":"Jane"}]}` + "\n",
 		expectedNewSenzingSdkLogger:   `{"level":"WARN","text":"WARN: Bob works with Jane","id":"senzing-99973001","details":[{"position":1,"type":"string","value":"Bob"},{"position":2,"type":"string","value":"Jane"}]}` + "\n",
@@ -76,7 +81,7 @@ var testCasesForMessage = []struct {
 	{
 		name:                          "logging-3002",
 		messageNumber:                 3002,
-		options:                       []interface{}{getOptionIdMessages(), getOptionCallerSkip(), getOptionOutput(), getOptionTimeHidden(), getOptionLogLevel("ERROR")},
+		options:                       []interface{}{getOptionIDMessages(), getOptionCallerSkip(), getOptionOutput(), getOptionTimeHidden(), getOptionLogLevel("ERROR")},
 		details:                       []interface{}{"Bob", "Jane"},
 		expectedNew:                   ``,
 		expectedNewSenzingSdkLogger:   ``,
@@ -85,7 +90,7 @@ var testCasesForMessage = []struct {
 	{
 		name:                          "logging-4001",
 		messageNumber:                 4001,
-		options:                       []interface{}{getOptionIdMessages(), getOptionCallerSkip(), getOptionOutput(), getOptionTimeHidden()},
+		options:                       []interface{}{getOptionIDMessages(), getOptionCallerSkip(), getOptionOutput(), getOptionTimeHidden()},
 		details:                       []interface{}{"Bob", "Jane"},
 		expectedNew:                   `{"level":"ERROR","text":"ERROR: Bob works with Jane","id":"4001","details":[{"position":1,"type":"string","value":"Bob"},{"position":2,"type":"string","value":"Jane"}]}` + "\n",
 		expectedNewSenzingSdkLogger:   `{"level":"ERROR","text":"ERROR: Bob works with Jane","id":"senzing-99974001","details":[{"position":1,"type":"string","value":"Bob"},{"position":2,"type":"string","value":"Jane"}]}` + "\n",
@@ -94,7 +99,7 @@ var testCasesForMessage = []struct {
 	{
 		name:                          "logging-5001",
 		messageNumber:                 5001,
-		options:                       []interface{}{getOptionIdMessages(), getOptionCallerSkip(), getOptionOutput(), getOptionTimeHidden()},
+		options:                       []interface{}{getOptionIDMessages(), getOptionCallerSkip(), getOptionOutput(), getOptionTimeHidden()},
 		details:                       []interface{}{"Bob", "Jane"},
 		expectedNew:                   `{"level":"FATAL","text":"FATAL: Bob works with Jane","id":"5001","details":[{"position":1,"type":"string","value":"Bob"},{"position":2,"type":"string","value":"Jane"}]}` + "\n",
 		expectedNewSenzingSdkLogger:   `{"level":"FATAL","text":"FATAL: Bob works with Jane","id":"senzing-99975001","details":[{"position":1,"type":"string","value":"Bob"},{"position":2,"type":"string","value":"Jane"}]}` + "\n",
@@ -103,7 +108,7 @@ var testCasesForMessage = []struct {
 	{
 		name:                          "logging-6001",
 		messageNumber:                 6001,
-		options:                       []interface{}{getOptionIdMessages(), getOptionCallerSkip(), getOptionOutput(), getOptionTimeHidden()},
+		options:                       []interface{}{getOptionIDMessages(), getOptionCallerSkip(), getOptionOutput(), getOptionTimeHidden()},
 		details:                       []interface{}{"Bob", "Jane"},
 		expectedNew:                   `{"level":"PANIC","text":"PANIC: Bob works with Jane","id":"6001","details":[{"position":1,"type":"string","value":"Bob"},{"position":2,"type":"string","value":"Jane"}]}` + "\n",
 		expectedNewSenzingSdkLogger:   `{"level":"PANIC","text":"PANIC: Bob works with Jane","id":"senzing-99976001","details":[{"position":1,"type":"string","value":"Bob"},{"position":2,"type":"string","value":"Jane"}]}` + "\n",
@@ -249,8 +254,8 @@ var testCasesForIsXxxx = []struct {
 }
 
 var (
-	componentId  int           = 9997
-	outputString *bytes.Buffer = new(bytes.Buffer)
+	componentID  = 9997
+	outputString = new(bytes.Buffer) // *bytes.Buffer
 )
 
 // ----------------------------------------------------------------------------
@@ -272,12 +277,12 @@ func TestMain(m *testing.M) {
 }
 
 func setup() error {
-	var err error = nil
+	var err error
 	return err
 }
 
 func teardown() error {
-	var err error = nil
+	var err error
 	return err
 }
 
@@ -291,7 +296,7 @@ func getOptionCallerSkip() *OptionCallerSkip {
 	}
 }
 
-func getOptionIdMessages() *OptionIDMessages {
+func getOptionIDMessages() *OptionIDMessages {
 	return &OptionIDMessages{
 		Value: idMessagesTest,
 	}
@@ -315,17 +320,19 @@ func getOptionTimeHidden() *OptionTimeHidden {
 	}
 }
 
-func testError(test *testing.T, err error) {
-	if err != nil {
-		assert.Fail(test, err.Error())
-	}
-}
-
 // ----------------------------------------------------------------------------
 // Test interface functions
 // ----------------------------------------------------------------------------
 
-func TestLoggingImpl_IsValidLogLevelName(test *testing.T) {
+func TestBasicLogging_GetLogLevel(test *testing.T) {
+	loggerOptions := []interface{}{}
+	logger, err := NewSenzingToolsLogger(componentID, idMessagesTest, loggerOptions...)
+	require.NoError(test, err)
+	actual := logger.GetLogLevel()
+	assert.Equal(test, "INFO", actual)
+}
+
+func TestBasicLogging_IsValidLogLevelName(test *testing.T) {
 	for _, testCase := range testCasesForIsValidLogLevelName {
 		test.Run(testCase.name, func(test *testing.T) {
 			actual := IsValidLogLevelName(testCase.logLevelName)
@@ -334,11 +341,12 @@ func TestLoggingImpl_IsValidLogLevelName(test *testing.T) {
 	}
 }
 
-func TestLoggingImpl_IsXxxx(test *testing.T) {
+func TestBasicLogging_IsXxxx(test *testing.T) {
 	for _, testCase := range testCasesForIsXxxx {
 		test.Run(testCase.name, func(test *testing.T) {
 			testObject, _ := New()
-			testObject.SetLogLevel(testCase.logLevelName)
+			err := testObject.SetLogLevel(testCase.logLevelName)
+			require.NoError(test, err)
 			assert.Equal(test, testCase.expectedTrace, testObject.IsTrace(), testCase.name)
 			assert.Equal(test, testCase.expectedDebug, testObject.IsDebug(), testCase.name)
 			assert.Equal(test, testCase.expectedInfo, testObject.IsInfo(), testCase.name)
@@ -350,12 +358,20 @@ func TestLoggingImpl_IsXxxx(test *testing.T) {
 	}
 }
 
-func TestLoggingImpl_New(test *testing.T) {
+func TestBasicLogging_JSON(test *testing.T) {
+	loggerOptions := []interface{}{}
+	logger, err := NewSenzingToolsLogger(componentID, idMessagesTest, loggerOptions...)
+	require.NoError(test, err)
+	actual := logger.JSON(9999, "detail")
+	assert.Greater(test, len(actual), 0)
+}
+
+func TestBasicLogging_New(test *testing.T) {
 	outputString.Reset()
 	for _, testCase := range testCasesForMessage {
 		test.Run(testCase.name+"-New", func(test *testing.T) {
 			testObject, err := New(testCase.options...)
-			testError(test, err)
+			require.NoError(test, err)
 			testObject.Log(testCase.messageNumber, testCase.details...)
 			assert.Equal(test, testCase.expectedNew, outputString.String(), testCase.name)
 			outputString.Reset()
@@ -363,12 +379,12 @@ func TestLoggingImpl_New(test *testing.T) {
 	}
 }
 
-func TestLoggingImpl_NewSenzingToolsLogger(test *testing.T) {
+func TestBasicLogging_NewSenzingToolsLogger(test *testing.T) {
 	outputString.Reset()
 	for _, testCase := range testCasesForMessage {
 		test.Run(testCase.name+"-NewSenzingToolsLogger", func(test *testing.T) {
-			testObject, err := NewSenzingToolsLogger(componentId, idMessagesTest, testCase.options...)
-			testError(test, err)
+			testObject, err := NewSenzingToolsLogger(componentID, idMessagesTest, testCase.options...)
+			require.NoError(test, err)
 			testObject.Log(testCase.messageNumber, testCase.details...)
 			assert.Equal(test, testCase.expectedNewSenzingToolsLogger, outputString.String(), testCase.name)
 			outputString.Reset()
@@ -376,15 +392,67 @@ func TestLoggingImpl_NewSenzingToolsLogger(test *testing.T) {
 	}
 }
 
-func TestLoggingImpl_NewSenzingSdkLogger(test *testing.T) {
+func TestBasicLogging_NewSenzingSdkLogger(test *testing.T) {
 	outputString.Reset()
 	for _, testCase := range testCasesForMessage {
 		test.Run(testCase.name+"-NewSenzingSdkLogger", func(test *testing.T) {
-			testObject, err := NewSenzingSdkLogger(componentId, idMessagesTest, testCase.options...)
-			testError(test, err)
+			testObject, err := NewSenzingSdkLogger(componentID, idMessagesTest, testCase.options...)
+			require.NoError(test, err)
 			testObject.Log(testCase.messageNumber, testCase.details...)
 			assert.Equal(test, testCase.expectedNewSenzingSdkLogger, outputString.String(), testCase.name)
 			outputString.Reset()
 		})
 	}
+}
+
+func TestBasicLogging_NewError(test *testing.T) {
+	loggerOptions := []interface{}{getOptionIDMessages(), getOptionCallerSkip(), getOptionOutput(), getOptionTimeHidden()}
+	logger, err := NewSenzingToolsLogger(componentID, idMessagesTest, loggerOptions...)
+	require.NoError(test, err)
+	err = logger.NewError(4000, "A bad thing")
+	require.Error(test, err)
+}
+
+func TestBasicLogging_SetLogLevel_badLogLevelName(test *testing.T) {
+	loggerOptions := []interface{}{}
+	logger, err := NewSenzingToolsLogger(componentID, idMessagesTest, loggerOptions...)
+	require.NoError(test, err)
+	err = logger.SetLogLevel("BadLogLevelName")
+	require.Error(test, err)
+}
+
+// ----------------------------------------------------------------------------
+// Test private methods functions
+// ----------------------------------------------------------------------------
+
+func TestBasicLogging_initialize_badMessenger(test *testing.T) {
+	logger := &BasicLogging{
+		Ctx: context.TODO(),
+	}
+	assert.Panics(test, func() { logger.initialize() })
+}
+
+func TestBasicLogging_initialize_badLogger(test *testing.T) {
+	messenger, err := messenger.New()
+	require.NoError(test, err)
+	logger := &BasicLogging{
+		Ctx:       context.TODO(),
+		messenger: messenger,
+	}
+	assert.Panics(test, func() { logger.initialize() })
+}
+
+func TestBasicLogging_initialize_badLeveler(test *testing.T) {
+	messenger, err := messenger.New()
+	require.NoError(test, err)
+	var output io.Writer = os.Stderr
+	var slogLeveler = new(slog.LevelVar)
+	slogLeveler.Set(slog.LevelInfo)
+	sLogger := slog.New(slog.NewJSONHandler(output, SlogHandlerOptions(slogLeveler)))
+	logger := &BasicLogging{
+		Ctx:       context.TODO(),
+		logger:    sLogger,
+		messenger: messenger,
+	}
+	assert.Panics(test, func() { logger.initialize() })
 }
