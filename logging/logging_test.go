@@ -398,7 +398,7 @@ func TestBasicLogging_JSON(test *testing.T) {
 	logger, err := NewSenzingToolsLogger(componentID, idMessagesTest, loggerOptions...)
 	require.NoError(test, err)
 	actual := logger.JSON(9999, "detail")
-	assert.Greater(test, len(actual), 0)
+	assert.NotEmpty(test, len(actual))
 }
 
 func TestBasicLogging_NewError(test *testing.T) {
@@ -531,7 +531,7 @@ func TestBasicLogging_initialize_badLeveler(test *testing.T) {
 		logger:    sLogger,
 		messenger: messenger,
 	}
-	assert.Panics(test, func() { logger.initialize() })
+	assert.Panics(test, func() { _ = logger.initialize() })
 }
 
 func TestBasicLogging_initialize_badLogger(test *testing.T) {
@@ -541,12 +541,12 @@ func TestBasicLogging_initialize_badLogger(test *testing.T) {
 		Ctx:       context.TODO(),
 		messenger: messenger,
 	}
-	assert.Panics(test, func() { logger.initialize() })
+	assert.Panics(test, func() { _ = logger.initialize() })
 }
 
 func TestBasicLogging_initialize_badMessenger(test *testing.T) {
 	logger := &BasicLogging{
 		Ctx: context.TODO(),
 	}
-	assert.Panics(test, func() { logger.initialize() })
+	assert.Panics(test, func() { _ = logger.initialize() })
 }

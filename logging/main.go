@@ -273,9 +273,9 @@ func New(options ...interface{}) (Logging, error) {
 	// Create messenger.
 
 	messengerOptions := []interface{}{
-		&messenger.OptionIdMessages{Value: idMessages},
-		&messenger.OptionIdStatuses{Value: idStatuses},
-		&messenger.OptionMessageIdTemplate{Value: messageIDTemplate},
+		&messenger.OptionIDMessages{Value: idMessages},
+		&messenger.OptionIDStatuses{Value: idStatuses},
+		&messenger.OptionMessageIDTemplate{Value: messageIDTemplate},
 		&messenger.OptionCallerSkip{Value: callerSkip},
 	}
 

@@ -16,7 +16,7 @@ import (
 // BasicLogging is an type-struct for an implementation of the loggingInterface.
 type BasicLogging struct {
 	Ctx          context.Context // Not a preferred practice, but used to simplify Log() calls.
-	messenger    messenger.MessengerInterface
+	messenger    messenger.Interface
 	logger       *slog.Logger
 	leveler      *slog.LevelVar
 	logLevelName string
@@ -67,7 +67,7 @@ Output
   - error
 */
 func (loggingImpl *BasicLogging) NewError(messageNumber int, details ...interface{}) error {
-	return errors.New(loggingImpl.messenger.NewJson(messageNumber, details...))
+	return errors.New(loggingImpl.messenger.NewJSON(messageNumber, details...))
 }
 
 /*
@@ -176,7 +176,7 @@ Output
   - JSON string with message key/value pairs.
 */
 func (loggingImpl *BasicLogging) JSON(messageNumber int, details ...interface{}) string {
-	return loggingImpl.messenger.NewJson(messageNumber, details...)
+	return loggingImpl.messenger.NewJSON(messageNumber, details...)
 }
 
 /*
