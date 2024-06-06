@@ -35,6 +35,10 @@ type Logging interface {
 
 // --- Override values when creating messages ---------------------------------
 
+type MessageCode struct {
+	Value string
+}
+
 type MessageDetails struct {
 	Value interface{}
 }
@@ -55,12 +59,16 @@ type MessageLocation struct {
 	Value string
 }
 
+type MessageReason struct {
+	Value string
+}
+
 type MessageStatus struct {
 	Value string
 }
 
 type MessageText struct {
-	Value interface{}
+	Value string
 }
 
 type MessageTime struct {
@@ -73,6 +81,9 @@ type OptionCallerSkip struct {
 	Value int
 }
 
+type OptionComponentID struct {
+	Value int
+}
 type OptionIDMessages struct {
 	Value map[int]string
 }
@@ -85,12 +96,16 @@ type OptionLogLevel struct {
 	Value string
 }
 
-type OptionMessageIDTemplate struct {
+type OptionMessageField struct {
 	Value string
 }
 
-type OptionSenzingComponentID struct {
-	Value int
+type OptionMessageFields struct {
+	Value []string
+}
+
+type OptionMessageIDTemplate struct {
+	Value string
 }
 
 type OptionTimeHidden struct {
@@ -177,6 +192,9 @@ var TextToLevelMap = map[string]slog.Level{
 	LevelWarnName:  LevelWarnSlog,
 }
 
+// Order is important in AllMessageFields. Should match order in go-messaging/messenger/main.go's MessageFormat.
+var AllMessageFields = []string{"time", "id", "text", "code", "reason", "status", "duration", "location", "errors", "details"}
+
 // ----------------------------------------------------------------------------
 // Public functions
 // ----------------------------------------------------------------------------
@@ -214,51 +232,66 @@ func New(options ...interface{}) (Logging, error) {
 	// Default values.
 
 	var (
-		callerSkip                    = 0
-		idMessages                    = map[int]string{}
-		idStatuses                    = map[int]string{}
-		logLevel                      = LevelInfoName
-		messageIDTemplate             = "%d"
-		componentIdentifier           = 9999
+		callerSkip          = 0
+		componentIdentifier = 9999
+		idMessages          = map[int]string{}
+		idStatuses          = map[int]string{}
+		logLevel            = LevelInfoName
+		messageIDTemplate   = "%d"
+		messageFields       []string
 		output              io.Writer = os.Stderr
 	)
 
 	// Process options.
 
+	messengerOptions := []interface{}{}
 	for _, value := range options {
 		switch typedValue := value.(type) {
 		case *OptionCallerSkip:
 			callerSkip = typedValue.Value
+		case *OptionComponentID:
+			componentIdentifier = typedValue.Value
+			messageIDTemplate = fmt.Sprintf("senzing-%04d", componentIdentifier) + "%04d"
 		case *OptionIDMessages:
 			idMessages = typedValue.Value
 		case *OptionIDStatuses:
 			idStatuses = typedValue.Value
 		case *OptionLogLevel:
 			logLevel = typedValue.Value
+		case *OptionMessageField:
+			messengerOptions = append(messengerOptions, &messenger.OptionMessageField{Value: typedValue.Value})
+		case *OptionMessageFields:
+			messageFields = typedValue.Value
 		case *OptionMessageIDTemplate:
 			messageIDTemplate = typedValue.Value
 		case *OptionOutput:
 			output = typedValue.Value
-		case *OptionSenzingComponentID:
-			componentIdentifier = typedValue.Value
-			messageIDTemplate = fmt.Sprintf("senzing-%04d", componentIdentifier) + "%04d"
 		}
 	}
 
 	// Detect incorrect option values.
 
-	if componentIdentifier <= 0 || componentIdentifier >= 10000 {
+	if componentIdentifier <= 0 || componentIdentifier > 9999 {
 		err := errors.New("componentIdentifier must be in range 1..9999. See https://github.com/senzing-garage/knowledge-base/blob/main/lists/senzing-product-ids.md")
 		return result, err
 	}
 
-	if idMessages == nil {
-		err := errors.New("messages must be a map[int]string, not nil")
-		return result, err
+	// Construct options.
+
+	messengerOptions = append(messengerOptions, &messenger.OptionIDMessages{Value: idMessages})
+	messengerOptions = append(messengerOptions, &messenger.OptionIDStatuses{Value: idStatuses})
+	messengerOptions = append(messengerOptions, &messenger.OptionMessageIDTemplate{Value: messageIDTemplate})
+	if callerSkip != 0 {
+		messengerOptions = append(messengerOptions, &messenger.OptionCallerSkip{Value: callerSkip})
+	}
+	if messageFields != nil {
+		messengerOptions = append(messengerOptions, &messenger.OptionMessageFields{Value: messageFields})
 	}
 
-	if idStatuses == nil {
-		err := errors.New("statuses must be a map[int]string, not nil")
+	// Create messenger.
+
+	messenger, err := messenger.New(messengerOptions...)
+	if err != nil {
 		return result, err
 	}
 
@@ -269,20 +302,6 @@ func New(options ...interface{}) (Logging, error) {
 	}
 	var slogLeveler = new(slog.LevelVar)
 	slogLeveler.Set(slogLevel)
-
-	// Create messenger.
-
-	messengerOptions := []interface{}{
-		&messenger.OptionIDMessages{Value: idMessages},
-		&messenger.OptionIDStatuses{Value: idStatuses},
-		&messenger.OptionMessageIDTemplate{Value: messageIDTemplate},
-		&messenger.OptionCallerSkip{Value: callerSkip},
-	}
-
-	messenger, err := messenger.New(messengerOptions...)
-	if err != nil {
-		return result, err
-	}
 
 	// Create logger.
 
@@ -322,6 +341,7 @@ func NewSenzingLogger(messageIDTemplate string, idMessages map[int]string, optio
 	loggerOptions := []interface{}{
 		&OptionIDMessages{Value: idMessages},
 		&OptionMessageIDTemplate{Value: messageIDTemplate},
+		&OptionMessageFields{Value: []string{"id", "reason"}},
 	}
 	loggerOptions = append(loggerOptions, options...)
 	return New(loggerOptions...)
@@ -341,9 +361,12 @@ Output
   - error
 */
 func NewSenzingSdkLogger(componentID int, idMessages map[int]string, options ...interface{}) (Logging, error) {
+	optionMessageID := fmt.Sprintf("SZSDK%04d", componentID) + "%04d"
 	loggerOptions := []interface{}{
+		&OptionComponentID{Value: componentID},
 		&OptionIDMessages{Value: idMessages},
-		&OptionSenzingComponentID{Value: componentID},
+		&OptionMessageFields{Value: []string{"id", "reason"}},
+		&OptionMessageIDTemplate{Value: optionMessageID},
 	}
 	loggerOptions = append(loggerOptions, options...)
 	return New(loggerOptions...)
@@ -363,9 +386,12 @@ Output
   - error
 */
 func NewSenzingToolsLogger(componentID int, idMessages map[int]string, options ...interface{}) (Logging, error) {
+	optionMessageID := fmt.Sprintf("SZTL%04d", componentID) + "%04d"
 	loggerOptions := []interface{}{
+		&OptionComponentID{Value: componentID},
 		&OptionIDMessages{Value: idMessages},
-		&OptionSenzingComponentID{Value: componentID},
+		&OptionMessageFields{Value: []string{"id", "reason"}},
+		&OptionMessageIDTemplate{Value: optionMessageID},
 	}
 	loggerOptions = append(loggerOptions, options...)
 	return New(loggerOptions...)

@@ -4,6 +4,7 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"time"
 
 	"github.com/senzing-garage/go-messaging/messenger"
 	"golang.org/x/exp/slog"
@@ -16,40 +17,10 @@ import (
 // BasicLogging is an type-struct for an implementation of the loggingInterface.
 type BasicLogging struct {
 	Ctx          context.Context // Not a preferred practice, but used to simplify Log() calls.
-	messenger    messenger.Interface
+	messenger    messenger.Messenger
 	logger       *slog.Logger
 	leveler      *slog.LevelVar
 	logLevelName string
-}
-
-// ----------------------------------------------------------------------------
-// Private methods
-// ----------------------------------------------------------------------------
-
-func (loggingImpl *BasicLogging) initialize() error {
-	var err error
-
-	if loggingImpl.Ctx == nil {
-		loggingImpl.Ctx = context.Background()
-	}
-
-	if loggingImpl.messenger == nil {
-		panic("LoggingImpl.messenger is nil")
-	}
-
-	if loggingImpl.logger == nil {
-		panic("LoggingImpl.logger is nil")
-	}
-
-	if loggingImpl.leveler == nil {
-		panic("LoggingImpl.leveler is nil")
-	}
-
-	if loggingImpl.logLevelName == "" {
-		loggingImpl.logLevelName = LevelInfoName
-	}
-
-	return err
 }
 
 // ----------------------------------------------------------------------------
@@ -67,7 +38,8 @@ Output
   - error
 */
 func (loggingImpl *BasicLogging) NewError(messageNumber int, details ...interface{}) error {
-	return errors.New(loggingImpl.messenger.NewJSON(messageNumber, details...))
+	transformedDetails := transformDetails(details...)
+	return errors.New(loggingImpl.messenger.NewJSON(messageNumber, transformedDetails...))
 }
 
 /*
@@ -176,7 +148,8 @@ Output
   - JSON string with message key/value pairs.
 */
 func (loggingImpl *BasicLogging) JSON(messageNumber int, details ...interface{}) string {
-	return loggingImpl.messenger.NewJSON(messageNumber, details...)
+	transformedDetails := transformDetails(details...)
+	return loggingImpl.messenger.NewJSON(messageNumber, transformedDetails...)
 }
 
 /*
@@ -187,8 +160,10 @@ Input
   - details: Variadic arguments of any type to be added to the message.
 */
 func (loggingImpl *BasicLogging) Log(messageNumber int, details ...interface{}) {
-	message, logLevel, details := loggingImpl.messenger.NewSlogLevel(messageNumber, details...)
-	loggingImpl.logger.Log(loggingImpl.Ctx, logLevel, message, details...)
+	transformedDetails := transformDetails(details...)
+	message, logLevel, newDetails := loggingImpl.messenger.NewSlogLevel(messageNumber, transformedDetails...)
+	newTransformedDetails := transformDetails(newDetails...)
+	loggingImpl.logger.Log(loggingImpl.Ctx, logLevel, message, newTransformedDetails...)
 }
 
 /*
@@ -210,4 +185,71 @@ func (loggingImpl *BasicLogging) SetLogLevel(logLevelName string) error {
 	loggingImpl.leveler.Set(slogLevel)
 	loggingImpl.logLevelName = logLevelName
 	return err
+}
+
+// ----------------------------------------------------------------------------
+// Private methods
+// ----------------------------------------------------------------------------
+
+func (loggingImpl *BasicLogging) initialize() error {
+	var err error
+
+	if loggingImpl.Ctx == nil {
+		loggingImpl.Ctx = context.Background()
+	}
+
+	if loggingImpl.messenger == nil {
+		panic("LoggingImpl.messenger is nil")
+	}
+
+	if loggingImpl.logger == nil {
+		panic("LoggingImpl.logger is nil")
+	}
+
+	if loggingImpl.leveler == nil {
+		panic("LoggingImpl.leveler is nil")
+	}
+
+	if loggingImpl.logLevelName == "" {
+		loggingImpl.logLevelName = LevelInfoName
+	}
+
+	return err
+}
+
+// ----------------------------------------------------------------------------
+// Private methods
+// ----------------------------------------------------------------------------
+
+func transformDetails(details ...interface{}) []interface{} {
+	result := []interface{}{}
+	for _, value := range details {
+		switch typedValue := value.(type) {
+		case *MessageCode:
+			result = append(result, &messenger.MessageCode{Value: typedValue.Value})
+		case *MessageDuration:
+			result = append(result, &messenger.MessageDuration{Value: typedValue.Value})
+		case *MessageID:
+			result = append(result, &messenger.MessageID{Value: typedValue.Value})
+		case *MessageLevel:
+			result = append(result, &messenger.MessageID{Value: typedValue.Value})
+		case *MessageLocation:
+			result = append(result, &messenger.MessageLocation{Value: typedValue.Value})
+		case *MessageReason:
+			result = append(result, &messenger.MessageReason{Value: typedValue.Value})
+		case *MessageStatus:
+			result = append(result, &messenger.MessageStatus{Value: typedValue.Value})
+		case *MessageText:
+			result = append(result, &messenger.MessageText{Value: typedValue.Value})
+		case *MessageTime:
+			result = append(result, &messenger.MessageTime{Value: typedValue.Value})
+		case *OptionCallerSkip:
+			result = append(result, &messenger.OptionCallerSkip{Value: typedValue.Value})
+		case time.Duration:
+			result = append(result, &messenger.MessageDuration{Value: typedValue.Nanoseconds()})
+		default:
+			result = append(result, typedValue)
+		}
+	}
+	return result
 }

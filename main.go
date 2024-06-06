@@ -16,6 +16,9 @@ import (
 // ----------------------------------------------------------------------------
 
 var (
+	callerSkip = 3
+	err1       = errors.New("example error #1")
+	err2       = errors.New("example error #2")
 	idMessages = map[int]string{
 		0:    "TRACE has %s",
 		1000: "DEBUG has %s",
@@ -25,57 +28,24 @@ var (
 		5000: "FATAL has %s",
 		6000: "PANIC has %s",
 	}
-
 	idStatuses = map[int]string{
 		2000: "SUCCESS",
 		4000: "FAILURE",
 		6000: "DISASTER",
 	}
-	messageIDTemplate = "my-id-%04d"
-	callerSkip        = 3
+	messageReason           = &logging.MessageReason{Value: "The reason is..."}
+	optionCallerSkip        = &logging.OptionCallerSkip{Value: callerSkip}
+	optionIDMessages        = &logging.OptionIDMessages{Value: idMessages}
+	optionIDStatuses        = &logging.OptionIDStatuses{Value: idStatuses}
+	optionMessageID         = "my-id-%04d"
+	optionMessageIDTemplate = &logging.OptionMessageIDTemplate{Value: optionMessageID}
 )
-
-// ----------------------------------------------------------------------------
-// Internal functions
-// ----------------------------------------------------------------------------
-
-func printBanner(banner string) {
-	fmt.Printf("\n%s\n", strings.Repeat("-", 80))
-	fmt.Printf("-- %s\n", banner)
-	fmt.Printf("%s\n\n", strings.Repeat("-", 80))
-}
-
-func testError(err error) {
-	if err != nil {
-		fmt.Println(err)
-	}
-}
-
-func testLogger(banner string, logger logging.Logging) {
-	printBanner(banner)
-
-	// Create faux errors.
-
-	err1 := errors.New("example error #1")
-	err2 := errors.New("example error #2")
-
-	// Test logging.
-
-	logger.Log(0000, "TRACE level", err1, err2)
-	logger.Log(1000, "DEBUG level", err1, err2)
-	logger.Log(2000, "INFO level", err1, err2)
-	logger.Log(3000, "WARN level", err1, err2)
-	logger.Log(4000, "ERROR level", err1, err2)
-	logger.Log(5000, "FATAL level", err1, err2)
-	logger.Log(6000, "PANIC level", err1, err2)
-}
 
 // ----------------------------------------------------------------------------
 // Main
 // ----------------------------------------------------------------------------
 
 func main() {
-
 	// ------------------------------------------------------------------------
 	// Simple logger
 	// Message ids translate into log levels:
@@ -93,7 +63,7 @@ func main() {
 
 	logger1, err := logging.New()
 	testError(err)
-	logger1.Log(2001, "Hello World!")
+	logger1.Log(2001)
 	testLogger("Simple logger", logger1)
 
 	// ------------------------------------------------------------------------
@@ -101,33 +71,31 @@ func main() {
 	// ------------------------------------------------------------------------
 
 	loggerOptions2 := []interface{}{
-		&logging.OptionIDMessages{Value: idMessages},
-		&logging.OptionIDStatuses{Value: idStatuses},
-		&logging.OptionMessageIDTemplate{Value: messageIDTemplate},
-		&logging.OptionCallerSkip{Value: callerSkip},
+		optionIDMessages,
+		optionIDStatuses,
+		optionMessageIDTemplate,
+		optionCallerSkip,
+		&logging.OptionMessageFields{Value: []string{"id", "text", "reason"}},
 	}
 	logger2, err := logging.New(loggerOptions2...)
 	testError(err)
 	testLogger("Configured logger", logger2)
 
 	// ------------------------------------------------------------------------
-	// NewSenzingLogger - for use generally.
+	// NewSenzingSdkLogger - for use generally.
 	// ------------------------------------------------------------------------
 
-	logger3, err := logging.NewSenzingLogger("my-unique-%04d", idMessages)
+	logger3, err := logging.NewSenzingSdkLogger(9997, idMessages)
 	testError(err)
-	testLogger("NewSenzingLogger", logger3)
+	testLogger("SenzingSdkLogger", logger3)
 
 	// ------------------------------------------------------------------------
 	// NewSenzingToolsLogger - for use with senzing-tools commands.
 	// ------------------------------------------------------------------------
 
-	loggerOptions4 := []interface{}{
-		&logging.OptionCallerSkip{Value: callerSkip},
-	}
-	logger4, err := logging.NewSenzingToolsLogger(9998, idMessages, loggerOptions4...)
+	logger4, err := logging.NewSenzingToolsLogger(9998, idMessages)
 	testError(err)
-	testLogger("NewSenzingToolsLogger", logger4)
+	testLogger("SenzingToolsLogger", logger4)
 
 	// ------------------------------------------------------------------------
 	// README.md examples
@@ -168,7 +136,10 @@ func main() {
 
 	// logger6
 
-	logger6, _ := logging.New()
+	loggerOptions = []interface{}{
+		&logging.OptionMessageFields{Value: []string{"id", "details"}},
+	}
+	logger6, _ := logging.New(loggerOptions...)
 	logger6.Log(999, "TRACE level")
 	logger6.Log(1000, "DEBUG level")
 	logger6.Log(2000, "INFO  level")
@@ -182,6 +153,7 @@ func main() {
 	// logger7
 
 	loggerOptions7 := []interface{}{
+		&logging.OptionMessageFields{Value: []string{"id", "details"}},
 		&logging.OptionLogLevel{Value: "TRACE"},
 	}
 	logger7, _ := logging.New(loggerOptions7...)
@@ -198,6 +170,7 @@ func main() {
 	// logger8
 
 	loggerOptions8 := []interface{}{
+		&logging.OptionMessageFields{Value: []string{"id", "details"}},
 		&logging.OptionMessageIDTemplate{Value: "my-message-%04d"},
 	}
 	logger8, _ := logging.New(loggerOptions8...)
@@ -231,13 +204,56 @@ func main() {
 		6000: "A test of PANIC.",
 	}
 	loggerOptions9 := []interface{}{
+		&logging.OptionMessageFields{Value: []string{"id", "text"}},
 		&logging.OptionIDMessages{Value: idMessages},
 	}
 	logger9, _ := logging.New(loggerOptions9...)
 	logger9.Log(2004, "Robert Smith", 12345)
 
+	// logger10
+
 	err1 := errors.New("error #1")
 	err2 := errors.New("error #2")
-	logger9.Log(2005, err1, err2)
 
+	loggerOptions10 := []interface{}{
+		&logging.OptionMessageFields{Value: []string{"id", "details"}},
+		&logging.OptionIDMessages{Value: idMessages},
+	}
+	logger10, _ := logging.New(loggerOptions10...)
+	logger10.Log(2005, err1, err2)
+
+	// Epilog.
+
+	printBanner("Done")
+
+}
+
+// ----------------------------------------------------------------------------
+// Internal functions
+// ----------------------------------------------------------------------------
+
+func printBanner(banner string) {
+	fmt.Printf("\n%s\n", strings.Repeat("-", 80))
+	fmt.Printf("-- %s\n", banner)
+	fmt.Printf("%s\n\n", strings.Repeat("-", 80))
+}
+
+func testError(err error) {
+	if err != nil {
+		fmt.Println(err)
+	}
+}
+
+func testLogger(banner string, logger logging.Logging) {
+	printBanner(banner)
+
+	// Test logging.
+
+	logger.Log(0000, "TRACE level", messageReason, err1, err2)
+	logger.Log(1000, "DEBUG level", messageReason, err1, err2)
+	logger.Log(2000, "INFO level", messageReason, err1, err2)
+	logger.Log(3000, "WARN level", messageReason, err1, err2)
+	logger.Log(4000, "ERROR level", messageReason, err1, err2)
+	logger.Log(5000, "FATAL level", messageReason, err1, err2)
+	logger.Log(6000, "PANIC level", messageReason, err1, err2)
 }
