@@ -15,5 +15,3 @@ require (
 	github.com/rogpeppe/go-internal v1.10.0 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
 )
-
-replace github.com/senzing-garage/go-messaging v1.5.0 => /home/senzing/senzing-garage.git/go-messaging
