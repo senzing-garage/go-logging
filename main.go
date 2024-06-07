@@ -82,20 +82,12 @@ func main() {
 	testLogger("Configured logger", logger2)
 
 	// ------------------------------------------------------------------------
-	// NewSenzingSdkLogger - for use generally.
+	// NewSenzingLogger - for use with senzing-tools commands.
 	// ------------------------------------------------------------------------
 
-	logger3, err := logging.NewSenzingSdkLogger(9997, idMessages)
+	logger3, err := logging.NewSenzingLogger(9998, idMessages)
 	testError(err)
-	testLogger("SenzingSdkLogger", logger3)
-
-	// ------------------------------------------------------------------------
-	// NewSenzingToolsLogger - for use with senzing-tools commands.
-	// ------------------------------------------------------------------------
-
-	logger4, err := logging.NewSenzingToolsLogger(9998, idMessages)
-	testError(err)
-	testLogger("SenzingToolsLogger", logger4)
+	testLogger("SenzingLogger", logger3)
 
 	// ------------------------------------------------------------------------
 	// README.md examples
@@ -114,13 +106,13 @@ func main() {
 
 	// Logging options. See https://github.com/senzing-garage/go-logging/blob/main/logging/main.go
 
-	loggerOptions := []interface{}{
+	loggerOptions4 := []interface{}{
 		&logging.OptionCallerSkip{Value: callerSkip},
 	}
-	logger, err := logging.NewSenzingToolsLogger(ComponentID, IDMessages, loggerOptions...)
+	logger4, err := logging.NewSenzingLogger(ComponentID, IDMessages, loggerOptions4...)
 	testError(err)
-	logger.Log(2000, "Hello, world!")
-	err = logger.NewError(4000, "A bad thing")
+	logger4.Log(2000, "Hello, world!")
+	err = logger4.NewError(4000, "A bad thing")
 	fmt.Printf("The error: %v\n", err)
 
 	// ------------------------------------------------------------------------
@@ -136,10 +128,10 @@ func main() {
 
 	// logger6
 
-	loggerOptions = []interface{}{
+	loggerOptions6 := []interface{}{
 		&logging.OptionMessageFields{Value: []string{"id", "details"}},
 	}
-	logger6, _ := logging.New(loggerOptions...)
+	logger6, _ := logging.New(loggerOptions6...)
 	logger6.Log(999, "TRACE level")
 	logger6.Log(1000, "DEBUG level")
 	logger6.Log(2000, "INFO  level")
@@ -225,7 +217,6 @@ func main() {
 	// Epilog.
 
 	printBanner("Done")
-
 }
 
 // ----------------------------------------------------------------------------

@@ -18,13 +18,13 @@ func ExampleNew() {
 	// Output:
 }
 
-func ExampleNewSenzingToolsLogger() {
+func ExampleNewSenzingLogger() {
 	// For more information, visit https://github.com/senzing-garage/go-logging/blob/main/logging/logging_examples_test.go
 	componentID := 9999
 	idMessages := map[int]string{
 		2001: "My message",
 	}
-	logger, err := NewSenzingToolsLogger(componentID, idMessages)
+	logger, err := NewSenzingLogger(componentID, idMessages)
 	if err != nil {
 		fmt.Println(err)
 	}
@@ -203,13 +203,13 @@ func ExampleBasicLogging_Log_new() {
 	// Output:
 }
 
-func ExampleBasicLogging_Log_newSenzingToolsLogger() {
+func ExampleBasicLogging_Log_newSenzingLogger() {
 	// For more information, visit https://github.com/senzing-garage/go-logging/blob/main/logging/logging_examples_test.go
 	componentID := 9999
 	idMessages := map[int]string{
 		2001: "%s works with %s",
 	}
-	logger, err := NewSenzingToolsLogger(componentID, idMessages)
+	logger, err := NewSenzingLogger(componentID, idMessages)
 	if err != nil {
 		fmt.Println(err)
 	}

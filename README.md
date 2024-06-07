@@ -172,7 +172,7 @@ loggerOptions := []interface{}{
 }
 
 // Create a logger from a factory.
-logger, err := logging.NewSenzingToolsLogger(ComponentId, IdMessages, loggerOptions...)
+logger, err := logging.NewSenzingLogger(ComponentId, IdMessages, loggerOptions...)
 if err != nil {
     fmt.Println(err)
 }

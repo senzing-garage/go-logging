@@ -325,55 +325,7 @@ func New(options ...interface{}) (Logging, error) {
 }
 
 /*
-The NewSenzingLogger function creates a new instance of loggingInterface
-for the general use.
-
-Input
-  - idTemplate: A string with a "%04d" in it. Used to generate unique messages.  Example: "my-id-%04d"
-  - idMessage: A map of integer to string message templates.
-  - options: Variadic arguments listing the options (usually having type OptionXxxxx) used to configure the logger.
-
-Output
-  - A logger
-  - error
-*/
-func NewSenzingLogger(messageIDTemplate string, idMessages map[int]string, options ...interface{}) (Logging, error) {
-	loggerOptions := []interface{}{
-		&OptionIDMessages{Value: idMessages},
-		&OptionMessageIDTemplate{Value: messageIDTemplate},
-		&OptionMessageFields{Value: []string{"id", "reason"}},
-	}
-	loggerOptions = append(loggerOptions, options...)
-	return New(loggerOptions...)
-}
-
-/*
-The NewSenzingSdkLogger function creates a new instance of loggingInterface
-specifically for use with g2-sdk-go-* packages.
-
-Input
-  - componentId: See list at https://github.com/senzing-garage/knowledge-base/blob/main/lists/senzing-product-ids.md
-  - idMessage: A map of integer to string message templates.
-  - options: Variadic arguments listing the options (usually having type OptionXxxxx) used to configure the logger.
-
-Output
-  - A logger
-  - error
-*/
-func NewSenzingSdkLogger(componentID int, idMessages map[int]string, options ...interface{}) (Logging, error) {
-	optionMessageID := fmt.Sprintf("SZSDK%04d", componentID) + "%04d"
-	loggerOptions := []interface{}{
-		&OptionComponentID{Value: componentID},
-		&OptionIDMessages{Value: idMessages},
-		&OptionMessageFields{Value: []string{"id", "reason"}},
-		&OptionMessageIDTemplate{Value: optionMessageID},
-	}
-	loggerOptions = append(loggerOptions, options...)
-	return New(loggerOptions...)
-}
-
-/*
-The NewSenzingToolsLogger function creates a new instance of loggingInterface
+The NewSenzingLogger function creates a new instance of Logging
 specifically for use with senzing-tools.
 
 Input
@@ -385,7 +337,7 @@ Output
   - A logger
   - error
 */
-func NewSenzingToolsLogger(componentID int, idMessages map[int]string, options ...interface{}) (Logging, error) {
+func NewSenzingLogger(componentID int, idMessages map[int]string, options ...interface{}) (Logging, error) {
 	optionMessageID := fmt.Sprintf("SZTL%04d", componentID) + "%04d"
 	loggerOptions := []interface{}{
 		&OptionComponentID{Value: componentID},
