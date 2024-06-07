@@ -247,24 +247,24 @@ func New(options ...interface{}) (Logging, error) {
 	messengerOptions := []interface{}{}
 	for _, value := range options {
 		switch typedValue := value.(type) {
-		case *OptionCallerSkip:
+		case OptionCallerSkip:
 			callerSkip = typedValue.Value
-		case *OptionComponentID:
+		case OptionComponentID:
 			componentIdentifier = typedValue.Value
 			messageIDTemplate = fmt.Sprintf("senzing-%04d", componentIdentifier) + "%04d"
-		case *OptionIDMessages:
+		case OptionIDMessages:
 			idMessages = typedValue.Value
-		case *OptionIDStatuses:
+		case OptionIDStatuses:
 			idStatuses = typedValue.Value
-		case *OptionLogLevel:
+		case OptionLogLevel:
 			logLevel = typedValue.Value
-		case *OptionMessageField:
-			messengerOptions = append(messengerOptions, &messenger.OptionMessageField{Value: typedValue.Value})
-		case *OptionMessageFields:
+		case OptionMessageField:
+			messengerOptions = append(messengerOptions, messenger.OptionMessageField{Value: typedValue.Value})
+		case OptionMessageFields:
 			messageFields = typedValue.Value
-		case *OptionMessageIDTemplate:
+		case OptionMessageIDTemplate:
 			messageIDTemplate = typedValue.Value
-		case *OptionOutput:
+		case OptionOutput:
 			output = typedValue.Value
 		}
 	}
@@ -278,14 +278,14 @@ func New(options ...interface{}) (Logging, error) {
 
 	// Construct options.
 
-	messengerOptions = append(messengerOptions, &messenger.OptionIDMessages{Value: idMessages})
-	messengerOptions = append(messengerOptions, &messenger.OptionIDStatuses{Value: idStatuses})
-	messengerOptions = append(messengerOptions, &messenger.OptionMessageIDTemplate{Value: messageIDTemplate})
+	messengerOptions = append(messengerOptions, messenger.OptionIDMessages{Value: idMessages})
+	messengerOptions = append(messengerOptions, messenger.OptionIDStatuses{Value: idStatuses})
+	messengerOptions = append(messengerOptions, messenger.OptionMessageIDTemplate{Value: messageIDTemplate})
 	if callerSkip != 0 {
-		messengerOptions = append(messengerOptions, &messenger.OptionCallerSkip{Value: callerSkip})
+		messengerOptions = append(messengerOptions, messenger.OptionCallerSkip{Value: callerSkip})
 	}
 	if messageFields != nil {
-		messengerOptions = append(messengerOptions, &messenger.OptionMessageFields{Value: messageFields})
+		messengerOptions = append(messengerOptions, messenger.OptionMessageFields{Value: messageFields})
 	}
 
 	// Create messenger.
@@ -340,10 +340,10 @@ Output
 func NewSenzingLogger(componentID int, idMessages map[int]string, options ...interface{}) (Logging, error) {
 	optionMessageID := fmt.Sprintf("SZTL%04d", componentID) + "%04d"
 	loggerOptions := []interface{}{
-		&OptionComponentID{Value: componentID},
-		&OptionIDMessages{Value: idMessages},
-		&OptionMessageFields{Value: []string{"id", "reason"}},
-		&OptionMessageIDTemplate{Value: optionMessageID},
+		OptionComponentID{Value: componentID},
+		OptionIDMessages{Value: idMessages},
+		OptionMessageFields{Value: []string{"id", "reason"}},
+		OptionMessageIDTemplate{Value: optionMessageID},
 	}
 	loggerOptions = append(loggerOptions, options...)
 	return New(loggerOptions...)
@@ -368,7 +368,7 @@ func SlogHandlerOptions(leveler slog.Leveler, options ...interface{}) *slog.Hand
 
 	for _, value := range options {
 		switch typedValue := value.(type) {
-		case *OptionTimeHidden:
+		case OptionTimeHidden:
 			timeHidden = typedValue.Value
 		default:
 		}

@@ -33,12 +33,12 @@ var (
 		4000: "FAILURE",
 		6000: "DISASTER",
 	}
-	messageReason           = &logging.MessageReason{Value: "The reason is..."}
-	optionCallerSkip        = &logging.OptionCallerSkip{Value: callerSkip}
-	optionIDMessages        = &logging.OptionIDMessages{Value: idMessages}
-	optionIDStatuses        = &logging.OptionIDStatuses{Value: idStatuses}
+	messageReason           = logging.MessageReason{Value: "The reason is..."}
+	optionCallerSkip        = logging.OptionCallerSkip{Value: callerSkip}
+	optionIDMessages        = logging.OptionIDMessages{Value: idMessages}
+	optionIDStatuses        = logging.OptionIDStatuses{Value: idStatuses}
 	optionMessageID         = "my-id-%04d"
-	optionMessageIDTemplate = &logging.OptionMessageIDTemplate{Value: optionMessageID}
+	optionMessageIDTemplate = logging.OptionMessageIDTemplate{Value: optionMessageID}
 )
 
 // ----------------------------------------------------------------------------
@@ -75,7 +75,7 @@ func main() {
 		optionIDStatuses,
 		optionMessageIDTemplate,
 		optionCallerSkip,
-		&logging.OptionMessageFields{Value: []string{"id", "text", "reason"}},
+		logging.OptionMessageFields{Value: []string{"id", "text", "reason"}},
 	}
 	logger2, err := logging.New(loggerOptions2...)
 	testError(err)
@@ -107,7 +107,7 @@ func main() {
 	// Logging options. See https://github.com/senzing-garage/go-logging/blob/main/logging/main.go
 
 	loggerOptions4 := []interface{}{
-		&logging.OptionCallerSkip{Value: callerSkip},
+		logging.OptionCallerSkip{Value: callerSkip},
 	}
 	logger4, err := logging.NewSenzingLogger(ComponentID, IDMessages, loggerOptions4...)
 	testError(err)
@@ -129,7 +129,7 @@ func main() {
 	// logger6
 
 	loggerOptions6 := []interface{}{
-		&logging.OptionMessageFields{Value: []string{"id", "details"}},
+		logging.OptionMessageFields{Value: []string{"id", "details"}},
 	}
 	logger6, _ := logging.New(loggerOptions6...)
 	logger6.Log(999, "TRACE level")
@@ -145,8 +145,8 @@ func main() {
 	// logger7
 
 	loggerOptions7 := []interface{}{
-		&logging.OptionMessageFields{Value: []string{"id", "details"}},
-		&logging.OptionLogLevel{Value: "TRACE"},
+		logging.OptionMessageFields{Value: []string{"id", "details"}},
+		logging.OptionLogLevel{Value: "TRACE"},
 	}
 	logger7, _ := logging.New(loggerOptions7...)
 	logger7.Log(999, "TRACE level")
@@ -162,8 +162,8 @@ func main() {
 	// logger8
 
 	loggerOptions8 := []interface{}{
-		&logging.OptionMessageFields{Value: []string{"id", "details"}},
-		&logging.OptionMessageIDTemplate{Value: "my-message-%04d"},
+		logging.OptionMessageFields{Value: []string{"id", "details"}},
+		logging.OptionMessageIDTemplate{Value: "my-message-%04d"},
 	}
 	logger8, _ := logging.New(loggerOptions8...)
 	logger8.Log(2002, "A message")
@@ -196,8 +196,8 @@ func main() {
 		6000: "A test of PANIC.",
 	}
 	loggerOptions9 := []interface{}{
-		&logging.OptionMessageFields{Value: []string{"id", "text"}},
-		&logging.OptionIDMessages{Value: idMessages},
+		logging.OptionMessageFields{Value: []string{"id", "text"}},
+		logging.OptionIDMessages{Value: idMessages},
 	}
 	logger9, _ := logging.New(loggerOptions9...)
 	logger9.Log(2004, "Robert Smith", 12345)
@@ -208,8 +208,8 @@ func main() {
 	err2 := errors.New("error #2")
 
 	loggerOptions10 := []interface{}{
-		&logging.OptionMessageFields{Value: []string{"id", "details"}},
-		&logging.OptionIDMessages{Value: idMessages},
+		logging.OptionMessageFields{Value: []string{"id", "details"}},
+		logging.OptionIDMessages{Value: idMessages},
 	}
 	logger10, _ := logging.New(loggerOptions10...)
 	logger10.Log(2005, err1, err2)

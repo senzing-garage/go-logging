@@ -168,7 +168,7 @@ var (
 
 // Logging options. See https://github.com/senzing-garage/go-logging/blob/main/logging/main.go
 loggerOptions := []interface{}{
-    &logging.OptionCallerSkip{Value: callerSkip},
+    logging.OptionCallerSkip{Value: callerSkip},
 }
 
 // Create a logger from a factory.

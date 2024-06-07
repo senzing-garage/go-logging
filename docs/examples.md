@@ -64,8 +64,8 @@ Example:
 
 ```go
 loggerOptions := []interface{}{
-    &logging.OptionMessageFields{Value: []string{"id", "details"}},
-    &logging.OptionLogLevel{Value: "TRACE"},
+    logging.OptionMessageFields{Value: []string{"id", "details"}},
+    logging.OptionLogLevel{Value: "TRACE"},
 }
 logger, _ := logging.New(loggerOptions...)
 logger.Log(999,  "TRACE level")
@@ -108,7 +108,7 @@ Example:
 
 ```go
 loggerOptions := []interface{}{
-    &logging.OptionMessageIdTemplate{Value: "my-message-%04d"},
+    logging.OptionMessageIdTemplate{Value: "my-message-%04d"},
 }
 logger, _ = logging.New(loggerOptions...)
 logger.Log(2002, "A message")
@@ -212,8 +212,8 @@ idMessages := map[int]string{
  }
 
 loggerOptions := []interface{}{
-    &logging.OptionMessageFields{Value: []string{"id", "text"}},
-    &logging.OptionIdMessages{Value: idMessages},
+    logging.OptionMessageFields{Value: []string{"id", "text"}},
+    logging.OptionIdMessages{Value: idMessages},
 }
 logger, _ = logging.New(loggerOptions...)
 logger.Log(2004, "Robert Smith", 12345)
@@ -238,8 +238,8 @@ err1 := errors.New("error #1")
 err2 := errors.New("error #2")
 
 loggerOptions := []interface{}{
-    &logging.OptionMessageFields{Value: []string{"id", "details"}},
-    &logging.OptionIDMessages{Value: idMessages},
+    logging.OptionMessageFields{Value: []string{"id", "details"}},
+    logging.OptionIDMessages{Value: idMessages},
 }
 logger, _ := logging.New(loggerOptions...)
 logger.Log(2005, err1, err2)

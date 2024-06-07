@@ -116,15 +116,15 @@ var testCasesForMessage = []struct {
 		name:                     "logging-3005",
 		messageNumber:            3005,
 		options:                  []interface{}{getMessageFields(), getOptionIDMessages(), getOptionCallerSkip(), getOptionOutput(), getOptionTimeHidden()},
-		details:                  []interface{}{"Bob", "Jane", &MessageCode{Value: "Test Code"}, &MessageDuration{Value: 1234567}, &MessageID{Value: "3005-Test"}, &MessageLevel{Value: "ERROR"}, &MessageLocation{Value: "Test Location"}, &MessageReason{Value: "Test reason ..."}, &MessageStatus{Value: "Test-Status"}, &MessageText{Value: "Test text"}, &MessageTime{Value: time.Now()}, &OptionCallerSkip{Value: 3}, testDuration},
+		details:                  []interface{}{"Bob", "Jane", MessageCode{Value: "Test Code"}, MessageDuration{Value: 1234567}, MessageID{Value: "3005-Test"}, MessageLevel{Value: "ERROR"}, MessageLocation{Value: "Test Location"}, MessageReason{Value: "Test reason ..."}, MessageStatus{Value: "Test-Status"}, MessageText{Value: "Test text"}, MessageTime{Value: time.Now()}, OptionCallerSkip{Value: 3}, testDuration},
 		expectedNew:              `{"level":"WARN","text":"Test text","id":"ERROR","code":"Test Code","reason":"Test reason ...","status":"Test-Status","duration":10000,"location":"In func1() at logging_test.go:371","details":[{"position":1,"type":"string","value":"Bob"},{"position":2,"type":"string","value":"Jane"}]}` + "\n",
 		expectedNewSenzingLogger: `{"level":"WARN","text":"Test text","id":"ERROR","code":"Test Code","reason":"Test reason ...","status":"Test-Status","duration":10000,"location":"In func1() at logging_test.go:424","details":[{"position":1,"type":"string","value":"Bob"},{"position":2,"type":"string","value":"Jane"}]}` + "\n",
 	},
 	{
 		name:                     "logging-3006",
 		messageNumber:            3006,
-		options:                  []interface{}{&OptionMessageField{Value: "id"}, &OptionCallerSkip{Value: 3}, getOptionOutput(), getOptionTimeHidden()},
-		details:                  []interface{}{"Bob", "Jane", &MessageCode{Value: "Test Code"}, &MessageDuration{Value: 1234567}, &MessageID{Value: "3005-Test"}, &MessageLevel{Value: "ERROR"}, &MessageLocation{Value: "Test Location"}, &MessageReason{Value: "Test reason ..."}, &MessageStatus{Value: "Test-Status"}, &MessageText{Value: "Test text"}, &MessageTime{Value: time.Now()}, &OptionCallerSkip{Value: 3}, testDuration},
+		options:                  []interface{}{OptionMessageField{Value: "id"}, OptionCallerSkip{Value: 3}, getOptionOutput(), getOptionTimeHidden()},
+		details:                  []interface{}{"Bob", "Jane", MessageCode{Value: "Test Code"}, MessageDuration{Value: 1234567}, MessageID{Value: "3005-Test"}, MessageLevel{Value: "ERROR"}, MessageLocation{Value: "Test Location"}, MessageReason{Value: "Test reason ..."}, MessageStatus{Value: "Test-Status"}, MessageText{Value: "Test text"}, MessageTime{Value: time.Now()}, OptionCallerSkip{Value: 3}, testDuration},
 		expectedNew:              `{"level":"WARN","text":"Test text","id":"ERROR"}` + "\n",
 		expectedNewSenzingLogger: `{"level":"WARN","id":"ERROR","reason":"Test reason ..."}` + "\n",
 	},
@@ -377,7 +377,7 @@ func TestLogging_New(test *testing.T) {
 
 func TestLogging_New_badComponentIdentifier(test *testing.T) {
 	options := []interface{}{
-		&OptionComponentID{
+		OptionComponentID{
 			Value: badComponentIdentifier,
 		},
 	}
@@ -387,7 +387,7 @@ func TestLogging_New_badComponentIdentifier(test *testing.T) {
 
 func TestLogging_New_badIDMessages(test *testing.T) {
 	options := []interface{}{
-		&OptionIDMessages{
+		OptionIDMessages{
 			Value: badIDMessages,
 		},
 	}
@@ -397,7 +397,7 @@ func TestLogging_New_badIDMessages(test *testing.T) {
 
 func TestLogging_New_badIDStatuses(test *testing.T) {
 	options := []interface{}{
-		&OptionIDStatuses{
+		OptionIDStatuses{
 			Value: badIDStatuses,
 		},
 	}
@@ -407,7 +407,7 @@ func TestLogging_New_badIDStatuses(test *testing.T) {
 
 func TestLogging_New_badLogLevelName(test *testing.T) {
 	options := []interface{}{
-		&OptionLogLevel{
+		OptionLogLevel{
 			Value: badLogLevelName,
 		},
 	}
@@ -468,50 +468,50 @@ func TestBasicLogging_initialize_badMessenger(test *testing.T) {
 // Internal functions - names begin with lowercase letter
 // ----------------------------------------------------------------------------
 
-func getOptionCallerSkip() *OptionCallerSkip {
-	return &OptionCallerSkip{
+func getOptionCallerSkip() OptionCallerSkip {
+	return OptionCallerSkip{
 		Value: 0,
 	}
 }
 
-func getOptionIDMessages() *OptionIDMessages {
-	return &OptionIDMessages{
+func getOptionIDMessages() OptionIDMessages {
+	return OptionIDMessages{
 		Value: idMessagesTest,
 	}
 }
 
-func getOptionIDStatuses() *OptionIDStatuses {
-	return &OptionIDStatuses{
+func getOptionIDStatuses() OptionIDStatuses {
+	return OptionIDStatuses{
 		Value: idStatusesTest,
 	}
 }
 
-func getOptionIDTemplate() *OptionMessageIDTemplate {
-	return &OptionMessageIDTemplate{
+func getOptionIDTemplate() OptionMessageIDTemplate {
+	return OptionMessageIDTemplate{
 		Value: messageIDTemplate,
 	}
 }
 
-func getOptionLogLevel(logLevelName string) *OptionLogLevel {
-	return &OptionLogLevel{
+func getOptionLogLevel(logLevelName string) OptionLogLevel {
+	return OptionLogLevel{
 		Value: logLevelName,
 	}
 }
 
-func getMessageFields() *OptionMessageFields {
-	return &OptionMessageFields{
+func getMessageFields() OptionMessageFields {
+	return OptionMessageFields{
 		Value: AllMessageFields,
 	}
 }
 
-func getOptionOutput() *OptionOutput {
-	return &OptionOutput{
+func getOptionOutput() OptionOutput {
+	return OptionOutput{
 		Value: outputString,
 	}
 }
 
-func getOptionTimeHidden() *OptionTimeHidden {
-	return &OptionTimeHidden{
+func getOptionTimeHidden() OptionTimeHidden {
+	return OptionTimeHidden{
 		Value: true,
 	}
 }

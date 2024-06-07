@@ -225,28 +225,28 @@ func transformDetails(details ...interface{}) []interface{} {
 	result := []interface{}{}
 	for _, value := range details {
 		switch typedValue := value.(type) {
-		case *MessageCode:
-			result = append(result, &messenger.MessageCode{Value: typedValue.Value})
-		case *MessageDuration:
-			result = append(result, &messenger.MessageDuration{Value: typedValue.Value})
-		case *MessageID:
-			result = append(result, &messenger.MessageID{Value: typedValue.Value})
-		case *MessageLevel:
-			result = append(result, &messenger.MessageID{Value: typedValue.Value})
-		case *MessageLocation:
-			result = append(result, &messenger.MessageLocation{Value: typedValue.Value})
-		case *MessageReason:
-			result = append(result, &messenger.MessageReason{Value: typedValue.Value})
-		case *MessageStatus:
-			result = append(result, &messenger.MessageStatus{Value: typedValue.Value})
-		case *MessageText:
-			result = append(result, &messenger.MessageText{Value: typedValue.Value})
-		case *MessageTime:
-			result = append(result, &messenger.MessageTime{Value: typedValue.Value})
-		case *OptionCallerSkip:
-			result = append(result, &messenger.OptionCallerSkip{Value: typedValue.Value})
+		case MessageCode:
+			result = append(result, messenger.MessageCode{Value: typedValue.Value})
+		case MessageDuration:
+			result = append(result, messenger.MessageDuration{Value: typedValue.Value})
+		case MessageID:
+			result = append(result, messenger.MessageID{Value: typedValue.Value})
+		case MessageLevel:
+			result = append(result, messenger.MessageID{Value: typedValue.Value})
+		case MessageLocation:
+			result = append(result, messenger.MessageLocation{Value: typedValue.Value})
+		case MessageReason:
+			result = append(result, messenger.MessageReason{Value: typedValue.Value})
+		case MessageStatus:
+			result = append(result, messenger.MessageStatus{Value: typedValue.Value})
+		case MessageText:
+			result = append(result, messenger.MessageText{Value: typedValue.Value})
+		case MessageTime:
+			result = append(result, messenger.MessageTime{Value: typedValue.Value})
+		case OptionCallerSkip:
+			result = append(result, messenger.OptionCallerSkip{Value: typedValue.Value})
 		case time.Duration:
-			result = append(result, &messenger.MessageDuration{Value: typedValue.Nanoseconds()})
+			result = append(result, messenger.MessageDuration{Value: typedValue.Nanoseconds()})
 		default:
 			result = append(result, typedValue)
 		}
