@@ -3,7 +3,7 @@ module github.com/senzing-garage/go-logging
 go 1.21
 
 require (
-	github.com/senzing-garage/go-messaging v1.5.1-0.20240607213726-ebf77030814d
+	github.com/senzing-garage/go-messaging v1.5.1-0.20240610132047-0ce48867c5c8
 	github.com/stretchr/testify v1.9.0
 	golang.org/x/exp v0.0.0-20240604190554-fc45aab8b7f8
 )
