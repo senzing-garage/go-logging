@@ -21,7 +21,7 @@ logger.Log(2001, "A message")
 Output:
 
 ```json
-{"time":"YYYY-MM-DDThh:mm:ss.nnnnnnZ","level":"INFO","id":"2001","details":{"1":"A message"}}
+{"time":"YYYY-MM-DDThh:mm:ss.nnnnnnZ","level":"INFO","id":"2001"}
 ```
 
 ## Log level
@@ -47,13 +47,13 @@ logger.Log(8000, "undefined level")
 Output:
 
 ```json
- {"time":"YYYY-MM-DDThh:mm:ss.nnnnnnZ","level":"INFO","id":"2000","details":{"1":"INFO  level"}}
- {"time":"YYYY-MM-DDThh:mm:ss.nnnnnnZ","level":"WARN","id":"3000","details":{"1":"WARN  level"}}
- {"time":"YYYY-MM-DDThh:mm:ss.nnnnnnZ","level":"ERROR","id":"4000","details":{"1":"ERROR level"}}
- {"time":"YYYY-MM-DDThh:mm:ss.nnnnnnZ","level":"FATAL","id":"5000","details":{"1":"FATAL level"}}
- {"time":"YYYY-MM-DDThh:mm:ss.nnnnnnZ","level":"PANIC","id":"6000","details":{"1":"PANIC level"}}
- {"time":"YYYY-MM-DDThh:mm:ss.nnnnnnZ","level":"PANIC","id":"7000","details":{"1":"undefined level"}}
- {"time":"YYYY-MM-DDThh:mm:ss.nnnnnnZ","level":"PANIC","id":"8000","details":{"1":"undefined level"}}
+{"time":"YYYY-MM-DDThh:mm:ss.nnnnnnZ","level":"INFO","id":"2000","details":[{"position":1,"type":"string","value":"INFO  level"}]}
+{"time":"YYYY-MM-DDThh:mm:ss.nnnnnnZ","level":"WARN","id":"3000","details":[{"position":1,"type":"string","value":"WARN  level"}]}
+{"time":"YYYY-MM-DDThh:mm:ss.nnnnnnZ","level":"ERROR","id":"4000","details":[{"position":1,"type":"string","value":"ERROR level"}]}
+{"time":"YYYY-MM-DDThh:mm:ss.nnnnnnZ","level":"FATAL","id":"5000","details":[{"position":1,"type":"string","value":"FATAL level"}]}
+{"time":"YYYY-MM-DDThh:mm:ss.nnnnnnZ","level":"PANIC","id":"6000","details":[{"position":1,"type":"string","value":"PANIC level"}]}
+{"time":"YYYY-MM-DDThh:mm:ss.nnnnnnZ","level":"PANIC","id":"7000","details":[{"position":1,"type":"string","value":"undefined level"}]}
+{"time":"YYYY-MM-DDThh:mm:ss.nnnnnnZ","level":"PANIC","id":"8000","details":[{"position":1,"type":"string","value":"undefined level"}]}
  ```
 
 Notice that the TRACE and DEBUG messages were not logged.
@@ -64,12 +64,19 @@ Example:
 
 ```go
 loggerOptions := []interface{}{
-    &logging.OptionLogLevel{Value: "TRACE"},
+    logging.OptionMessageFields{Value: []string{"id", "details"}},
+    logging.OptionLogLevel{Value: "TRACE"},
 }
 logger, _ := logging.New(loggerOptions...)
-logger.Log(0999, "TRACE level")
+logger.Log(999,  "TRACE level")
 logger.Log(1000, "DEBUG level")
 logger.Log(2000, "INFO  level")
+logger.Log(3000, "WARN  level")
+logger.Log(4000, "ERROR level")
+logger.Log(5000, "FATAL level")
+logger.Log(6000, "PANIC level")
+logger.Log(7000, "undefined level")
+logger.Log(8000, "undefined level")
 ```
 
 Output:
@@ -78,6 +85,17 @@ Output:
  {"time":"YYYY-MM-DDThh:mm:ss.nnnnnnZ","level":"TRACE","id":"999","details":{"1":"TRACE level"}}
  {"time":"YYYY-MM-DDThh:mm:ss.nnnnnnZ","level":"DEBUG","id":"1000","details":{"1":"DEBUG level"}}
  {"time":"YYYY-MM-DDThh:mm:ss.nnnnnnZ","level":"INFO","id":"2000","details":{"1":"INFO  level"}}
+
+ {"time":"YYYY-MM-DDThh:mm:ss.nnnnnnZ","level":"TRACE","id":"999","details":[{"position":1,"type":"string","value":"TRACE level"}]}
+{"time":"YYYY-MM-DDThh:mm:ss.nnnnnnZ","level":"DEBUG","id":"1000","details":[{"position":1,"type":"string","value":"DEBUG level"}]}
+{"time":"YYYY-MM-DDThh:mm:ss.nnnnnnZ","level":"INFO","id":"2000","details":[{"position":1,"type":"string","value":"INFO  level"}]}
+{"time":"YYYY-MM-DDThh:mm:ss.nnnnnnZ","level":"WARN","id":"3000","details":[{"position":1,"type":"string","value":"WARN  level"}]}
+{"time":"YYYY-MM-DDThh:mm:ss.nnnnnnZ","level":"ERROR","id":"4000","details":[{"position":1,"type":"string","value":"ERROR level"}]}
+{"time":"YYYY-MM-DDThh:mm:ss.nnnnnnZ","level":"FATAL","id":"5000","details":[{"position":1,"type":"string","value":"FATAL level"}]}
+{"time":"YYYY-MM-DDThh:mm:ss.nnnnnnZ","level":"PANIC","id":"6000","details":[{"position":1,"type":"string","value":"PANIC level"}]}
+{"time":"YYYY-MM-DDThh:mm:ss.nnnnnnZ","level":"PANIC","id":"7000","details":[{"position":1,"type":"string","value":"undefined level"}]}
+{"time":"YYYY-MM-DDThh:mm:ss.nnnnnnZ","level":"PANIC","id":"8000","details":[{"position":1,"type":"string","value":"undefined level"}]}
+
 ```
 
 ## Customize the id field
@@ -90,7 +108,7 @@ Example:
 
 ```go
 loggerOptions := []interface{}{
-    &logging.OptionMessageIdTemplate{Value: "my-message-%04d"},
+    logging.OptionMessageIdTemplate{Value: "my-message-%04d"},
 }
 logger, _ = logging.New(loggerOptions...)
 logger.Log(2002, "A message")
@@ -99,7 +117,7 @@ logger.Log(2002, "A message")
 Output:
 
 ```json
- {"time":"YYYY-MM-DDThh:mm:ss.nnnnnnZ","level":"INFO","id":"my-message-2002","details":{"1":"A message"}}
+ {"time":"YYYY-MM-DDThh:mm:ss.nnnnnnZ","level":"INFO","id":"my-message-2002","details":[{"position":1,"type":"string","value":"A message"}]}
 ```
 
 ## Log additional information
@@ -127,7 +145,8 @@ logger.Log(2003, "Robert Smith", 12345, aMap, aStruct)
 Output:
 
 ```json
-{"time":"YYYY-MM-DDThh:mm:ss.nnnnnnZ","level":"INFO","id":"my-message-2003","details":{"1":"Robert Smith","2":12345,"3":"map[int]string{10:\"ten\", 20:\"twenty\"}","4":"struct { Name string; ID int }{Name:\"Robert Smith\", ID:123145}"}}
+
+{"time":"YYYY-MM-DDThh:mm:ss.nnnnnnZ","level":"INFO","id":"my-message-2003","details":[{"position":1,"type":"string","value":"Robert Smith"},{"position":2,"type":"integer","value":"12345","valueRaw":12345},{"position":3,"type":"map[int]string","value":"map[int]string{10:\"ten\", 20:\"twenty\"}","valueRaw":{"10":"ten","20":"twenty"}},{"position":4,"type":"struct { Name string; ID int }","value":"struct { Name string; ID int }{Name:\"Robert Smith\", ID:123145}","valueRaw":{"Name":"Robert Smith","ID":123145}}]}
  ```
 
 Output pretty printed:
@@ -137,12 +156,37 @@ Output pretty printed:
     "time": "YYYY-MM-DDThh:mm:ss.nnnnnnZ",
     "level": "INFO",
     "id": "my-message-2003",
-    "details": {
-        "1": "Robert Smith",
-        "2": 12345,
-        "3": "map[int]string{10:\"ten\", 20:\"twenty\"}",
-        "4": "struct { Name string; ID int }{Name:\"Robert Smith\", ID:123145}"
-    }
+    "details": [
+        {
+            "position": 1,
+            "type": "string",
+            "value": "Robert Smith"
+        },
+        {
+            "position": 2,
+            "type": "integer",
+            "value": "12345",
+            "valueRaw": 12345
+        },
+        {
+            "position": 3,
+            "type": "map[int]string",
+            "value": "map[int]string{10:\"ten\", 20:\"twenty\"}",
+            "valueRaw": {
+                "10": "ten",
+                "20": "twenty"
+            }
+        },
+        {
+            "position": 4,
+            "type": "struct { Name string; ID int }",
+            "value": "struct { Name string; ID int }{Name:\"Robert Smith\", ID:123145}",
+            "valueRaw": {
+                "Name": "Robert Smith",
+                "ID": 123145
+            }
+        }
+    ]
 }
 ```
 
@@ -168,7 +212,8 @@ idMessages := map[int]string{
  }
 
 loggerOptions := []interface{}{
-    &logging.OptionIdMessages{Value: idMessages},
+    logging.OptionMessageFields{Value: []string{"id", "text"}},
+    logging.OptionIdMessages{Value: idMessages},
 }
 logger, _ = logging.New(loggerOptions...)
 logger.Log(2004, "Robert Smith", 12345)
@@ -177,7 +222,7 @@ logger.Log(2004, "Robert Smith", 12345)
 Output:
 
 ```json
-{"time":"2023-07-06T19:38:32.350977388Z","level":"INFO","text":"The favorite number for Robert Smith is 12345.","id":"2004","details":{"1":"Robert Smith","2":12345}}
+{"time":"YYYY-MM-DDThh:mm:ss.nnnnnnZ","level":"INFO","text":"The favorite number for Robert Smith is 12345.","id":"2004"}
 ```
 
 Notice that the information used to build the formatted text still remains in the "details" map.
@@ -189,15 +234,21 @@ Go errors can also be logged.
 Example:
 
 ```go
- err1 := errors.New("error #1")
- err2 := errors.New("error #2")
- logger.Log(2005, err1, err2)
+err1 := errors.New("error #1")
+err2 := errors.New("error #2")
+
+loggerOptions := []interface{}{
+    logging.OptionMessageFields{Value: []string{"id", "details"}},
+    logging.OptionIDMessages{Value: idMessages},
+}
+logger, _ := logging.New(loggerOptions...)
+logger.Log(2005, err1, err2)
 ```
 
 Output:
 
 ```json
-{"time":"YYYY-MM-DDThh:mm:ss.nnnnnnZ","level":"INFO","id":"2005","errors":["error #1","error #2"]}
+{"time":"YYYY-MM-DDThh:mm:ss.nnnnnnZ","level":"INFO","id":"2005","details":[{"position":1,"type":"error","value":"error #1"},{"position":2,"type":"error","value":"error #2"}]}
 ```
 
 ## Guards
