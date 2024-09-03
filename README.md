@@ -21,6 +21,7 @@ upon Go's experimental `slog` package (<https://pkg.go.dev/golang.org/x/exp/slog
 [![go-test-windows.yaml Badge]][go-test-windows.yaml]
 
 [![golangci-lint.yaml Badge]][golangci-lint.yaml]
+
 ## Overview
 
 The Senzing `go-logging` packages use the message number to coordinate aspects of the log message such as

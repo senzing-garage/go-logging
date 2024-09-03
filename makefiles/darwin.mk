@@ -55,12 +55,12 @@ package-osarch-specific:
 
 .PHONY: run-osarch-specific
 run-osarch-specific:
-	@go run -exec macos_exec_dyld.sh main.go
+	@go run main.go
 
 
 .PHONY: setup-osarch-specific
 setup-osarch-specific:
-	$(info  No setup required.)
+	$(info No setup required.)
 
 
 .PHONY: test-osarch-specific

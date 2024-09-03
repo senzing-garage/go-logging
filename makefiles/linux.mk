@@ -48,6 +48,11 @@ hello-world-osarch-specific:
 	$(info Hello World, from linux.)
 
 
+.PHONY: package-osarch-specific
+package-osarch-specific:
+	$(info No packaging for linux.)
+
+
 .PHONY: run-osarch-specific
 run-osarch-specific:
 	@go run main.go
