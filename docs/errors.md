@@ -1,1 +1,1 @@
-## Errors
+# go-logging errors

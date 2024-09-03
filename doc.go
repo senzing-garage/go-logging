@@ -1,5 +1,5 @@
 /*
-The Senzing go-logging packages build a composable logging system
+Module go-logging builds a composable logging system
 that sits on top of Go's log package (https://pkg.go.dev/log).
 
 # Overview
