@@ -1,4 +1,4 @@
-# template-go
+# go-logging
 
 Placeholder for [GitHub pages].
 
