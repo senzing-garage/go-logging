@@ -1,3 +1,8 @@
+/*
+The [Logging] interface lists the methods available to a Logging object.
+
+For examples of use, see https://github.com/senzing-garage/go-logging/blob/main/logger/logger_test.go
+*/
 package logging
 
 import (

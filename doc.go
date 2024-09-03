@@ -37,7 +37,10 @@ Output:
 
 For examples, visit:
 
-- [Examples](https://github.com/senzing-garage/go-logging/blob/main/docs/examples.md)
-- [main.go](https://github.com/senzing-garage/go-logging/blob/main/main.go)
+  - [Examples] is a short tutorial on using go-logging
+  - [main.go] has a working Go program
+
+[Examples]: https://github.com/senzing-garage/go-logging/blob/main/docs/examples.md
+[main.go]: https://github.com/senzing-garage/go-logging/blob/main/main.go
 */
 package main

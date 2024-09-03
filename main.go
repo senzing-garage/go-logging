@@ -1,6 +1,3 @@
-/*
-go-logging/main.go implements examples.
-*/
 package main
 
 import (

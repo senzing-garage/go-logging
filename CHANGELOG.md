@@ -7,7 +7,7 @@ and this project adheres to [Semantic Versioning].
 
 ## [Unreleased]
 
-## [1.5.0] - 2024-06-10
+## [1.5.0] - 2024-09-03
 
 ### Changed in 1.5.0
 
@@ -202,7 +202,6 @@ and this project adheres to [Semantic Versioning].
 ### Added to 1.0.0
 
 - Initial implementation
-
 
 [Keep a Changelog]: https://keepachangelog.com/en/1.0.0/
 [markdownlint]: https://dlaa.me/markdownlint/
