@@ -1,12 +1,10 @@
 /*
-The logger package is a decorator over Go's log package.
-
-The LoggerDefault implementation  provides a layer over go's log to
+The [BasicLogger] implementation of the [Logger] interface
+provides a layer over go's log to
 add Trace, Debug, Info, Warn, Error, Fatal, and Panic levels.
+It also implements IsXxxx() functions that can be used as [guards].
 
-It also implements IsXxxx() functions
-that can be used as guards
-(https://en.wikipedia.org/wiki/Guard_(computer_science))
+[guards]: https://en.wikipedia.org/wiki/Guard_(computer_science)
 */
 package logger
 

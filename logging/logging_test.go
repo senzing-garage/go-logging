@@ -330,7 +330,7 @@ func TestBasicLogging_JSON(test *testing.T) {
 	logger, err := NewSenzingLogger(componentID, idMessagesTest, loggerOptions...)
 	require.NoError(test, err)
 	actual := logger.JSON(9999, "detail")
-	assert.NotEmpty(test, len(actual))
+	assert.NotEmpty(test, actual)
 }
 
 func TestBasicLogging_NewError(test *testing.T) {

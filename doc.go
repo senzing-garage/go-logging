@@ -1,5 +1,5 @@
 /*
-The Senzing go-logging packages build a composable logging system
+Module go-logging builds a composable logging system
 that sits on top of Go's log package (https://pkg.go.dev/log).
 
 # Overview
@@ -37,7 +37,10 @@ Output:
 
 For examples, visit:
 
-- [Examples](https://github.com/senzing-garage/go-logging/blob/main/docs/examples.md)
-- [main.go](https://github.com/senzing-garage/go-logging/blob/main/main.go)
+  - [Examples] is a short tutorial on using go-logging
+  - [main.go] has a working Go program
+
+[Examples]: https://github.com/senzing-garage/go-logging/blob/main/docs/examples.md
+[main.go]: https://github.com/senzing-garage/go-logging/blob/main/main.go
 */
 package main
