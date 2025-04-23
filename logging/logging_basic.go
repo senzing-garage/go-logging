@@ -3,9 +3,9 @@ package logging
 import (
 	"context"
 	"errors"
-	"fmt"
 	"time"
 
+	"github.com/senzing-garage/go-helpers/wraperror"
 	"github.com/senzing-garage/go-messaging/messenger"
 	"golang.org/x/exp/slog"
 )
@@ -16,7 +16,8 @@ import (
 
 // BasicLogging is an type-struct for an implementation of the loggingInterface.
 type BasicLogging struct {
-	Ctx          context.Context // Not a preferred practice, but used to simplify Log() calls.
+	// Using Ctx is not a preferred practice, but used to simplify Log() calls.
+	Ctx          context.Context //nolint
 	messenger    messenger.Messenger
 	logger       *slog.Logger
 	leveler      *slog.LevelVar
@@ -39,7 +40,7 @@ Output
 */
 func (loggingImpl *BasicLogging) NewError(messageNumber int, details ...interface{}) error {
 	transformedDetails := transformDetails(details...)
-	return errors.New(loggingImpl.messenger.NewJSON(messageNumber, transformedDetails...))
+	return errors.New(loggingImpl.messenger.NewJSON(messageNumber, transformedDetails...)) //nolint
 }
 
 /*
@@ -61,9 +62,11 @@ Output
 func (loggingImpl *BasicLogging) Is(logLevelName string) bool {
 	result := false
 	logLevel, ok := TextToLevelMap[logLevelName]
+
 	if ok {
 		result = loggingImpl.logger.Enabled(loggingImpl.Ctx, logLevel)
 	}
+
 	return result
 }
 
@@ -149,6 +152,7 @@ Output
 */
 func (loggingImpl *BasicLogging) JSON(messageNumber int, details ...interface{}) string {
 	transformedDetails := transformDetails(details...)
+
 	return loggingImpl.messenger.NewJSON(messageNumber, transformedDetails...)
 }
 
@@ -161,7 +165,10 @@ Input
 */
 func (loggingImpl *BasicLogging) Log(messageNumber int, details ...interface{}) {
 	transformedDetails := transformDetails(details...)
-	message, logLevel, newDetails := loggingImpl.messenger.NewSlogLevel(messageNumber, transformedDetails...)
+	message, logLevel, newDetails := loggingImpl.messenger.NewSlogLevel(
+		messageNumber,
+		transformedDetails...,
+	)
 	newTransformedDetails := transformDetails(newDetails...)
 	loggingImpl.logger.Log(loggingImpl.Ctx, logLevel, message, newTransformedDetails...)
 }
@@ -177,13 +184,20 @@ Output
 */
 func (loggingImpl *BasicLogging) SetLogLevel(logLevelName string) error {
 	var err error
+
 	slogLevel, ok := TextToLevelMap[logLevelName]
 	if !ok {
-		err := fmt.Errorf("unknown error level: %s", logLevelName)
-		return err
+		return wraperror.Errorf(
+			errLogging,
+			"unknown error level: %s error: %w",
+			logLevelName,
+			errLogging,
+		)
 	}
+
 	loggingImpl.leveler.Set(slogLevel)
 	loggingImpl.logLevelName = logLevelName
+
 	return err
 }
 
@@ -191,9 +205,7 @@ func (loggingImpl *BasicLogging) SetLogLevel(logLevelName string) error {
 // Private methods
 // ----------------------------------------------------------------------------
 
-func (loggingImpl *BasicLogging) initialize() error {
-	var err error
-
+func (loggingImpl *BasicLogging) initialize() {
 	if loggingImpl.Ctx == nil {
 		loggingImpl.Ctx = context.Background()
 	}
@@ -213,8 +225,6 @@ func (loggingImpl *BasicLogging) initialize() error {
 	if loggingImpl.logLevelName == "" {
 		loggingImpl.logLevelName = LevelInfoName
 	}
-
-	return err
 }
 
 // ----------------------------------------------------------------------------
@@ -223,6 +233,7 @@ func (loggingImpl *BasicLogging) initialize() error {
 
 func transformDetails(details ...interface{}) []interface{} {
 	result := []interface{}{}
+
 	for _, value := range details {
 		switch typedValue := value.(type) {
 		case MessageCode:
@@ -251,5 +262,6 @@ func transformDetails(details ...interface{}) []interface{} {
 			result = append(result, typedValue)
 		}
 	}
+
 	return result
 }

@@ -34,26 +34,6 @@ type BasicLogger struct {
 }
 
 // ----------------------------------------------------------------------------
-// Internal methods
-// ----------------------------------------------------------------------------
-
-func (logger *BasicLogger) printf(debugLevelName string, format string, v ...interface{}) Logger {
-	_ = debugLevelName
-	var message string
-	calldepth := 3
-	if format == noFormat {
-		message = fmt.Sprint(v...)
-	} else {
-		message = fmt.Sprintf(format, v...)
-	}
-	err := log.Output(calldepth, message)
-	if err != nil {
-		panic(err)
-	}
-	return loggerInstance
-}
-
-// ----------------------------------------------------------------------------
 // Interface methods
 // ----------------------------------------------------------------------------
 
@@ -62,6 +42,7 @@ func (logger *BasicLogger) Debug(v ...interface{}) Logger {
 	if logger.isDebug {
 		logger.printf(LevelDebugName, noFormat, v...)
 	}
+
 	return logger
 }
 
@@ -70,6 +51,7 @@ func (logger *BasicLogger) Debugf(format string, v ...interface{}) Logger {
 	if logger.isDebug {
 		logger.printf(LevelDebugName, format, v...)
 	}
+
 	return logger
 }
 
@@ -78,6 +60,7 @@ func (logger *BasicLogger) Error(v ...interface{}) Logger {
 	if logger.isError {
 		logger.printf(LevelErrorName, noFormat, v...)
 	}
+
 	return logger
 }
 
@@ -86,6 +69,7 @@ func (logger *BasicLogger) Errorf(format string, v ...interface{}) Logger {
 	if logger.isError {
 		logger.printf(LevelErrorName, format, v...)
 	}
+
 	return logger
 }
 
@@ -95,6 +79,7 @@ func (logger *BasicLogger) Fatal(v ...interface{}) Logger {
 		logger.printf(LevelFatalName, noFormat, v...)
 		log.Fatal("")
 	}
+
 	return logger
 }
 
@@ -104,6 +89,7 @@ func (logger *BasicLogger) Fatalf(format string, v ...interface{}) Logger {
 		logger.printf(LevelFatalName, format, v...)
 		log.Fatal("")
 	}
+
 	return logger
 }
 
@@ -122,6 +108,7 @@ func (logger *BasicLogger) Info(v ...interface{}) Logger {
 	if logger.isInfo {
 		logger.printf(LevelInfoName, noFormat, v...)
 	}
+
 	return logger
 }
 
@@ -130,6 +117,7 @@ func (logger *BasicLogger) Infof(format string, v ...interface{}) Logger {
 	if logger.isInfo {
 		logger.printf(LevelInfoName, format, v...)
 	}
+
 	return logger
 }
 
@@ -174,6 +162,7 @@ func (logger *BasicLogger) Panic(v ...interface{}) Logger {
 		logger.printf(LevelPanicName, noFormat, v...)
 		log.Panic("")
 	}
+
 	return logger
 }
 
@@ -183,6 +172,7 @@ func (logger *BasicLogger) Panicf(format string, v ...interface{}) Logger {
 		logger.printf(LevelPanicName, format, v...)
 		log.Panic("")
 	}
+
 	return logger
 }
 
@@ -196,17 +186,21 @@ func (logger *BasicLogger) SetLogLevel(level Level) Logger {
 	logger.isInfo = level <= LevelInfo
 	logger.isDebug = level <= LevelDebug
 	logger.isTrace = level <= LevelTrace
+
 	return logger
 }
 
 // SetLogLevelFromString() sets the logger instance logging level using a string representation.
 func (logger *BasicLogger) SetLogLevelFromString(levelString string) Logger {
 	upperLevelString := strings.ToUpper(levelString)
+
 	level, ok := TextToLevelMap[upperLevelString]
 	if !ok {
 		level = LevelPanic
 	}
+
 	logger.SetLogLevel(level)
+
 	return logger
 }
 
@@ -215,6 +209,7 @@ func (logger *BasicLogger) Trace(v ...interface{}) Logger {
 	if logger.isTrace {
 		logger.printf(LevelTraceName, noFormat, v...)
 	}
+
 	return logger
 }
 
@@ -223,6 +218,7 @@ func (logger *BasicLogger) Tracef(format string, v ...interface{}) Logger {
 	if logger.isTrace {
 		logger.printf(LevelTraceName, format, v...)
 	}
+
 	return logger
 }
 
@@ -231,6 +227,7 @@ func (logger *BasicLogger) Warn(v ...interface{}) Logger {
 	if logger.isWarn {
 		logger.printf(LevelWarnName, noFormat, v...)
 	}
+
 	return logger
 }
 
@@ -239,5 +236,32 @@ func (logger *BasicLogger) Warnf(format string, v ...interface{}) Logger {
 	if logger.isWarn {
 		logger.printf(LevelWarnName, format, v...)
 	}
+
 	return logger
+}
+
+// ----------------------------------------------------------------------------
+// Internal methods
+// ----------------------------------------------------------------------------
+
+func (logger *BasicLogger) printf(
+	debugLevelName string,
+	format string,
+	messages ...interface{},
+) {
+	var message string
+
+	_ = debugLevelName
+	calldepth := 3
+
+	if format == noFormat {
+		message = fmt.Sprint(messages...)
+	} else {
+		message = fmt.Sprintf(format, messages...)
+	}
+
+	err := log.Output(calldepth, message)
+	if err != nil {
+		panic(err)
+	}
 }

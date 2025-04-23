@@ -1,15 +1,18 @@
-package logger
+package logger_test
 
 import (
 	"testing"
 	"time"
 
+	"github.com/senzing-garage/go-logging/logger"
+	"github.com/senzing-garage/go-logging/logging"
 	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
 )
 
-var testCases = []struct {
+var testCases = []struct { //nolint
 	name          string
-	logLevel      Level
+	logLevel      logger.Level
 	logLevelName  string
 	expectedTrace bool
 	expectedDebug bool
@@ -21,8 +24,8 @@ var testCases = []struct {
 }{
 	{
 		name:          "Test case: #1 - Trace",
-		logLevel:      LevelTrace,
-		logLevelName:  LevelTraceName,
+		logLevel:      logger.LevelTrace,
+		logLevelName:  logger.LevelTraceName,
 		expectedTrace: true,
 		expectedDebug: true,
 		expectedInfo:  true,
@@ -33,8 +36,8 @@ var testCases = []struct {
 	},
 	{
 		name:          "Test case: #2 - Debug",
-		logLevel:      LevelDebug,
-		logLevelName:  LevelDebugName,
+		logLevel:      logger.LevelDebug,
+		logLevelName:  logger.LevelDebugName,
 		expectedTrace: false,
 		expectedDebug: true,
 		expectedInfo:  true,
@@ -45,8 +48,8 @@ var testCases = []struct {
 	},
 	{
 		name:          "Test case: #3 - Info",
-		logLevel:      LevelInfo,
-		logLevelName:  LevelInfoName,
+		logLevel:      logger.LevelInfo,
+		logLevelName:  logger.LevelInfoName,
 		expectedTrace: false,
 		expectedDebug: false,
 		expectedInfo:  true,
@@ -57,8 +60,8 @@ var testCases = []struct {
 	},
 	{
 		name:          "Test case: #4 - Warn",
-		logLevel:      LevelWarn,
-		logLevelName:  LevelWarnName,
+		logLevel:      logger.LevelWarn,
+		logLevelName:  logger.LevelWarnName,
 		expectedTrace: false,
 		expectedDebug: false,
 		expectedInfo:  false,
@@ -69,8 +72,8 @@ var testCases = []struct {
 	},
 	{
 		name:          "Test case: #5 - Error",
-		logLevel:      LevelError,
-		logLevelName:  LevelErrorName,
+		logLevel:      logger.LevelError,
+		logLevelName:  logger.LevelErrorName,
 		expectedTrace: false,
 		expectedDebug: false,
 		expectedInfo:  false,
@@ -81,8 +84,8 @@ var testCases = []struct {
 	},
 	{
 		name:          "Test case: #6 - Fatal",
-		logLevel:      LevelFatal,
-		logLevelName:  LevelFatalName,
+		logLevel:      logger.LevelFatal,
+		logLevelName:  logger.LevelFatalName,
 		expectedTrace: false,
 		expectedDebug: false,
 		expectedInfo:  false,
@@ -93,8 +96,8 @@ var testCases = []struct {
 	},
 	{
 		name:          "Test case: #7 - Panic",
-		logLevel:      LevelPanic,
-		logLevelName:  LevelPanicName,
+		logLevel:      logger.LevelPanic,
+		logLevelName:  logger.LevelPanicName,
 		expectedTrace: false,
 		expectedDebug: false,
 		expectedInfo:  false,
@@ -110,22 +113,24 @@ var testCases = []struct {
 // ----------------------------------------------------------------------------
 
 func TestLevels(test *testing.T) {
-	assert.Less(test, LevelTrace, LevelDebug, "Trace")
-	assert.Less(test, LevelDebug, LevelInfo, "Debug")
-	assert.Less(test, LevelInfo, LevelWarn, "Info")
-	assert.Less(test, LevelWarn, LevelError, "Warn")
-	assert.Less(test, LevelError, LevelFatal, "Error")
-	assert.Less(test, LevelFatal, LevelPanic, "Fatal")
+	test.Parallel()
+	assert.Less(test, logger.LevelTrace, logger.LevelDebug, "Trace")
+	assert.Less(test, logger.LevelDebug, logger.LevelInfo, "Debug")
+	assert.Less(test, logger.LevelInfo, logger.LevelWarn, "Info")
+	assert.Less(test, logger.LevelWarn, logger.LevelError, "Warn")
+	assert.Less(test, logger.LevelError, logger.LevelFatal, "Error")
+	assert.Less(test, logger.LevelFatal, logger.LevelPanic, "Fatal")
 }
 
 // -- SetLogLevel -------------------------------------------------------------
 
 func TestSetLevel(test *testing.T) {
-	_ = test
+	test.Parallel()
+
 	for _, testCase := range testCases {
 		test.Run(testCase.name, func(test *testing.T) {
-			_ = test
-			SetLogLevel(testCase.logLevel)
+			test.Parallel()
+			logger.SetLogLevel(testCase.logLevel)
 		})
 	}
 }
@@ -133,27 +138,35 @@ func TestSetLevel(test *testing.T) {
 // -- SetLogLevelFromString ---------------------------------------------------
 
 func TestSetLogLevelFromString(test *testing.T) {
+	test.Parallel()
+
 	for _, testCase := range testCases {
 		test.Run(testCase.name, func(test *testing.T) {
-			SetLogLevelFromString(testCase.logLevelName)
-			assert.Equal(test, testCase.logLevel, GetLogLevel(), testCase.name)
+			test.Parallel()
+			logger.SetLogLevelFromString(testCase.logLevelName)
+			assert.Equal(test, testCase.logLevel, logger.GetLogLevel(), testCase.name)
 		})
 	}
 }
 
 func TestSetLogLevelFromStringBadString(test *testing.T) {
+	test.Parallel()
+
 	levelString := "Bad-Level-String"
-	SetLogLevelFromString(levelString)
-	assert.Equal(test, LevelPanic, GetLogLevel(), "Unknown string returns Panic")
+	logger.SetLogLevelFromString(levelString)
+	assert.Equal(test, logger.LevelPanic, logger.GetLogLevel(), "Unknown string returns Panic")
 }
 
 // -- GetLogLevel -------------------------------------------------------------
 
 func TestGetLogLevel(test *testing.T) {
+	test.Parallel()
+
 	for _, testCase := range testCases {
 		test.Run(testCase.name, func(test *testing.T) {
-			SetLogLevel(testCase.logLevel)
-			assert.Equal(test, testCase.logLevel, GetLogLevel(), testCase.name)
+			test.Parallel()
+			logger.SetLogLevel(testCase.logLevel)
+			assert.Equal(test, testCase.logLevel, logger.GetLogLevel(), testCase.name)
 		})
 	}
 }
@@ -161,10 +174,13 @@ func TestGetLogLevel(test *testing.T) {
 // -- GetLogLevelAsString -----------------------------------------------------
 
 func TestGetLogLevelAsString(test *testing.T) {
+	test.Parallel()
+
 	for _, testCase := range testCases {
 		test.Run(testCase.name, func(test *testing.T) {
-			SetLogLevel(testCase.logLevel)
-			assert.Equal(test, testCase.logLevelName, GetLogLevelAsString(), testCase.name)
+			test.Parallel()
+			logger.SetLogLevel(testCase.logLevel)
+			assert.Equal(test, testCase.logLevelName, logger.GetLogLevelAsString(), testCase.name)
 		})
 	}
 }
@@ -172,17 +188,24 @@ func TestGetLogLevelAsString(test *testing.T) {
 // -- IsXxxxx -----------------------------------------------------------------
 
 func TestIsXxxx(test *testing.T) {
+	test.Parallel()
+
 	for _, testCase := range testCases {
 		test.Run(testCase.name, func(test *testing.T) {
-			SetLogLevel(testCase.logLevel)
-			assert.Equal(test, testCase.logLevelName, GetLogLevelAsString(), testCase.name)
-			assert.Equal(test, testCase.expectedTrace, IsTrace(), "Trace")
-			assert.Equal(test, testCase.expectedDebug, IsDebug(), "Debug")
-			assert.Equal(test, testCase.expectedInfo, IsInfo(), "Info")
-			assert.Equal(test, testCase.expectedWarn, IsWarn(), "Warn")
-			assert.Equal(test, testCase.expectedError, IsError(), "Error")
-			assert.Equal(test, testCase.expectedFatal, IsFatal(), "Fatal")
-			assert.Equal(test, testCase.expectedPanic, IsPanic(), "Panic")
+			test.Parallel()
+
+			logger, err := logging.New()
+			require.NoError(test, err)
+			err = logger.SetLogLevel(testCase.logLevelName)
+			require.NoError(test, err)
+			assert.Equal(test, testCase.logLevelName, logger.GetLogLevel(), testCase.name)
+			assert.Equal(test, testCase.expectedTrace, logger.IsTrace(), "Trace")
+			assert.Equal(test, testCase.expectedDebug, logger.IsDebug(), "Debug")
+			assert.Equal(test, testCase.expectedInfo, logger.IsInfo(), "Info")
+			assert.Equal(test, testCase.expectedWarn, logger.IsWarn(), "Warn")
+			assert.Equal(test, testCase.expectedError, logger.IsError(), "Error")
+			assert.Equal(test, testCase.expectedFatal, logger.IsFatal(), "Fatal")
+			assert.Equal(test, testCase.expectedPanic, logger.IsPanic(), "Panic")
 		})
 	}
 }
@@ -190,65 +213,78 @@ func TestIsXxxx(test *testing.T) {
 // -- Error -------------------------------------------------------------------
 
 func TestError(test *testing.T) {
-	SetLogLevel(LevelError)
-	assert.NotZero(test, Error("test"), "string")
-	assert.NotZero(test, Errorf("test %s", "something"), "format")
+	test.Parallel()
+	logger.SetLogLevel(logger.LevelError)
+	assert.NotZero(test, logger.Error("test"), "string")
+	assert.NotZero(test, logger.Errorf("test %s", "something"), "format")
 }
 
 // -- Trace -------------------------------------------------------------------
 
 func TestTrace(test *testing.T) {
-	SetLogLevel(LevelTrace)
-	assert.NotZero(test, Trace("test"), "string")
-	assert.NotZero(test, Tracef("test %s", "something"), "format")
+	test.Parallel()
+	logger.SetLogLevel(logger.LevelTrace)
+	assert.NotZero(test, logger.Trace("test"), "string")
+	assert.NotZero(test, logger.Tracef("test %s", "something"), "format")
 }
 
 // -- Debug -------------------------------------------------------------------
 
 func TestDebug(test *testing.T) {
-	SetLogLevel(LevelDebug)
-	assert.NotZero(test, Debug("test"), "string")
-	assert.NotZero(test, Debugf("test %s", "something"), "format")
+	test.Parallel()
+	logger.SetLogLevel(logger.LevelDebug)
+	assert.NotZero(test, logger.Debug("test"), "string")
+	assert.NotZero(test, logger.Debugf("test %s", "something"), "format")
 }
 
 // -- Info --------------------------------------------------------------------
 
 func TestInfo(test *testing.T) {
-	SetLogLevel(LevelInfo)
-	assert.NotZero(test, Info("test"), "string")
-	assert.NotZero(test, Infof("test %s", "something"), "format")
+	test.Parallel()
+	logger.SetLogLevel(logger.LevelInfo)
+	assert.NotZero(test, logger.Info("test"), "string")
+	assert.NotZero(test, logger.Infof("test %s", "something"), "format")
 }
 
 // -- Warn --------------------------------------------------------------------
 
 func TestWarn(test *testing.T) {
-	SetLogLevel(LevelWarn)
-	assert.NotZero(test, Warn("test"), "string")
-	assert.NotZero(test, Warnf("test %s", "something"), "format")
+	test.Parallel()
+	logger.SetLogLevel(logger.LevelWarn)
+	assert.NotZero(test, logger.Warn("test"), "string")
+	assert.NotZero(test, logger.Warnf("test %s", "something"), "format")
 }
 
 // -- Fatal -------------------------------------------------------------------
-// TODO: Figure out how to test Fatal and Fatalf
+
+func TestFatal(test *testing.T) {
+	// IMPROVE: Figure out how to test Fatal and Fatalf
+	test.Parallel()
+
+	logger.SetLogLevel(logger.LevelFatal)
+}
 
 // -- Panic -------------------------------------------------------------------
 
 func TestPanic(test *testing.T) {
-	SetLogLevel(LevelPanic)
-	assert.Panics(test, func() { Panic("test") })
-	assert.Panics(test, func() { Panicf("test %s", "something") })
+	test.Parallel()
+	logger.SetLogLevel(logger.LevelPanic)
+	assert.Panics(test, func() { logger.Panic("test") })
+	assert.Panics(test, func() { logger.Panicf("test %s", "something") })
 }
 
 // -- Miscellaneous -----------------------------------------------------------
 
 func TestFluentInterface(test *testing.T) {
-	_ = test
-	SetLogLevel(LevelTrace)
-	Trace("trace").Debug("debug").Info("info").Warn("warn").Error("error")
+	test.Parallel()
+	logger.SetLogLevel(logger.LevelTrace)
+	logger.Trace("trace").Debug("debug").Info("info").Warn("warn").Error("error")
 }
 
 func TestVaradic(test *testing.T) {
-	_ = test
-	SetLogLevel(LevelDebug)
+	test.Parallel()
+	logger.SetLogLevel(logger.LevelDebug)
+
 	_, err := time.LoadLocation("bob")
-	Info("Should be error: ", err)
+	logger.Info("Should be error: ", err)
 }

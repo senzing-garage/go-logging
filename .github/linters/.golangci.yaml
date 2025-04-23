@@ -8,39 +8,40 @@ linters:
     - bidichk
     - bodyclose
     - canonicalheader
-    # - containedctx
+    - containedctx
     - contextcheck
     - copyloopvar
-    # - cyclop
+    - cyclop
     - decorder
-    # - depguard
+    - depguard
     - dogsled
     - dupl
     - dupword
     - durationcheck
-    # - err113
+    - err113
     - errcheck
     - errchkjson
     - errname
     - errorlint
     - exhaustive
-    # - exhaustruct
+    - exhaustruct
     - exptostd
     - fatcontext
-    # - forbidigo
-    # - forcetypeassert
-    # - funlen
+    - forbidigo
+    - forcetypeassert
+    - funcorder
+    - funlen
     - ginkgolinter
     - gocheckcompilerdirectives
-    # - gochecknoglobals
-    # - gochecknoinits
+    - gochecknoglobals
+    - gochecknoinits
     - gochecksumtype
     - gocognit
     - goconst
     - gocritic
     - gocyclo
     - godot
-    # - godox
+    - godox
     - goheader
     - gomoddirectives
     - gomodguard
@@ -53,28 +54,28 @@ linters:
     - importas
     - inamedparam
     - ineffassign
-    # - interfacebloat
+    - interfacebloat
     - intrange
-    # - ireturn
-    # - lll
+    - ireturn
+    - lll
     - loggercheck
     - maintidx
     - makezero
     - mirror
     - misspell
-    # - mnd
+    - mnd
     - musttag
     - nakedret
     - nestif
     - nilerr
     - nilnesserr
     - nilnil
-    # - nlreturn
+    - nlreturn
     - noctx
     - nolintlint
     - nonamedreturns
     - nosprintfhostport
-    # - paralleltest
+    - paralleltest
     - perfsprint
     - prealloc
     - predeclared
@@ -92,20 +93,24 @@ linters:
     - tagliatelle
     - testableexamples
     - testifylint
-    # - testpackage
+    - testpackage
     - thelper
     - tparallel
     - unconvert
-    # - unparam
+    - unparam
     - unused
     - usestdlibvars
-    # - usetesting
-    # - varnamelen
+    - usetesting
+    - varnamelen
     - wastedassign
-    # - whitespace
-    # - wrapcheck
-    # - wsl
+    - whitespace
+    - wrapcheck
+    - wsl
     - zerologlint
+  disable:
+    - ireturn
+    - lll
+    - mnd
   exclusions:
     generated: lax
     presets:
@@ -117,6 +122,27 @@ linters:
       - third_party$
       - builtin$
       - examples$
+  settings:
+    cyclop:
+      max-complexity: 20
+    depguard:
+      rules:
+        prevent_unmaintained_packages:
+          list-mode: lax # allow unless explicitely denied
+          allow:
+            - github.com/stretchr/testify/*
+          deny:
+            - pkg: io/ioutil
+              desc: "replaced by io and os packages since Go 1.16: https://tip.golang.org/doc/go1.16#ioutil"
+    exhaustruct:
+      exclude:
+        - '.+/logger\.BasicLogger$'
+        - '.+/logging\.BasicLogging$'
+        - '.+/logging\.ExtractedValues$'
+        - '.+/slog\.Attr$'
+        - '.+/slog\.HandlerOptions$'
+    interfacebloat:
+      max: 25
 
 formatters:
   enable:
