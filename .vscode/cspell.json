@@ -47,10 +47,11 @@
     "testdata"
   ],
   "ignorePaths": [
-    "Makefile",
+    ".github/linters/.golangci.yaml",
+    ".gitignore",
     "**/*.go",
     "**/*.mod",
     "**/*.sum",
-    ".github/linters/.golangci.yaml"
+    "Makefile"
   ]
 }
