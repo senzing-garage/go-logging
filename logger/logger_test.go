@@ -214,6 +214,7 @@ func TestIsXxxx(test *testing.T) {
 
 func TestTrace(test *testing.T) {
 	test.Parallel()
+
 	testObject := logger.New()
 	testObject.SetLogLevel(logger.LevelTrace)
 	assert.NotZero(test, testObject.Trace("test"), "string")
@@ -231,6 +232,7 @@ func TestTrace_Global(test *testing.T) {
 
 func TestDebug(test *testing.T) {
 	test.Parallel()
+
 	testObject := logger.New()
 	testObject.SetLogLevel(logger.LevelDebug)
 	assert.NotZero(test, testObject.Debug("test"), "string")
@@ -250,6 +252,7 @@ func TestDebug_Global(test *testing.T) {
 
 func TestInfo(test *testing.T) {
 	test.Parallel()
+
 	testObject := logger.New()
 	testObject.SetLogLevel(logger.LevelInfo)
 	assert.NotZero(test, testObject.Info("test"), "string")
@@ -269,6 +272,7 @@ func TestInfo_Global(test *testing.T) {
 
 func TestWarn(test *testing.T) {
 	test.Parallel()
+
 	testObject := logger.New()
 	testObject.SetLogLevel(logger.LevelWarn)
 	assert.NotZero(test, testObject.Warn("test"), "string")
@@ -288,6 +292,7 @@ func TestWarn_Global(test *testing.T) {
 
 func TestError(test *testing.T) {
 	test.Parallel()
+
 	testObject := logger.New()
 	testObject.SetLogLevel(logger.LevelError)
 	assert.NotZero(test, testObject.Error("test"), "string")
@@ -307,6 +312,7 @@ func TestError_Global(test *testing.T) {
 func TestFatal(test *testing.T) {
 	// IMPROVE: Figure out how to test Fatal and Fatalf
 	test.Parallel()
+
 	testObject := logger.New()
 	testObject.SetLogLevel(logger.LevelFatal)
 	require.True(test, testObject.IsFatal())
@@ -323,6 +329,7 @@ func TestFatal_Global(test *testing.T) {
 
 func TestPanic(test *testing.T) {
 	test.Parallel()
+
 	testObject := logger.New()
 	testObject.SetLogLevel(logger.LevelPanic)
 	assert.Panics(test, func() { testObject.Panic("test") })
