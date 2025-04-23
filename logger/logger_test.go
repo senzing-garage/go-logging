@@ -197,7 +197,6 @@ func TestIsXxxx(test *testing.T) {
 			logger, err := logging.New()
 			require.NoError(test, err)
 			err = logger.SetLogLevel(testCase.logLevelName)
-			require.NoError(test, err)
 			assert.Equal(test, testCase.logLevelName, logger.GetLogLevel(), testCase.name)
 			assert.Equal(test, testCase.expectedTrace, logger.IsTrace(), "Trace")
 			assert.Equal(test, testCase.expectedDebug, logger.IsDebug(), "Debug")
@@ -206,33 +205,43 @@ func TestIsXxxx(test *testing.T) {
 			assert.Equal(test, testCase.expectedError, logger.IsError(), "Error")
 			assert.Equal(test, testCase.expectedFatal, logger.IsFatal(), "Fatal")
 			assert.Equal(test, testCase.expectedPanic, logger.IsPanic(), "Panic")
+			require.NoError(test, err)
 		})
 	}
-}
-
-// -- Error -------------------------------------------------------------------
-
-func TestError(test *testing.T) {
-	test.Parallel()
-	logger.SetLogLevel(logger.LevelError)
-	assert.NotZero(test, logger.Error("test"), "string")
-	assert.NotZero(test, logger.Errorf("test %s", "something"), "format")
 }
 
 // -- Trace -------------------------------------------------------------------
 
 func TestTrace(test *testing.T) {
 	test.Parallel()
+	testObject := logger.New()
+	testObject.SetLogLevel(logger.LevelTrace)
+	assert.NotZero(test, testObject.Trace("test"), "string")
+	assert.NotZero(test, testObject.Tracef("test %s", "something"), "format")
+	require.True(test, testObject.IsTrace())
+}
+
+func TestTrace_Global(test *testing.T) {
+	test.Parallel()
 	logger.SetLogLevel(logger.LevelTrace)
-	assert.NotZero(test, logger.Trace("test"), "string")
-	assert.NotZero(test, logger.Tracef("test %s", "something"), "format")
+	require.True(test, logger.IsTrace())
 }
 
 // -- Debug -------------------------------------------------------------------
 
 func TestDebug(test *testing.T) {
 	test.Parallel()
+	testObject := logger.New()
+	testObject.SetLogLevel(logger.LevelDebug)
+	assert.NotZero(test, testObject.Debug("test"), "string")
+	assert.NotZero(test, testObject.Debugf("test %s", "something"), "format")
+	require.True(test, testObject.IsDebug())
+}
+
+func TestDebug_Global(test *testing.T) {
+	test.Parallel()
 	logger.SetLogLevel(logger.LevelDebug)
+	require.True(test, logger.IsDebug())
 	assert.NotZero(test, logger.Debug("test"), "string")
 	assert.NotZero(test, logger.Debugf("test %s", "something"), "format")
 }
@@ -241,7 +250,17 @@ func TestDebug(test *testing.T) {
 
 func TestInfo(test *testing.T) {
 	test.Parallel()
+	testObject := logger.New()
+	testObject.SetLogLevel(logger.LevelInfo)
+	assert.NotZero(test, testObject.Info("test"), "string")
+	assert.NotZero(test, testObject.Infof("test %s", "something"), "format")
+	require.True(test, testObject.IsInfo())
+}
+
+func TestInfo_Global(test *testing.T) {
+	test.Parallel()
 	logger.SetLogLevel(logger.LevelInfo)
+	require.True(test, logger.IsInfo())
 	assert.NotZero(test, logger.Info("test"), "string")
 	assert.NotZero(test, logger.Infof("test %s", "something"), "format")
 }
@@ -250,9 +269,37 @@ func TestInfo(test *testing.T) {
 
 func TestWarn(test *testing.T) {
 	test.Parallel()
+	testObject := logger.New()
+	testObject.SetLogLevel(logger.LevelWarn)
+	assert.NotZero(test, testObject.Warn("test"), "string")
+	assert.NotZero(test, testObject.Warnf("test %s", "something"), "format")
+	require.True(test, testObject.IsWarn())
+}
+
+func TestWarn_Global(test *testing.T) {
+	test.Parallel()
 	logger.SetLogLevel(logger.LevelWarn)
+	require.True(test, logger.IsWarn())
 	assert.NotZero(test, logger.Warn("test"), "string")
 	assert.NotZero(test, logger.Warnf("test %s", "something"), "format")
+}
+
+// -- Error -------------------------------------------------------------------
+
+func TestError(test *testing.T) {
+	test.Parallel()
+	testObject := logger.New()
+	testObject.SetLogLevel(logger.LevelError)
+	assert.NotZero(test, testObject.Error("test"), "string")
+	assert.NotZero(test, testObject.Errorf("test %s", "something"), "format")
+}
+
+func TestError_Global(test *testing.T) {
+	test.Parallel()
+	logger.SetLogLevel(logger.LevelError)
+	require.True(test, logger.IsError())
+	assert.NotZero(test, logger.Error("test"), "string")
+	assert.NotZero(test, logger.Errorf("test %s", "something"), "format")
 }
 
 // -- Fatal -------------------------------------------------------------------
@@ -260,15 +307,33 @@ func TestWarn(test *testing.T) {
 func TestFatal(test *testing.T) {
 	// IMPROVE: Figure out how to test Fatal and Fatalf
 	test.Parallel()
+	testObject := logger.New()
+	testObject.SetLogLevel(logger.LevelFatal)
+	require.True(test, testObject.IsFatal())
+}
 
+func TestFatal_Global(test *testing.T) {
+	// IMPROVE: Figure out how to test Fatal and Fatalf
+	test.Parallel()
 	logger.SetLogLevel(logger.LevelFatal)
+	require.True(test, logger.IsFatal())
 }
 
 // -- Panic -------------------------------------------------------------------
 
 func TestPanic(test *testing.T) {
 	test.Parallel()
+	testObject := logger.New()
+	testObject.SetLogLevel(logger.LevelPanic)
+	assert.Panics(test, func() { testObject.Panic("test") })
+	assert.Panics(test, func() { testObject.Panicf("test %s", "something") })
+	require.True(test, testObject.IsPanic())
+}
+
+func TestPanic_Global(test *testing.T) {
+	test.Parallel()
 	logger.SetLogLevel(logger.LevelPanic)
+	require.True(test, logger.IsPanic())
 	assert.Panics(test, func() { logger.Panic("test") })
 	assert.Panics(test, func() { logger.Panicf("test %s", "something") })
 }
