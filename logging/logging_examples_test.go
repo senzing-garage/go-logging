@@ -1,7 +1,9 @@
-package logging
+package logging_test
 
 import (
 	"fmt"
+
+	"github.com/senzing-garage/go-logging/logging"
 )
 
 // ----------------------------------------------------------------------------
@@ -10,10 +12,11 @@ import (
 
 func ExampleNew() {
 	// For more information, visit https://github.com/senzing-garage/go-logging/blob/main/logging/logging_examples_test.go
-	logger, err := New()
+	logger, err := logging.New()
 	if err != nil {
 		fmt.Println(err)
 	}
+
 	logger.Log(2001)
 	// Output:
 }
@@ -24,27 +27,32 @@ func ExampleNewSenzingLogger() {
 	idMessages := map[int]string{
 		2001: "My message",
 	}
-	logger, err := NewSenzingLogger(componentID, idMessages)
+
+	logger, err := logging.NewSenzingLogger(componentID, idMessages)
 	if err != nil {
 		fmt.Println(err)
 	}
+
 	logger.Log(2001)
 	// Output:
 }
 
 func ExampleBasicLogging_IsTrace() {
 	// For more information, visit https://github.com/senzing-garage/go-logging/blob/main/logging/logging_examples_test.go
-	logger, err := New()
+	logger, err := logging.New()
 	if err != nil {
 		fmt.Println(err)
 	}
+
 	err = logger.SetLogLevel("TRACE")
 	if err != nil {
 		fmt.Println(err)
 	}
+
 	if logger.IsTrace() {
 		fmt.Println("TRACE active")
 	}
+
 	if logger.IsDebug() {
 		fmt.Println("DEBUG active")
 	}
@@ -55,20 +63,24 @@ func ExampleBasicLogging_IsTrace() {
 
 func ExampleBasicLogging_IsDebug() {
 	// For more information, visit https://github.com/senzing-garage/go-logging/blob/main/logging/logging_examples_test.go
-	logger, err := New()
+	logger, err := logging.New()
 	if err != nil {
 		fmt.Println(err)
 	}
+
 	err = logger.SetLogLevel("DEBUG")
 	if err != nil {
 		fmt.Println(err)
 	}
+
 	if logger.IsTrace() {
 		fmt.Println("TRACE active")
 	}
+
 	if logger.IsDebug() {
 		fmt.Println("DEBUG active")
 	}
+
 	if logger.IsInfo() {
 		fmt.Println("INFO active")
 	}
@@ -79,20 +91,24 @@ func ExampleBasicLogging_IsDebug() {
 
 func ExampleBasicLogging_IsInfo() {
 	// For more information, visit https://github.com/senzing-garage/go-logging/blob/main/logging/logging_examples_test.go
-	logger, err := New()
+	logger, err := logging.New()
 	if err != nil {
 		fmt.Println(err)
 	}
+
 	err = logger.SetLogLevel("INFO")
 	if err != nil {
 		fmt.Println(err)
 	}
+
 	if logger.IsDebug() {
 		fmt.Println("DEBUG active")
 	}
+
 	if logger.IsInfo() {
 		fmt.Println("INFO active")
 	}
+
 	if logger.IsWarn() {
 		fmt.Println("WARN active")
 	}
@@ -103,20 +119,24 @@ func ExampleBasicLogging_IsInfo() {
 
 func ExampleBasicLogging_IsWarn() {
 	// For more information, visit https://github.com/senzing-garage/go-logging/blob/main/logging/logging_examples_test.go
-	logger, err := New()
+	logger, err := logging.New()
 	if err != nil {
 		fmt.Println(err)
 	}
+
 	err = logger.SetLogLevel("WARN")
 	if err != nil {
 		fmt.Println(err)
 	}
+
 	if logger.IsInfo() {
 		fmt.Println("INFO active")
 	}
+
 	if logger.IsWarn() {
 		fmt.Println("WARN active")
 	}
+
 	if logger.IsError() {
 		fmt.Println("ERROR active")
 	}
@@ -127,20 +147,24 @@ func ExampleBasicLogging_IsWarn() {
 
 func ExampleBasicLogging_IsError() {
 	// For more information, visit https://github.com/senzing-garage/go-logging/blob/main/logging/logging_examples_test.go
-	logger, err := New()
+	logger, err := logging.New()
 	if err != nil {
 		fmt.Println(err)
 	}
+
 	err = logger.SetLogLevel("ERROR")
 	if err != nil {
 		fmt.Println(err)
 	}
+
 	if logger.IsWarn() {
 		fmt.Println("WARN active")
 	}
+
 	if logger.IsError() {
 		fmt.Println("ERROR active")
 	}
+
 	if logger.IsFatal() {
 		fmt.Println("FATAL active")
 	}
@@ -151,20 +175,24 @@ func ExampleBasicLogging_IsError() {
 
 func ExampleBasicLogging_IsFatal() {
 	// For more information, visit https://github.com/senzing-garage/go-logging/blob/main/logging/logging_examples_test.go
-	logger, err := New()
+	logger, err := logging.New()
 	if err != nil {
 		fmt.Println(err)
 	}
+
 	err = logger.SetLogLevel("FATAL")
 	if err != nil {
 		fmt.Println(err)
 	}
+
 	if logger.IsError() {
 		fmt.Println("ERROR active")
 	}
+
 	if logger.IsFatal() {
 		fmt.Println("FATAL active")
 	}
+
 	if logger.IsPanic() {
 		fmt.Println("PANIC active")
 	}
@@ -175,17 +203,20 @@ func ExampleBasicLogging_IsFatal() {
 
 func ExampleBasicLogging_IsPanic() {
 	// For more information, visit https://github.com/senzing-garage/go-logging/blob/main/logging/logging_examples_test.go
-	logger, err := New()
+	logger, err := logging.New()
 	if err != nil {
 		fmt.Println(err)
 	}
+
 	err = logger.SetLogLevel("PANIC")
 	if err != nil {
 		fmt.Println(err)
 	}
+
 	if logger.IsFatal() {
 		fmt.Println("FATAL active")
 	}
+
 	if logger.IsPanic() {
 		fmt.Println("PANIC active")
 	}
@@ -195,10 +226,11 @@ func ExampleBasicLogging_IsPanic() {
 
 func ExampleBasicLogging_Log_new() {
 	// For more information, visit https://github.com/senzing-garage/go-logging/blob/main/logging/logging_examples_test.go
-	logger, err := New()
+	logger, err := logging.New()
 	if err != nil {
 		fmt.Println(err)
 	}
+
 	logger.Log(2001, "Bob", "Jane") // Note that 2000's are INFO messages.
 	// Output:
 }
@@ -209,10 +241,12 @@ func ExampleBasicLogging_Log_newSenzingLogger() {
 	idMessages := map[int]string{
 		2001: "%s works with %s",
 	}
-	logger, err := NewSenzingLogger(componentID, idMessages)
+
+	logger, err := logging.NewSenzingLogger(componentID, idMessages)
 	if err != nil {
 		fmt.Println(err)
 	}
+
 	logger.Log(2001, "Bob", "Jane") // Note that 2000's are INFO messages.
 	// Output:
 }

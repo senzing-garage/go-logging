@@ -12,6 +12,7 @@ import (
 	"os"
 	"time"
 
+	"github.com/senzing-garage/go-helpers/wraperror"
 	"github.com/senzing-garage/go-messaging/messenger"
 	"golang.org/x/exp/slog"
 )
@@ -36,6 +37,22 @@ type Logging interface {
 	Log(messageNumber int, details ...interface{})            // Log the message.
 	NewError(messageNumber int, details ...interface{}) error // Return an error object with the message.
 	SetLogLevel(logLevelName string) error                    // Set the level of logging.
+}
+
+// ----------------------------------------------------------------------------
+// Types - struct
+// ----------------------------------------------------------------------------
+
+type ExtractedValues struct {
+	callerSkip          int
+	componentIdentifier int
+	idMessages          map[int]string
+	idStatuses          map[int]string
+	logLevel            string
+	messageIDTemplate   string
+	messageFields       []string
+	output              io.Writer
+	messengerOptions    []interface{}
 }
 
 // --- Override values when creating messages ---------------------------------
@@ -165,7 +182,7 @@ const (
 
 // Message ID Low-bound for message levels
 // i.e. a message in range 0 - 999 is a TRACE message.
-var IDLevelRangesAsString = map[int]string{
+var IDLevelRangesAsString = map[int]string{ //nolint
 	0000: LevelTraceName,
 	1000: LevelDebugName,
 	2000: LevelInfoName,
@@ -176,7 +193,7 @@ var IDLevelRangesAsString = map[int]string{
 }
 
 // Map from slog.Level to string representation.
-var LevelToTextMap = map[slog.Level]string{
+var LevelToTextMap = map[slog.Level]string{ //nolint
 	LevelDebugSlog: LevelDebugName,
 	LevelErrorSlog: LevelErrorName,
 	LevelFatalSlog: LevelFatalName,
@@ -187,7 +204,7 @@ var LevelToTextMap = map[slog.Level]string{
 }
 
 // Map from string representation to Log level as typed integer.
-var TextToLevelMap = map[string]slog.Level{
+var TextToLevelMap = map[string]slog.Level{ //nolint
 	LevelDebugName: LevelDebugSlog,
 	LevelErrorName: LevelErrorSlog,
 	LevelFatalName: LevelFatalSlog,
@@ -198,7 +215,20 @@ var TextToLevelMap = map[string]slog.Level{
 }
 
 // Order is important in AllMessageFields. Should match order in go-messaging/messenger/main.go's MessageFormat.
-var AllMessageFields = []string{"time", "id", "text", "code", "reason", "status", "duration", "location", "errors", "details"}
+var AllMessageFields = []string{ //nolint
+	"time",
+	"id",
+	"text",
+	"code",
+	"reason",
+	"status",
+	"duration",
+	"location",
+	"errors",
+	"details",
+}
+
+var errLogging = errors.New("logging")
 
 // ----------------------------------------------------------------------------
 // Public functions
@@ -216,6 +246,7 @@ Output
 */
 func IsValidLogLevelName(logLevelName string) bool {
 	_, ok := TextToLevelMap[logLevelName]
+
 	return ok
 }
 
@@ -231,86 +262,54 @@ Output
   - error
 */
 func New(options ...interface{}) (Logging, error) {
-	var err error
-	var result Logging
-
-	// Default values.
-
 	var (
-		callerSkip          = 0
-		componentIdentifier = 9999
-		idMessages          = map[int]string{}
-		idStatuses          = map[int]string{}
-		logLevel            = LevelInfoName
-		messageIDTemplate   = "%d"
-		messageFields       []string
-		output              io.Writer = os.Stderr
+		err    error
+		result Logging
 	)
 
-	// Process options.
-
-	messengerOptions := []interface{}{}
-	for _, value := range options {
-		switch typedValue := value.(type) {
-		case OptionCallerSkip:
-			callerSkip = typedValue.Value
-		case OptionComponentID:
-			componentIdentifier = typedValue.Value
-			messageIDTemplate = fmt.Sprintf("senzing-%04d", componentIdentifier) + "%04d"
-		case OptionIDMessages:
-			idMessages = typedValue.Value
-		case OptionIDStatuses:
-			idStatuses = typedValue.Value
-		case OptionLogLevel:
-			logLevel = typedValue.Value
-		case OptionMessageField:
-			messengerOptions = append(messengerOptions, messenger.OptionMessageField{Value: typedValue.Value})
-		case OptionMessageFields:
-			messageFields = typedValue.Value
-		case OptionMessageIDTemplate:
-			messageIDTemplate = typedValue.Value
-		case OptionOutput:
-			output = typedValue.Value
-		}
+	extractedValues := &ExtractedValues{
+		callerSkip:          0,
+		componentIdentifier: 9999,
+		idMessages:          map[int]string{},
+		idStatuses:          map[int]string{},
+		logLevel:            LevelInfoName,
+		messageIDTemplate:   "%d",
+		messengerOptions:    []interface{}{},
+		output:              os.Stderr,
 	}
+	extractFromOptions(extractedValues, options)
 
-	// Detect incorrect option values.
-
-	if componentIdentifier <= 0 || componentIdentifier > 9999 {
-		err := errors.New("componentIdentifier must be in range 1..9999. See https://github.com/senzing-garage/knowledge-base/blob/main/lists/senzing-product-ids.md")
-		return result, err
-	}
-
-	// Construct options.
-
-	messengerOptions = append(messengerOptions, messenger.OptionIDMessages{Value: idMessages})
-	messengerOptions = append(messengerOptions, messenger.OptionIDStatuses{Value: idStatuses})
-	messengerOptions = append(messengerOptions, messenger.OptionMessageIDTemplate{Value: messageIDTemplate})
-	if callerSkip != 0 {
-		messengerOptions = append(messengerOptions, messenger.OptionCallerSkip{Value: callerSkip})
-	}
-	if messageFields != nil {
-		messengerOptions = append(messengerOptions, messenger.OptionMessageFields{Value: messageFields})
-	}
-
-	// Create messenger.
-
-	messenger, err := messenger.New(messengerOptions...)
+	err = verifyOptions(extractedValues)
 	if err != nil {
 		return result, err
 	}
 
-	slogLevel, ok := TextToLevelMap[logLevel]
-	if !ok {
-		err := fmt.Errorf("unknown error level: %s", logLevel)
-		return result, err
+	constructOptions(extractedValues)
+
+	// Create messenger.
+
+	messenger, err := messenger.New(extractedValues.messengerOptions...)
+	if err != nil {
+		return result, wraperror.Errorf(err, "logging.messenger.New error: %w", err)
 	}
+
+	slogLevel, ok := TextToLevelMap[extractedValues.logLevel]
+	if !ok {
+		return result, wraperror.Errorf(
+			errLogging,
+			"unknown error level: %s error: %w",
+			extractedValues.logLevel,
+			errLogging,
+		)
+	}
+
 	var slogLeveler = new(slog.LevelVar)
+
 	slogLeveler.Set(slogLevel)
 
 	// Create logger.
 
-	logger := slog.New(slog.NewJSONHandler(output, SlogHandlerOptions(slogLeveler, options...)))
+	logger := slog.New(slog.NewJSONHandler(extractedValues.output, SlogHandlerOptions(slogLeveler, options...)))
 
 	// Create LoggingInterface.
 
@@ -320,13 +319,9 @@ func New(options ...interface{}) (Logging, error) {
 		leveler:   slogLeveler,
 	}
 
-	err = loggingImpl.initialize()
-	if err != nil {
-		return result, err
-	}
+	loggingImpl.initialize()
 
-	result = loggingImpl
-	return result, err
+	return loggingImpl, nil
 }
 
 /*
@@ -351,6 +346,7 @@ func NewSenzingLogger(componentID int, idMessages map[int]string, options ...int
 		OptionMessageIDTemplate{Value: optionMessageID},
 	}
 	loggerOptions = append(loggerOptions, options...)
+
 	return New(loggerOptions...)
 }
 
@@ -381,11 +377,11 @@ func SlogHandlerOptions(leveler slog.Leveler, options ...interface{}) *slog.Hand
 
 	handlerOptions := &slog.HandlerOptions{
 		Level: leveler,
-		ReplaceAttr: func(groups []string, a slog.Attr) slog.Attr {
+		ReplaceAttr: func(groups []string, slogAttr slog.Attr) slog.Attr {
 			_ = groups
-			if a.Key == slog.LevelKey {
+			if slogAttr.Key == slog.LevelKey {
 				level := ""
-				switch typedValue := a.Value.Any().(type) {
+				switch typedValue := slogAttr.Value.Any().(type) {
 				case string:
 					level = typedValue
 				case slog.Level:
@@ -393,27 +389,101 @@ func SlogHandlerOptions(leveler slog.Leveler, options ...interface{}) *slog.Hand
 				}
 				switch level {
 				case "DEBUG-4":
-					a.Value = slog.StringValue(LevelTraceName)
+					slogAttr.Value = slog.StringValue(LevelTraceName)
 				case "ERROR+4":
-					a.Value = slog.StringValue(LevelFatalName)
+					slogAttr.Value = slog.StringValue(LevelFatalName)
 				case "ERROR+8":
-					a.Value = slog.StringValue(LevelPanicName)
+					slogAttr.Value = slog.StringValue(LevelPanicName)
 				}
 			}
-			if a.Key == slog.MessageKey {
-				a.Key = "text"
-				if a.Value.Any().(string) == "" {
+			if slogAttr.Key == slog.MessageKey {
+				slogAttr.Key = "text"
+				aValue, isOK := slogAttr.Value.Any().(string)
+				if isOK && (aValue == "") {
 					return slog.Attr{}
 				}
 			}
-			if a.Key == slog.TimeKey {
+			if slogAttr.Key == slog.TimeKey {
 				if timeHidden {
 					return slog.Attr{}
 				}
-				a.Value = slog.TimeValue(a.Value.Time().UTC())
+				slogAttr.Value = slog.TimeValue(slogAttr.Value.Time().UTC())
 			}
-			return a
+
+			return slogAttr
 		},
 	}
+
 	return handlerOptions
+}
+
+// ----------------------------------------------------------------------------
+// Private functions
+// ----------------------------------------------------------------------------
+
+func constructOptions(extractedValues *ExtractedValues) {
+	extractedValues.messengerOptions = append(
+		extractedValues.messengerOptions,
+		messenger.OptionIDMessages{Value: extractedValues.idMessages},
+	)
+	extractedValues.messengerOptions = append(
+		extractedValues.messengerOptions,
+		messenger.OptionIDStatuses{Value: extractedValues.idStatuses},
+	)
+	extractedValues.messengerOptions = append(
+		extractedValues.messengerOptions,
+		messenger.OptionMessageIDTemplate{Value: extractedValues.messageIDTemplate},
+	)
+
+	if extractedValues.callerSkip != 0 {
+		extractedValues.messengerOptions = append(
+			extractedValues.messengerOptions,
+			messenger.OptionCallerSkip{Value: extractedValues.callerSkip},
+		)
+	}
+
+	if extractedValues.messageFields != nil {
+		extractedValues.messengerOptions = append(
+			extractedValues.messengerOptions,
+			messenger.OptionMessageFields{Value: extractedValues.messageFields},
+		)
+	}
+}
+
+func extractFromOptions(extracted *ExtractedValues, options []interface{}) {
+	for _, value := range options {
+		switch typedValue := value.(type) {
+		case OptionCallerSkip:
+			extracted.callerSkip = typedValue.Value
+		case OptionComponentID:
+			extracted.componentIdentifier = typedValue.Value
+			extracted.messageIDTemplate = fmt.Sprintf("senzing-%04d", extracted.componentIdentifier) + "%04d"
+		case OptionIDMessages:
+			extracted.idMessages = typedValue.Value
+		case OptionIDStatuses:
+			extracted.idStatuses = typedValue.Value
+		case OptionLogLevel:
+			extracted.logLevel = typedValue.Value
+		case OptionMessageField:
+			extracted.messengerOptions = append(extracted.messengerOptions, messenger.OptionMessageField{Value: typedValue.Value})
+		case OptionMessageFields:
+			extracted.messageFields = typedValue.Value
+		case OptionMessageIDTemplate:
+			extracted.messageIDTemplate = typedValue.Value
+		case OptionOutput:
+			extracted.output = typedValue.Value
+		}
+	}
+}
+
+func verifyOptions(extractedValues *ExtractedValues) error {
+	if extractedValues.componentIdentifier <= 0 || extractedValues.componentIdentifier > 9999 {
+		return wraperror.Errorf(
+			errLogging,
+			"componentIdentifier must be in range 1..9999. See https://github.com/senzing-garage/knowledge-base/blob/main/lists/senzing-product-ids.md Error: %w",
+			errLogging,
+		)
+	}
+
+	return nil
 }

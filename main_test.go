@@ -2,7 +2,6 @@ package main
 
 import (
 	"bytes"
-	"fmt"
 	"testing"
 
 	"github.com/senzing-garage/go-logging/logger"
@@ -10,18 +9,20 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-var (
+const (
 	componentIdentifier = 9999
-	idMessagesTest      = map[int]string{
+)
+
+var (
+	idMessagesTest = map[int]string{ //nolint
 		0001: "Info for %s",
 		1000: "Warning for %s",
 		2000: "Error for %s",
 	}
-	outputString = new(bytes.Buffer) // *bytes.Buffer
 )
 
 func TestMain(test *testing.T) {
-	_ = test
+	test.Parallel()
 	main()
 }
 
@@ -29,11 +30,12 @@ func TestMain(test *testing.T) {
 // Test interface functions for New
 // ----------------------------------------------------------------------------
 
-func TestNew(test *testing.T) {
-	_ = test
+func TestNewLogger(test *testing.T) {
+	test.Parallel()
+
 	expected := `{"level":"INFO","id":"2000"}` + "\n"
-	outputString.Reset()
-	logger, _ := logging.New(optionOutput(), optionTimeHidden())
+	outputString := new(bytes.Buffer)
+	logger, _ := logging.New(optionOutput(outputString), optionTimeHidden())
 	logger.Log(1, "Mary")
 	logger.Log(1000, "Jane")
 	logger.Log(2000, "Bob")
@@ -45,10 +47,16 @@ func TestNew(test *testing.T) {
 // ----------------------------------------------------------------------------
 
 func TestNewSenzingLogger(test *testing.T) {
-	_ = test
+	test.Parallel()
+
 	expected := `{"level":"INFO","id":"SZTL99992000"}` + "\n"
-	outputString.Reset()
-	logger, _ := logging.NewSenzingLogger(componentIdentifier, idMessagesTest, optionOutput(), optionTimeHidden())
+	outputString := new(bytes.Buffer)
+	logger, _ := logging.NewSenzingLogger(
+		componentIdentifier,
+		idMessagesTest,
+		optionOutput(outputString),
+		optionTimeHidden(),
+	)
 	logger.Log(1, "Mary")
 	logger.Log(1000, "Jane")
 	logger.Log(2000, "Bob")
@@ -56,12 +64,13 @@ func TestNewSenzingLogger(test *testing.T) {
 }
 
 func TestNewSenzingLoggerAtErrorLevel(test *testing.T) {
-	_ = test
+	test.Parallel()
+
 	expected := ""
-	outputString.Reset()
+	outputString := new(bytes.Buffer)
 	loggerOptions := []interface{}{
 		logging.OptionLogLevel{Value: logger.LevelErrorName},
-		logging.OptionOutput{Value: outputString},
+		optionOutput(outputString),
 		logging.OptionTimeHidden{Value: true},
 	}
 	logger, _ := logging.NewSenzingLogger(componentIdentifier, idMessagesTest, loggerOptions...)
@@ -69,16 +78,13 @@ func TestNewSenzingLoggerAtErrorLevel(test *testing.T) {
 	logger.Log(1000, "Jane")
 	logger.Log(2000, "Bob")
 	assert.Equal(test, expected, outputString.String())
-
-	fmt.Println(">>>> ", outputString)
-
 }
 
 // ----------------------------------------------------------------------------
 // Internal functions - names begin with lowercase letter
 // ----------------------------------------------------------------------------
 
-func optionOutput() logging.OptionOutput {
+func optionOutput(outputString *bytes.Buffer) logging.OptionOutput {
 	return logging.OptionOutput{
 		Value: outputString,
 	}
