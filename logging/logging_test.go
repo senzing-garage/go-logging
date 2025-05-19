@@ -24,7 +24,7 @@ var (
 )
 
 var idMessagesTest = map[int]string{ //nolint
-	0001: "TRACE: %s works with %s",
+	1:    "TRACE: %s works with %s",
 	1001: "DEBUG: %s works with %s",
 	2001: "INFO: %s works with %s",
 	3001: "WARN: %s works with %s",

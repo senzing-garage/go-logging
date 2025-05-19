@@ -3,10 +3,10 @@ module github.com/senzing-garage/go-logging
 go 1.24
 
 require (
-	github.com/senzing-garage/go-helpers v0.6.11
+	github.com/senzing-garage/go-helpers v0.6.12-0.20250519194142-f14d9690ffbb
 	github.com/senzing-garage/go-messaging v1.5.3
 	github.com/stretchr/testify v1.10.0
-	golang.org/x/exp v0.0.0-20250408133849-7e4ce0ab07d0
+	golang.org/x/exp v0.0.0-20250506013437-ce4c2cf36ca6
 )
 
 require (

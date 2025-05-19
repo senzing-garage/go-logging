@@ -22,6 +22,7 @@
     "gotesttools",
     "govulncheck",
     "ICLA",
+    "logfile",
     "messagedate",
     "messagedetails",
     "messageduration",
@@ -37,8 +38,10 @@
     "OSARCH",
     "OSTYPE",
     "pkill",
+    "Println",
     "rootfs",
     "Senzing",
+    "senzingschema",
     "SENZINGSDK",
     "stackoverflow",
     "stretchr",
@@ -47,11 +50,15 @@
     "testdata"
   ],
   "ignorePaths": [
+    ".dockerignore",
+    ".git/*",
     ".github/linters/.golangci.yaml",
     ".gitignore",
+    ".history/*",
     "**/*.go",
     "**/*.mod",
     "**/*.sum",
+    "bearer.ignore",
     "Makefile"
   ]
 }
