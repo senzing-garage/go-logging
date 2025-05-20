@@ -108,9 +108,7 @@ linters:
     - wsl
     - zerologlint
   disable:
-    - ireturn
     - lll
-    - mnd
   exclusions:
     generated: lax
     presets:
@@ -141,19 +139,35 @@ linters:
         - '.+/logging\.ExtractedValues$'
         - '.+/slog\.Attr$'
         - '.+/slog\.HandlerOptions$'
+        - '.+/slog\.Attr$'
     interfacebloat:
       max: 25
-
+    ireturn:
+      allow:
+        - anon
+        - empty
+        - error
+        - logger.Logger
+        - logging.Logging
+        - stdlib
+    mnd:
+      ignored-functions:
+        - '^logger\.Log$'
+        - '^logger\.NewError$'
+        - '^logging\.NewSenzingLogger$'
 formatters:
   enable:
     - gci
     - gofmt
-    # - gofumpt
+    - gofumpt
     - goimports
-    # - golines
+    - golines
   exclusions:
     generated: lax
     paths:
       - third_party$
       - builtin$
       - examples$
+  settings:
+    golines:
+      max-len: 120

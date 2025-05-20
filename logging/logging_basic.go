@@ -187,12 +187,7 @@ func (loggingImpl *BasicLogging) SetLogLevel(logLevelName string) error {
 
 	slogLevel, ok := TextToLevelMap[logLevelName]
 	if !ok {
-		return wraperror.Errorf(
-			errLogging,
-			"unknown error level: %s error: %w",
-			logLevelName,
-			errLogging,
-		)
+		return wraperror.Errorf(errForPackage, "unknown error level: %s", logLevelName)
 	}
 
 	loggingImpl.leveler.Set(slogLevel)
