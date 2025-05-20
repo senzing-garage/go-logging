@@ -13,13 +13,11 @@ const (
 	componentIdentifier = 9999
 )
 
-var (
-	idMessagesTest = map[int]string{ //nolint
-		0001: "Info for %s",
-		1000: "Warning for %s",
-		2000: "Error for %s",
-	}
-)
+var idMessagesTest = map[int]string{ //nolint
+	1:    "Info for %s",
+	1000: "Warning for %s",
+	2000: "Error for %s",
+}
 
 func TestMain(test *testing.T) {
 	test.Parallel()

@@ -176,6 +176,10 @@ const (
 	LevelWarnSlog  = slog.LevelWarn
 )
 
+const (
+	componentIdentifier = 9999
+)
+
 // ----------------------------------------------------------------------------
 // Variables
 // ----------------------------------------------------------------------------
@@ -183,7 +187,7 @@ const (
 // Message ID Low-bound for message levels
 // i.e. a message in range 0 - 999 is a TRACE message.
 var IDLevelRangesAsString = map[int]string{ //nolint
-	0000: LevelTraceName,
+	0:    LevelTraceName,
 	1000: LevelDebugName,
 	2000: LevelInfoName,
 	3000: LevelWarnName,
@@ -228,7 +232,7 @@ var AllMessageFields = []string{ //nolint
 	"details",
 }
 
-var errLogging = errors.New("logging")
+var errForPackage = errors.New("logging")
 
 // ----------------------------------------------------------------------------
 // Public functions
@@ -269,7 +273,7 @@ func New(options ...interface{}) (Logging, error) {
 
 	extractedValues := &ExtractedValues{
 		callerSkip:          0,
-		componentIdentifier: 9999,
+		componentIdentifier: componentIdentifier,
 		idMessages:          map[int]string{},
 		idStatuses:          map[int]string{},
 		logLevel:            LevelInfoName,
@@ -290,21 +294,15 @@ func New(options ...interface{}) (Logging, error) {
 
 	messenger, err := messenger.New(extractedValues.messengerOptions...)
 	if err != nil {
-		return result, wraperror.Errorf(err, "logging.messenger.New error: %w", err)
+		return result, wraperror.Errorf(err, "New")
 	}
 
 	slogLevel, ok := TextToLevelMap[extractedValues.logLevel]
 	if !ok {
-		return result, wraperror.Errorf(
-			errLogging,
-			"unknown error level: %s error: %w",
-			extractedValues.logLevel,
-			errLogging,
-		)
+		return result, wraperror.Errorf(errForPackage, "unknown error level: %s", extractedValues.logLevel)
 	}
 
-	var slogLeveler = new(slog.LevelVar)
-
+	slogLeveler := new(slog.LevelVar)
 	slogLeveler.Set(slogLevel)
 
 	// Create logger.
@@ -361,9 +359,7 @@ func SlogHandlerOptions(leveler slog.Leveler, options ...interface{}) *slog.Hand
 
 	// Default values.
 
-	var (
-		timeHidden = false
-	)
+	timeHidden := false
 
 	// Process options.
 
@@ -479,9 +475,9 @@ func extractFromOptions(extracted *ExtractedValues, options []interface{}) {
 func verifyOptions(extractedValues *ExtractedValues) error {
 	if extractedValues.componentIdentifier <= 0 || extractedValues.componentIdentifier > 9999 {
 		return wraperror.Errorf(
-			errLogging,
-			"componentIdentifier must be in range 1..9999. See https://github.com/senzing-garage/knowledge-base/blob/main/lists/senzing-product-ids.md Error: %w",
-			errLogging,
+			errForPackage,
+			"componentIdentifier %d must be in range 1..9999. See https://github.com/senzing-garage/knowledge-base/blob/main/lists/senzing-product-ids.md",
+			extractedValues.componentIdentifier,
 		)
 	}
 

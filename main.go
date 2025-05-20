@@ -8,6 +8,10 @@ import (
 	"github.com/senzing-garage/go-logging/logging"
 )
 
+const (
+	horizontalRuleLength = 80
+)
+
 // ----------------------------------------------------------------------------
 // Variables
 // ----------------------------------------------------------------------------
@@ -173,7 +177,7 @@ func logger08() {
 		ID   int
 	}{
 		Name: "Robert Smith",
-		ID:   123145,
+		ID:   123145, //nolint
 	}
 
 	logger.Log(2003, "Robert Smith", 12345, aMap, aStruct)
@@ -216,9 +220,9 @@ func outputln(message ...any) {
 }
 
 func printBanner(banner string) {
-	outputf("\n%s\n", strings.Repeat("-", 80))
+	outputf("\n%s\n", strings.Repeat("-", horizontalRuleLength))
 	outputf("-- %s\n", banner)
-	outputf("%s\n\n", strings.Repeat("-", 80))
+	outputf("%s\n\n", strings.Repeat("-", horizontalRuleLength))
 }
 
 func testError(err error) {
@@ -234,7 +238,7 @@ func testLogger1(banner string, logger logging.Logging) {
 
 	// Test logging.
 
-	logger.Log(0000, "TRACE level", messageReason, err1, err2)
+	logger.Log(0, "TRACE level", messageReason, err1, err2)
 	logger.Log(1000, "DEBUG level", messageReason, err1, err2)
 	logger.Log(2000, "INFO level", messageReason, err1, err2)
 	logger.Log(3000, "WARN level", messageReason, err1, err2)
