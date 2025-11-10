@@ -40,7 +40,7 @@ type BasicLogger struct {
 // Debug() logs a DEBUG message.
 func (logger *BasicLogger) Debug(v ...interface{}) Logger {
 	if logger.isDebug {
-		logger.printf(LevelDebugName, noFormat, v...)
+		logger.print(LevelDebugName, v...)
 	}
 
 	return logger
@@ -58,7 +58,7 @@ func (logger *BasicLogger) Debugf(format string, v ...interface{}) Logger {
 // Error() logs a ERROR message.
 func (logger *BasicLogger) Error(v ...interface{}) Logger {
 	if logger.isError {
-		logger.printf(LevelErrorName, noFormat, v...)
+		logger.print(LevelErrorName, v...)
 	}
 
 	return logger
@@ -76,7 +76,7 @@ func (logger *BasicLogger) Errorf(format string, v ...interface{}) Logger {
 // Fatal() logs a FATAL message.
 func (logger *BasicLogger) Fatal(v ...interface{}) Logger {
 	if logger.isFatal {
-		logger.printf(LevelFatalName, noFormat, v...)
+		logger.print(LevelFatalName, v...)
 		log.Fatal("")
 	}
 
@@ -106,7 +106,7 @@ func (logger *BasicLogger) GetLogLevelAsString() string {
 // Info() logs a INFO message.
 func (logger *BasicLogger) Info(v ...interface{}) Logger {
 	if logger.isInfo {
-		logger.printf(LevelInfoName, noFormat, v...)
+		logger.print(LevelInfoName, v...)
 	}
 
 	return logger
@@ -159,7 +159,7 @@ func (logger *BasicLogger) IsWarn() bool {
 // Panic() logs a PANIC message.
 func (logger *BasicLogger) Panic(v ...interface{}) Logger {
 	if logger.isPanic {
-		logger.printf(LevelPanicName, noFormat, v...)
+		logger.print(LevelPanicName, v...)
 		log.Panic("")
 	}
 
@@ -207,7 +207,7 @@ func (logger *BasicLogger) SetLogLevelFromString(levelString string) Logger {
 // Trace() logs a TRACE message.
 func (logger *BasicLogger) Trace(v ...interface{}) Logger {
 	if logger.isTrace {
-		logger.printf(LevelTraceName, noFormat, v...)
+		logger.print(LevelTraceName, v...)
 	}
 
 	return logger
@@ -225,7 +225,7 @@ func (logger *BasicLogger) Tracef(format string, v ...interface{}) Logger {
 // Warn() logs a WARN message.
 func (logger *BasicLogger) Warn(v ...interface{}) Logger {
 	if logger.isWarn {
-		logger.printf(LevelWarnName, noFormat, v...)
+		logger.print(LevelWarnName, v...)
 	}
 
 	return logger
@@ -244,6 +244,23 @@ func (logger *BasicLogger) Warnf(format string, v ...interface{}) Logger {
 // Internal methods
 // ----------------------------------------------------------------------------
 
+func (logger *BasicLogger) print(
+	debugLevelName string,
+	messages ...interface{},
+) {
+	var message string
+
+	_ = debugLevelName
+	calldepth := 3
+
+	message = fmt.Sprint(messages...)
+
+	err := log.Output(calldepth, message)
+	if err != nil {
+		panic(err)
+	}
+}
+
 func (logger *BasicLogger) printf(
 	debugLevelName string,
 	format string,
@@ -254,7 +271,7 @@ func (logger *BasicLogger) printf(
 	_ = debugLevelName
 	calldepth := 3
 
-	if format == noFormat {
+	if format == "" {
 		message = fmt.Sprint(messages...)
 	} else {
 		message = fmt.Sprintf(format, messages...)
