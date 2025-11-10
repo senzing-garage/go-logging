@@ -46,10 +46,6 @@ type Logger interface {
 // Constants
 // ----------------------------------------------------------------------------
 
-const (
-	noFormat = ""
-)
-
 /*
 LevelXxxx values are an enumeration of typed integers representing logging levels.
 Order is important for the LevelXxxx variables.
