@@ -1,12 +1,12 @@
 module github.com/senzing-garage/go-logging
 
-go 1.24
+go 1.24.0
 
 require (
 	github.com/senzing-garage/go-helpers v0.6.13
 	github.com/senzing-garage/go-messaging v1.5.3
 	github.com/stretchr/testify v1.11.1
-	golang.org/x/exp v0.0.0-20250531010427-b6e5de432a8b
+	golang.org/x/exp v0.0.0-20251023183803-a4bb9ffd2546
 )
 
 require (
