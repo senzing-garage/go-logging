@@ -105,7 +105,7 @@ linters:
     - wastedassign
     - whitespace
     - wrapcheck
-    - wsl
+    - wsl_v5
     - zerologlint
   disable:
     - lll
@@ -140,6 +140,8 @@ linters:
         - '.+/slog\.Attr$'
         - '.+/slog\.HandlerOptions$'
         - '.+/slog\.Attr$'
+    funlen:
+      lines: 150
     interfacebloat:
       max: 25
     ireturn:

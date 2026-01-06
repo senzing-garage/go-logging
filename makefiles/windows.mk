@@ -14,6 +14,7 @@ clean-osarch-specific:
 	@del /F /S /Q $(GOPATH)/bin/$(PROGRAM_NAME)
 	@del /F /S /Q $(MAKEFILE_DIRECTORY)/coverage.html
 	@del /F /S /Q $(MAKEFILE_DIRECTORY)/coverage.out
+	@del /F /S /Q $(MAKEFILE_DIRECTORY)/cover.out
 	@del /F /S /Q $(TARGET_DIRECTORY)
 	@taskkill /f /t/im godoc
 
