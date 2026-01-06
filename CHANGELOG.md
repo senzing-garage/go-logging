@@ -183,7 +183,7 @@ This project adheres to [Semantic Versioning].
 
 ### Added in 1.1.2
 
-- Support `messagelogger.Level` type as a  `messagelogger.New()` parameter
+- Support `messagelogger.Level` type as a `messagelogger.New()` parameter
 
 ## [1.1.1] - 2022-11-18
 
