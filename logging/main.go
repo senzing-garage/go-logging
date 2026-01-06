@@ -375,14 +375,17 @@ func SlogHandlerOptions(leveler slog.Leveler, options ...interface{}) *slog.Hand
 		Level: leveler,
 		ReplaceAttr: func(groups []string, slogAttr slog.Attr) slog.Attr {
 			_ = groups
+
 			if slogAttr.Key == slog.LevelKey {
 				level := ""
+
 				switch typedValue := slogAttr.Value.Any().(type) {
 				case string:
 					level = typedValue
 				case slog.Level:
 					level = typedValue.String()
 				}
+
 				switch level {
 				case "DEBUG-4":
 					slogAttr.Value = slog.StringValue(LevelTraceName)
@@ -392,17 +395,21 @@ func SlogHandlerOptions(leveler slog.Leveler, options ...interface{}) *slog.Hand
 					slogAttr.Value = slog.StringValue(LevelPanicName)
 				}
 			}
+
 			if slogAttr.Key == slog.MessageKey {
 				slogAttr.Key = "text"
+
 				aValue, isOK := slogAttr.Value.Any().(string)
 				if isOK && (aValue == "") {
 					return slog.Attr{}
 				}
 			}
+
 			if slogAttr.Key == slog.TimeKey {
 				if timeHidden {
 					return slog.Attr{}
 				}
+
 				slogAttr.Value = slog.TimeValue(slogAttr.Value.Time().UTC())
 			}
 
