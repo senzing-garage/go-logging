@@ -468,7 +468,9 @@ func extractFromOptions(extracted *ExtractedValues, options []interface{}) {
 		case OptionLogLevel:
 			extracted.logLevel = typedValue.Value
 		case OptionMessageField:
-			extracted.messengerOptions = append(extracted.messengerOptions, messenger.OptionMessageField{Value: typedValue.Value})
+			extracted.messengerOptions = append(
+				extracted.messengerOptions,
+				messenger.OptionMessageField{Value: typedValue.Value})
 		case OptionMessageFields:
 			extracted.messageFields = typedValue.Value
 		case OptionMessageIDTemplate:
