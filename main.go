@@ -9,6 +9,7 @@ import (
 )
 
 const (
+	detailsField         = "details"
 	horizontalRuleLength = 80
 )
 
@@ -144,7 +145,7 @@ func logger05() {
 
 func logger06() {
 	loggerOptions := []interface{}{
-		logging.OptionMessageFields{Value: []string{"id", "details"}},
+		logging.OptionMessageFields{Value: []string{"id", detailsField}},
 	}
 	logger, _ := logging.New(loggerOptions...)
 	testLogger2("Logger test 6", logger)
@@ -152,7 +153,7 @@ func logger06() {
 
 func logger07() {
 	loggerOptions := []interface{}{
-		logging.OptionMessageFields{Value: []string{"id", "details"}},
+		logging.OptionMessageFields{Value: []string{"id", detailsField}},
 		logging.OptionLogLevel{Value: "TRACE"},
 	}
 	logger, _ := logging.New(loggerOptions...)
@@ -161,7 +162,7 @@ func logger07() {
 
 func logger08() {
 	loggerOptions := []interface{}{
-		logging.OptionMessageFields{Value: []string{"id", "details"}},
+		logging.OptionMessageFields{Value: []string{"id", detailsField}},
 		logging.OptionMessageIDTemplate{Value: "my-message-%04d"},
 	}
 	logger, _ := logging.New(loggerOptions...)
@@ -204,7 +205,7 @@ func logger09() {
 
 func logger10() {
 	loggerOptions := []interface{}{
-		logging.OptionMessageFields{Value: []string{"id", "details"}},
+		logging.OptionMessageFields{Value: []string{"id", detailsField}},
 		logging.OptionIDMessages{Value: idMessages},
 	}
 	logger, _ := logging.New(loggerOptions...)
