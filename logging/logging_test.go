@@ -15,6 +15,8 @@ const (
 	badLogLevelName                      = "BadLogLevelName"
 	componentID                          = 9997
 	messageIDTemplate                    = "test-%04d"
+	nameBob                              = "Bob"
+	nameJane                             = "Jane"
 	testDuration           time.Duration = 10000
 )
 
@@ -55,7 +57,7 @@ var testCasesForMessage = []struct { //nolint
 			getOptionCallerSkip(),
 			getOptionTimeHidden(),
 		},
-		details:                  []interface{}{"Bob", "Jane"},
+		details:                  []interface{}{nameBob, nameJane},
 		expectedNew:              ``,
 		expectedNewSenzingLogger: ``,
 	},
@@ -67,7 +69,7 @@ var testCasesForMessage = []struct { //nolint
 			getOptionCallerSkip(),
 			getOptionTimeHidden(),
 		},
-		details:                  []interface{}{"Bob", "Jane"},
+		details:                  []interface{}{nameBob, nameJane},
 		expectedNew:              ``,
 		expectedNewSenzingLogger: ``,
 	},
@@ -80,7 +82,7 @@ var testCasesForMessage = []struct { //nolint
 			getOptionCallerSkip(),
 			getOptionTimeHidden(),
 		},
-		details:                  []interface{}{"Bob", "Jane"},
+		details:                  []interface{}{nameBob, nameJane},
 		expectedNew:              `{"level":"INFO","text":"INFO: Bob works with Jane","id":"2001","details":[{"position":1,"type":"string","value":"Bob"},{"position":2,"type":"string","value":"Jane"}]}` + "\n",
 		expectedNewSenzingLogger: `{"level":"INFO","text":"INFO: Bob works with Jane","id":"SZTL99972001","details":[{"position":1,"type":"string","value":"Bob"},{"position":2,"type":"string","value":"Jane"}]}` + "\n",
 	},
@@ -93,7 +95,7 @@ var testCasesForMessage = []struct { //nolint
 			getOptionTimeHidden(),
 			getOptionLogLevel("WARN"),
 		},
-		details:                  []interface{}{"Bob", "Jane"},
+		details:                  []interface{}{nameBob, nameJane},
 		expectedNew:              ``,
 		expectedNewSenzingLogger: ``,
 	},
@@ -106,7 +108,7 @@ var testCasesForMessage = []struct { //nolint
 			getOptionCallerSkip(),
 			getOptionTimeHidden(),
 		},
-		details:                  []interface{}{"Bob", "Jane"},
+		details:                  []interface{}{nameBob, nameJane},
 		expectedNew:              `{"level":"WARN","text":"WARN: Bob works with Jane","id":"3001","details":[{"position":1,"type":"string","value":"Bob"},{"position":2,"type":"string","value":"Jane"}]}` + "\n",
 		expectedNewSenzingLogger: `{"level":"WARN","text":"WARN: Bob works with Jane","id":"SZTL99973001","details":[{"position":1,"type":"string","value":"Bob"},{"position":2,"type":"string","value":"Jane"}]}` + "\n",
 	},
@@ -119,7 +121,7 @@ var testCasesForMessage = []struct { //nolint
 			getOptionTimeHidden(),
 			getOptionLogLevel("ERROR"),
 		},
-		details:                  []interface{}{"Bob", "Jane"},
+		details:                  []interface{}{nameBob, nameJane},
 		expectedNew:              ``,
 		expectedNewSenzingLogger: ``,
 	},
@@ -149,8 +151,8 @@ var testCasesForMessage = []struct { //nolint
 			getOptionTimeHidden(),
 		},
 		details: []interface{}{
-			"Bob",
-			"Jane",
+			nameBob,
+			nameJane,
 			logging.MessageCode{Value: "Test Code"},
 			logging.MessageDuration{Value: 1234567},
 			logging.MessageID{Value: "3005-Test"},
@@ -163,8 +165,8 @@ var testCasesForMessage = []struct { //nolint
 			logging.OptionCallerSkip{Value: 3},
 			testDuration,
 		},
-		expectedNew:              `{"level":"WARN","text":"Test text","id":"ERROR","code":"Test Code","reason":"Test reason ...","status":"Test-Status","duration":10000,"location":"In func1() at logging_test.go:473","details":[{"position":1,"type":"string","value":"Bob"},{"position":2,"type":"string","value":"Jane"}]}` + "\n",
-		expectedNewSenzingLogger: `{"level":"WARN","text":"Test text","id":"ERROR","code":"Test Code","reason":"Test reason ...","status":"Test-Status","duration":10000,"location":"In func1() at logging_test.go:539","details":[{"position":1,"type":"string","value":"Bob"},{"position":2,"type":"string","value":"Jane"}]}` + "\n",
+		expectedNew:              `{"level":"WARN","text":"Test text","id":"ERROR","code":"Test Code","reason":"Test reason ...","status":"Test-Status","duration":10000,"location":"In func1() at logging_test.go:475","details":[{"position":1,"type":"string","value":"Bob"},{"position":2,"type":"string","value":"Jane"}]}` + "\n",
+		expectedNewSenzingLogger: `{"level":"WARN","text":"Test text","id":"ERROR","code":"Test Code","reason":"Test reason ...","status":"Test-Status","duration":10000,"location":"In func1() at logging_test.go:541","details":[{"position":1,"type":"string","value":"Bob"},{"position":2,"type":"string","value":"Jane"}]}` + "\n",
 	},
 	{
 		name:          "logging-3006",
@@ -175,8 +177,8 @@ var testCasesForMessage = []struct { //nolint
 			getOptionTimeHidden(),
 		},
 		details: []interface{}{
-			"Bob",
-			"Jane",
+			nameBob,
+			nameJane,
 			logging.MessageCode{Value: "Test Code"},
 			logging.MessageDuration{Value: 1234567},
 			logging.MessageID{Value: "3005-Test"},
@@ -201,7 +203,7 @@ var testCasesForMessage = []struct { //nolint
 			getOptionCallerSkip(),
 			getOptionTimeHidden(),
 		},
-		details:                  []interface{}{"Bob", "Jane"},
+		details:                  []interface{}{nameBob, nameJane},
 		expectedNew:              `{"level":"ERROR","text":"ERROR: Bob works with Jane","id":"4001","details":[{"position":1,"type":"string","value":"Bob"},{"position":2,"type":"string","value":"Jane"}]}` + "\n",
 		expectedNewSenzingLogger: `{"level":"ERROR","text":"ERROR: Bob works with Jane","id":"SZTL99974001","details":[{"position":1,"type":"string","value":"Bob"},{"position":2,"type":"string","value":"Jane"}]}` + "\n",
 	},
@@ -214,7 +216,7 @@ var testCasesForMessage = []struct { //nolint
 			getOptionCallerSkip(),
 			getOptionTimeHidden(),
 		},
-		details:                  []interface{}{"Bob", "Jane"},
+		details:                  []interface{}{nameBob, nameJane},
 		expectedNew:              `{"level":"FATAL","text":"FATAL: Bob works with Jane","id":"5001","details":[{"position":1,"type":"string","value":"Bob"},{"position":2,"type":"string","value":"Jane"}]}` + "\n",
 		expectedNewSenzingLogger: `{"level":"FATAL","text":"FATAL: Bob works with Jane","id":"SZTL99975001","details":[{"position":1,"type":"string","value":"Bob"},{"position":2,"type":"string","value":"Jane"}]}` + "\n",
 	},
@@ -227,7 +229,7 @@ var testCasesForMessage = []struct { //nolint
 			getOptionCallerSkip(),
 			getOptionTimeHidden(),
 		},
-		details:                  []interface{}{"Bob", "Jane"},
+		details:                  []interface{}{nameBob, nameJane},
 		expectedNew:              `{"level":"PANIC","text":"PANIC: Bob works with Jane","id":"6001","details":[{"position":1,"type":"string","value":"Bob"},{"position":2,"type":"string","value":"Jane"}]}` + "\n",
 		expectedNewSenzingLogger: `{"level":"PANIC","text":"PANIC: Bob works with Jane","id":"SZTL99976001","details":[{"position":1,"type":"string","value":"Bob"},{"position":2,"type":"string","value":"Jane"}]}` + "\n",
 	},
