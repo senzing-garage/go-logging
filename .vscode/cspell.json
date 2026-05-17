@@ -54,7 +54,8 @@
     "stretchr",
     "taskkill",
     "testcoverage",
-    "testdata"
+    "testdata",
+    "zizmor"
   ],
   "ignorePaths": [
     ".dockerignore",
