@@ -226,6 +226,8 @@ func TestTrace_Global(test *testing.T) {
 	test.Parallel()
 	logger.SetLogLevel(logger.LevelTrace)
 	require.True(test, logger.IsTrace())
+	assert.NotZero(test, logger.Trace("test"), "string")
+	assert.NotZero(test, logger.Tracef("test %s", "something"), "format")
 }
 
 // -- Debug -------------------------------------------------------------------
@@ -323,6 +325,17 @@ func TestFatal_Global(test *testing.T) {
 	test.Parallel()
 	logger.SetLogLevel(logger.LevelFatal)
 	require.True(test, logger.IsFatal())
+}
+
+// Not parallel: parallel tests change the global log level, and calling Fatal()
+// at a level that prints FATAL would exit the test binary.
+//
+//nolint:paralleltest
+func TestFatal_Global_levelAboveFatal(test *testing.T) {
+	logger.SetLogLevel(logger.LevelPanic)
+	require.False(test, logger.IsFatal())
+	assert.NotZero(test, logger.Fatal("test"), "string")
+	assert.NotZero(test, logger.Fatalf("test %s", "something"), "format")
 }
 
 // -- Panic -------------------------------------------------------------------
